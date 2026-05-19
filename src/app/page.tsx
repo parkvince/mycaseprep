@@ -147,9 +147,8 @@ export default function LandingPage() {
               margin: "0 auto 40px",
             }}
           >
-            Practice with a realistic AI interviewer. Get firm-specific scoring
-            from McKinsey, Bain, BCG and 6 more firms. Know exactly where you
-            stand.
+            Practice with a realistic AI interviewer. Get firm-specific scoring from MBB, Big
+            4, and 10+ leading consulting firms. Know exactly where you stand.
           </p>
           <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
             <button
@@ -192,7 +191,7 @@ export default function LandingPage() {
             alignSelf: "center",
           }}
         >
-          MBB + 10 more firms
+
         </p>
         {firms.map((firm) => (
           <span
