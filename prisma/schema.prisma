@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  clerkId    String    @unique
+  email      String    @unique
+  name       String?
+  targetFirm String?
+  targetRole String?
+  createdAt  DateTime  @default(now())
+  sessions   Session[]
+}
+
+model Case {
+  id         String    @id @default(cuid())
+  title      String
+  type       String
+  difficulty String
+  prompt     String    @db.Text
+  context    String?   @db.Text
+  isBuiltIn  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  sessions   Session[]
+}
+
+model Session {
+  id             String    @id @default(cuid())
+  userId         String
+  caseId         String
+  firmMode       String
+  mode           String
+  difficulty     String
+  transcript     Json
+  hintsUsed      Int       @default(0)
+  durationSecs   Int?
+  score          Int?
+  scoreBreakdown Json?
+  feedback       Json?
+  status         String    @default("in_progress")
+  createdAt      DateTime  @default(now())
+  completedAt    DateTime?
+  user           User      @relation(fields: [userId], references: [id])
+  case           Case      @relation(fields: [caseId], references: [id])
+
+  @@index([userId])
+}
