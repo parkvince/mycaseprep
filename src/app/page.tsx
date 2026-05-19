@@ -1,65 +1,305 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+
+const firms = [
+  "McKinsey", "Bain", "BCG", "Deloitte", "EY", "KPMG", "PwC", "Accenture"
+];
+
+const features = [
+  {
+    icon: "🎯",
+    title: "Firm-Specific Feedback",
+    desc: "Get graded exactly how McKinsey, Bain, and BCG would evaluate you.",
+  },
+  {
+    icon: "🧠",
+    title: "AI Interviewer",
+    desc: "A realistic AI interviewer that never gives away answers.",
+  },
+  {
+    icon: "📊",
+    title: "Detailed Scorecard",
+    desc: "Structure, quant, communication — scored and explained.",
+  },
+  {
+    icon: "🎙️",
+    title: "Voice + Text Modes",
+    desc: "Practice speaking out loud or typing your answers.",
+  },
+  {
+    icon: "💡",
+    title: "Top 1% Answers",
+    desc: "See exactly what the best candidates would have said.",
+  },
+  {
+    icon: "📈",
+    title: "Performance Dashboard",
+    desc: "Track your improvement across every session.",
+  },
+];
+
+export default function LandingPage() {
+  const router = useRouter();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg)",
+        color: "var(--text-primary)",
+      }}
+    >
+      {/* Navbar */}
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "20px 48px",
+          borderBottom: "1px solid var(--border)",
+          position: "sticky",
+          top: 0,
+          background: "rgba(10,10,15,0.95)",
+          backdropFilter: "blur(10px)",
+          zIndex: 100,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "Playfair Display, serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+          }}
+        >
+          MyCasePrep
+        </span>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button
+            className="btn-secondary"
+            onClick={() => router.push("/auth/sign-in")}
+          >
+            Sign In
+          </button>
+          <button
+            className="btn-primary"
+            onClick={() => router.push("/auth/sign-up")}
+          >
+            Get Started Free
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section
+        style={{
+          textAlign: "center",
+          padding: "120px 48px 80px",
+          maxWidth: "800px",
+          margin: "0 auto",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div
+            style={{
+              display: "inline-block",
+              background: "var(--accent-glow)",
+              border: "1px solid var(--accent)",
+              borderRadius: "20px",
+              padding: "6px 16px",
+              fontSize: "13px",
+              color: "var(--accent)",
+              marginBottom: "24px",
+              fontWeight: 500,
+            }}
+          >
+            AI-Powered Case Interview Practice
+          </div>
+          <h1
+            style={{
+              fontSize: "clamp(40px, 6vw, 72px)",
+              lineHeight: 1.1,
+              marginBottom: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Crack Your Consulting
+            <br />
+            <span style={{ color: "var(--accent)" }}>Case Interview.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p
+            style={{
+              fontSize: "18px",
+              color: "var(--text-secondary)",
+              lineHeight: 1.7,
+              marginBottom: "40px",
+              maxWidth: "560px",
+              margin: "0 auto 40px",
+            }}
+          >
+            Practice with a realistic AI interviewer. Get firm-specific scoring
+            from McKinsey, Bain, BCG and 6 more firms. Know exactly where you
+            stand.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
+            <button
+              className="btn-primary glow"
+              style={{ fontSize: "16px", padding: "14px 32px" }}
+              onClick={() => router.push("/auth/sign-up")}
+            >
+              Start Practicing Free →
+            </button>
+            <button
+              className="btn-secondary"
+              style={{ fontSize: "16px", padding: "14px 32px" }}
+              onClick={() => router.push("/dashboard")}
+            >
+              View Demo
+            </button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Firms ticker */}
+      <section
+        style={{
+          padding: "40px 48px",
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
+          display: "flex",
+          justifyContent: "center",
+          gap: "48px",
+          flexWrap: "wrap",
+        }}
+      >
+        <p
+          style={{
+            color: "var(--text-secondary)",
+            fontSize: "13px",
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            alignSelf: "center",
+          }}
+        >
+          Simulate interviews at
+        </p>
+        {firms.map((firm) => (
+          <span
+            key={firm}
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "15px",
+              fontWeight: 600,
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {firm}
+          </span>
+        ))}
+      </section>
+
+      {/* Features */}
+      <section
+        style={{
+          padding: "100px 48px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(28px, 4vw, 42px)",
+            marginBottom: "64px",
+          }}
+        >
+          Everything you need to{" "}
+          <span style={{ color: "var(--accent)" }}>get the offer.</span>
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {features.map((f, i) => (
+            <motion.div
+              key={f.title}
+              className="card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              style={{ padding: "32px" }}
+            >
+              <div style={{ fontSize: "32px", marginBottom: "16px" }}>
+                {f.icon}
+              </div>
+              <h3
+                style={{
+                  fontSize: "18px",
+                  marginBottom: "8px",
+                  fontFamily: "DM Sans, sans-serif",
+                  fontWeight: 600,
+                }}
+              >
+                {f.title}
+              </h3>
+              <p style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                {f.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* CTA */}
+      <section
+        style={{
+          textAlign: "center",
+          padding: "100px 48px",
+          borderTop: "1px solid var(--border)",
+        }}
+      >
+        <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", marginBottom: "16px" }}>
+          Ready to start?
+        </h2>
+        <p
+          style={{
+            color: "var(--text-secondary)",
+            marginBottom: "40px",
+            fontSize: "17px",
+          }}
+        >
+          Free to use. No credit card required.
+        </p>
+        <button
+          className="btn-primary glow"
+          style={{ fontSize: "16px", padding: "14px 32px" }}
+          onClick={() => router.push("/auth/sign-up")}
+        >
+          Start Practicing Free →
+        </button>
+      </section>
+
+      {/* Footer */}
+      <footer
+        style={{
+          textAlign: "center",
+          padding: "32px",
+          borderTop: "1px solid var(--border)",
+          color: "var(--text-secondary)",
+          fontSize: "14px",
+        }}
+      >
+        Built by Vince Park · MyCasePrep © 2025
+      </footer>
+    </main>
   );
 }
