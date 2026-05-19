@@ -7,7 +7,14 @@ export type FirmKey =
   | "kpmg"
   | "pwc"
   | "rolandberger"
-  | "accenture";
+  | "accenture"
+  | "oliver_wyman"
+  | "at_kearney"
+  | "lek"
+  | "monitor_deloitte"
+  | "ibm_consulting"
+  | "strategy_and"
+  | "huron";
 
 export type CaseType =
   | "market_sizing"

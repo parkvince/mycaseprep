@@ -192,7 +192,7 @@ export default function LandingPage() {
             alignSelf: "center",
           }}
         >
-          Simulate interviews at
+          MBB + 10 more firms
         </p>
         {firms.map((firm) => (
           <span
