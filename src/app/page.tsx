@@ -4,39 +4,43 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 const firms = [
-  "McKinsey", "Bain", "BCG", "Deloitte", "EY", "KPMG", "PwC", "Accenture"
+  "McKinsey", "Bain", "BCG",
+  "EY-Parthenon", "Deloitte", "KPMG",
+  "PwC Strategy&", "Roland Berger", "Accenture",
+  "Oliver Wyman", "Kearney", "L.E.K.",
+  "Monitor Deloitte", "IBM Consulting", "Huron",
 ];
 
 const features = [
   {
-    icon: "🎯",
+    icon: "01",
     title: "Firm-Specific Feedback",
-    desc: "Get graded exactly how McKinsey, Bain, and BCG would evaluate you.",
+    desc: "Get graded exactly how McKinsey, Bain, and BCG would evaluate you. Each firm has its own rubric and feedback style.",
   },
   {
-    icon: "🧠",
+    icon: "02",
     title: "AI Interviewer",
-    desc: "A realistic AI interviewer that never gives away answers.",
+    desc: "A realistic AI interviewer that never gives away answers. It pushes back, asks follow-ups, and holds a high bar.",
   },
   {
-    icon: "📊",
+    icon: "03",
     title: "Detailed Scorecard",
-    desc: "Structure, quant, communication — scored and explained.",
+    desc: "Structure, quantitative accuracy, communication — each dimension scored, explained, and benchmarked.",
   },
   {
-    icon: "🎙️",
+    icon: "04",
     title: "Voice + Text Modes",
-    desc: "Practice speaking out loud or typing your answers.",
+    desc: "Practice speaking out loud or typing your answers. Both modes simulate real interview conditions.",
   },
   {
-    icon: "💡",
+    icon: "05",
     title: "Top 1% Answers",
-    desc: "See exactly what the best candidates would have said.",
+    desc: "After each case, see exactly what the best candidates would have said differently.",
   },
   {
-    icon: "📈",
+    icon: "06",
     title: "Performance Dashboard",
-    desc: "Track your improvement across every session.",
+    desc: "Track your improvement across every session. Identify your weak spots before your real interview.",
   },
 ];
 
@@ -238,8 +242,15 @@ export default function LandingPage() {
               transition={{ delay: i * 0.1 }}
               style={{ padding: "32px" }}
             >
-              <div style={{ fontSize: "32px", marginBottom: "16px" }}>
-                {f.icon}
+              <div style={{
+                fontSize: "12px",
+                fontWeight: 700,
+                color: "var(--accent)",
+                letterSpacing: "0.1em",
+                marginBottom: "16px",
+                fontFamily: "DM Sans, sans-serif",
+              }}>
+              {f.icon}
               </div>
               <h3
                 style={{
