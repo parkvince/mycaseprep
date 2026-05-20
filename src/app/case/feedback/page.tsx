@@ -226,4 +226,169 @@ function FeedbackInner() {
           >
             <div className="card" style={{ padding: "28px" }}>
               <h3 style={{
-                font
+                fontSize: "13px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--success)",
+                marginBottom: "16px",
+                fontFamily: "DM Sans, sans-serif",
+              }}>
+                What Went Well
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {evaluation.whatWentWell.map((item, i) => (
+                  <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                    <div style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "var(--success)",
+                      marginTop: "8px",
+                      flexShrink: 0,
+                    }} />
+                    <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="card" style={{ padding: "28px" }}>
+              <h3 style={{
+                fontSize: "13px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--warning)",
+                marginBottom: "16px",
+                fontFamily: "DM Sans, sans-serif",
+              }}>
+                Areas to Improve
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {evaluation.areasToImprove.map((item, i) => (
+                  <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                    <div style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "var(--warning)",
+                      marginTop: "8px",
+                      flexShrink: 0,
+                    }} />
+                    <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="card" style={{
+              padding: "28px",
+              borderLeft: `3px solid ${firmConfig.color}`,
+            }}>
+              <h3 style={{
+                fontSize: "13px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--text-secondary)",
+                marginBottom: "12px",
+                fontFamily: "DM Sans, sans-serif",
+              }}>
+                {firmConfig.name} Note
+              </h3>
+              <p style={{ fontSize: "15px", lineHeight: 1.7 }}>{evaluation.firmSpecificNote}</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Breakdown Tab */}
+        {activeTab === "breakdown" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card"
+            style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px" }}
+          >
+            {breakdownItems.map((item) => {
+              const score = evaluation.breakdown[item.key];
+              const color = formatScoreColor(score);
+              const weight = firmConfig.evaluationWeights[item.key];
+              return (
+                <div key={item.key}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                    <div>
+                      <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
+                      <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
+                        {weight}% weight
+                      </span>
+                    </div>
+                    <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score}</span>
+                  </div>
+                  <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${score}%` }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      style={{ height: "100%", background: color, borderRadius: "3px" }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </motion.div>
+        )}
+
+        {/* Ideal Answer Tab */}
+        {activeTab === "ideal" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card"
+            style={{ padding: "32px" }}
+          >
+            <h3 style={{
+              fontSize: "13px",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+              marginBottom: "20px",
+              fontFamily: "DM Sans, sans-serif",
+            }}>
+              What a Top 1% Candidate Would Say
+            </h3>
+            <p style={{ fontSize: "15px", lineHeight: 1.8 }}>
+              {evaluation.topCandidateResponse}
+            </p>
+          </motion.div>
+        )}
+
+        <div style={{ marginTop: "48px", display: "flex", gap: "12px" }}>
+          <button
+            className="btn-primary glow"
+            style={{ flex: 1, padding: "16px", fontSize: "15px" }}
+            onClick={() => router.push("/case/new")}
+          >
+            Practice Another Case →
+          </button>
+          <button
+            className="btn-secondary"
+            style={{ flex: 1, padding: "16px", fontSize: "15px" }}
+            onClick={() => router.push("/dashboard")}
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function FeedbackPage() {
+  return (
+    <Suspense>
+      <FeedbackInner />
+    </Suspense>
+  );
+}
