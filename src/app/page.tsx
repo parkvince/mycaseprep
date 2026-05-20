@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useUser, UserButton } from "@clerk/nextjs";
 
 const firms = [
   "McKinsey", "Bain", "BCG",
@@ -46,6 +47,7 @@ const features = [
 
 export default function LandingPage() {
   const router = useRouter();
+  const { user, isSignedIn } = useUser();
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
@@ -77,20 +79,41 @@ export default function LandingPage() {
           MyCasePrep
         </span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          <button
-            className="btn-secondary"
-            style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/auth/sign-in")}
-          >
-            Sign in
-          </button>
-          <button
-            className="btn-primary"
-            style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/auth/sign-up")}
-          >
-            Get started
-          </button>
+          {isSignedIn ? (
+            <>
+              <span style={{
+                fontSize: "14px",
+                color: "var(--text-secondary)",
+              }}>
+                {user.firstName ?? user.emailAddresses[0].emailAddress}
+              </span>
+              <button
+                className="btn-primary"
+                style={{ padding: "7px 16px" }}
+                onClick={() => router.push("/dashboard")}
+              >
+                Start a Case
+              </button>
+              <UserButton afterSignOutUrl="/" />
+            </>
+          ) : (
+            <>
+              <button
+                className="btn-secondary"
+                style={{ padding: "7px 16px" }}
+                onClick={() => router.push("/auth/sign-in")}
+              >
+                Sign in
+              </button>
+              <button
+                className="btn-primary"
+                style={{ padding: "7px 16px" }}
+                onClick={() => router.push("/auth/sign-up")}
+              >
+                Get started
+              </button>
+            </>
+          )}
         </div>
       </nav>
 
@@ -128,20 +151,23 @@ export default function LandingPage() {
             Practice with a realistic AI interviewer. Get firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-            <button
-              className="btn-primary"
-              style={{ fontSize: "15px", padding: "11px 28px" }}
-              onClick={() => router.push("/auth/sign-up")}
-            >
-              Start for free
-            </button>
-            <button
-              className="btn-secondary"
-              style={{ fontSize: "15px", padding: "11px 28px" }}
-              onClick={() => router.push("/dashboard")}
-            >
-              See demo
-            </button>
+            {isSignedIn ? (
+              <button
+                className="btn-primary"
+                style={{ fontSize: "15px", padding: "11px 28px" }}
+                onClick={() => router.push("/dashboard")}
+              >
+                Start practicing →
+              </button>
+            ) : (
+              <button
+                className="btn-primary"
+                style={{ fontSize: "15px", padding: "11px 28px" }}
+                onClick={() => router.push("/auth/sign-up")}
+              >
+                Get started free
+              </button>
+            )}
           </div>
         </motion.div>
       </section>
@@ -271,9 +297,9 @@ export default function LandingPage() {
         <button
           className="btn-primary"
           style={{ fontSize: "15px", padding: "11px 28px" }}
-          onClick={() => router.push("/auth/sign-up")}
+          onClick={() => router.push(isSignedIn ? "/dashboard" : "/auth/sign-up")}
         >
-          Get started free
+          {isSignedIn ? "Start practicing →" : "Get started free"}
         </button>
       </section>
 
