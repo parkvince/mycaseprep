@@ -204,9 +204,8 @@ export default function DashboardPage() {
                 <div style={{
                   fontSize: "11px",
                   color: "var(--text-secondary)",
-                  textTransform: "capitalize",
                 }}>
-                  {config.style.split(",")[0].trim().replace(/^\w/, c => c.toUpperCase())}
+                  {config.style.split(",")[0].trim().charAt(0).toUpperCase() + config.style.split(",")[0].trim().slice(1)}
                 </div>
               </div>
             ))}

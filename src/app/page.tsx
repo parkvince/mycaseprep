@@ -146,25 +146,42 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Firms */}
+      {/* Firms ticker */}
       <section style={{
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
-        padding: "20px 48px",
-        display: "flex",
-        justifyContent: "center",
-        gap: "32px",
-        flexWrap: "wrap",
+        padding: "16px 0",
+        overflow: "hidden",
+        position: "relative",
       }}>
-        {firms.map((firm) => (
-          <span key={firm} style={{
-            fontSize: "13px",
-            color: "var(--text-secondary)",
-            fontWeight: 500,
-          }}>
-            {firm}
-          </span>
-        ))}
+        <style>{`
+          @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: ticker 28s linear infinite;
+          }
+          .ticker-track:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
+        <div className="ticker-track">
+          {[...firms, ...firms].map((firm, i) => (
+            <span key={i} style={{
+              fontSize: "13px",
+              color: "var(--text-secondary)",
+              fontWeight: 500,
+              padding: "0 32px",
+              whiteSpace: "nowrap",
+              borderRight: "1px solid var(--border)",
+            }}>
+              {firm}
+            </span>
+          ))}
+        </div>
       </section>
 
       {/* Features */}
