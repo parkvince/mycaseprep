@@ -13,33 +13,33 @@ const firms = [
 
 const features = [
   {
-    icon: "01",
+    number: "01",
     title: "Firm-Specific Feedback",
     desc: "Get graded exactly how McKinsey, Bain, and BCG would evaluate you. Each firm has its own rubric and feedback style.",
   },
   {
-    icon: "02",
+    number: "02",
     title: "AI Interviewer",
     desc: "A realistic AI interviewer that never gives away answers. It pushes back, asks follow-ups, and holds a high bar.",
   },
   {
-    icon: "03",
+    number: "03",
     title: "Detailed Scorecard",
     desc: "Structure, quantitative accuracy, communication — each dimension scored, explained, and benchmarked.",
   },
   {
-    icon: "04",
+    number: "04",
     title: "Voice + Text Modes",
     desc: "Practice speaking out loud or typing your answers. Both modes simulate real interview conditions.",
   },
   {
-    icon: "05",
+    number: "05",
     title: "Top 1% Answers",
     desc: "After each case, see exactly what the best candidates would have said differently.",
   },
   {
-    icon: "06",
-    title: "Performance Dashboard",
+    number: "06",
+    title: "Performance Tracking",
     desc: "Track your improvement across every session. Identify your weak spots before your real interview.",
   },
 ];
@@ -48,267 +48,228 @@ export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg)",
-        color: "var(--text-primary)",
-      }}
-    >
+    <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+
       {/* Navbar */}
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "20px 48px",
-          borderBottom: "1px solid var(--border)",
-          position: "sticky",
-          top: 0,
-          background: "rgba(10,10,15,0.95)",
-          backdropFilter: "blur(10px)",
-          zIndex: 100,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-          }}
-        >
+      <nav style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0 48px",
+        height: "60px",
+        borderBottom: "1px solid var(--border)",
+        position: "sticky",
+        top: 0,
+        background: "rgba(255,255,255,0.95)",
+        backdropFilter: "blur(8px)",
+        zIndex: 100,
+      }}>
+        <span style={{
+          fontFamily: "Instrument Serif, serif",
+          fontSize: "20px",
+          fontWeight: 400,
+          color: "var(--text-primary)",
+        }}>
           MyCasePrep
         </span>
-        <div style={{ display: "flex", gap: "12px" }}>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <button
             className="btn-secondary"
+            style={{ padding: "7px 16px" }}
             onClick={() => router.push("/auth/sign-in")}
           >
-            Sign In
+            Sign in
           </button>
           <button
             className="btn-primary"
+            style={{ padding: "7px 16px" }}
             onClick={() => router.push("/auth/sign-up")}
           >
-            Get Started Free
+            Get started
           </button>
         </div>
       </nav>
 
       {/* Hero */}
-      <section
-        style={{
-          textAlign: "center",
-          padding: "120px 48px 80px",
-          maxWidth: "800px",
-          margin: "0 auto",
-        }}
-      >
+      <section style={{
+        maxWidth: "720px",
+        margin: "0 auto",
+        padding: "100px 48px 80px",
+        textAlign: "center",
+      }}>
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <div
-            style={{
-              display: "inline-block",
-              background: "var(--accent-glow)",
-              border: "1px solid var(--accent)",
-              borderRadius: "20px",
-              padding: "6px 16px",
-              fontSize: "13px",
-              color: "var(--accent)",
-              marginBottom: "24px",
-              fontWeight: 500,
-            }}
-          >
-            AI-Powered Case Interview Practice
-          </div>
-          <h1
-            style={{
-              fontSize: "clamp(40px, 6vw, 72px)",
-              lineHeight: 1.1,
-              marginBottom: "24px",
-              fontWeight: 700,
-            }}
-          >
-            Crack Your Consulting
+          <h1 style={{
+            fontSize: "clamp(40px, 6vw, 68px)",
+            lineHeight: 1.08,
+            fontWeight: 400,
+            marginBottom: "24px",
+            letterSpacing: "-0.02em",
+          }}>
+            Ace your consulting
             <br />
-            <span style={{ color: "var(--accent)" }}>Case Interview.</span>
+            case interview.
           </h1>
-          <p
-            style={{
-              fontSize: "18px",
-              color: "var(--text-secondary)",
-              lineHeight: 1.7,
-              marginBottom: "40px",
-              maxWidth: "560px",
-              margin: "0 auto 40px",
-            }}
-          >
-            Practice with a realistic AI interviewer. Get firm-specific scoring from MBB, Big
-            4, and 10+ leading consulting firms. Know exactly where you stand.
+          <p style={{
+            fontSize: "17px",
+            color: "var(--text-secondary)",
+            lineHeight: 1.65,
+            marginBottom: "36px",
+            maxWidth: "480px",
+            margin: "0 auto 36px",
+          }}>
+            Practice with a realistic AI interviewer. Get firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
           </p>
-          <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
             <button
-              className="btn-primary glow"
-              style={{ fontSize: "16px", padding: "14px 32px" }}
+              className="btn-primary"
+              style={{ fontSize: "15px", padding: "11px 28px" }}
               onClick={() => router.push("/auth/sign-up")}
             >
-              Start Practicing Free →
+              Start for free
             </button>
             <button
               className="btn-secondary"
-              style={{ fontSize: "16px", padding: "14px 32px" }}
+              style={{ fontSize: "15px", padding: "11px 28px" }}
               onClick={() => router.push("/dashboard")}
             >
-              View Demo
+              See demo
             </button>
           </div>
         </motion.div>
       </section>
 
-      {/* Firms ticker */}
-      <section
-        style={{
-          padding: "40px 48px",
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
-          display: "flex",
-          justifyContent: "center",
-          gap: "48px",
-          flexWrap: "wrap",
-        }}
-      >
-        <p
-          style={{
-            color: "var(--text-secondary)",
-            fontSize: "13px",
-            fontWeight: 500,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            alignSelf: "center",
-          }}
-        >
-
-        </p>
+      {/* Firms */}
+      <section style={{
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
+        padding: "20px 48px",
+        display: "flex",
+        justifyContent: "center",
+        gap: "32px",
+        flexWrap: "wrap",
+      }}>
         {firms.map((firm) => (
-          <span
-            key={firm}
-            style={{
-              color: "var(--text-secondary)",
-              fontSize: "15px",
-              fontWeight: 600,
-            }}
-          >
+          <span key={firm} style={{
+            fontSize: "13px",
+            color: "var(--text-secondary)",
+            fontWeight: 500,
+          }}>
             {firm}
           </span>
         ))}
       </section>
 
       {/* Features */}
-      <section
-        style={{
-          padding: "100px 48px",
-          maxWidth: "1100px",
-          margin: "0 auto",
-        }}
-      >
-        <h2
-          style={{
-            textAlign: "center",
-            fontSize: "clamp(28px, 4vw, 42px)",
-            marginBottom: "64px",
-          }}
-        >
-          Everything you need to{" "}
-          <span style={{ color: "var(--accent)" }}>get the offer.</span>
+      <section style={{
+        maxWidth: "1000px",
+        margin: "0 auto",
+        padding: "96px 48px",
+      }}>
+        <h2 style={{
+          fontSize: "clamp(26px, 3vw, 38px)",
+          fontWeight: 400,
+          textAlign: "center",
+          marginBottom: "64px",
+          letterSpacing: "-0.01em",
+        }}>
+          Everything you need to get the offer.
         </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "24px",
-          }}
-        >
-          {features.map((f, i) => (
-            <motion.div
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "1px",
+          border: "1px solid var(--border)",
+          borderRadius: "10px",
+          overflow: "hidden",
+        }}>
+          {features.map((f) => (
+            <div
               key={f.title}
-              className="card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              style={{ padding: "32px" }}
+              style={{
+                padding: "32px",
+                background: "var(--bg)",
+                borderRight: "1px solid var(--border)",
+                borderBottom: "1px solid var(--border)",
+              }}
             >
               <div style={{
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "var(--accent)",
-                letterSpacing: "0.1em",
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "var(--text-secondary)",
+                letterSpacing: "0.08em",
                 marginBottom: "16px",
-                fontFamily: "DM Sans, sans-serif",
               }}>
-              {f.icon}
+                {f.number}
               </div>
-              <h3
-                style={{
-                  fontSize: "18px",
-                  marginBottom: "8px",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 600,
-                }}
-              >
+              <h3 style={{
+                fontSize: "16px",
+                fontWeight: 600,
+                marginBottom: "8px",
+                fontFamily: "Inter, sans-serif",
+                letterSpacing: "-0.01em",
+              }}>
                 {f.title}
               </h3>
-              <p style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>
+              <p style={{
+                color: "var(--text-secondary)",
+                fontSize: "14px",
+                lineHeight: 1.6,
+              }}>
                 {f.desc}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section
-        style={{
-          textAlign: "center",
-          padding: "100px 48px",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", marginBottom: "16px" }}>
-          Ready to start?
+      <section style={{
+        borderTop: "1px solid var(--border)",
+        padding: "96px 48px",
+        textAlign: "center",
+      }}>
+        <h2 style={{
+          fontSize: "clamp(26px, 3vw, 38px)",
+          fontWeight: 400,
+          marginBottom: "16px",
+          letterSpacing: "-0.01em",
+        }}>
+          Ready to start practicing?
         </h2>
-        <p
-          style={{
-            color: "var(--text-secondary)",
-            marginBottom: "40px",
-            fontSize: "17px",
-          }}
-        >
+        <p style={{
+          color: "var(--text-secondary)",
+          marginBottom: "32px",
+          fontSize: "16px",
+        }}>
           Free to use. No credit card required.
         </p>
         <button
-          className="btn-primary glow"
-          style={{ fontSize: "16px", padding: "14px 32px" }}
+          className="btn-primary"
+          style={{ fontSize: "15px", padding: "11px 28px" }}
           onClick={() => router.push("/auth/sign-up")}
         >
-          Start Practicing Free →
+          Get started free
         </button>
       </section>
 
       {/* Footer */}
-      <footer
-        style={{
-          textAlign: "center",
-          padding: "32px",
-          borderTop: "1px solid var(--border)",
-          color: "var(--text-secondary)",
-          fontSize: "14px",
-        }}
-      >
-        Built by Vince Park · MyCasePrep © 2025
+      <footer style={{
+        borderTop: "1px solid var(--border)",
+        padding: "24px 48px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        color: "var(--text-secondary)",
+        fontSize: "13px",
+      }}>
+        <span style={{ fontFamily: "Instrument Serif, serif", fontSize: "16px", color: "var(--text-primary)" }}>
+          MyCasePrep
+        </span>
+        <span>Built by Vince Park · 2025</span>
       </footer>
     </main>
   );
