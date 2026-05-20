@@ -166,14 +166,26 @@ function SessionInner() {
         flexShrink: 0,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <span
+            style={{
+              fontFamily: "Cormorant, serif",
+              fontSize: "20px",
+              fontWeight: 500,
+              color: "#111111",
+              cursor: "pointer",
+              marginRight: "8px",
+            }}
+            onClick={() => router.push("/")}
+          >
+            MyCasePrep
+          </span>
           <div style={{
-            width: "10px",
-            height: "10px",
+            width: "8px",
+            height: "8px",
             borderRadius: "50%",
             background: "var(--success)",
-            boxShadow: "0 0 8px var(--success)",
           }} />
-          <span style={{ fontWeight: 600, fontSize: "15px" }}>{caseTitle}</span>
+          <span style={{ fontWeight: 500, fontSize: "14px" }}>{caseTitle}</span>
           <span style={{
             fontSize: "12px",
             color: "var(--text-secondary)",

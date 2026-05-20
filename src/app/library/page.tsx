@@ -191,7 +191,7 @@ export default function LibraryPage() {
         zIndex: 100,
       }}>
         <span
-          style={{ fontFamily: "Playfair Display, serif", fontSize: "22px", fontWeight: 700, cursor: "pointer" }}
+          style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 700, cursor: "pointer" }}
           onClick={() => router.push("/dashboard")}
         >
           MyCasePrep

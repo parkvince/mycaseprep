@@ -133,7 +133,7 @@ function FeedbackInner() {
         zIndex: 100,
       }}>
         <span
-          style={{ fontFamily: "Playfair Display, serif", fontSize: "22px", fontWeight: 700, cursor: "pointer" }}
+          style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 700, cursor: "pointer" }}
           onClick={() => router.push("/dashboard")}
         >
           MyCasePrep
@@ -186,7 +186,7 @@ function FeedbackInner() {
                 fontSize: "52px",
                 fontWeight: 700,
                 color: scoreColor,
-                fontFamily: "Playfair Display, serif",
+                fontFamily: "Cormorant, serif",
                 lineHeight: 1,
               }}>
                 {evaluation.overallScore}

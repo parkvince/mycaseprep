@@ -30,12 +30,18 @@ export default function DashboardPage() {
     type: CaseType,
     difficulty: Difficulty
   ) => {
-    const params = new URLSearchParams({
-      firm,
-      type,
-      difficulty,
-    });
+    const params = new URLSearchParams({ firm, type, difficulty });
     router.push(`/case/new?${params.toString()}`);
+  };
+
+  const sectionLabel: React.CSSProperties = {
+    fontSize: "11px",
+    fontWeight: 600,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "var(--text-secondary)",
+    marginBottom: "16px",
+    fontFamily: "Inter, sans-serif",
   };
 
   return (
@@ -45,30 +51,44 @@ export default function DashboardPage() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "20px 48px",
+        padding: "0 48px",
+        height: "60px",
         borderBottom: "1px solid var(--border)",
         position: "sticky",
         top: 0,
-        background: "rgba(10,10,15,0.95)",
-        backdropFilter: "blur(10px)",
+        background: "rgba(255,255,255,0.98)",
         zIndex: 100,
       }}>
-        <span style={{
-          fontFamily: "Playfair Display, serif",
-          fontSize: "22px",
-          fontWeight: 700,
-        }}>
+        <span
+          style={{
+            fontFamily: "Cormorant, serif",
+            fontSize: "22px",
+            fontWeight: 500,
+            color: "#111111",
+            cursor: "pointer",
+          }}
+          onClick={() => router.push("/")}
+        >
           MyCasePrep
         </span>
-        <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <button
             className="btn-secondary"
+            style={{ padding: "7px 16px" }}
+            onClick={() => router.push("/")}
+          >
+            Home
+          </button>
+          <button
+            className="btn-secondary"
+            style={{ padding: "7px 16px" }}
             onClick={() => router.push("/library")}
           >
             Case Library
           </button>
           <button
             className="btn-secondary"
+            style={{ padding: "7px 16px" }}
             onClick={() => router.push("/settings")}
           >
             Settings
@@ -80,52 +100,61 @@ export default function DashboardPage() {
 
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: "60px" }}
+          style={{ marginBottom: "56px" }}
         >
-          <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", marginBottom: "12px" }}>
+          <h1 style={{
+            fontSize: "clamp(26px, 3vw, 38px)",
+            fontWeight: 400,
+            marginBottom: "8px",
+            letterSpacing: "-0.01em",
+          }}>
             Start a Case
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "16px" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
             Select a firm, case type, and difficulty to begin your simulation.
           </p>
         </motion.div>
 
-        {/* Quick Start — Random Case */}
+        {/* Quick Start */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          style={{ marginBottom: "60px" }}
+          transition={{ delay: 0.05 }}
+          style={{ marginBottom: "56px" }}
         >
           <div
-            className="card glow"
+            className="card"
             style={{
-              padding: "32px",
+              padding: "28px 32px",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              borderColor: "var(--accent)",
               cursor: "pointer",
+              transition: "all 0.15s",
+              borderColor: "#111111",
             }}
+            onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = "var(--bg-elevated)"}
+            onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)"}
             onClick={() => handleStart("mckinsey", "random", "intermediate")}
           >
             <div>
               <div style={{
                 fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                color: "var(--accent)",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
-                marginBottom: "8px",
+                color: "var(--text-secondary)",
+                marginBottom: "6px",
               }}>
                 Quick Start
               </div>
               <h2 style={{
-                fontSize: "22px",
-                fontFamily: "Playfair Display, serif",
-                marginBottom: "8px",
+                fontSize: "20px",
+                fontWeight: 400,
+                fontFamily: "Cormorant, serif",
+                marginBottom: "4px",
               }}>
                 Random Case
               </h2>
@@ -133,71 +162,51 @@ export default function DashboardPage() {
                 Jump straight in. Random firm, random case type, intermediate difficulty.
               </p>
             </div>
-            <div style={{
-              fontSize: "32px",
-              color: "var(--accent)",
-              fontFamily: "Playfair Display, serif",
-            }}>
-              →
-            </div>
+            <span style={{ fontSize: "20px", color: "var(--text-secondary)" }}>→</span>
           </div>
         </motion.div>
 
         {/* Firm Selection */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
           style={{ marginBottom: "48px" }}
         >
-          <h2 style={{
-            fontSize: "13px",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "var(--text-secondary)",
-            marginBottom: "20px",
-            fontFamily: "DM Sans, sans-serif",
-          }}>
-            Select Firm
-          </h2>
+          <p style={sectionLabel}>Select Firm</p>
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: "12px",
+            gap: "8px",
           }}>
             {firmEntries.map(([key, config]) => (
               <div
                 key={key}
                 className="card"
                 style={{
-                  padding: "16px 20px",
+                  padding: "14px 18px",
                   cursor: "pointer",
-                  transition: "all 0.2s",
-                  borderLeft: `3px solid ${config.color}`,
+                  transition: "all 0.15s",
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = config.color;
                   (e.currentTarget as HTMLDivElement).style.background = "var(--bg-elevated)";
+                  (e.currentTarget as HTMLDivElement).style.borderColor = "#111111";
                 }}
                 onMouseLeave={e => {
                   (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)";
+                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
                 }}
                 onClick={() => handleStart(key, "random", "intermediate")}
               >
-                <div style={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  marginBottom: "4px",
-                }}>
+                <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "3px" }}>
                   {config.name}
                 </div>
                 <div style={{
-                  fontSize: "12px",
+                  fontSize: "11px",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.4,
+                  textTransform: "capitalize",
                 }}>
-                  {config.style.split(",")[0]}
+                  {config.style.split(",")[0].trim().replace(/^\w/, c => c.toUpperCase())}
                 </div>
               </div>
             ))}
@@ -206,48 +215,38 @@ export default function DashboardPage() {
 
         {/* Case Type Selection */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.15 }}
           style={{ marginBottom: "48px" }}
         >
-          <h2 style={{
-            fontSize: "13px",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "var(--text-secondary)",
-            marginBottom: "20px",
-            fontFamily: "DM Sans, sans-serif",
-          }}>
-            Case Type
-          </h2>
+          <p style={sectionLabel}>Case Type</p>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-            gap: "12px",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "8px",
           }}>
             {caseTypes.map((type) => (
               <div
                 key={type.value}
                 className="card"
                 style={{
-                  padding: "16px 20px",
+                  padding: "14px 18px",
                   cursor: "pointer",
-                  transition: "all 0.2s",
+                  transition: "all 0.15s",
                   textAlign: "center",
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--accent)";
-                  (e.currentTarget as HTMLDivElement).style.color = "var(--accent)";
+                  (e.currentTarget as HTMLDivElement).style.background = "var(--bg-elevated)";
+                  (e.currentTarget as HTMLDivElement).style.borderColor = "#111111";
                 }}
                 onMouseLeave={e => {
+                  (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)";
                   (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
-                  (e.currentTarget as HTMLDivElement).style.color = "var(--text-primary)";
                 }}
                 onClick={() => handleStart("mckinsey", type.value, "intermediate")}
               >
-                <div style={{ fontSize: "14px", fontWeight: 600 }}>
+                <div style={{ fontSize: "13px", fontWeight: 600 }}>
                   {type.label}
                 </div>
               </div>
@@ -257,25 +256,15 @@ export default function DashboardPage() {
 
         {/* Difficulty Selection */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.2 }}
         >
-          <h2 style={{
-            fontSize: "13px",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "var(--text-secondary)",
-            marginBottom: "20px",
-            fontFamily: "DM Sans, sans-serif",
-          }}>
-            Difficulty
-          </h2>
+          <p style={sectionLabel}>Difficulty</p>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-            gap: "12px",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "8px",
           }}>
             {difficulties.map((d) => (
               <div
@@ -284,22 +273,22 @@ export default function DashboardPage() {
                 style={{
                   padding: "20px 24px",
                   cursor: "pointer",
-                  transition: "all 0.2s",
+                  transition: "all 0.15s",
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--accent)";
                   (e.currentTarget as HTMLDivElement).style.background = "var(--bg-elevated)";
+                  (e.currentTarget as HTMLDivElement).style.borderColor = "#111111";
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
                   (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)";
+                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
                 }}
                 onClick={() => handleStart("mckinsey", "random", d.value)}
               >
-                <div style={{ fontSize: "15px", fontWeight: 600, marginBottom: "6px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
                   {d.label}
                 </div>
-                <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
                   {d.desc}
                 </div>
               </div>

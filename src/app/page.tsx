@@ -60,16 +60,20 @@ export default function LandingPage() {
         borderBottom: "1px solid var(--border)",
         position: "sticky",
         top: 0,
-        background: "rgba(255,255,255,0.95)",
+        background: "rgba(255,255,255,0.98)",
         backdropFilter: "blur(8px)",
         zIndex: 100,
       }}>
-        <span style={{
-          fontFamily: "Instrument Serif, serif",
-          fontSize: "20px",
-          fontWeight: 400,
-          color: "var(--text-primary)",
-        }}>
+        <span
+          style={{
+            fontFamily: "Cormorant, serif",
+            fontSize: "22px",
+            fontWeight: 500,
+            color: "#111111",
+            cursor: "pointer",
+          }}
+          onClick={() => router.push("/")}
+        >
           MyCasePrep
         </span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
