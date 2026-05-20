@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "motion/react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CaseType, Difficulty, FirmKey } from "@/types";
 import { getCaseTypeLabel, getDifficultyColor } from "@/lib/utils";
