@@ -6,11 +6,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 
-const INTERVIEWER = {
-  name: "James Chen",
-  title: "Senior Engagement Manager",
-  image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-};
+const INTERVIEWERS = [
+  {
+    name: "Vince",
+    title: "Senior Engagement Manager",
+    gender: "male",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=800&fit=crop&crop=face",
+  },
+  {
+    name: "Park",
+    title: "Senior Engagement Manager",
+    gender: "female",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=800&fit=crop&crop=face",
+  },
+];
+
+const INTERVIEWER = INTERVIEWERS[Math.floor(Math.random() * INTERVIEWERS.length)];
 
 function InterviewInner() {
   const router = useRouter();
@@ -70,20 +81,35 @@ function InterviewInner() {
     return `${m}:${s}`;
   };
 
-  const speak = (text: string) => {
+const speak = (text: string) => {
     if (!synthRef.current) return;
     synthRef.current.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = synthRef.current.getVoices();
-    const preferred = voices.find(v =>
-      v.name.includes("Daniel") ||
-      v.name.includes("Alex") ||
-      v.name.includes("Google UK English Male") ||
-      v.lang === "en-GB"
-    );
+
+    let preferred;
+    if (INTERVIEWER.gender === "male") {
+      preferred = voices.find(v =>
+        v.name.includes("Daniel") ||
+        v.name.includes("Alex") ||
+        v.name.includes("Google UK English Male") ||
+        v.name.includes("Arthur") ||
+        (v.lang === "en-GB" && v.name.toLowerCase().includes("male"))
+      ) ?? voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male"));
+    } else {
+      preferred = voices.find(v =>
+        v.name.includes("Samantha") ||
+        v.name.includes("Victoria") ||
+        v.name.includes("Karen") ||
+        v.name.includes("Google UK English Female") ||
+        v.name.includes("Serena") ||
+        (v.lang === "en-GB" && v.name.toLowerCase().includes("female"))
+      ) ?? voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female"));
+    }
+
     if (preferred) utterance.voice = preferred;
-    utterance.rate = 0.92;
-    utterance.pitch = 0.95;
+    utterance.rate = INTERVIEWER.gender === "female" ? 0.94 : 0.92;
+    utterance.pitch = INTERVIEWER.gender === "female" ? 1.05 : 0.95;
     utterance.volume = 1;
     setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -245,11 +271,17 @@ function InterviewInner() {
           borderRadius: "50%",
           overflow: "hidden",
           border: "3px solid rgba(255,255,255,0.1)",
+          flexShrink: 0,
         }}>
           <img
             src={INTERVIEWER.image}
             alt={INTERVIEWER.name}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center top",
+            }}
           />
         </div>
 
@@ -429,6 +461,7 @@ function InterviewInner() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                objectPosition: "center top",
                 filter: "brightness(0.9)",
               }}
             />
