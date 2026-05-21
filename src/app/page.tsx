@@ -94,7 +94,7 @@ export default function LandingPage() {
               >
                 Start a Case
               </button>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </>
           ) : (
             <>
