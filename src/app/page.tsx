@@ -66,14 +66,13 @@ export default function LandingPage() {
         backdropFilter: "blur(8px)",
         zIndex: 100,
       }}>
-        <span
-          style={{
-            fontFamily: "Cormorant, serif",
-            fontSize: "22px",
-            fontWeight: 500,
-            color: "#111111",
-            cursor: "pointer",
-          }}
+        <span style={{
+          fontFamily: "Cormorant, serif",
+          fontSize: "22px",
+          fontWeight: 500,
+          color: "#111111",
+          cursor: "pointer",
+        }}
           onClick={() => router.push("/")}
         >
           MyCasePrep
@@ -81,10 +80,7 @@ export default function LandingPage() {
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           {isSignedIn ? (
             <>
-              <span style={{
-                fontSize: "14px",
-                color: "var(--text-secondary)",
-              }}>
+              <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
                 {user.firstName ?? user.emailAddresses[0].emailAddress}
               </span>
               <button
@@ -313,7 +309,11 @@ export default function LandingPage() {
         color: "var(--text-secondary)",
         fontSize: "13px",
       }}>
-        <span style={{ fontFamily: "Instrument Serif, serif", fontSize: "16px", color: "var(--text-primary)" }}>
+        <span style={{
+          fontFamily: "Cormorant, serif",
+          fontSize: "16px",
+          color: "var(--text-primary)",
+        }}>
           MyCasePrep
         </span>
         <span>Built by Vince Park · 2025</span>
