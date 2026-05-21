@@ -27,8 +27,7 @@ export default function DashboardPage() {
   const [selectedFirm, setSelectedFirm] = useState<FirmKey>("mckinsey");
   const [selectedType, setSelectedType] = useState<CaseType>("random");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("intermediate");
-  const [selectedMode, setSelectedMode] = useState<Mode>("text");
-  const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
+  const [selectedMode, setSelectedMode] = useState<Mode | "live">("text");  const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
   const [loading, setLoading] = useState(false);
 
   const firmEntries = Object.entries(FIRM_CONFIGS) as [FirmKey, typeof FIRM_CONFIGS[FirmKey]][];
@@ -59,7 +58,11 @@ export default function DashboardPage() {
         context: caseData.context ?? "",
       });
 
-      router.push(`/case/session?${params.toString()}`);
+      const route = selectedMode === "live"
+        ? `/case/interview?${params.toString()}`
+        : `/case/session?${params.toString()}`;
+
+      router.push(route);
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -242,18 +245,39 @@ export default function DashboardPage() {
           style={{ marginBottom: "40px" }}
         >
           <p style={sectionLabel}>Mode</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px" }}>
-            {(["text", "voice"] as Mode[]).map((m) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+            {[
+              { value: "text", label: "Text", desc: "Type your answers" },
+              { value: "voice", label: "Voice", desc: "Speak your answers aloud" },
+              { value: "live", label: "Live Interview", desc: "Video call with AI interviewer" },
+            ].map((m) => (
               <div
-                key={m}
-                style={optionCard(selectedMode === m)}
-                onClick={() => setSelectedMode(m)}
+                key={m.value}
+                style={{
+                  ...optionCard(selectedMode === m.value),
+                  ...(m.value === "live" ? {
+                    borderColor: selectedMode === "live" ? "#111111" : "var(--border)",
+                    background: selectedMode === "live" ? "#111111" : "var(--bg-card)",
+                    color: selectedMode === "live" ? "#ffffff" : "var(--text-primary)",
+                  } : {})
+                }}
+                onClick={() => setSelectedMode(m.value as Mode | "live")}
               >
-                <div style={{ fontSize: "13px", fontWeight: 600, textTransform: "capitalize", marginBottom: "3px" }}>
-                  {m} Mode
+                <div style={{
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  marginBottom: "3px",
+                  color: selectedMode === m.value && m.value === "live" ? "#ffffff" : "inherit",
+                }}>
+                  {m.label}
                 </div>
-                <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
-                  {m === "text" ? "Type your answers" : "Speak your answers aloud"}
+                <div style={{
+                  fontSize: "12px",
+                  color: selectedMode === m.value && m.value === "live"
+                    ? "rgba(255,255,255,0.6)"
+                    : "var(--text-secondary)",
+                }}>
+                  {m.desc}
                 </div>
               </div>
             ))}
