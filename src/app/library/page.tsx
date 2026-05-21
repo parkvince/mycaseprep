@@ -12,7 +12,6 @@ interface PrebuiltCase {
   type: CaseType;
   difficulty: Difficulty;
   firm: FirmKey;
-  description: string;
   estimatedMinutes: number;
 }
 
@@ -23,7 +22,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "profitability",
     difficulty: "beginner",
     firm: "mckinsey",
-    description: "A major coffee chain has seen profits drop 20% over the last two years despite growing revenue. Diagnose the issue.",
     estimatedMinutes: 20,
   },
   {
@@ -32,7 +30,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "market_entry",
     difficulty: "intermediate",
     firm: "bcg",
-    description: "A US-based ride-sharing company wants to expand into Southeast Asia. Should they enter, and if so, how?",
     estimatedMinutes: 25,
   },
   {
@@ -41,7 +38,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "merger_acquisition",
     difficulty: "advanced",
     firm: "ey",
-    description: "Two regional hospital systems are considering a merger. Evaluate the strategic and financial rationale.",
     estimatedMinutes: 30,
   },
   {
@@ -50,7 +46,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "market_sizing",
     difficulty: "beginner",
     firm: "bain",
-    description: "Estimate the total addressable market for smartphones in India for the current year.",
     estimatedMinutes: 15,
   },
   {
@@ -59,7 +54,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "operations",
     difficulty: "intermediate",
     firm: "deloitte",
-    description: "A major airline is experiencing delays and cost overruns in its maintenance operations. Identify root causes and solutions.",
     estimatedMinutes: 25,
   },
   {
@@ -68,7 +62,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "market_entry",
     difficulty: "advanced",
     firm: "bcg",
-    description: "A heritage luxury fashion house wants to build a direct-to-consumer digital channel without diluting brand equity.",
     estimatedMinutes: 30,
   },
   {
@@ -77,7 +70,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "profitability",
     difficulty: "intermediate",
     firm: "mckinsey",
-    description: "A grocery delivery startup has scaled to $500M revenue but has never turned a profit. The board wants a path to profitability.",
     estimatedMinutes: 25,
   },
   {
@@ -86,7 +78,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "market_sizing",
     difficulty: "beginner",
     firm: "bain",
-    description: "Estimate the total number of gas stations currently operating in the United States.",
     estimatedMinutes: 15,
   },
   {
@@ -95,7 +86,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "merger_acquisition",
     difficulty: "advanced",
     firm: "lek",
-    description: "A PE firm is evaluating a $2B acquisition of a mid-market SaaS company with 30% YoY growth. Build the investment thesis.",
     estimatedMinutes: 35,
   },
   {
@@ -104,7 +94,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "operations",
     difficulty: "beginner",
     firm: "kpmg",
-    description: "A fast food franchise is seeing increasing customer complaints about wait times. Diagnose and fix the operational issues.",
     estimatedMinutes: 20,
   },
   {
@@ -113,7 +102,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "market_entry",
     difficulty: "advanced",
     firm: "rolandberger",
-    description: "A Chinese EV manufacturer wants to enter the European market. Assess feasibility and recommend an entry strategy.",
     estimatedMinutes: 30,
   },
   {
@@ -122,7 +110,6 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     type: "profitability",
     difficulty: "intermediate",
     firm: "oliver_wyman",
-    description: "A streaming platform has plateaued at 80M subscribers and is losing ground to competitors. Develop a growth strategy.",
     estimatedMinutes: 25,
   },
 ];
@@ -160,69 +147,94 @@ export default function LibraryPage() {
       type: c.type,
       difficulty: c.difficulty,
     });
-    router.push(`/case/new?${params.toString()}`);
+    router.push(`/dashboard?${params.toString()}`);
   };
 
   const filterBtn = (active: boolean): React.CSSProperties => ({
-    padding: "8px 16px",
+    padding: "6px 14px",
     borderRadius: "20px",
-    border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
-    background: active ? "var(--accent-glow)" : "transparent",
-    color: active ? "var(--accent)" : "var(--text-secondary)",
+    border: `1px solid ${active ? "#111111" : "var(--border)"}`,
+    background: active ? "#111111" : "transparent",
+    color: active ? "#ffffff" : "var(--text-secondary)",
     cursor: "pointer",
     fontSize: "13px",
-    fontFamily: "DM Sans, sans-serif",
+    fontFamily: "Inter, sans-serif",
     fontWeight: 500,
     transition: "all 0.15s",
   });
 
+  const sectionLabel: React.CSSProperties = {
+    fontSize: "11px",
+    fontWeight: 600,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "var(--text-secondary)",
+    marginBottom: "12px",
+    fontFamily: "Inter, sans-serif",
+  };
+
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+      {/* Navbar */}
       <nav style={{
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "20px 48px",
+        padding: "0 48px",
+        height: "60px",
         borderBottom: "1px solid var(--border)",
         position: "sticky",
         top: 0,
-        background: "rgba(10,10,15,0.95)",
-        backdropFilter: "blur(10px)",
+        background: "rgba(255,255,255,0.98)",
         zIndex: 100,
       }}>
         <span
-          style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 700, cursor: "pointer" }}
-          onClick={() => router.push("/dashboard")}
+          style={{
+            fontFamily: "Cormorant, serif",
+            fontSize: "22px",
+            fontWeight: 500,
+            color: "#111111",
+            cursor: "pointer",
+          }}
+          onClick={() => router.push("/")}
         >
           MyCasePrep
         </span>
-        <button className="btn-secondary" onClick={() => router.push("/dashboard")}>
-          Back to Dashboard
-        </button>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <button
+            className="btn-secondary"
+            style={{ padding: "7px 16px" }}
+            onClick={() => router.push("/dashboard")}
+          >
+            Start a Case
+          </button>
+          <button
+            className="btn-secondary"
+            style={{ padding: "7px 16px" }}
+            onClick={() => router.push("/settings")}
+          >
+            Settings
+          </button>
+        </div>
       </nav>
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "60px 48px" }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 style={{ fontSize: "clamp(24px, 3vw, 36px)", marginBottom: "8px" }}>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 style={{
+            fontSize: "clamp(26px, 3vw, 38px)",
+            fontWeight: 400,
+            marginBottom: "8px",
+            letterSpacing: "-0.01em",
+          }}>
             Case Library
           </h1>
-          <p style={{ color: "var(--text-secondary)", marginBottom: "40px" }}>
-            {PREBUILT_CASES.length} pre-built cases across all types and difficulties.
+          <p style={{ color: "var(--text-secondary)", marginBottom: "40px", fontSize: "15px" }}>
+            {PREBUILT_CASES.length} cases across all types and difficulties. Click any case to start practicing.
           </p>
 
           {/* Filters */}
           <div style={{ marginBottom: "16px" }}>
-            <p style={{
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--text-secondary)",
-              marginBottom: "12px",
-              fontFamily: "DM Sans, sans-serif",
-            }}>
-              Case Type
-            </p>
+            <p style={sectionLabel}>Case Type</p>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
               {caseTypes.map((t) => (
                 <button
@@ -237,17 +249,7 @@ export default function LibraryPage() {
           </div>
 
           <div style={{ marginBottom: "40px" }}>
-            <p style={{
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--text-secondary)",
-              marginBottom: "12px",
-              fontFamily: "DM Sans, sans-serif",
-            }}>
-              Difficulty
-            </p>
+            <p style={sectionLabel}>Difficulty</p>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
               {difficulties.map((d) => (
                 <button
@@ -264,34 +266,42 @@ export default function LibraryPage() {
           {/* Cases Grid */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-            gap: "16px",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "1px",
+            border: "1px solid var(--border)",
+            borderRadius: "10px",
+            overflow: "hidden",
           }}>
             {filtered.map((c, i) => (
               <motion.div
                 key={c.id}
-                className="card"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                style={{ padding: "24px", cursor: "pointer", transition: "all 0.2s" }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--accent)";
-                  (e.currentTarget as HTMLDivElement).style.background = "var(--bg-elevated)";
+                transition={{ delay: i * 0.03 }}
+                style={{
+                  padding: "24px",
+                  background: "var(--bg)",
+                  borderRight: "1px solid var(--border)",
+                  borderBottom: "1px solid var(--border)",
+                  cursor: "pointer",
+                  transition: "background 0.15s",
                 }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
-                  (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)";
-                }}
+                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)"}
+                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = "var(--bg)"}
                 onClick={() => handleStart(c)}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "12px",
+                }}>
                   <span style={{
                     fontSize: "11px",
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color: "var(--accent)",
+                    color: "var(--text-secondary)",
                   }}>
                     {getCaseTypeLabel(c.type)}
                   </span>
@@ -306,23 +316,15 @@ export default function LibraryPage() {
                 </div>
 
                 <h3 style={{
-                  fontSize: "16px",
+                  fontSize: "15px",
                   fontWeight: 600,
-                  marginBottom: "10px",
-                  fontFamily: "DM Sans, sans-serif",
+                  marginBottom: "16px",
+                  fontFamily: "Inter, sans-serif",
                   lineHeight: 1.4,
+                  color: "var(--text-primary)",
                 }}>
                   {c.title}
                 </h3>
-
-                <p style={{
-                  fontSize: "13px",
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.6,
-                  marginBottom: "16px",
-                }}>
-                  {c.description}
-                </p>
 
                 <div style={{
                   display: "flex",
@@ -332,7 +334,7 @@ export default function LibraryPage() {
                   color: "var(--text-secondary)",
                 }}>
                   <span>{c.estimatedMinutes} min</span>
-                  <span>→</span>
+                  <span style={{ fontSize: "14px" }}>→</span>
                 </div>
               </motion.div>
             ))}
