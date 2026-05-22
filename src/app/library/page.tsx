@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CaseType, Difficulty, FirmKey } from "@/types";
 import { getCaseTypeLabel, getDifficultyColor } from "@/lib/utils";
+import { GUIDED_CASES } from "@/lib/guidedCases";
 
 interface PrebuiltCase {
   id: string;
@@ -966,6 +967,97 @@ export default function LibraryPage() {
               ))}
             </div>
           </div>
+          {/* Guided Cases */}
+          <div style={{ marginBottom: "48px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+              <p style={sectionLabel}>Guided Cases</p>
+              <span style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                padding: "3px 10px",
+                background: "#111111",
+                color: "#ffffff",
+                borderRadius: "20px",
+              }}>
+                {GUIDED_CASES.length} cases with full exhibits
+              </span>
+            </div>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "1px",
+              border: "1px solid var(--border)",
+              borderRadius: "10px",
+              overflow: "hidden",
+            }}>
+              {GUIDED_CASES.map((c, i) => (
+                <motion.div
+                  key={c.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.03 }}
+                  style={{
+                    padding: "24px",
+                    background: "var(--bg)",
+                    borderRight: "1px solid var(--border)",
+                    borderBottom: "1px solid var(--border)",
+                    cursor: "pointer",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)"}
+                  onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = "var(--bg)"}
+                  onClick={() => router.push(`/case/guided?id=${c.id}`)}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <span style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      color: "var(--text-secondary)",
+                    }}>
+                      {getCaseTypeLabel(c.type)}
+                    </span>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      <span style={{
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        padding: "2px 8px",
+                        background: "#111111",
+                        color: "#ffffff",
+                        borderRadius: "10px",
+                      }}>
+                        Guided
+                      </span>
+                      <span style={{
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        color: getDifficultyColor(c.difficulty),
+                        textTransform: "capitalize",
+                      }}>
+                        {c.difficulty}
+                      </span>
+                    </div>
+                  </div>
+                  <h3 style={{
+                    fontSize: "15px",
+                    fontWeight: 600,
+                    marginBottom: "16px",
+                    fontFamily: "Inter, sans-serif",
+                    lineHeight: 1.4,
+                  }}>
+                    {c.title}
+                  </h3>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--text-secondary)" }}>
+                    <span>{c.questions.length} questions · {c.estimatedMinutes} min</span>
+                    <span>→</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ ...sectionLabel, marginBottom: "20px" }}>AI-Generated Cases</p>
 
           {/* Cases Grid */}
           <div style={{
