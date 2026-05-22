@@ -2482,4 +2482,1951 @@ Chinese digital luxury platforms:
       },
     ],
   },
+  // ─────────────────────────────────────────────
+  // CASE 11: BAIN — PIZZA CHAIN MARKET SIZING (BEGINNER)
+  // ─────────────────────────────────────────────
+  {
+    id: "g11",
+    title: "SliceCo: US Pizza Market Sizing",
+    type: "market_sizing",
+    difficulty: "beginner",
+    firm: "bain",
+    estimatedMinutes: 15,
+    overview: "A private equity firm is evaluating an investment in SliceCo, a regional pizza chain. Before committing capital, they want Bain to estimate the total US pizza market size by revenue.",
+    clientBackground: "SliceCo operates 240 locations in the Midwest, generating $180M in annual revenue. They are considering a national expansion and need to understand the total market opportunity. The PE firm wants a quick market sizing to validate whether a national pizza brand is worth pursuing.",
+    yourRole: "You are a Bain first-year associate. The partner needs a market size estimate in 30 minutes for a client call.",
+    finalRecommendationPrompt: "Give your best estimate of the US pizza market size in annual revenue and explain your methodology.",
+    idealRecommendation: "The US pizza market is approximately $46-50B annually. Methodology: US population 330M, average household size 2.6 = 127M households. Pizza consumption: average American eats pizza ~30 times per year. Average spend per pizza occasion: $12 (mix of delivery, dine-in, frozen). 330M people x 30 occasions x $12 = $118B — but this includes frozen/retail. Restaurant pizza only: ~60% of occasions = $71B. Cross-check: 75,000 pizza restaurants in US x $650K average revenue = $49B. Final estimate: $46-50B for restaurant pizza, $15-18B additional for retail/frozen. Industry data confirms approximately $46B for restaurant pizza.",
+    keyTakeaways: [
+      "Always triangulate market sizing from two different angles — top-down (population-based) and bottom-up (supply-side)",
+      "State your assumptions explicitly — the method matters as much as the number",
+      "Sanity check your answer against any known data points",
+      "Break the market into segments (restaurant vs retail, delivery vs dine-in) for a more useful answer",
+    ],
+    questions: [
+      {
+        id: "g11q1",
+        stage: "Structuring",
+        question: "The partner says: 'Give me a quick structure for sizing the US pizza market before you start calculating.' What is the best approach?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Number of pizza restaurants × average revenue per restaurant",
+            correct: false,
+            explanation: "This is a valid bottom-up approach but it only captures restaurant pizza and misses retail/frozen. As a standalone approach without triangulation it is incomplete.",
+          },
+          {
+            id: "b",
+            text: "Use two approaches: (1) Top-down: US population × frequency of pizza consumption × average spend; (2) Bottom-up: number of pizza restaurants × average unit volume. Then triangulate between the two.",
+            correct: true,
+            explanation: "Correct. Bain always wants two approaches to triangulate. Top-down starts from demand (consumers), bottom-up starts from supply (restaurants). When both approaches give similar answers, you have high confidence. When they diverge, you investigate why.",
+          },
+          {
+            id: "c",
+            text: "Look up Domino's annual report and multiply by the inverse of their market share",
+            correct: false,
+            explanation: "Using public company data is clever but Domino's market share varies by estimate and this approach doesn't account for independent pizzerias which represent a large portion of the market. Also, in a case interview you won't have internet access.",
+          },
+          {
+            id: "d",
+            text: "Estimate the number of pizza slices consumed daily and multiply by average slice price",
+            correct: false,
+            explanation: "This is a valid decomposition but 'slices per day' is a difficult number to anchor. Household-level or per-capita consumption is easier to estimate reliably.",
+          },
+        ],
+      },
+      {
+        id: "g11q2",
+        stage: "Top-Down Calculation",
+        question: "You decide to start with a top-down approach. Using the following data, calculate the US restaurant pizza market size.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "US Pizza Consumption Data",
+          data: `| Input | Estimate | Notes |
+|---|---|---|
+| US Population | 330M | Known |
+| Average pizza occasions per person per year | 30 | Mix of restaurant + delivery + frozen |
+| % of occasions at restaurant or delivery (not frozen/retail) | 62% | Frozen accounts for ~38% |
+| Average spend per restaurant/delivery occasion | $13.50 | Individual spend including tip |
+| % of spend that is pizza revenue (vs beverages, sides) | 68% | Pizza as % of total ticket |
+
+Cross-check data:
+| Input | Estimate |
+|---|---|
+| Number of pizza restaurants in US | ~78,000 |
+| Average annual revenue per location | $620,000 |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "$28B",
+            correct: false,
+            explanation: "Check your math. 330M × 30 × 62% × $13.50 × 68% = 330M × 18.6 occasions × $9.18 average pizza spend = $56.4B. $28B is roughly half the correct answer — likely a calculation error.",
+          },
+          {
+            id: "b",
+            text: "$56B top-down, $48B bottom-up — estimate approximately $46-52B",
+            correct: true,
+            explanation: "Correct. Top-down: 330M × 30 × 62% × $13.50 × 68% = 330M × 18.6 × $9.18 = $56.4B. Bottom-up: 78,000 × $620,000 = $48.4B. The two approaches give $48-56B, suggesting a midpoint estimate of approximately $46-52B is reasonable. The bottom-up is slightly lower because it excludes delivery-only operations not counted as 'restaurants.' Both numbers are in the same ballpark — good triangulation.",
+          },
+          {
+            id: "c",
+            text: "$120B",
+            correct: false,
+            explanation: "$120B would be correct only if you included ALL pizza occasions including frozen retail without the 68% pizza-only adjustment. Restaurant pizza market is significantly smaller than total pizza expenditure.",
+          },
+          {
+            id: "d",
+            text: "$15B",
+            correct: false,
+            explanation: "$15B is far too low. This is roughly what Domino's alone generates globally — the entire US pizza market is several multiples larger.",
+          },
+        ],
+      },
+      {
+        id: "g11q3",
+        stage: "Insight",
+        question: "SliceCo generates $180M from 240 locations. Based on your market sizing, what is their current market share, and what does this imply for national expansion?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "SliceCo has 0.37% market share ($180M / $48B) — they are tiny and would need enormous capital to become a national player",
+            correct: false,
+            explanation: "The math is right (0.37%) but the conclusion is wrong. 0.37% of a $48B market is actually normal for a regional chain. Domino's has ~15% market share and Domino's is one of the world's largest restaurant chains. The right insight is about the expansion opportunity, not just the smallness.",
+          },
+          {
+            id: "b",
+            text: "SliceCo has 0.37% market share in a $48B market — their 240 Midwest locations at $750K average revenue suggest strong unit economics (50% above the $620K industry average), making national expansion compelling. At national scale matching Domino's 9% share, SliceCo would represent a $4.3B revenue business — 24x current size.",
+            correct: true,
+            explanation: "Correct. This is the full analytical insight. The market share number alone ($180M/$48B = 0.37%) is not the insight — the insight is the unit economics ($750K vs $620K benchmark = 21% above average) and the scale of opportunity (national expansion to Domino's-comparable share = $4.3B). This is how Bain thinks: market sizing is a means to a strategic insight, not an end in itself.",
+          },
+          {
+            id: "c",
+            text: "SliceCo should not expand nationally because the pizza market is dominated by Domino's and Pizza Hut",
+            correct: false,
+            explanation: "Competitive concentration does not automatically preclude expansion. A 0.37% share company with above-average unit economics in a $48B market has significant room to grow even in a competitive market.",
+          },
+          {
+            id: "d",
+            text: "The market sizing is not relevant to the expansion decision — what matters is whether SliceCo's food is good",
+            correct: false,
+            explanation: "Product quality matters but market sizing is directly relevant — it determines the ceiling of the opportunity and frames whether the expansion investment is justified.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 12: DELOITTE — BOOKSTORE PROFITABILITY (BEGINNER)
+  // ─────────────────────────────────────────────
+  {
+    id: "g12",
+    title: "PageTurner: Bookstore Chain Profitability",
+    type: "profitability",
+    difficulty: "beginner",
+    firm: "deloitte",
+    estimatedMinutes: 18,
+    overview: "A regional bookstore chain has seen profits decline sharply over three years despite stable revenue. Deloitte has been engaged to diagnose the problem.",
+    clientBackground: "PageTurner operates 85 bookstores across the Southeast US. Revenue has been stable at $420M for three years. However, net profit has fallen from $42M (10% margin) to $12.6M (3% margin). The CEO is concerned and has asked Deloitte for a rapid diagnosis before the board meeting next week.",
+    yourRole: "You are a Deloitte consultant on your second engagement. The senior manager needs a clear diagnosis and preliminary recommendations by end of day.",
+    finalRecommendationPrompt: "What is the primary driver of PageTurner's margin compression, and what are your top two recommendations?",
+    idealRecommendation: "PageTurner's margin compression is driven by two factors: (1) rising occupancy costs as leases renewed at significantly higher post-pandemic rates (+$18M over 3 years), and (2) mix shift toward lower-margin categories (toys/gifts/café) that were added to offset declining book sales but dilute overall margin. Recommendations: (1) Renegotiate or exit the highest-cost leases — the bottom 20 locations by contribution margin should be evaluated for closure or relocation; (2) Optimize category mix by focusing on high-margin books and cutting underperforming gift/toy SKUs that were added without adequate margin analysis.",
+    keyTakeaways: [
+      "When revenue is flat and margins fall, the answer is always on the cost side — work through each cost line systematically",
+      "Category mix changes often have unintended margin consequences — always analyze margin by category, not just total revenue",
+      "Lease renewals are a common hidden driver of margin deterioration in retail — they often don't show up until renewal dates",
+      "Stable revenue can mask significant underlying shifts — always ask what is inside the revenue number",
+    ],
+    questions: [
+      {
+        id: "g12q1",
+        stage: "Initial Hypothesis",
+        question: "Revenue is flat at $420M but profit margin fell from 10% to 3% — a $29.4M profit decline. Before looking at any data, what is your initial hypothesis about the most likely cause?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Revenue mix has shifted toward lower-margin products or channels",
+            correct: false,
+            explanation: "This is a valid hypothesis but it assumes revenue is flat in total while mix shifts internally. This is possible but you should also consider cost increases as an equally likely explanation — especially in a retail business where rents and labor are major variable costs.",
+          },
+          {
+            id: "b",
+            text: "Costs have increased while revenue remained flat — likely one or more cost line items (rent, labor, COGS) grew faster than revenue could absorb",
+            correct: true,
+            explanation: "Correct. With flat revenue, the entire margin decline must come from cost increases. In retail, the three largest cost buckets are COGS (cost of inventory), labor, and occupancy (rent). This is your hypothesis framework — you need to isolate which of these grew and by how much.",
+          },
+          {
+            id: "c",
+            text: "Management has been investing in growth and the costs will pay off in future years",
+            correct: false,
+            explanation: "This is possible but there is no evidence for it in the problem statement. A good consultant forms hypotheses based on what is known, not on charitable assumptions about management intent.",
+          },
+          {
+            id: "d",
+            text: "Amazon has taken market share and PageTurner needs to add an e-commerce channel",
+            correct: false,
+            explanation: "Amazon competition is the context for the bookstore industry generally, but the specific question is why margin fell over three years when revenue was flat. If Amazon were the cause, revenue would have declined, not stayed flat.",
+          },
+        ],
+      },
+      {
+        id: "g12q2",
+        stage: "Cost Analysis",
+        question: "PageTurner's finance team provides the following P&L data. Identify the primary cost driver.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "PageTurner P&L — 3 Year Comparison ($M)",
+          data: `| Line Item | Year 1 | Year 3 | Change ($M) | Change (%) |
+|---|---|---|---|---|
+| Revenue | $420M | $420M | $0 | 0% |
+| Cost of Goods Sold | $252M | $260M | +$8M | +3% |
+| Gross Profit | $168M | $160M | -$8M | -5% |
+| Labor Costs | $63M | $67M | +$4M | +6% |
+| Occupancy (Rent) | $38M | $56M | +$18M | +47% |
+| Marketing | $8M | $9M | +$1M | +13% |
+| G&A | $17M | $15M | -$2M | -12% |
+| **Net Profit** | **$42M** | **$13M** | **-$29M** | **-69%** |
+| **Net Margin** | **10%** | **3%** | | |
+
+Location data:
+- Total stores: 85 (unchanged)
+- Stores with lease renewals in past 3 years: 38
+- Average pre-renewal rent per store: $560K/year
+- Average post-renewal rent per store: $1.1M/year`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "COGS increase of $8M is the primary driver — PageTurner is paying more for inventory",
+            correct: false,
+            explanation: "COGS increased $8M (3%) but this is roughly in line with inflation and represents a modest impact. The occupancy increase of $18M (+47%) is 2.25x larger and far above any inflation rate. COGS is not the primary driver.",
+          },
+          {
+            id: "b",
+            text: "Occupancy costs increased $18M (+47%) — driven by 38 lease renewals where average rent nearly doubled from $560K to $1.1M — this single item accounts for 62% of the total profit decline",
+            correct: true,
+            explanation: "Correct. $18M occupancy increase / $29M total profit decline = 62%. The lease renewal data makes this concrete: 38 stores renewed at $1.1M average vs $560K previous — an increase of $540K per store × 38 stores = $20.5M (slightly more than the $18M P&L shows, accounting for partial year renewals). This is the smoking gun. The partner will want this framed clearly: 'The $29M profit decline is primarily a real estate cost problem, not a revenue or COGS problem.'",
+          },
+          {
+            id: "c",
+            text: "Labor costs increased $4M — this is the operational problem that needs to be fixed through headcount reduction",
+            correct: false,
+            explanation: "Labor increased $4M (6%), which is roughly in line with wage inflation nationally. This is not an abnormal increase and represents only 14% of the profit decline. It should not be the focus of the diagnosis.",
+          },
+          {
+            id: "d",
+            text: "G&A decreased $2M which suggests management is cutting costs — the problem is on the revenue side",
+            correct: false,
+            explanation: "Revenue is flat at $420M by the problem definition. G&A reduction is a positive, not an indication of the problem. The cost analysis clearly shows occupancy as the culprit.",
+          },
+        ],
+      },
+      {
+        id: "g12q3",
+        stage: "Recommendation",
+        question: "Now that you know occupancy is the primary driver, what is the most actionable recommendation for the CEO to present to the board?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Close all 38 stores that had lease renewals",
+            correct: false,
+            explanation: "Not all 38 renewed stores are necessarily unprofitable. Some may be high-traffic locations that justify higher rent. The recommendation should be a portfolio review based on contribution margin per store, not a blanket closure of all renewed locations.",
+          },
+          {
+            id: "b",
+            text: "Conduct a store-level contribution margin analysis of all 85 locations, identify the bottom 15-20 stores for closure or lease renegotiation, and establish a policy requiring board approval for any lease renewal above $800K/year",
+            correct: true,
+            explanation: "Correct. This recommendation is specific, actionable, and addresses both the immediate problem (exit/renegotiate high-cost leases) and the governance failure (no one flagged that 38 leases were renewing at 2x previous rates). The contribution margin analysis is the right tool — some high-rent stores may still be profitable enough to keep. The governance policy prevents recurrence.",
+          },
+          {
+            id: "c",
+            text: "Raise book prices to recover margin",
+            correct: false,
+            explanation: "Raising prices in a commoditized retail category where Amazon offers the same books at lower prices would accelerate customer attrition. This addresses the symptom (low margin) not the cause (high rent) and would likely make performance worse.",
+          },
+          {
+            id: "d",
+            text: "Add more café and gift sections to stores to grow revenue and dilute the fixed rent cost",
+            correct: false,
+            explanation: "Adding lower-margin categories (café, gifts) to grow revenue mathematically while the primary problem is cost is a distraction. You need to fix the cost structure, not try to grow revenue over it.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 13: BCG — GYM MARKET SIZING (BEGINNER)
+  // ─────────────────────────────────────────────
+  {
+    id: "g13",
+    title: "FitNation: US Gym Membership Market",
+    type: "market_sizing",
+    difficulty: "beginner",
+    firm: "bcg",
+    estimatedMinutes: 15,
+    overview: "A PE firm wants BCG to size the US gym and fitness membership market before evaluating an acquisition of FitNation, a regional gym chain.",
+    clientBackground: "FitNation operates 120 gyms in Texas and Oklahoma with 280,000 members and $168M in annual revenue. The PE firm wants to understand the total US market before deciding whether to back a national rollout.",
+    yourRole: "You are a BCG associate. The partner needs the market size in a structured, well-reasoned format before the investment committee meets in two hours.",
+    finalRecommendationPrompt: "Estimate the total US gym and fitness membership market size by annual revenue, and explain what it means for FitNation's expansion opportunity.",
+    idealRecommendation: "The US gym/fitness membership market is approximately $32-35B annually. Top-down: 260M adults × 22% gym membership rate × $600 average annual membership = $34.3B. Bottom-up: 41,000 gyms in US × $800K average revenue = $32.8B. FitNation's $168M revenue = 0.5% market share. With 120 gyms averaging 2,333 members at $600/year = solid unit economics. National scale to 1,000 gyms (comparable to Planet Fitness footprint) = $1.4B revenue opportunity. PE investment is justified if FitNation can demonstrate unit economics replicate outside Texas/Oklahoma.",
+    keyTakeaways: [
+      "Per-capita market sizing requires two key inputs: penetration rate and spend per user",
+      "Always convert your market share into a concrete story about scale and opportunity",
+      "Bottom-up supply-side sizing is a powerful cross-check for consumer-demand estimates",
+      "The goal of market sizing in PE diligence is to frame the investment opportunity, not just produce a number",
+    ],
+    questions: [
+      {
+        id: "g13q1",
+        stage: "Framework",
+        question: "How would you structure a sizing of the US gym membership market?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "US adult population × gym membership penetration rate × average annual membership fee",
+            correct: true,
+            explanation: "Correct. This is the cleanest top-down approach. It decomposes the market into three inputs each of which can be estimated independently: adult population (known), penetration (estimable from personal experience/knowledge), and average fee (estimable from typical gym prices). This structure is immediately clear to any interviewer.",
+          },
+          {
+            id: "b",
+            text: "Total US healthcare spending × percentage allocated to fitness",
+            correct: false,
+            explanation: "Gym memberships are not typically counted as healthcare spending in a way that makes this decomposition clean. The inputs are harder to estimate and the connection is indirect.",
+          },
+          {
+            id: "c",
+            text: "Number of gym visits per year × revenue per visit",
+            correct: false,
+            explanation: "This approach works but requires estimating 'visits per year' which is harder to anchor than membership count. Memberships are also the unit of revenue for gyms (monthly fees regardless of visits), so a visit-based approach doesn't match the gym business model.",
+          },
+          {
+            id: "d",
+            text: "Number of people who exercise regularly × willingness to pay for a gym",
+            correct: false,
+            explanation: "'People who exercise regularly' is broader than gym members (includes home exercisers, runners, etc.) and 'willingness to pay' is different from actual spend. This framing introduces unnecessary complexity.",
+          },
+        ],
+      },
+      {
+        id: "g13q2",
+        stage: "Calculation",
+        question: "Calculate the US gym membership market using the following data.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "US Fitness Market Inputs",
+          data: `| Input | Low Estimate | Base Estimate | High Estimate |
+|---|---|---|---|
+| US adult population (18+) | 255M | 260M | 265M |
+| Gym membership penetration | 18% | 22% | 26% |
+| Average annual membership fee | $480 | $600 | $720 |
+| % who are active members (vs lapsed payers) | 80% | 85% | 90% |
+
+Supply-side cross-check:
+| Input | Value |
+|---|---|
+| Total US gym/fitness facilities | ~41,000 |
+| Average revenue per facility | $800,000 |
+
+Note: Includes traditional gyms, boutique fitness (yoga, cycling), and budget chains.
+Excludes: home fitness equipment, fitness apps, personal trainers.`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "$18B",
+            correct: false,
+            explanation: "Too low. Using base estimates: 260M × 22% = 57.2M members × $600 = $34.3B. $18B would require penetration of only ~11% or fees of only ~$315 — neither is realistic.",
+          },
+          {
+            id: "b",
+            text: "$34B top-down, $33B bottom-up — estimate approximately $32-35B",
+            correct: true,
+            explanation: "Correct. Top-down: 260M adults × 22% penetration = 57.2M members × $600/year = $34.3B. Bottom-up: 41,000 facilities × $800K = $32.8B. The two approaches are within 5% of each other — excellent triangulation. Final estimate: $32-35B for gym/fitness memberships in the US.",
+          },
+          {
+            id: "c",
+            text: "$65B",
+            correct: false,
+            explanation: "$65B is nearly double the correct answer. This would require either ~40% adult penetration or $1,000+ average annual fees — neither is realistic for the US gym market.",
+          },
+          {
+            id: "d",
+            text: "$8B",
+            correct: false,
+            explanation: "$8B is far too low — this is roughly what Planet Fitness alone generates. The total market is several multiples larger.",
+          },
+        ],
+      },
+      {
+        id: "g13q3",
+        stage: "Strategic Implication",
+        question: "FitNation has 280,000 members paying an average of $50/month. How does this compare to the market, and what does it mean for the PE investment thesis?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "FitNation is too small — 0.5% market share means they cannot compete with Planet Fitness and Equinox",
+            correct: false,
+            explanation: "0.5% of a $33B market is $165M — which matches FitNation's $168M revenue. Small market share in a large market does not mean uncompetitive. Regional focus with strong unit economics is a valid and often successful strategy.",
+          },
+          {
+            id: "b",
+            text: "FitNation's 0.5% share of a $33B market represents a massive expansion runway. Their $600 average membership fee matches the market benchmark, and 280,000 members across 120 gyms = 2,333 members per gym, which is healthy utilization. National scale to Planet Fitness size (~2,400 gyms) would imply $3.4B revenue — a 20x opportunity.",
+            correct: true,
+            explanation: "Correct. BCG frames market sizing as an opportunity quantification exercise, not just a number. The 2,333 members per gym benchmark is solid (industry average is ~1,800-2,500). $600 average fee matches the market. The 20x scale opportunity (120 gyms to 2,400 gyms) frames the PE investment thesis clearly. The key diligence question is whether the unit economics replicate nationally — this is what the PE firm should focus on next.",
+          },
+          {
+            id: "c",
+            text: "FitNation should raise their membership fees since $600/year is at the market average — premium pricing would improve margins",
+            correct: false,
+            explanation: "Pricing strategy is a separate question from market sizing. More importantly, raising prices without a premium product differentiation risks churn to lower-priced competitors like Planet Fitness ($180/year).",
+          },
+          {
+            id: "d",
+            text: "The market is too competitive to justify investment — there are 41,000 gyms already",
+            correct: false,
+            explanation: "41,000 gyms across the US in a $33B market suggests average revenue of $800K per gym — a healthy market. Competitive intensity does not preclude a well-run operator from growing market share, especially via acquisition and rollup strategy.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 14: MCKINSEY — HOTEL PROFITABILITY (BEGINNER)
+  // ─────────────────────────────────────────────
+  {
+    id: "g14",
+    title: "SunStay Hotels: Post-Pandemic Recovery",
+    type: "profitability",
+    difficulty: "beginner",
+    firm: "mckinsey",
+    estimatedMinutes: 18,
+    overview: "A mid-scale hotel chain is struggling to recover profitability three years after the pandemic. McKinsey has been engaged to identify the primary issues and quick wins.",
+    clientBackground: "SunStay operates 95 hotels (primarily in business travel markets — airports, downtown business districts) with 14,200 total rooms. Pre-pandemic RevPAR (revenue per available room) was $98. Current RevPAR is $84. Operating costs per available room per day have increased from $52 to $71 over the same period. The CEO believes the problem is purely demand-side but the CFO thinks costs are out of control.",
+    yourRole: "You are a McKinsey associate on the hospitality and travel practice. You have been asked to prepare a 10-minute update for the CEO and CFO together.",
+    finalRecommendationPrompt: "Who is right — the CEO (demand problem) or the CFO (cost problem)? What should SunStay prioritize in the next 90 days?",
+    idealRecommendation: "Both are right, but the CFO's concern is more urgent. RevPAR decline ($98 to $84 = -14%) is real but primarily explained by business travel not fully returning post-pandemic. Cost per room increase ($52 to $71 = +37%) is structural — labor and utility costs have permanently reset higher and will not self-correct. The contribution margin (RevPAR minus operating cost per room) has collapsed from $46 to $13 per room per day — a 72% decline. Immediate priorities: (1) Dynamic pricing optimization to recover RevPAR toward $92 in 90 days — revenue management systems are underutilized; (2) Labor scheduling optimization — peak vs off-peak staffing is poorly managed; (3) Identify 10-15 hotels with negative contribution margins for operational restructuring. The demand recovery will happen gradually — the cost problem needs active management now.",
+    keyTakeaways: [
+      "In hospitality, RevPAR (revenue per available room) and cost per available room are the two key metrics — the gap between them is contribution margin",
+      "Post-pandemic cost resets are often structural (new wage levels, energy costs) rather than temporary",
+      "Dynamic pricing in hotels is a high-ROI, low-investment quick win that many mid-scale chains underutilize",
+      "When a CEO and CFO disagree, often both have a piece of the truth — a good consultant synthesizes rather than picks a side",
+    ],
+    questions: [
+      {
+        id: "g14q1",
+        stage: "Framing the Problem",
+        question: "Before looking at data, how do you frame the SunStay problem for the meeting with the CEO and CFO?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Take the CFO's side — costs are always manageable, demand is outside your control",
+            correct: false,
+            explanation: "Siding with one executive before seeing data is not analytical. Also, the framing is wrong — in hospitality, revenue management (pricing, channel mix) is very much within a hotel chain's control.",
+          },
+          {
+            id: "b",
+            text: "Frame it as a margin problem: Contribution Margin = RevPAR − Operating Cost per Room. RevPAR has declined AND cost per room has increased — both need to be quantified to determine relative importance",
+            correct: true,
+            explanation: "Correct. McKinsey would frame this as a contribution margin problem that decomposes into a revenue side and a cost side. This framing acknowledges both the CEO and CFO's concerns while establishing a neutral analytical structure. The question 'who is right' is answered by quantifying which side of the equation has moved more.",
+          },
+          {
+            id: "c",
+            text: "The CEO is likely right — hotels are fundamentally demand-driven businesses",
+            correct: false,
+            explanation: "Hotels have significant cost structures that management can control. Assuming the CEO is right without data is the same error as siding with the CFO without data.",
+          },
+          {
+            id: "d",
+            text: "Request a 2-week data gathering phase before forming any views",
+            correct: false,
+            explanation: "You have been asked to present in 10 minutes. 'We need more time' is not an acceptable answer when the CEO and CFO are in the room. Work with what you have and be explicit about assumptions.",
+          },
+        ],
+      },
+      {
+        id: "g14q2",
+        stage: "Quantifying the Problem",
+        question: "Using the following data, calculate the contribution margin decline and determine whether it is primarily a revenue or cost problem.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "SunStay Financial Performance — Pre-Pandemic vs Current",
+          data: `| Metric | Pre-Pandemic | Current | Change |
+|---|---|---|---|
+| RevPAR (revenue/available room/day) | $98 | $84 | -$14 (-14%) |
+| Occupancy rate | 76% | 71% | -5pp |
+| Average daily rate (ADR) | $129 | $118 | -$11 (-9%) |
+| Operating cost per available room/day | $52 | $71 | +$19 (+37%) |
+| **Contribution margin per room/day** | **$46** | **$13** | **-$33 (-72%)** |
+| Total available room nights/year | 5.18M | 5.18M | 0 |
+| **Annual contribution** | **$238M** | **$67M** | **-$171M** |
+
+Cost breakdown (operating cost per available room/day):
+| Cost Category | Pre-Pandemic | Current | Change |
+|---|---|---|---|
+| Labor | $24 | $36 | +$12 (+50%) |
+| Utilities | $8 | $12 | +$4 (+50%) |
+| Maintenance | $7 | $9 | +$2 (+29%) |
+| Supplies/amenities | $6 | $8 | +$2 (+33%) |
+| Other | $7 | $6 | -$1 (-14%) |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The revenue decline ($14/room/day) is the bigger problem since it affects the top line directly",
+            correct: false,
+            explanation: "The revenue decline is $14/room/day (-14%). The cost increase is $19/room/day (+37%). The cost increase is both larger in absolute terms AND represents a larger percentage change. Contribution margin fell $33 — $19 (58%) from cost increases and $14 (42%) from revenue declines. The CFO is more right than the CEO.",
+          },
+          {
+            id: "b",
+            text: "Both matter but cost increases account for $19 of the $33 contribution margin decline (58%) vs $14 from revenue decline (42%). The $171M annual contribution loss is roughly split $99M from cost increases and $72M from revenue declines — the CFO's concern is more acute.",
+            correct: true,
+            explanation: "Correct. This is the precise, quantified answer that the McKinsey partner wants. $19 cost increase vs $14 revenue decline — cost is the bigger driver. Annualized: $19 × 5.18M room nights = $98.4M from cost, $14 × 5.18M = $72.5M from revenue. Both are material but cost increases are the more urgent structural problem, especially since labor and utilities (+50% each) are unlikely to reverse.",
+          },
+          {
+            id: "c",
+            text: "The problem is equally split and both CEO and CFO are completely right",
+            correct: false,
+            explanation: "The data shows costs account for 58% of the decline and revenue 42% — not equal. 'Both equally right' is a diplomatic non-answer that avoids the quantitative conclusion the data supports.",
+          },
+          {
+            id: "d",
+            text: "The occupancy rate decline from 76% to 71% is the most important metric",
+            correct: false,
+            explanation: "Occupancy is one component of RevPAR. RevPAR = Occupancy × ADR. Both occupancy (-5pp) and ADR (-$11) contributed to the RevPAR decline. Focusing only on occupancy misses half of the revenue story.",
+          },
+        ],
+      },
+      {
+        id: "g14q3",
+        stage: "Quick Wins",
+        question: "The CEO asks: 'What can we do in the next 90 days to improve the situation?' Which recommendation is highest priority?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Reduce room rates to drive occupancy back to 76% and recover revenue",
+            correct: false,
+            explanation: "Cutting rates when cost per room has increased by $19/day would worsen contribution margin. Lower rates + higher volume at negative margins is a path to faster losses. Pricing discipline is more important than occupancy optimization at this stage.",
+          },
+          {
+            id: "b",
+            text: "Implement dynamic pricing to optimize ADR without sacrificing occupancy — target recovering $8-10 of the $11 ADR decline through better yield management, and launch labor scheduling optimization to address the $12/room labor cost increase",
+            correct: true,
+            explanation: "Correct. These are the two highest-ROI 90-day actions. Dynamic pricing (revenue management) is often dramatically underutilized in mid-scale hotel chains — a 10-15% ADR improvement is achievable with better pricing software and yield management practices. Labor scheduling is the largest cost lever ($12/room increase = $62M annual impact) and can be partially addressed in 90 days through scheduling software and shift optimization.",
+          },
+          {
+            id: "c",
+            text: "Close the 10-15 least profitable hotels immediately to reduce overhead",
+            correct: false,
+            explanation: "Hotel closures involve lease obligations, staff severance, and brand consequences that cannot be executed in 90 days. This is a medium-term restructuring action, not a 90-day quick win.",
+          },
+          {
+            id: "d",
+            text: "Launch a major marketing campaign to drive leisure travelers since business travel has not recovered",
+            correct: false,
+            explanation: "Marketing campaigns take months to show revenue impact and business travel hotels are poorly positioned for leisure travelers (airport and downtown locations, no resort amenities). This is not a quick win.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 15: KPMG — FAST FOOD OPERATIONS (BEGINNER)
+  // ─────────────────────────────────────────────
+  {
+    id: "g15",
+    title: "BurgerBlitz: Drive-Through Wait Time Crisis",
+    type: "operations",
+    difficulty: "beginner",
+    firm: "kpmg",
+    estimatedMinutes: 18,
+    overview: "A fast food franchise operator is seeing customer complaints about drive-through wait times surge. KPMG has been engaged to diagnose the operational issue and recommend fixes.",
+    clientBackground: "BurgerBlitz operates 62 franchise locations in the mid-Atlantic US. Average drive-through wait time has increased from 3.2 minutes to 6.8 minutes over 18 months. Customer satisfaction scores have fallen from 78 to 61 (out of 100). Three locations have lost franchisee status due to quality standards violations. The franchisee group has hired KPMG to present findings to the franchisor before the annual review.",
+    yourRole: "You are a KPMG consultant on the operations practice. You have visited 8 locations over the past two weeks and have operational data to present.",
+    finalRecommendationPrompt: "What are the root causes of BurgerBlitz's drive-through problem and what are your top three operational fixes?",
+    idealRecommendation: "The drive-through problem has three root causes: (1) Menu complexity — BurgerBlitz added 28 new SKUs in 18 months, increasing average order complexity and cooking time by 40%; (2) Staffing model — peak hour staffing ratios have not been updated since 2019 despite 23% higher order volumes; (3) Equipment maintenance — fryer and grill maintenance is reactive rather than scheduled, causing unplanned downtime during peak periods. Three fixes: (1) SKU rationalization — eliminate the bottom 30% of menu items by volume (retains 95% of revenue, reduces kitchen complexity significantly); (2) Update staffing model to peak-hour demand patterns; (3) Implement preventive maintenance schedule for all cooking equipment.",
+    keyTakeaways: [
+      "In food service operations, menu complexity is the hidden enemy of speed — every additional SKU adds training burden, inventory complexity, and kitchen coordination overhead",
+      "Staffing models must be updated as demand patterns change — a 2019 model cannot handle 2024 volumes",
+      "Reactive maintenance in food service creates peak-hour failures when equipment is under maximum stress",
+      "Customer satisfaction in fast food correlates more strongly with wait time than any other single factor",
+    ],
+    questions: [
+      {
+        id: "g15q1",
+        stage: "Problem Scoping",
+        question: "Wait times doubled from 3.2 to 6.8 minutes. Before your site visits, what are the three most likely root cause categories you would investigate?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Staff quality, customer rudeness, and equipment brand",
+            correct: false,
+            explanation: "Staff quality is relevant but 'customer rudeness' is not an operational root cause, and equipment brand is not a meaningful variable for operational performance. This framing lacks rigor.",
+          },
+          {
+            id: "b",
+            text: "Order complexity (menu/order size), throughput capacity (staffing, equipment, layout), and process execution (standard operating procedures, training)",
+            correct: true,
+            explanation: "Correct. KPMG operations consultants use this three-bucket framework for food service throughput problems. Order complexity drives kitchen time. Throughput capacity determines how many orders can be processed simultaneously. Process execution determines whether the team is following optimal procedures. These three categories are MECE and cover the full range of drive-through speed drivers.",
+          },
+          {
+            id: "c",
+            text: "Competition, marketing, and pricing",
+            correct: false,
+            explanation: "These are relevant to revenue but not to operational wait times. The problem is explicitly about speed of service, not demand levels or competitive positioning.",
+          },
+          {
+            id: "d",
+            text: "Only staffing levels — more staff always solves throughput problems",
+            correct: false,
+            explanation: "More staff is one lever but not the only one. In food service, menu complexity, equipment capacity, and process design often have more impact per dollar than headcount increases.",
+          },
+        ],
+      },
+      {
+        id: "g15q2",
+        stage: "Data Analysis",
+        question: "Your site visit data reveals the following. What is the primary operational root cause?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "BurgerBlitz Operational Diagnostic Data",
+          data: `| Metric | 18 Months Ago | Current | Change |
+|---|---|---|---|
+| Average items per order | 3.2 | 4.1 | +28% |
+| Menu SKU count | 42 | 70 | +67% |
+| Average kitchen preparation time | 1.8 min | 3.4 min | +89% |
+| Average order-taking time | 0.8 min | 1.2 min | +50% |
+| Peak hour staffing (per location) | 8.2 FTE | 8.0 FTE | -2% |
+| Daily order volume per location | 380 | 467 | +23% |
+| Equipment downtime incidents/month | 1.2 | 4.8 | +300% |
+| % of orders containing new menu items | N/A | 38% | N/A |
+
+Wait time breakdown (current):
+- Order taking: 1.2 min
+- Kitchen preparation: 3.4 min  
+- Window service/payment: 1.1 min  
+- Queue wait: 1.1 min
+- Total: 6.8 min`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Staffing is the primary problem — peak hour FTE decreased from 8.2 to 8.0 while volume increased 23%",
+            correct: false,
+            explanation: "Staffing contributes but is not the primary driver. Kitchen preparation time increased 89% (from 1.8 to 3.4 minutes) — this single metric accounts for the largest share of the 3.6-minute wait increase. The staffing decline (-2%) is too small to explain an 89% preparation time increase.",
+          },
+          {
+            id: "b",
+            text: "Kitchen preparation time (+89%) is the primary driver, caused by two compounding factors: menu complexity (SKUs increased 67%, new items in 38% of orders) and equipment downtime (incidents up 300%). Together these account for 2.2 of the 3.6 minute wait time increase.",
+            correct: true,
+            explanation: "Correct. Kitchen prep time went from 1.8 to 3.4 minutes (+1.6 minutes) — the largest single contributor to the 3.6-minute total wait increase. The root causes are clear: 70 vs 42 SKUs = significantly more complex kitchen choreography; 38% of orders now contain new menu items that staff are less practiced with; equipment downtime increased 4x creating bottlenecks at peak times. The staffing gap (8.0 vs 8.2 FTE despite 23% more orders) compounds the problem but is secondary.",
+          },
+          {
+            id: "c",
+            text: "Order taking time increased 50% — the problem is at the front of the process, not the kitchen",
+            correct: false,
+            explanation: "Order taking increased from 0.8 to 1.2 minutes (+0.4 minutes). Kitchen prep increased from 1.8 to 3.4 minutes (+1.6 minutes). The kitchen time increase is 4x larger. Order taking is a contributing factor but not the primary driver.",
+          },
+          {
+            id: "d",
+            text: "Volume increase of 23% is the root cause — BurgerBlitz is a victim of its own success",
+            correct: false,
+            explanation: "Higher volume requires capacity adjustments but is not itself a root cause. The same 23% volume increase would be manageable with appropriate staffing, simpler menu, and reliable equipment. Volume growth is the context, not the cause.",
+          },
+        ],
+      },
+      {
+        id: "g15q3",
+        stage: "Solution Design",
+        question: "The franchisor pushes back: 'We can't cut menu items — new products drove a 12% revenue increase.' How do you respond?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "You're right — keep all 70 menu items and just hire more staff to handle the complexity",
+            correct: false,
+            explanation: "Capitulating without analysis is not consulting. The question is whether the revenue from new items offsets the cost of slower service (lost customers, lower table turns). This is a quantifiable tradeoff.",
+          },
+          {
+            id: "b",
+            text: "The 12% revenue increase must be weighed against the cost of slower service. If wait times drove a 10-15% reduction in customer satisfaction and repeat visits, the net revenue impact may be neutral or negative. The recommendation is to retain the top 70% of new SKUs by volume (keeping most of the revenue) while eliminating the bottom 30% (low volume, high complexity items) — this likely preserves 95%+ of revenue while recovering 50-60% of the kitchen time lost to new item complexity.",
+            correct: true,
+            explanation: "Correct. KPMG would not simply retreat from the menu rationalization recommendation under pushback. The right response is to quantify the tradeoff: 12% revenue increase vs. customer satisfaction decline and repeat visit reduction. The compromise solution (cut bottom 30% by volume) preserves most revenue while recovering meaningful kitchen efficiency. This is the 'facts-based, constructive' approach — not capitulating, not being rigid, but proposing a data-driven middle path.",
+          },
+          {
+            id: "c",
+            text: "Menu expansion was a strategic mistake and should be fully reversed",
+            correct: false,
+            explanation: "Recommending full reversal without acknowledging the 12% revenue impact shows lack of commercial awareness. Menu rationalization should be surgical, not complete reversal.",
+          },
+          {
+            id: "d",
+            text: "This is the franchisor's decision — we can only present the data",
+            correct: false,
+            explanation: "Consultants are hired to make recommendations, not just present data and abdicate the decision. 'This is the client's decision' is the right framing for the ultimate choice but not for the recommendation itself.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 16: EY — LUXURY CAR MARKET SIZING (BEGINNER)
+  // ─────────────────────────────────────────────
+  {
+    id: "g16",
+    title: "LuxAuto: US Luxury Vehicle Market",
+    type: "market_sizing",
+    difficulty: "beginner",
+    firm: "ey",
+    estimatedMinutes: 15,
+    overview: "An EV startup wants to enter the US luxury vehicle segment. EY-Parthenon has been engaged to size the market and identify the most attractive entry point.",
+    clientBackground: "VoltLux is a startup with $400M in seed funding building a luxury electric sedan to compete with Tesla Model S, BMW 7-series, and Mercedes S-class. The founding team wants to understand the total US luxury vehicle market (>$60,000) before finalizing their go-to-market strategy.",
+    yourRole: "You are an EY-Parthenon associate. The partner needs a market size estimate with a clear methodology for the investor presentation tomorrow.",
+    finalRecommendationPrompt: "Estimate the US luxury vehicle market size, identify VoltLux's realistic addressable market, and recommend which luxury segment to enter first.",
+    idealRecommendation: "US luxury vehicle market ($60K+): approximately 1.8M units/year × $85K average transaction price = $153B. Luxury EV specifically (Tesla + competitors): approximately 350,000 units/year = ~$30B. VoltLux's SAM — targeting Model S/7-Series/S-Class buyers (>$80K sedan segment): ~180,000 units/year = $15-17B. SOM in Year 1-3: 2-5% of SAM = 3,600-9,000 units = $300-750M revenue. Recommended entry: full-size luxury EV sedan ($85-120K price point) targeting tech-forward luxury buyers in California, Texas, and New York first — these three states represent 42% of US luxury vehicle sales.",
+    keyTakeaways: [
+      "Market sizing requires defining TAM, SAM, and SOM — investors care most about SOM",
+      "In automotive, sizing by units AND dollars gives a more complete picture",
+      "Geographic concentration matters in luxury goods — 3-5 states often represent 40%+ of US luxury sales",
+      "Always define the segment boundaries clearly — 'luxury' means different things at $60K vs $150K",
+    ],
+    questions: [
+      {
+        id: "g16q1",
+        stage: "Market Definition",
+        question: "The partner asks: 'Before sizing, define exactly what market we are sizing.' What is the most useful market definition for VoltLux?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "All electric vehicles sold in the US",
+            correct: false,
+            explanation: "This includes Chevy Bolts and budget EVs where VoltLux will not compete. Too broad to be actionable for their go-to-market strategy.",
+          },
+          {
+            id: "b",
+            text: "US luxury vehicles ($60K+ MSRP, new sales) — then segment further into luxury EV as VoltLux's primary competitive space",
+            correct: true,
+            explanation: "Correct. EY-Parthenon would define the market in layers: Total luxury market ($60K+) sets the ceiling of the opportunity. Luxury EV specifically is VoltLux's direct competitive set. This layered definition allows you to show TAM (all luxury), SAM (luxury EV buyers willing to switch), and SOM (realistic near-term capture). The $60K floor is a reasonable luxury threshold that captures the core competitive segment.",
+          },
+          {
+            id: "c",
+            text: "Tesla's current US sales as a proxy for the addressable market",
+            correct: false,
+            explanation: "Tesla's current sales reflect Tesla's market share, not the total addressable market. Using one competitor's sales as the market definition systematically understates the opportunity.",
+          },
+          {
+            id: "d",
+            text: "All vehicles sold in the US above $40K",
+            correct: false,
+            explanation: "$40K includes near-luxury vehicles (Toyota Camry XSE, Honda Accord Sport) where VoltLux at $85-120K would not compete. The threshold should match VoltLux's actual price point.",
+          },
+        ],
+      },
+      {
+        id: "g16q2",
+        stage: "Calculation",
+        question: "Calculate the US luxury vehicle market size using the following data.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "US Vehicle Market Data",
+          data: `| Segment | Annual Units Sold | Average Transaction Price | % that are EV |
+|---|---|---|---|
+| Near-luxury ($40-60K) | 2.8M | $51,000 | 18% |
+| Luxury ($60-80K) | 980,000 | $71,000 | 24% |
+| Ultra-luxury ($80-120K) | 620,000 | $96,000 | 31% |
+| Super-luxury ($120K+) | 185,000 | $168,000 | 12% |
+| **Total luxury ($60K+)** | **1,785,000** | **$85,000 avg** | **26%** |
+
+Key brands in luxury ($60K+):
+| Brand | Annual US Units | Avg Price | EV % |
+|---|---|---|---|
+| Tesla | 380,000 | $68,000 | 100% |
+| BMW | 310,000 | $72,000 | 22% |
+| Mercedes | 295,000 | $78,000 | 18% |
+| Audi | 210,000 | $67,000 | 24% |
+| Lexus | 185,000 | $62,000 | 8% |
+| Porsche | 92,000 | $115,000 | 28% |
+| Others | 313,000 | $88,000 | various |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "$75B",
+            correct: false,
+            explanation: "Check your calculation. 1,785,000 units × $85,000 average = $151.7B ≈ $152B. $75B would only be correct if average price was around $42,000 — below the luxury threshold.",
+          },
+          {
+            id: "b",
+            text: "$152B total luxury market; $464B if you include near-luxury; luxury EV segment approximately $32B (1.785M × 26% EV × $68K avg EV price)",
+            correct: true,
+            explanation: "Correct. Total luxury ($60K+): 1,785,000 × $85,000 = $151.7B ≈ $152B. Luxury EV: 1,785,000 × 26% = 464,100 units × $68,000 average EV price = $31.6B ≈ $32B. This is VoltLux's primary competitive space. The $152B vs $32B framing shows why EV-specific sizing matters — VoltLux is entering 21% of the luxury market, not 100%.",
+          },
+          {
+            id: "c",
+            text: "$380B — the full US auto market",
+            correct: false,
+            explanation: "$380B is the full US auto market (approximately 15M vehicles × $25,000 average). The luxury segment ($60K+) is approximately 12% of total volume but 40% of total value. You should size the segment, not the whole market.",
+          },
+          {
+            id: "d",
+            text: "$26B — only counting Tesla since they dominate luxury EV",
+            correct: false,
+            explanation: "Tesla's $26B US revenue is Tesla's share of the luxury market, not the total market. VoltLux will compete against all luxury vehicles (gas and EV) that buyers might consider instead of their product.",
+          },
+        ],
+      },
+      {
+        id: "g16q3",
+        stage: "Entry Strategy",
+        question: "The CEO asks: 'We have $400M. Which segment should we target first — volume luxury ($60-80K) or ultra-luxury ($80K+)?' What is your recommendation?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Volume luxury ($60-80K) — larger market at 980,000 units, more potential customers",
+            correct: false,
+            explanation: "Larger market in units does not mean better for a startup. The $60-80K segment is Tesla's core market — VoltLux would be directly competing with the best-resourced EV company. Also, $400M in capital limits your ability to win a price-sensitive high-volume segment.",
+          },
+          {
+            id: "b",
+            text: "Ultra-luxury ($80-120K) — smaller segment (620,000 units) but 31% EV penetration shows buyer receptivity, less direct Tesla competition, higher margins support $400M capital base, and luxury buyers are less price-sensitive allowing time to build brand",
+            correct: true,
+            explanation: "Correct. EY-Parthenon would recommend the ultra-luxury segment for a capital-constrained startup. Higher average price ($96K) means fewer units needed to generate meaningful revenue — 5,000 units = $480M revenue. 31% EV penetration is the highest of any luxury segment, showing buyer openness to EVs. Tesla is less dominant above $80K (Model X, not Model 3/Y territory). BMW 7-Series and Mercedes S-Class buyers are the target — they are already paying $100K+ for ICE vehicles and are open to EV alternatives.",
+          },
+          {
+            id: "c",
+            text: "Super-luxury ($120K+) — highest margin per unit",
+            correct: false,
+            explanation: "Super-luxury (185,000 units) has only 12% EV penetration — the lowest of all segments. Rolls-Royce and Bentley buyers are the most resistant to EVs in the current market. A startup entering this segment against legacy brands with 100-year heritage would struggle enormously.",
+          },
+          {
+            id: "d",
+            text: "Near-luxury ($40-60K) — largest addressable market",
+            correct: false,
+            explanation: "Near-luxury is outside VoltLux's stated $85-120K price point. Entering a segment below your natural price positioning would destroy the brand before it is built.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 17: ACCENTURE — RETAIL DIGITAL OPERATIONS (MEDIUM)
+  // ─────────────────────────────────────────────
+  {
+    id: "g17",
+    title: "RetailMax: Omnichannel Transformation",
+    type: "operations",
+    difficulty: "intermediate",
+    firm: "accenture",
+    estimatedMinutes: 28,
+    overview: "A large US department store chain is losing market share to Amazon and specialty retailers. Accenture has been engaged to design and implement an omnichannel transformation.",
+    clientBackground: "RetailMax operates 180 department stores across 32 states with $8.4B in annual revenue. Online revenue is only 12% ($1B) despite the category average being 35%. Their NPS is 42 vs 68 for best-in-class. Inventory accuracy is 71% (vs 94% best practice). Same-day delivery capability: 0 stores. Click-and-collect capability: 28 stores (16%). The CEO has set a target of 25% digital revenue within 2 years.",
+    yourRole: "You are an Accenture senior manager on the retail technology practice. You are presenting a transformation roadmap to RetailMax's CTO and COO.",
+    finalRecommendationPrompt: "What is your omnichannel transformation roadmap for RetailMax, and what is the expected financial impact?",
+    idealRecommendation: "RetailMax's omnichannel transformation should be structured in three phases over 24 months. Phase 1 (0-6 months, $45M): Deploy RFID inventory tracking across all 180 stores to improve inventory accuracy from 71% to 94% — this is the foundation for all other capabilities. Roll out click-and-collect to all 180 stores. Phase 2 (6-12 months, $80M): Launch same-day delivery from 50 high-density stores using store-as-warehouse model. Redesign mobile app with personalization engine. Phase 3 (12-24 months, $120M): Full ship-from-store capability, AI-powered demand forecasting, and unified commerce platform. Financial impact: inventory accuracy improvement alone recovers $180M in lost sales annually. Click-and-collect drives 15% store traffic lift. Combined, these initiatives should deliver $1.2B in incremental digital revenue, reaching 23% digital mix — near the 25% target.",
+    keyTakeaways: [
+      "Inventory accuracy is the unsexy foundation of all omnichannel capability — you cannot offer same-day delivery if you don't know what's in your stores",
+      "Click-and-collect (BOPIS) has 2-3x higher basket size than pure online orders due to incremental in-store purchases",
+      "Store-as-warehouse models allow retailers to compete with Amazon on delivery speed without building new distribution infrastructure",
+      "Digital transformation sequencing matters enormously — building customer-facing features on a broken inventory foundation is a common and costly mistake",
+    ],
+    questions: [
+      {
+        id: "g17q1",
+        stage: "Root Cause",
+        question: "RetailMax's digital revenue is 12% vs a 35% category average. Before designing solutions, what is the most likely root cause of this gap?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "RetailMax Digital Capability Benchmarking",
+          data: `| Capability | RetailMax | Category Average | Best-in-Class |
+|---|---|---|---|
+| Online revenue share | 12% | 35% | 48% |
+| Click-and-collect (BOPIS) | 16% of stores | 92% of stores | 100% |
+| Same-day delivery | 0% of stores | 68% of stores | 100% |
+| Inventory accuracy | 71% | 88% | 96% |
+| Mobile app rating | 2.8/5 | 4.1/5 | 4.6/5 |
+| Personalization score | 2/10 | 6/10 | 9/10 |
+| Online return to store | Yes | Yes | Yes |
+| Customer NPS | 42 | 61 | 78 |
+
+Customer feedback (exit surveys, n=8,200):
+| Reason for not shopping online | % Citing |
+|---|---|
+| Cannot get it same day | 54% |
+| Item shown online not available in store | 48% |
+| Prefer to try on/see in person | 38% |
+| App is difficult to use | 31% |
+| Prefer Amazon for same category | 28% |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The mobile app rating of 2.8 is the primary problem — fix the app and digital revenue will follow",
+            correct: false,
+            explanation: "The app is a problem (31% of customers cite it) but not the primary driver. 54% cite same-day delivery gaps and 48% cite inventory inaccuracy — both are larger and more fundamental barriers. Fixing the app experience on top of broken fulfillment capability would not resolve the primary issues.",
+          },
+          {
+            id: "b",
+            text: "Two compounding gaps drive the digital underperformance: fulfillment capability (0% same-day delivery vs 68% average, only 16% BOPIS vs 92% average) and inventory accuracy (71% vs 88% average) — customers cannot get what they want, when they want it, and RetailMax's digital channel cannot reliably promise availability",
+            correct: true,
+            explanation: "Correct. Accenture's diagnostic connects the customer feedback data (54% same-day, 48% inventory availability) to the capability gaps (0% same-day, 71% inventory accuracy). The root cause is not digital features — it is the physical fulfillment and inventory infrastructure that digital commerce runs on. This is the classic 'digital transformation starts with operations' insight.",
+          },
+          {
+            id: "c",
+            text: "RetailMax competes in the wrong categories — they should exit apparel and focus on home goods where Amazon is weaker",
+            correct: false,
+            explanation: "Category portfolio is a strategic question beyond the scope of a digital transformation engagement. The data does not support a category exit recommendation — it points to capability gaps that affect all categories.",
+          },
+          {
+            id: "d",
+            text: "Customer NPS of 42 is the root cause — unhappy customers don't shop online",
+            correct: false,
+            explanation: "Low NPS is a symptom of the fulfillment and inventory problems, not the cause. Fixing NPS requires fixing the underlying operational issues — not the other way around.",
+          },
+        ],
+      },
+      {
+        id: "g17q2",
+        stage: "Business Case",
+        question: "The CFO asks: 'What is the financial return on the transformation investment?' Analyze the following data to build the business case.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "RetailMax Digital Transformation Business Case",
+          data: `| Initiative | Investment | Annual Revenue Benefit | Annual Cost Savings | Payback |
+|---|---|---|---|---|
+| RFID inventory accuracy (180 stores) | $45M | $180M (reduced stockouts) | $35M (reduced markdowns) | 10 months |
+| Click-and-collect rollout (all stores) | $28M | $145M (basket uplift) | $0 | 2.3 months |
+| Same-day delivery (50 stores) | $65M | $280M (new digital revenue) | $0 | 2.8 months |
+| Mobile app redesign + personalization | $38M | $165M (conversion improvement) | $0 | 2.8 months |
+| Ship-from-store (all stores) | $120M | $420M (digital revenue) | $45M (fulfillment cost reduction) | 3.6 months |
+| **Total** | **$296M** | **$1,190M** | **$80M** | **~3.5 months avg** |
+
+Current state costs of digital underperformance:
+- Lost online revenue vs category average: $1.9B annually (35% - 12% = 23pp × $8.4B)
+- Inventory inaccuracy cost (markdowns + lost sales): $215M annually
+- Higher fulfillment cost vs ship-from-store model: $45M annually`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The $296M investment is too large for RetailMax to fund given their current performance",
+            correct: false,
+            explanation: "Investment size should be evaluated relative to returns, not in absolute terms. $296M generating $1,190M in annual revenue benefit = 4x return in Year 1. Even at a 50% probability-weighted benefit, the return is 2x. The investment is clearly justified.",
+          },
+          {
+            id: "b",
+            text: "The $296M investment generates $1,190M in annual revenue benefit + $80M in cost savings = $1,270M total annual benefit — a 4.3x first-year return. The average payback of 3.5 months is exceptional. The business case is compelling, especially against the $1.9B in annual revenue currently being lost to digital underperformance.",
+            correct: true,
+            explanation: "Correct. Accenture always leads with the business case in transformation selling. The $1.9B current annual cost of underperformance is the most powerful number in the room — it reframes the $296M investment from 'cost' to 'recovery of value that is already being lost.' This is how Accenture secures large transformation mandates: by showing the cost of inaction exceeds the cost of action.",
+          },
+          {
+            id: "c",
+            text: "Prioritize only the cheapest initiatives (click-and-collect at $28M) and see if revenue improves before committing to the full program",
+            correct: false,
+            explanation: "Click-and-collect without inventory accuracy (71%) will disappoint customers who arrive to pick up items that aren't actually available. Partial transformation without the foundational RFID investment risks wasting the $28M on a capability that doesn't work reliably.",
+          },
+          {
+            id: "d",
+            text: "The ship-from-store initiative should be deprioritized because it has the longest payback at 3.6 months",
+            correct: false,
+            explanation: "3.6 months payback for a $120M investment is exceptional by any standard. Deprioritizing the initiative with the highest absolute return ($420M + $45M = $465M) because it has a slightly longer payback than other initiatives is a misapplication of ROI analysis.",
+          },
+        ],
+      },
+      {
+        id: "g17q3",
+        stage: "Implementation Sequencing",
+        question: "The CTO says: 'We cannot do everything at once. In what order should we implement these capabilities?' What is the correct sequencing and why?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Start with mobile app redesign — it is customer-facing and will drive immediate digital revenue",
+            correct: false,
+            explanation: "Mobile app improvements without fixing fulfillment capability will improve conversion to a broken experience. Customers will order online via the new app and then be disappointed when items aren't available or delivery takes 5 days. Customer experience is determined by the worst step in the journey, not the best.",
+          },
+          {
+            id: "b",
+            text: "Sequence: (1) RFID inventory accuracy first — it is the operational foundation without which all other capabilities fail; (2) Click-and-collect simultaneously — fastest ROI and lowest complexity; (3) Same-day delivery once inventory is reliable; (4) Mobile app and personalization; (5) Ship-from-store last — highest complexity, requires accurate inventory as prerequisite",
+            correct: true,
+            explanation: "Correct. Accenture's transformation sequencing principle: fix the foundation before building on it. RFID inventory accuracy is the prerequisite for everything else — you cannot reliably offer same-day delivery or BOPIS with 71% inventory accuracy. Click-and-collect can run in parallel because it is simpler and the impact of inaccuracy is lower (customers arrive and find out item is unavailable — frustrating but recoverable). Mobile and personalization can be built while physical capability is being established. Ship-from-store requires near-perfect inventory accuracy and is therefore last.",
+          },
+          {
+            id: "c",
+            text: "Implement all five initiatives simultaneously to minimize total transformation timeline",
+            correct: false,
+            explanation: "Simultaneous implementation overloads organizational change management capacity and creates technical dependencies — you cannot complete ship-from-store before RFID is done. Parallel streams are appropriate where there are no dependencies, but sequencing is required where capabilities build on each other.",
+          },
+          {
+            id: "d",
+            text: "Start with ship-from-store since it has the highest revenue benefit",
+            correct: false,
+            explanation: "Ship-from-store requires 94%+ inventory accuracy to function reliably. Starting it at 71% accuracy would result in high error rates, customer disappointment, and wasted implementation investment.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 18: BCG — PHARMA MARKET ENTRY (MEDIUM)
+  // ─────────────────────────────────────────────
+  {
+    id: "g18",
+    title: "GeneriPharma: US Generic Drug Market Entry",
+    type: "market_entry",
+    difficulty: "intermediate",
+    firm: "bcg",
+    estimatedMinutes: 28,
+    overview: "A European pharmaceutical company wants to enter the US generic drug market. BCG has been engaged to assess market attractiveness and recommend an entry strategy.",
+    clientBackground: "GeneriPharma is a €2.8B European generic pharmaceutical company (headquartered in Germany) with operations in 18 European markets. They have never operated in the US. The US generic drug market is the world's largest at ~$100B. GeneriPharma's CEO believes there is significant opportunity as branded drugs go off-patent over the next 5 years.",
+    yourRole: "You are a BCG project leader on the pharma and healthcare practice. You have 6 weeks to deliver a go/no-go recommendation with an entry strategy.",
+    finalRecommendationPrompt: "Should GeneriPharma enter the US generic drug market, and if so, through what entry mode and targeting which therapeutic categories?",
+    idealRecommendation: "GeneriPharma should enter the US market through acquisition of a mid-sized US generic manufacturer, not organically. Organic entry would take 5-7 years (FDA ANDA filing backlog, manufacturing compliance, distribution setup) — too slow to capture the upcoming patent cliff opportunity. Recommended acquisition target: a US generic company with $300-500M revenue, existing FDA-approved manufacturing, established distribution relationships with major PBMs (Express Scripts, CVS Caremark), and exposure to the cardiovascular and CNS categories where 8 major drugs lose patent protection 2025-2028 ($45B+ combined revenue at risk). Target acquisition price: $800M-1.2B (2-3x revenue). Entry rationale: US generics market growing at 8% CAGR, GeneriPharma's European manufacturing expertise creates immediate synergies, and the patent cliff creates a 3-year window of above-average opportunity.",
+    keyTakeaways: [
+      "FDA regulatory approval (ANDA) is the primary barrier to entry in US generics — it creates 2-5 year lead times that favor incumbent players",
+      "PBM (pharmacy benefit manager) relationships are the distribution key to the US generic market",
+      "Patent cliffs create predictable, time-limited windows of above-normal profitability for first generic entrants",
+      "Build vs buy in regulated industries almost always favors acquisition because regulatory approvals cannot be accelerated with money",
+    ],
+    questions: [
+      {
+        id: "g18q1",
+        stage: "Market Attractiveness",
+        question: "Assess the attractiveness of the US generic drug market for GeneriPharma using the following data.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "US Generic Drug Market Overview",
+          data: `| Metric | Value | Notes |
+|---|---|---|
+| Total US generic drug market size | $98B | At manufacturer prices |
+| Market growth rate (CAGR) | 8% | Driven by patent expirations |
+| Number of generic manufacturers | ~300 | Highly fragmented |
+| Top 5 players' combined market share | 52% | Teva (18%), Mylan (12%), Sandoz (9%), Amneal (7%), Sun Pharma (6%) |
+| Average gross margin (generic drugs) | 42% | vs 85%+ for branded |
+| Regulatory barrier: ANDA approval time | 36-48 months | Average FDA review time |
+| Pending ANDAs in FDA queue | 4,200 | Growing backlog |
+| Generic penetration rate (by prescriptions) | 91% | 9% of Rx are branded |
+
+Patent cliff pipeline (drugs losing patent 2025-2028):
+| Drug | Category | 2024 Branded Revenue | First Generic Date |
+|---|---|---|---|
+| Humira biosimilars | Autoimmune | $21B | Already live |
+| Keytruda | Oncology | $25B | 2028 |
+| Eliquis | Cardiovascular | $12B | 2026 |
+| Jardiance | Diabetes | $8B | 2025 |
+| Ozempic | Diabetes/GLP-1 | $14B | 2031 |
+| Vyvanse | CNS/ADHD | $4.5B | 2023 (live) |
+| Entresto | Cardiovascular | $6B | 2025 |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The market is unattractive — 300 competitors and 52% concentration in the top 5 players leaves little room for a new entrant",
+            correct: false,
+            explanation: "300 manufacturers in a $98B market = $327M average revenue per player — this is actually a sign of a fragmented market with room for consolidation. Top 5 at 52% leaves 48% ($47B) in the hands of smaller players — significant opportunity for a well-capitalized entrant.",
+          },
+          {
+            id: "b",
+            text: "The market is attractive: $98B and growing at 8% CAGR, a major patent cliff creates time-limited opportunity, and GeneriPharma's European manufacturing expertise can be leveraged. The key risk is the 36-48 month ANDA approval timeline which constrains organic entry speed.",
+            correct: true,
+            explanation: "Correct. BCG's market attractiveness assessment: Size ($98B) and growth (8%) are both strong. Patent cliff is a near-term catalyst (Eliquis and Entresto both lose patent 2025-2026 = $18B combined revenue entering generic competition). The ANDA timeline is the structural challenge — any organic entry strategy must account for 3-4 year lead time. This is the key insight that drives the acquisition recommendation.",
+          },
+          {
+            id: "c",
+            text: "GeneriPharma should focus on branded drugs not generics — the 42% vs 85%+ margin differential makes generics unattractive",
+            correct: false,
+            explanation: "Branded pharma requires 10-15 year R&D timelines and billions in clinical trial investment. GeneriPharma's business model and capabilities are built around generics. Switching to branded is a complete strategic pivot, not a market entry decision.",
+          },
+          {
+            id: "d",
+            text: "The Ozempic patent cliff in 2031 should be the primary target — it is the largest revenue opportunity",
+            correct: false,
+            explanation: "2031 is 7 years away — planning around a 2031 patent expiry ignores the nearer-term opportunities (2025-2026 patent cliffs) that create the immediate window. Also, GLP-1 biosimilars will face significant manufacturing complexity that may not leverage GeneriPharma's existing capabilities.",
+          },
+        ],
+      },
+      {
+        id: "g18q2",
+        stage: "Entry Mode",
+        question: "GeneriPharma's CEO wants to enter organically. What is the case for and against organic entry vs acquisition?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "Entry Mode Comparison: Organic vs Acquisition",
+          data: `| Dimension | Organic Entry | Acquisition |
+|---|---|---|
+| Time to first US revenue | 4-6 years (ANDA + setup) | 6-12 months (post-close) |
+| Capital required | $150-250M over 5 years | $800M-1.2B upfront |
+| FDA manufacturing compliance | Start from scratch (2-3 years) | Acquired company already compliant |
+| Distribution (PBM relationships) | Build from zero (2-4 years) | Acquire existing relationships |
+| Ability to capture 2025-2026 patent cliff | No — too slow | Yes — if acquired in 2024 |
+| Risk level | High (unknown unknowns) | Medium (due diligence mitigates) |
+| Management complexity | Low initially | High (integration) |
+
+US generic market acquisition targets (illustrative):
+| Company | Revenue | EBITDA | Market Cap | Capabilities |
+|---|---|---|---|---|
+| MidWest Generics | $380M | $72M | $650M | Cardiovascular focus, 8 FDA-approved plants |
+| SunValley Pharma | $520M | $98M | $890M | CNS + diabetes, strong PBM relationships |
+| Atlantic Drug Co | $290M | $48M | $480M | Solid state, injectable expertise |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Organic entry is better — it is cheaper at $150-250M vs $800M-1.2B for an acquisition",
+            correct: false,
+            explanation: "Cost comparison without accounting for time value is incomplete. Organic entry takes 4-6 years to generate revenue vs acquisition that generates revenue in 6-12 months. The opportunity cost of missing the 2025-2026 patent cliff alone could be worth hundreds of millions. 'Cheaper' is not always 'better.'",
+          },
+          {
+            id: "b",
+            text: "Acquisition is clearly superior: it generates US revenue 4-5 years faster, captures the 2025-2026 patent cliff, acquires FDA manufacturing compliance and PBM distribution that cannot be accelerated with money, and the $800M-1.2B investment generates $380-520M in acquired revenue from Day 1",
+            correct: true,
+            explanation: "Correct. BCG's entry mode analysis in regulated industries almost always favors acquisition when: (1) regulatory timelines constrain organic speed; (2) there is a time-sensitive market window; (3) the acquirer lacks country-specific regulatory and distribution assets. All three conditions apply here. The 4-5 year head start on revenue generation, combined with the patent cliff window, makes acquisition clearly superior despite higher upfront cost.",
+          },
+          {
+            id: "c",
+            text: "A joint venture with an existing US generic manufacturer is the best middle path",
+            correct: false,
+            explanation: "JVs in pharma are complex to structure, create IP sharing concerns, and don't provide the full distribution and regulatory control that GeneriPharma needs. JVs also don't give the speed advantage of acquisition since negotiation and setup take 12-18 months anyway.",
+          },
+          {
+            id: "d",
+            text: "GeneriPharma should wait and see how the patent cliff plays out before committing",
+            correct: false,
+            explanation: "'Wait and see' means missing the patent cliff window. The best acquisition targets will be priced higher once the patent cliff opportunity is obvious to all buyers. First-mover advantage in M&A requires acting before the thesis is fully proven.",
+          },
+        ],
+      },
+      {
+        id: "g18q3",
+        stage: "Target Selection",
+        question: "Which acquisition target should GeneriPharma pursue, and what is your rationale?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Atlantic Drug Co ($290M revenue, $480M market cap) — cheapest acquisition price",
+            correct: false,
+            explanation: "Atlantic Drug focuses on solid state and injectable — not cardiovascular or CNS where the 2025-2026 patent cliff is concentrated. Cheapest acquisition price is not the right selection criterion — strategic fit is.",
+          },
+          {
+            id: "b",
+            text: "SunValley Pharma ($520M revenue, $890M market cap) — CNS + diabetes focus directly aligns with Vyvanse (already live), Jardiance (2025), and future GLP-1 generic opportunity. Strong PBM relationships accelerate commercial launch of acquired pipeline. Implied 9x EBITDA multiple ($890M/$98M) is reasonable for a platform asset.",
+            correct: true,
+            explanation: "Correct. BCG would select on strategic fit, not just price. SunValley's CNS + diabetes focus aligns directly with the near-term patent cliff (Jardiance 2025, Vyvanse already live) and the longer-term GLP-1 opportunity. Strong PBM relationships are the most valuable non-obvious asset — they determine whether GeneriPharma's new generic launches actually get formulary placement and volume. The 9x EBITDA multiple is standard for a high-quality US generic platform.",
+          },
+          {
+            id: "c",
+            text: "MidWest Generics ($380M revenue, $650M market cap) — cardiovascular focus captures Eliquis and Entresto patent cliffs in 2025-2026",
+            correct: false,
+            explanation: "MidWest Generics is a valid second choice — cardiovascular focus does align with the 2025-2026 patent cliff. However, SunValley is better because it covers both CNS and diabetes (broader pipeline), has $140M more revenue at only $240M more market cap (better multiple), and has stronger PBM relationships. Both are defensible but SunValley is the stronger recommendation.",
+          },
+          {
+            id: "d",
+            text: "GeneriPharma should acquire all three targets to maximize market coverage",
+            correct: false,
+            explanation: "Acquiring three companies simultaneously would cost $2B+, require integrating three separate organizations at once, and stretch management capacity dangerously thin. Platform building through serial acquisitions is a valid strategy — doing three at once is not.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 19: MCKINSEY — TECH COMPANY RESTRUCTURING (HARD)
+  // ─────────────────────────────────────────────
+  {
+    id: "g19",
+    title: "CloudCore: Post-Hypergrowth Restructuring",
+    type: "operations",
+    difficulty: "advanced",
+    firm: "mckinsey",
+    estimatedMinutes: 35,
+    overview: "A B2B SaaS company that grew 10x during the pandemic is now facing an existential cost crisis. McKinsey has been engaged to redesign the cost structure and restore sustainable growth.",
+    clientBackground: "CloudCore provides cloud infrastructure management software to mid-enterprise clients. Revenue grew from $180M (2019) to $1.8B (2022) — 10x in 3 years. Headcount grew from 800 to 6,200 employees. In 2023, revenue growth decelerated to 12% (from 65% in 2022) while costs continued growing at 28%. EBITDA has gone from +18% margin to -22% margin. The board has given the CEO 18 months to reach EBITDA breakeven or the company faces a down-round or sale.",
+    yourRole: "You are a McKinsey associate principal on the tech and digital practice. You have 8 weeks to deliver a restructuring plan. The CEO has been clear: this plan will determine whether the company survives.",
+    finalRecommendationPrompt: "What restructuring actions should CloudCore take to reach EBITDA breakeven within 18 months? Be specific about cost reduction targets, organizational changes, and the sequencing.",
+    idealRecommendation: "CloudCore must reduce annualized costs by $580M to reach breakeven. Three major actions: (1) Workforce reduction of 35% (2,170 employees) focused on: G&A functions at 2x industry ratios, duplicate engineering teams from acquisition integrations, and sales productivity outliers. Estimated savings: $320M. (2) Real estate rationalization — close 8 of 12 office locations, shift to hub-and-spoke model. Savings: $85M. (3) Vendor and infrastructure spend consolidation — cloud infrastructure costs grew 340% vs revenue growth of 900%, suggesting significant waste. Savings: $175M. Total: $580M, achieving breakeven at current revenue run-rate. Sequencing: workforce announcement in Week 2 (one-time, get it done), real estate over 6-12 months as leases expire, infrastructure over 6 months with engineering team. Critical risk: retention of top 10% of engineering talent who can re-accelerate growth after restructuring.",
+    keyTakeaways: [
+      "Hypergrowth companies systematically over-hire in G&A and middle management because revenue growth masks inefficiency",
+      "Workforce reductions must be done once and decisively — death by a thousand cuts destroys morale without fixing the economics",
+      "Infrastructure and vendor spend is often the least-examined cost bucket in tech companies and frequently has 30-50% waste",
+      "The goal of a restructuring is to create a sustainable business, not just to hit a near-term target — talent retention during restructuring is critical",
+    ],
+    questions: [
+      {
+        id: "g19q1",
+        stage: "Cost Diagnosis",
+        question: "CloudCore's cost structure has grown dramatically. Identify the primary areas of cost excess using the following data.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "CloudCore Cost Structure Analysis",
+          data: `| Cost Category | 2019 | 2022 | Growth | % of Revenue 2022 | Industry Benchmark |
+|---|---|---|---|---|---|
+| R&D (engineering) | $45M | $612M | 13.6x | 34% | 18-22% |
+| Sales & Marketing | $38M | $504M | 13.3x | 28% | 20-25% |
+| G&A | $22M | $414M | 18.8x | 23% | 8-12% |
+| Cloud infrastructure | $18M | $252M | 14x | 14% | 8-10% |
+| **Total Costs** | **$123M** | **$1,782M** | **14.5x** | **99%** | **65-70%** |
+| **Revenue** | **$180M** | **$1,800M** | **10x** | | |
+| **EBITDA margin** | **+18%** | **-1%** | | | |
+
+Headcount by function (current):
+| Function | 2019 | 2022 | Growth | Revenue/Employee |
+|---|---|---|---|---|
+| Engineering | 320 | 2,480 | 7.8x | $726K |
+| Sales & Marketing | 210 | 1,560 | 7.4x | $1,154K |
+| G&A (HR, Finance, Legal, IT, Facilities) | 180 | 1,480 | 8.2x | $1,216K |
+| Customer Success | 90 | 680 | 7.6x | $2,647K |
+| **Total** | **800** | **6,200** | **7.75x** | **$290K/employee** |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "R&D is the biggest problem — $612M is the largest absolute cost and engineering headcount grew 7.8x",
+            correct: false,
+            explanation: "R&D at 34% of revenue is high but not the most anomalous. Industry benchmark is 18-22%, so CloudCore is 12-16pp above benchmark. G&A at 23% vs 8-12% benchmark is 11-15pp above benchmark. More importantly, G&A grew 18.8x vs revenue growth of 10x — the fastest growing cost category by far.",
+          },
+          {
+            id: "b",
+            text: "G&A is the most structurally excessive at 23% of revenue vs 8-12% benchmark — it grew 18.8x while revenue grew only 10x. Cloud infrastructure at 14% vs 8-10% benchmark is the second largest excess. Together, G&A and infrastructure represent $540M in excess costs against benchmarks.",
+            correct: true,
+            explanation: "Correct. McKinsey's cost excess analysis: G&A at 23% vs 11% midpoint benchmark = 12pp excess × $1.8B revenue = $216M in excess G&A. Infrastructure at 14% vs 9% benchmark = 5pp × $1.8B = $90M excess. G&A grew 18.8x vs 10x revenue — the most disproportionate growth. The G&A problem is structural (hypergrowth always creates bloated support functions) and the infrastructure problem is technical (cloud costs often scale faster than revenue until optimized).",
+          },
+          {
+            id: "c",
+            text: "Sales & marketing at 28% is most concerning — the company is overspending on growth",
+            correct: false,
+            explanation: "S&M at 28% vs 20-25% benchmark is 3-8pp above benchmark — elevated but not catastrophic. S&M grew 13.3x which tracks revenue growth of 10x reasonably well. The bigger excesses are in G&A and infrastructure.",
+          },
+          {
+            id: "d",
+            text: "Revenue per employee of $290K is actually fine for a SaaS company",
+            correct: false,
+            explanation: "SaaS company revenue per employee benchmarks are typically $350-500K for mature companies. $290K is below benchmark and reflects the overhiring of the hypergrowth period. This is the aggregate signal — the function-level analysis tells you where to cut.",
+          },
+        ],
+      },
+      {
+        id: "g19q2",
+        stage: "Restructuring Sizing",
+        question: "The board wants CloudCore to reach EBITDA breakeven in 18 months. How much cost reduction is required and where should it come from?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "CloudCore Restructuring Target Analysis",
+          data: `| Metric | Current | Target (Breakeven) | Required Change |
+|---|---|---|---|
+| Revenue run-rate (2023E) | $2,016M | $2,016M | 0 (cost-driven fix) |
+| Total costs | $2,456M | $1,876M | -$580M (-24%) |
+| EBITDA | -$440M | $0 | +$440M |
+
+Cost reduction opportunity by category:
+| Category | Current | Benchmark % | Benchmark $ | Excess vs Benchmark |
+|---|---|---|---|---|
+| R&D | $612M | 20% | $403M | $209M |
+| Sales & Marketing | $504M | 22% | $443M | $61M |
+| G&A | $414M | 10% | $202M | $212M |
+| Cloud Infrastructure | $252M | 9% | $181M | $71M |
+| **Total excess vs benchmark** | | | | **$553M** |
+
+Additional context:
+- Average fully-loaded cost per employee: $185,000/year
+- Real estate cost per employee: $18,000/year
+- 12 global office locations, leases ranging from 6 months to 4 years remaining`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Cut $580M proportionally across all cost categories — 24% reduction everywhere",
+            correct: false,
+            explanation: "Proportional cuts ignore where the actual waste is. G&A and infrastructure are the most benchmarkably excessive. Cutting engineering and customer success proportionally would damage the core product and client relationships that drive revenue.",
+          },
+          {
+            id: "b",
+            text: "Target $580M in savings from three buckets: G&A to benchmark ($212M excess) + R&D to benchmark ($209M excess, targeting duplicate/redundant teams) + infrastructure optimization ($71M) + S&M efficiency ($61M) = $553M from benchmark gaps, plus additional $27M from real estate. The total exceeds the $580M target — apply savings asymmetrically, protecting customer success and frontline sales",
+            correct: true,
+            explanation: "Correct. McKinsey's restructuring math: total benchmark excess is $553M, which combined with real estate savings gets you to breakeven. The critical insight is to protect revenue-generating functions (frontline sales, customer success) while cutting support functions aggressively. G&A at $212M excess and R&D duplicate teams at $209M are the two primary levers. This analysis also gives the CEO the precise breakdown needed for board communication.",
+          },
+          {
+            id: "c",
+            text: "The restructuring is impossible — $580M in cuts from a $2.5B cost base would destroy the company",
+            correct: false,
+            explanation: "24% cost reduction is significant but achievable — many tech companies have executed larger restructurings. Meta cut costs by 22% in 2023. The fact that benchmark analysis shows $553M in identifiable excess makes this structurally possible, not destructive.",
+          },
+          {
+            id: "d",
+            text: "Focus only on infrastructure ($71M) since it doesn't involve layoffs",
+            correct: false,
+            explanation: "$71M in infrastructure savings closes only 12% of the $580M gap. A restructuring plan that avoids difficult decisions about workforce is not a restructuring plan — it is delay.",
+          },
+        ],
+      },
+      {
+        id: "g19q3",
+        stage: "Workforce Reduction Design",
+        question: "CloudCore must reduce headcount significantly. How should the workforce reduction be designed to minimize damage to the business?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "Workforce Reduction Options Analysis",
+          data: `| Approach | Headcount Reduction | Annual Savings | Business Risk | Implementation Time |
+|---|---|---|---|---|
+| A: Across-the-board 24% cut | 1,488 | $275M | High (damages best teams equally) | 4-6 weeks |
+| B: Function-targeted (G&A-heavy) | 1,850 (30%) | $342M | Medium | 6-8 weeks |
+| C: Productivity-ranked layoffs | 1,550 (25%) | $287M | Low-Medium | 8-12 weeks |
+| D: Combination B+C | 2,170 (35%) | $401M | Medium | 8-12 weeks |
+
+Top talent retention analysis:
+- Top 10% of engineers generate 3.2x average output (well-documented in tech)
+- Cost of replacing a senior engineer: $180-280K (recruiting + ramp time)
+- % of top engineers currently at risk of leaving (competitive offers): 34%
+- Retention package cost for top 500 engineers: $45M over 18 months
+
+Voluntary separation program:
+- 280 employees have expressed interest in voluntary departure
+- Average savings per voluntary departure: $195K/year
+- Cost: 6 months severance = $28M total`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Approach A (across-the-board 24%) — treats everyone equally and avoids the perception of unfairness",
+            correct: false,
+            explanation: "Across-the-board cuts are perceived as 'fair' but are operationally destructive — they eliminate your best engineers equally with your worst, damage high-performing teams as much as bloated ones, and signal that management cannot differentiate talent quality. McKinsey would never recommend this approach.",
+          },
+          {
+            id: "b",
+            text: "Approach D (combination B+C, 35% reduction) with a $45M top talent retention program: function-targeted cuts in G&A (getting to benchmark), plus productivity-ranked cuts in engineering and sales eliminating the lowest-output 15-20%. The retention program for top 500 engineers is critical — the $45M cost is offset by avoiding $90M+ in replacement costs if key engineers leave.",
+            correct: true,
+            explanation: "Correct. The McKinsey recommendation combines the two best elements: function targeting (removes the structural G&A excess) and productivity ranking (removes low performers while protecting high performers). The retention program is non-negotiable — the top 10% of engineers are the engine of the revenue recovery that makes the restructuring viable. Paying $45M to retain $401M in annual output is obvious math.",
+          },
+          {
+            id: "c",
+            text: "Start with the voluntary separation program and only do involuntary cuts if not enough people volunteer",
+            correct: false,
+            explanation: "Voluntary programs attract the wrong people — often your most employable (and therefore most valuable) employees take voluntary packages because they have the best outside options. Relying on voluntary departures creates adverse selection in the talent pool you retain.",
+          },
+          {
+            id: "d",
+            text: "Delay workforce reduction and focus on revenue acceleration to grow into the cost base",
+            correct: false,
+            explanation: "Revenue growth of 12% vs cost growth of 28% means the gap is widening, not closing. With 18 months to breakeven, waiting on revenue acceleration is not credible — the math requires cost action.",
+          },
+        ],
+      },
+      {
+        id: "g19q4",
+        stage: "Communication Strategy",
+        question: "The CEO asks: 'When and how do we communicate the restructuring?' What is the McKinsey recommendation on communication sequencing?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Announce everything simultaneously in a single all-hands meeting to be transparent",
+            correct: false,
+            explanation: "While transparency is important, announcing everything simultaneously without individual manager preparation creates chaos. Managers learn about their team's fate at the same moment as employees — removing their ability to support their people through the news.",
+          },
+          {
+            id: "b",
+            text: "Sequence: (1) Brief board and executive team 1 week in advance; (2) Train all people managers 48 hours in advance on their specific team changes and talking points; (3) Execute all individual notification conversations on the same morning (30-minute window); (4) CEO all-hands announcement same afternoon; (5) Public statement same day. Never let news leak before the simultaneous notification — every day of ambiguity is a day of distraction and attrition.",
+            correct: true,
+            explanation: "Correct. This is the McKinsey restructuring communication playbook. The 'single day execution' principle is critical — every day between when the decision is made and when it is communicated is a day of rumors, distraction, and preemptive departures of people who don't know if they are affected. Training managers 48 hours in advance (under strict NDA) ensures they can support their teams in the moment. Same-day public statement prevents media speculation.",
+          },
+          {
+            id: "c",
+            text: "Announce the restructuring plan first, then figure out exactly who is affected over 60 days",
+            correct: false,
+            explanation: "This is the worst possible approach — telling employees that significant cuts are coming but not who for 60 days creates 2 months of maximum uncertainty, distraction, and attrition of exactly the people you want to keep (who have the best outside options).",
+          },
+          {
+            id: "d",
+            text: "Do the workforce reduction in three tranches over 6 months to allow time for performance assessment",
+            correct: false,
+            explanation: "Multiple tranches extend the period of organizational uncertainty. The research on restructurings is clear: single-event restructurings recover faster than serial ones. 'Death by a thousand cuts' destroys morale without the certainty that enables recovery.",
+          },
+        ],
+      },
+      {
+        id: "g19q5",
+        stage: "Risk Management",
+        question: "What is the single biggest risk to the restructuring plan and how would you mitigate it?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Customer churn during the restructuring — enterprise clients may leave if they perceive CloudCore as unstable",
+            correct: false,
+            explanation: "Customer churn is a real risk but is manageable through proactive customer communication and ensuring customer success headcount is protected. It is not the most existential risk.",
+          },
+          {
+            id: "b",
+            text: "Exodus of top engineering talent who drive the product innovation that will reignite growth — if the restructuring is perceived as eliminating the best engineers as well as the worst, voluntary departures of key talent could make recovery impossible",
+            correct: true,
+            explanation: "Correct. McKinsey would identify talent risk as the primary restructuring risk. The $45M retention program is the mitigation. But beyond retention packages, the CEO must personally communicate to the top 200 engineers within 72 hours of the announcement — explaining the plan, why they are critical to the recovery, and what the path to growth looks like. Numbers alone don't retain top talent — narrative and leadership conviction do.",
+          },
+          {
+            id: "c",
+            text: "Board confidence — if the board loses faith in the CEO during the restructuring, it could accelerate a sale",
+            correct: false,
+            explanation: "Board management is important but is a governance risk, not the operational risk that could cause the restructuring to fail. A well-executed restructuring with clear metrics typically strengthens board confidence.",
+          },
+          {
+            id: "d",
+            text: "Media coverage — negative press about the layoffs could damage CloudCore's employer brand",
+            correct: false,
+            explanation: "Negative press about tech layoffs is now routine and rarely has lasting business impact. CloudCore's enterprise clients care about product quality and support, not press coverage of restructuring.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 20: BAIN — SPORTS FRANCHISE VALUATION (HARD)
+  // ─────────────────────────────────────────────
+  {
+    id: "g20",
+    title: "GoalKeeper Capital: Football Club Acquisition",
+    type: "merger_acquisition",
+    difficulty: "advanced",
+    firm: "bain",
+    estimatedMinutes: 35,
+    overview: "A US private equity firm wants to acquire a Premier League football club. Bain has been engaged to evaluate the investment thesis and recommend a valuation.",
+    clientBackground: "GoalKeeper Capital is a $12B AUM PE firm that has never invested in sports. They are evaluating an acquisition of Riverside FC, a mid-table Premier League club based in London. The seller (a Middle Eastern sovereign wealth fund) is asking £850M. Riverside FC generates £180M in annual revenue, has £290M in player squad value (net book value), and plays in a stadium with 42,000 capacity at 94% average occupancy.",
+    yourRole: "You are a Bain manager on the consumer and retail practice covering entertainment and sports. This is a novel asset class for your team — you need to advise on both valuation methodology and strategic value creation.",
+    finalRecommendationPrompt: "Should GoalKeeper Capital acquire Riverside FC at £850M? What is the investment thesis and what are the key value creation levers?",
+    idealRecommendation: "GoalKeeper Capital should acquire Riverside FC at £850M — it represents fair to slightly favorable value given the asset class characteristics. Valuation basis: 4.7x revenue is below the Premier League median of 5.5-6x; comparable transactions (Boehly/Chelsea at 7x, INEOS/Manchester United at 5.2x) support the £850M price. Investment thesis: (1) Revenue diversification — Riverside generates only 42% of revenue from commercial/sponsorship vs 65% for elite clubs, representing £85M+ in near-term commercial opportunity; (2) Stadium expansion — expanding from 42K to 55K capacity (precedent: Tottenham at 62K) would add £35M+ annually; (3) Women's team and US media rights growth — structural tailwinds in both. Key risks: relegation (would reduce value 40-50%), player cost inflation, and regulatory risk from Premier League financial rules. Recommend acquisition with board seat, focus on commercial development, and 7-10 year hold.",
+    keyTakeaways: [
+      "Sports franchises are valued on revenue multiples, not EBITDA, because player investment cycles create lumpy earnings",
+      "Relegation risk is the binary downside event that must be stress-tested in any football club investment",
+      "Commercial revenue (sponsorship, licensing, brand) is the primary value creation lever in sports — broadcasting rights are set by the league",
+      "Stadium capacity is a fixed asset constraint on matchday revenue that requires significant capex to expand",
+    ],
+    questions: [
+      {
+        id: "g20q1",
+        stage: "Asset Class Understanding",
+        question: "GoalKeeper Capital has never invested in sports. Before evaluating the specific deal, how should you frame the unique characteristics of sports franchise investing?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "Sports franchises are like any other consumer business — analyze revenue, costs, and EBITDA",
+            correct: false,
+            explanation: "This framing misses the unique characteristics of sports franchises: player cost structures create lumpy and hard-to-predict EBITDA; brand value is partly correlated with on-pitch performance (unpredictable); revenue streams have unique league-level distribution rules; and the asset is fundamentally a monopoly in its local market.",
+          },
+          {
+            id: "b",
+            text: "Sports franchises have four unique characteristics: (1) Revenue is partly performance-dependent (prize money, European competition); (2) The largest cost (player wages/amortization) is quasi-fixed and rises with competition; (3) Valuation is done on revenue multiples not EBITDA due to lumpy investment cycles; (4) Appreciation is structurally built in — the number of Premier League clubs is fixed at 20, creating artificial scarcity",
+            correct: true,
+            explanation: "Correct. Bain would educate the client on asset class characteristics before analysis. The fixed supply of Premier League clubs (20 forever) is the most important structural characteristic — it creates predictable long-term appreciation regardless of individual club performance. This is why Sheikh Mansour paid £210M for Manchester City in 2008 (now worth £4-5B). Revenue multiples (not EBITDA) are the right valuation methodology because player amortization makes EBITDA unreliable across different investment philosophies.",
+          },
+          {
+            id: "c",
+            text: "Sports franchises are speculative assets and not suitable for institutional PE investment",
+            correct: false,
+            explanation: "This is factually incorrect — KKR, ADIA, PIMCO, Ares, and many major institutional investors have acquired sports franchises in recent years. The asset class has become mainstream institutional.",
+          },
+          {
+            id: "d",
+            text: "The key metric for sports franchises is win-loss record — better performance = higher value",
+            correct: false,
+            explanation: "While performance affects some revenue streams, the most successful sports investors (Manchester City, PSG) have created value through commercial development and stadium investment, not purely by winning. The asset value is primarily driven by commercial revenue, brand, and stadium — not league position alone.",
+          },
+        ],
+      },
+      {
+        id: "g20q2",
+        stage: "Valuation",
+        question: "Is £850M a fair price for Riverside FC? Analyze the comparable transactions and financial data.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "Riverside FC Valuation Analysis",
+          data: `| Riverside FC Financial Data | Value |
+|---|---|
+| Annual revenue | £180M |
+| Revenue breakdown: Broadcasting | £72M (40%) |
+| Revenue breakdown: Matchday | £54M (30%) |
+| Revenue breakdown: Commercial | £54M (30%) |
+| EBITDA (before player amortization) | £22M |
+| Player squad net book value | £290M |
+| Stadium value (freehold) | £180M |
+| Annual wage bill | £145M |
+| Wage-to-revenue ratio | 81% |
+| Net debt | £85M |
+| Implied enterprise value (£850M offer) | £935M (£850M equity + £85M debt) |
+| EV/Revenue multiple | 5.2x |
+
+Comparable Premier League Transactions:
+| Club | Year | EV | Revenue at Time | EV/Revenue |
+|---|---|---|---|---|
+| Chelsea FC | 2022 | £4.25B | £481M | 8.8x |
+| Manchester United | 2023 | £5.0B | £648M | 7.7x |
+| Liverpool (partial) | 2023 | £2.8B (implied) | £593M | 4.7x |
+| Everton | 2023 | £0.5B | £171M | 2.9x |
+| Bournemouth | 2022 | £0.15B | £142M | 1.1x |
+| **Median (excl outliers)** | | | | **5.5x** |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "£850M is overpriced — Riverside FC should be valued at Everton's multiple (2.9x) = £522M",
+            correct: false,
+            explanation: "Everton's 2.9x multiple reflects a club in significant financial distress with a points deduction penalty — not comparable to a stable mid-table club. Using the lowest comparable to justify a lower price ignores the selection of the most relevant comparable.",
+          },
+          {
+            id: "b",
+            text: "£850M (5.2x EV/Revenue) is fair to slightly favorable. It is below the median comparable at 5.5x. The £935M EV vs £470M in tangible assets (£290M squad + £180M stadium) implies £465M in intangible brand/franchise value — reasonable for a Premier League club. The seller's price is not a steal but is not aggressive.",
+            correct: true,
+            explanation: "Correct. Bain's valuation conclusion: 5.2x is below the 5.5x median, so the price is fair or slightly below market. The tangible asset backing (£470M) provides some downside protection — in a distressed sale, hard assets set a floor. The intangible premium (£465M) is within the range of Premier League clubs of Riverside's tier. The recommendation is that the price is acceptable and the debate should shift to value creation potential.",
+          },
+          {
+            id: "c",
+            text: "£850M is a bargain — Chelsea was valued at 8.8x and Riverside should be worth more",
+            correct: false,
+            explanation: "Chelsea and Manchester United are globally recognized brands in the top 5 clubs by revenue and fanbase — they deserve premium multiples. Riverside FC at £180M revenue should not be valued at Chelsea multiples. Comps must be adjusted for club quality tier.",
+          },
+          {
+            id: "d",
+            text: "The wage-to-revenue ratio of 81% makes the investment unviable regardless of price",
+            correct: false,
+            explanation: "81% wage-to-revenue ratio is high (Premier League average ~60%) but not unusual for a mid-table club competing above its natural financial level. This is a value creation opportunity (reducing to 70% would add £18M in annual EBITDA) not a disqualifying feature.",
+          },
+        ],
+      },
+      {
+        id: "g20q3",
+        stage: "Value Creation",
+        question: "GoalKeeper Capital wants to understand the value creation opportunity beyond the base case. Which commercial development opportunity is highest priority?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "Riverside FC Value Creation Opportunities",
+          data: `| Initiative | Investment | Annual Revenue Uplift | Implementation | Precedent |
+|---|---|---|---|---|
+| Commercial/sponsorship development | £12M | £45-65M | 2-3 years | Arsenal (doubled sponsorship 2015-2020) |
+| Stadium expansion (42K → 55K) | £280M | £35-45M | 4-5 years | Tottenham (new stadium £1B, +£80M/year) |
+| Women's team development | £8M/year | £4-8M + brand value | 3-5 years | Chelsea Women (now top-3 revenue globally) |
+| US media rights and brand investment | £15M | £12-20M | 2-3 years | Wrexham (Ryan Reynolds, 3x revenue) |
+| Youth academy monetization | £5M | £20-40M (player sales) | 5-10 years | Southampton (selling £400M+ in players) |
+| Esports and gaming | £3M | £5-8M | 1-2 years | Manchester City (various gaming deals) |
+
+Current commercial revenue benchmarking:
+| Club Tier | Average Commercial Revenue | As % of Total | Riverside Gap |
+|---|---|---|---|
+| Top 6 clubs | £280M | 65% | N/A |
+| Mid-table (Riverside's tier) | £85M | 47% | £31M gap |
+| Riverside FC actual | £54M | 30% | £31M below mid-table average |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Stadium expansion — the £35-45M annual revenue uplift is the largest single initiative",
+            correct: false,
+            explanation: "Stadium expansion requires £280M investment over 4-5 years — a massive capital commitment on top of the £850M acquisition price. This is a long-term value creation lever, not the first priority. Also, the 4-5 year timeline means it does not contribute to early-period returns.",
+          },
+          {
+            id: "b",
+            text: "Commercial/sponsorship development is highest priority: it costs only £12M, generates £45-65M annually (within 2-3 years), and Riverside is 30pp below comparable clubs on commercial revenue share (30% vs 47% mid-table average). This single initiative could add £300-400M to club valuation at a 5-6x revenue multiple.",
+            correct: true,
+            explanation: "Correct. Bain would prioritize the initiative with the best return on invested capital and fastest time to impact. Commercial development: £12M investment for £55M mid-point revenue = 4.6x revenue multiple uplift. At 5.5x EV/Revenue, £55M in new commercial revenue = £302M in enterprise value creation against £12M investment = 25x ROIC. The gap analysis (Riverside at 30% commercial vs 47% mid-table average) identifies a concrete, benchmarkable opportunity — not aspirational.",
+          },
+          {
+            id: "c",
+            text: "US media rights — the Wrexham precedent shows massive brand value creation potential",
+            correct: false,
+            explanation: "Wrexham's success (Ryan Reynolds personal brand + TV documentary) is not replicable for most clubs. The £12-20M annual revenue uplift from US media investment is real but smaller than commercial sponsorship opportunity.",
+          },
+          {
+            id: "d",
+            text: "Youth academy — £400M in potential player sales over 10 years is the highest total return",
+            correct: false,
+            explanation: "Youth academy returns are real but 5-10 year timelines with highly uncertain outcomes (player development is inherently speculative) make this a poor first priority for a PE investor with a 7-10 year hold period.",
+          },
+        ],
+      },
+      {
+        id: "g20q4",
+        stage: "Downside Risk",
+        question: "The board asks: 'What happens to our investment if Riverside gets relegated to the Championship?' Quantify the downside.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "Relegation Impact Analysis",
+          data: `| Revenue Stream | Premier League | Championship (Year 1) | Change |
+|---|---|---|---|
+| Broadcasting (PL distribution) | £72M | £8M | -£64M |
+| Broadcasting (parachute payment) | £0 | £44M | +£44M |
+| Matchday (occupancy assumption) | £54M | £41M | -£13M |
+| Commercial (sponsor step-down clauses) | £54M | £35M | -£19M |
+| **Total Revenue** | **£180M** | **£128M** | **-£52M (-29%)** |
+| **EBITDA impact (before player cost adjustment)** | **£22M** | **-£28M** | **-£50M** |
+
+Comparable relegated club valuations:
+| Club | Value pre-relegation | Value post-relegation | Change |
+|---|---|---|---|
+| Sheffield United | £155M | £70M | -55% |
+| Burnley | £180M | £90M | -50% |
+| Leicester City | £520M | £280M | -46% |
+| **Average** | | | **-50%** |
+
+Premier League relegation statistics:
+- Average number of clubs relegated per season: 3 (out of 20)
+- Riverside FC current odds of relegation (bookmaker consensus): 18%
+- Probability of consecutive seasons avoiding relegation (5 years): 42%`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Relegation risk is manageable — parachute payments protect revenue in the short term",
+            correct: false,
+            explanation: "Parachute payments recover £44M of the £64M broadcasting loss — not full protection. The net revenue decline is still £52M (-29%). More importantly, sponsor step-down clauses (-£19M) and matchday decline show the parachute only partially cushions the blow.",
+          },
+          {
+            id: "b",
+            text: "Relegation would reduce club value approximately 46-50% (to £425-459M) based on comparable transactions — representing a £391-425M loss on the £850M acquisition price. With 18% annual relegation risk, the probability of at least one relegation event over a 7-year hold is 71%. This is the most significant investment risk and must be mitigated through squad investment strategy and manager selection.",
+            correct: true,
+            explanation: "Correct. The probability math: P(relegated at least once in 7 years) = 1 - (1-0.18)^7 = 1 - (0.82)^7 = 1 - 0.24 = 76%. This is not a tail risk — it is a likely event over a 7-year hold. Bain would present this starkly to the board and recommend: (1) ensuring the acquisition price reflects relegation risk; (2) structuring investment tranches with squad investment tied to league position; (3) monitoring relegation odds as an early warning system.",
+          },
+          {
+            id: "c",
+            text: "Relegation risk is priced in — that's why Riverside trades at a discount to top-6 clubs",
+            correct: false,
+            explanation: "Relegation risk explains part of the discount but the full financial impact ($425M+ potential loss) must be explicitly modeled and presented to the board, not dismissed as 'already priced in.'",
+          },
+          {
+            id: "d",
+            text: "GoalKeeper Capital should invest in better players to eliminate relegation risk",
+            correct: false,
+            explanation: "Player investment can reduce relegation risk but cannot eliminate it. More importantly, increased player spend raises the wage bill (already at 81% of revenue) and directly reduces EBITDA. The relationship between spend and performance in football is positive but highly uncertain.",
+          },
+        ],
+      },
+      {
+        id: "g20q5",
+        stage: "Final Recommendation",
+        question: "GoalKeeper Capital's IC asks for a final go/no-go with expected returns. What is your recommendation?",
+        type: "multiple_choice",
+        options: [
+          {
+            id: "a",
+            text: "No-go — 76% probability of at least one relegation event makes this too risky for institutional PE",
+            correct: false,
+            explanation: "The binary risk framing ignores: (1) parachute payments substantially cushion relegation revenue impact; (2) clubs typically return to the Premier League within 2-3 years; (3) the 7-10 year hold means the base value trajectory still points up due to structural scarcity and commercial development. A 76% probability of a temporary setback is not the same as a 76% probability of permanent value loss.",
+          },
+          {
+            id: "b",
+            text: "Go — at £850M (5.2x revenue, below 5.5x median), with £45-65M commercial revenue upside (valued at £247-357M at 5.5x), and structural appreciation driven by fixed supply of Premier League licenses. Base case IRR: 18-22% over 7 years. Bear case (one relegation, 2-year Championship): IRR 8-11%. Both scenarios clear GoalKeeper Capital's 8% hurdle rate.",
+            correct: true,
+            explanation: "Correct. Bain's final recommendation frames the return range. Base case: £850M acquisition, commercial development adds £300M in value, structural appreciation adds £400M (22% revenue growth at 5.5x multiple), exit at £1.55B = 8.6% annual return plus dividends. With financial leverage, IRR approaches 18-22%. Bear case: relegation depresses value to £430M for 2 years then recovers, dragging IRR to 8-11% — still above hurdle. The recommendation is go, with the risk mitigation being the commercial development strategy that reduces dependence on on-pitch performance.",
+          },
+          {
+            id: "c",
+            text: "Go — but only if GoalKeeper Capital can negotiate the price down to £650M",
+            correct: false,
+            explanation: "£650M (3.6x revenue) would be a 35% discount to the asking price and well below market comparables. The seller (a sovereign wealth fund) is unlikely to accept a 35% haircut. A recommendation contingent on an unrealistic price negotiation is not actionable.",
+          },
+          {
+            id: "d",
+            text: "Pass on Riverside FC and evaluate acquiring a Championship club instead for lower entry price",
+            correct: false,
+            explanation: "Championship clubs lack the Premier League broadcasting rights that make football investment attractive — they earn £8M vs £72M in broadcasting. A Championship club at lower price is not equivalent to a Premier League club with structural broadcasting revenue.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─────────────────────────────────────────────
+  // CASE 21: LEK — BIOTECH INVESTMENT THESIS (HARD)
+  // ─────────────────────────────────────────────
+  {
+    id: "g21",
+    title: "NovaBio: Pre-IPO Investment Assessment",
+    type: "merger_acquisition",
+    difficulty: "advanced",
+    firm: "lek",
+    estimatedMinutes: 35,
+    overview: "A healthcare-focused PE firm wants L.E.K. to evaluate a $450M pre-IPO investment in NovaBio, a clinical-stage biotech with a breakthrough oncology platform.",
+    clientBackground: "NovaBio is a 7-year-old Cambridge, MA biotech with a proprietary CAR-T cell therapy platform targeting solid tumors — historically the hardest cancer type for cell therapy to address. Their lead program (NB-101) is in Phase 2 clinical trials with breakthrough therapy designation from the FDA. Phase 1 data showed 62% objective response rate (vs 15% for standard of care) in advanced pancreatic cancer. They have $180M in cash (18-month runway) and are seeking $450M to fund Phase 3 trials and pre-commercialization activities. The PE firm would receive a 25% ownership stake at a $1.8B pre-money valuation.",
+    yourRole: "You are an L.E.K. manager on the healthcare and life sciences practice. You have 4 weeks to deliver a go/no-go investment recommendation with full financial analysis to the PE firm's IC.",
+    finalRecommendationPrompt: "Should the PE firm invest $450M in NovaBio at a $1.8B valuation? What is the risk-adjusted return analysis?",
+    idealRecommendation: "Invest with conditions. The scientific opportunity is exceptional — 62% ORR in solid tumor CAR-T is genuinely breakthrough and the pancreatic cancer market ($4.2B potential peak sales) at a 15% royalty implies significant value if Phase 3 succeeds. Risk-adjusted valuation using probability-weighted outcomes: 45% probability of Phase 3 success × $8.5B peak value = $3.8B expected value vs $1.8B entry = 2.1x expected return. IRR: 25-32% over 5-7 years to exit (IPO or acquisition). Conditions: (1) Independent scientific advisory board review of Phase 2 data; (2) Manufacturing partnership secured before investment close (NovaBio lacks commercial manufacturing capability); (3) CMO hire committed. Key risks: Phase 3 failure (most likely 55% scenario), manufacturing scale-up, and competitive risk from Novartis/BMS who have dominant CAR-T platforms.",
+    keyTakeaways: [
+      "Biotech investing requires probability-weighted return analysis — the binary nature of clinical outcomes makes simple DCF inappropriate",
+      "Phase 2 to Phase 3 success rates in oncology average 40-55% — Phase 3 failure is the most likely single outcome",
+      "Manufacturing capability is often the underappreciated constraint for cell therapy companies — CAR-T manufacturing is extraordinarily complex",
+      "Breakthrough therapy designation from FDA is a meaningful positive signal but does not guarantee approval",
+    ],
+    questions: [
+      {
+        id: "g21q1",
+        stage: "Scientific Assessment",
+        question: "NovaBio's Phase 1 data shows 62% objective response rate in pancreatic cancer vs 15% for standard of care. How do you interpret this for investment purposes?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "NovaBio Clinical Data vs Benchmarks",
+          data: `| Metric | NovaBio NB-101 | Standard of Care | Best-in-Class CAR-T (liquid tumors) |
+|---|---|---|---|
+| Objective Response Rate (ORR) | 62% | 15% | 82% |
+| Complete Response Rate | 28% | 3% | 44% |
+| Median Duration of Response | 8.2 months | 3.4 months | 14.6 months |
+| 12-month survival | 52% | 24% | 68% |
+| Patient population (Phase 1) | n=29 | Historical | Historical |
+| Adverse events (Grade 3-4) | 31% | 22% | 48% |
+| FDA Breakthrough Therapy Designation | Yes | N/A | N/A |
+
+Clinical context:
+- Pancreatic cancer 5-year survival rate: 12% (one of lowest of any cancer)
+- Current standard of care: Gemcitabine + nab-paclitaxel (approved 2013)
+- No new standard of care approved since 2013
+- CAR-T has never achieved significant response rates in solid tumors (prior attempts: <20% ORR)
+- Phase 2 currently enrolling (n=120, results expected 18 months)
+- Phase 3 would require n=400+, estimated cost $280-320M`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The 62% ORR is definitive proof of efficacy — this is a slam dunk investment",
+            correct: false,
+            explanation: "n=29 in Phase 1 is a very small sample size. Phase 1 is designed to assess safety and dosing, not efficacy. 62% ORR is highly promising but Phase 1 results have a well-documented tendency to look better than Phase 3 results due to: patient selection bias, small sample size, and optimal dosing conditions that may not replicate at scale.",
+          },
+          {
+            id: "b",
+            text: "The 62% ORR is scientifically exceptional (4x standard of care) and breakthrough therapy designation confirms FDA's view of the data, but n=29 is insufficient to draw definitive conclusions. The investment case requires Phase 2 data (n=120) before high conviction is possible. The current data justifies a significant but risk-adjusted investment.",
+            correct: true,
+            explanation: "Correct. L.E.K. would present a balanced scientific assessment. The data is genuinely impressive — 62% ORR in solid tumor CAR-T would be the first significant achievement in a space where multiple large companies have failed. FDA breakthrough designation confirms the agency sees the same signal. However, Phase 1 n=29 with 18 months median follow-up is early. The intellectually honest position: very promising, but the Phase 2 result (18 months away) is the real valuation catalyst. Investment now is buying optionality on Phase 2 success.",
+          },
+          {
+            id: "c",
+            text: "The 31% Grade 3-4 adverse event rate is too high — the safety profile is unacceptable",
+            correct: false,
+            explanation: "31% Grade 3-4 adverse events is actually better than best-in-class CAR-T (48%) and is within the range expected for aggressive oncology treatments in end-stage cancer patients. Safety must be contextualized by disease severity — in stage 4 pancreatic cancer with 24% 12-month survival, higher toxicity thresholds are acceptable.",
+          },
+          {
+            id: "d",
+            text: "Waiting for Phase 2 results before investing is the right approach",
+            correct: false,
+            explanation: "Waiting for Phase 2 results means investing after the major catalyst — the valuation will likely be $4-6B post-Phase 2 success vs $1.8B now. Pre-Phase 2 is the value creation window. The question is whether the risk-adjusted return at $1.8B is sufficient, not whether to wait.",
+          },
+        ],
+      },
+      {
+        id: "g21q2",
+        stage: "Market Sizing",
+        question: "If NB-101 is approved, what is the peak sales potential? Analyze the following market data.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "NB-101 Commercial Opportunity Analysis",
+          data: `| Market Parameter | Value | Notes |
+|---|---|---|
+| Annual pancreatic cancer diagnoses (US) | 64,000 | Stage 3-4 (addressable): 48,000 |
+| % eligible for CAR-T therapy | 35% | Based on biomarker + performance status criteria |
+| Treatment penetration (year 5 after launch) | 45% | Based on Kymriah/Yescarta penetration curves |
+| Expected list price per treatment course | $450,000 | Based on approved CAR-T therapies |
+| Net price after rebates/discounts | $320,000 | Typical 25-30% discount to list |
+| Peak year sales (US only) | ~$2.2B | 48K × 35% eligible × 45% penetration × $320K |
+| Ex-US market (EU + Japan, Year 5) | ~$1.4B | 60% of US market (regulatory lag) |
+| **Peak global sales potential** | **~$3.6B** | |
+| Probability of Phase 3 success (oncology benchmark) | 45% | Historical P2→P3 success rate in oncology |
+| Probability of FDA approval given P3 success | 85% | With breakthrough designation |
+| Combined probability of approval | 38% | 45% × 85% |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Peak sales of $3.6B makes this a blockbuster drug — invest immediately at any valuation",
+            correct: false,
+            explanation: "Peak sales potential must be probability-weighted. $3.6B peak sales × 38% probability of approval = $1.37B risk-adjusted peak sales. This is the number that should anchor valuation, not the undiscounted peak.",
+          },
+          {
+            id: "b",
+            text: "Risk-adjusted peak sales: $3.6B × 38% probability of approval = $1.37B expected peak sales. At a 4x peak sales multiple (standard pharma valuation), risk-adjusted value = $5.5B. Entry at $1.8B provides 3x upside in the success scenario, but the 62% failure probability means expected return analysis is essential.",
+            correct: true,
+            explanation: "Correct. L.E.K. uses probability-weighted valuation for biotech. The $3.6B peak sales is the success scenario value — you must weight it by the 38% probability. The 4x peak sales multiple is standard for oncology assets. $3.6B × 4x = $14.4B in the success scenario × 38% probability = $5.5B expected value vs $1.8B entry = 3.1x expected multiple. This is the core investment math.",
+          },
+          {
+            id: "c",
+            text: "The $450K list price is too high — payers will not reimburse this for a cancer with poor prognosis",
+            correct: false,
+            explanation: "Kymriah is priced at $475K and Yescarta at $373K — CAR-T pricing precedent supports $450K for a solid tumor indication. Pancreatic cancer prognosis makes payers MORE likely to approve expensive treatments (no alternatives), not less. FDA breakthrough designation also creates pricing leverage.",
+          },
+          {
+            id: "d",
+            text: "NovaBio should license the technology to a large pharma company rather than developing it independently",
+            correct: false,
+            explanation: "Licensing is a strategic option for NovaBio's management to consider, but from the PE investor perspective, licensing would significantly reduce the value creation opportunity. A Phase 3-ready asset with breakthrough designation would license for $200-400M — far below the Phase 3 + commercialization equity value.",
+          },
+        ],
+      },
+      {
+        id: "g21q3",
+        stage: "Manufacturing Risk",
+        question: "The IC asks: 'What do we know about NovaBio's manufacturing capability?' This question reveals a critical gap. What is the manufacturing risk in CAR-T?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "CAR-T Manufacturing Reality Check",
+          data: `| Manufacturing Parameter | NovaBio Current Status | Commercial Requirement | Gap |
+|---|---|---|---|
+| Manufacturing facility | None (contract with academic center) | FDA-approved GMP facility | Critical |
+| Batch success rate | 78% | 95%+ | Significant |
+| Vein-to-vein time (patient to treatment) | 28 days | Target: 14-18 days | Significant |
+| Cost per treatment (manufacturing only) | $180,000 | Target: $80,000 | Major |
+| Scalable to 1,000 patients/year | No | Yes (need 16,000+/year at peak) | Critical |
+| CDMOs capable of CAR-T at scale | 3 globally | N/A | Constrained supply |
+
+Comparator: Novartis Kymriah launch (2017)
+- Manufacturing failures delayed treatment for 40% of patients in first year
+- Required 18-month manufacturing remediation post-approval
+- Cost Novartis $500M+ in manufacturing investment beyond initial estimates
+- Almost caused FDA to withdraw approval in 2018`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Manufacturing risk is a technical problem the company can solve with money",
+            correct: false,
+            explanation: "The Kymriah precedent shows manufacturing is not just a money problem — it is a 2-3 year expertise and infrastructure problem. The three global CDMOs capable of CAR-T at scale are a binding constraint. Even with unlimited capital, you cannot scale CAR-T manufacturing faster than the expert infrastructure allows.",
+          },
+          {
+            id: "b",
+            text: "CAR-T manufacturing is the most underappreciated risk in this investment. Current cost ($180K/treatment manufacturing cost) must fall to $80K to be commercially viable at $320K net price. Kymriah's manufacturing failures post-approval nearly destroyed the Novartis program. NovaBio must secure a CDMO partnership with one of the 3 global-scale manufacturers BEFORE the investment closes — this should be a hard condition of investment.",
+            correct: true,
+            explanation: "Correct. L.E.K.'s manufacturing risk analysis: at $180K manufacturing cost vs $320K net price, gross margin is 44% — barely above minimum viability. The $80K target requires a 56% cost reduction that requires scale (16,000 patients/year) and process optimization that takes years. More critically, the Kymriah precedent shows this is an existential risk — FDA nearly withdrew approval due to manufacturing failures. The hard condition (CDMO partnership before close) is the right mitigation.",
+          },
+          {
+            id: "c",
+            text: "NovaBio should build its own manufacturing facility — outsourcing is too risky",
+            correct: false,
+            explanation: "Building proprietary CAR-T manufacturing from scratch would cost $300-500M and take 3-4 years — consuming most of the investment capital and delaying commercialization by years. Partnering with an established CDMO is faster and requires less capital.",
+          },
+          {
+            id: "d",
+            text: "Manufacturing is a commercialization problem — it shouldn't affect the Phase 3 investment decision",
+            correct: false,
+            explanation: "Manufacturing is a Phase 3 problem too — the FDA requires that commercial manufacturing processes are established and validated as part of the BLA (Biologics License Application). A company that reaches Phase 3 approval without commercial manufacturing will face a 2-3 year delay to approval, significantly reducing the investment value.",
+          },
+        ],
+      },
+      {
+        id: "g21q4",
+        stage: "Competitive Landscape",
+        question: "NovaBio claims they have the first solid tumor CAR-T. How do you assess the competitive threat from Novartis, BMS, and other large pharma companies?",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "Competitive Landscape: Solid Tumor CAR-T",
+          data: `| Company | Program | Target | Stage | ORR (Best Result) | Notes |
+|---|---|---|---|---|---|
+| NovaBio | NB-101 | MSLN (solid tumors) | Phase 2 | 62% | Pancreatic cancer, n=29 |
+| Novartis | CART-GPC3 | GPC3 (liver cancer) | Phase 2 | 24% | Different indication |
+| BMS/Celgene | BMS-986340 | EGFR (NSCLC) | Phase 1 | 18% | Lung cancer |
+| Arcus Biosciences | AB-101 | MSLN | Phase 1 | 31% | Same target as NovaBio |
+| Tmunity/Penn | TMU-101 | PSCA | Phase 1 | 15% | Prostate cancer |
+| Legend Biotech | LB-CAR | CLDN18.2 | Phase 2 | 41% | Gastric cancer |
+
+NovaBio's competitive position:
+- First solid tumor CAR-T to show >60% ORR
+- Patent protection: Core CAR construct patented until 2038
+- 3 published peer-reviewed papers confirming mechanism
+- Arcus targeting same antigen (MSLN) — potential head-to-head competition
+- Large pharma have failed solid tumor CAR-T 8 times in last 5 years
+- If NovaBio succeeds, expect large pharma to acquire rather than compete`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Arcus Biosciences targeting the same antigen (MSLN) is a direct competitive threat that invalidates the investment",
+            correct: false,
+            explanation: "Arcus's 31% ORR vs NovaBio's 62% ORR suggests NovaBio has a superior product even targeting the same antigen. In oncology, efficacy differences of this magnitude typically result in market leadership for the better drug. Different technologies targeting the same antigen is competitive, not fatal.",
+          },
+          {
+            id: "b",
+            text: "NovaBio's competitive moat is strong: 62% ORR is 2x Arcus (same target), core patents run to 2038, large pharma has failed in solid tumor CAR-T 8 times suggesting NovaBio has a genuinely differentiated approach. If Phase 3 succeeds, the most likely outcome is acquisition by large pharma (Novartis, BMS, Pfizer) at 5-8x peak sales multiple — making this a strategic acquisition target, not a standalone commercial company.",
+            correct: true,
+            explanation: "Correct. L.E.K. would identify acquisition as the most probable exit pathway. Large pharma companies that have failed in solid tumor CAR-T (Novartis, BMS) would pay premium multiples for a Phase 3-ready validated program. Precedent: Novartis paid $8.7B for AveXis (Phase 3 gene therapy). BMS paid $74B for Celgene (CAR-T portfolio). At 5-8x peak sales ($3.6B), acquisition value range would be $18-29B — well above the $1.8B entry. The patent protection to 2038 supports this thesis.",
+          },
+          {
+            id: "c",
+            text: "Large pharma's 8 prior failures in solid tumor CAR-T suggest this approach doesn't work — NovaBio may be misleading investors",
+            correct: false,
+            explanation: "Prior failures validate why NovaBio's result is exciting, not suspicious. Each prior attempt used different targets, constructs, and patient populations. NovaBio's 62% ORR with FDA breakthrough designation has been independently reviewed — accusing them of fraud without evidence is not analytical.",
+          },
+          {
+            id: "d",
+            text: "NovaBio should partner with Novartis immediately to accelerate commercialization",
+            correct: false,
+            explanation: "Partnering with Novartis at Phase 2 would severely cap the equity upside for investors. The entire investment thesis is based on maintaining independence through Phase 3 and exiting via acquisition or IPO at a much higher valuation. Early partnership would undermine the investment case.",
+          },
+        ],
+      },
+      {
+        id: "g21q5",
+        stage: "Investment Decision",
+        question: "Build the probability-weighted return analysis and give a final recommendation.",
+        type: "exhibit",
+        exhibit: {
+          type: "table",
+          title: "NovaBio Investment Scenario Analysis",
+          data: `| Scenario | Probability | Description | Exit Value | PE Firm Value (25%) |
+|---|---|---|---|---|
+| Phase 3 success + FDA approval + strategic acquisition | 32% | Acquired by large pharma at 6x peak sales ($3.6B) | $21.6B | $5.4B |
+| Phase 3 success + FDA approval + IPO | 13% | IPO at 4x peak sales, PE sells over 3 years | $14.4B | $3.6B |
+| Phase 2 positive → large pharma partnership/acquisition | 20% | Phase 2 data triggers acquisition pre-Phase 3 | $4.5B | $1.1B |
+| Phase 3 failure → asset sale/licensing | 25% | Technology licensed to multiple companies | $0.6B | $150M |
+| Complete failure (no salvage value) | 10% | Phase 3 fails, no licensable IP | $0 | $0 |
+
+Investment: $450M for 25% stake at $1.8B pre-money ($2.25B post-money)
+Expected PE firm value: probability-weighted sum of scenarios above`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The 35% probability of failure scenarios (complete failure + asset sale) makes this uninvestable",
+            correct: false,
+            explanation: "35% probability of adverse outcomes is normal for clinical-stage biotech. The expected value calculation is what matters, not binary outcome framing. You must calculate the probability-weighted return to assess the investment.",
+          },
+          {
+            id: "b",
+            text: "Expected value: (32% × $5.4B) + (13% × $3.6B) + (20% × $1.1B) + (25% × $150M) + (10% × $0) = $1,728M + $468M + $220M + $37.5M + $0 = $2.45B expected return on $450M investment = 5.5x expected MOIC. IRR depends on exit timing but at 5-7 years = 28-40% IRR. Recommend investment with manufacturing partnership condition.",
+            correct: true,
+            explanation: "Correct. L.E.K.'s probability-weighted analysis: $2.45B expected value on $450M = 5.5x expected MOIC. This is an excellent expected return profile even accounting for the high probability of failure scenarios. The analysis also reveals that the Phase 2 acquisition scenario (20% probability) provides meaningful downside protection — even if Phase 3 doesn't happen, a Phase 2 success triggers acquisition above investment value ($1.1B vs $450M). Recommendation: invest with manufacturing condition, as this de-risks the most existential commercial risk.",
+          },
+          {
+            id: "c",
+            text: "The expected return is too uncertain to recommend — wait for Phase 2 results",
+            correct: false,
+            explanation: "Post-Phase 2 success, the valuation will be $4-8B — the 5.5x expected MOIC disappears. Pre-Phase 2 at $1.8B is precisely when the risk-adjusted opportunity is best. 'Too uncertain' is not a meaningful objection when you have probability-weighted analysis showing 5.5x expected return.",
+          },
+          {
+            id: "d",
+            text: "Invest only $200M (not the full $450M) to limit downside exposure",
+            correct: false,
+            explanation: "Investing $200M instead of $450M would give only 11% ownership instead of 25%. The investment thesis requires a meaningful ownership stake to generate adequate absolute returns — 11% of $21.6B = $2.4B vs 25% = $5.4B. Half the commitment for half the return is not a valid risk mitigation.",
+          },
+        ],
+      },
+    ],
+  },
 ];
