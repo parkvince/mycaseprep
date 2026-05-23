@@ -1049,7 +1049,7 @@ export default function LibraryPage() {
                     {c.title}
                   </h3>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--text-secondary)" }}>
-                    <span>{c.questions.length} questions · {c.estimatedMinutes} min</span>
+                    <span>{c.estimatedMinutes} min</span>
                     <span>→</span>
                   </div>
                 </motion.div>
