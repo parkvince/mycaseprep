@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GUIDED_CASES, GuidedCase, CaseQuestion } from "@/lib/guidedCases";
+import { GUIDED_CASES, BranchQuestion } from "@/lib/guidedCases";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey } from "@/types";
 
@@ -15,11 +15,12 @@ function GuidedCaseInner() {
   const currentCase = GUIDED_CASES.find(c => c.id === caseId);
 
   const [stage, setStage] = useState<"intro" | "question" | "feedback" | "final" | "complete">("intro");
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [currentQuestionId, setCurrentQuestionId] = useState<string>("");
+  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState<{ questionId: string; correct: boolean; selectedId: string }[]>([]);
+  const [score, setScore] = useState(50); // starts at 50, goes up/down
+  const [questionCount, setQuestionCount] = useState(0);
+  const [pathTaken, setPathTaken] = useState<{ questionId: string; optionId: string; scoreImpact: number }[]>([]);
   const [finalAnswer, setFinalAnswer] = useState("");
 
   if (!currentCase) {
@@ -31,47 +32,78 @@ function GuidedCaseInner() {
   }
 
   const firmConfig = FIRM_CONFIGS[currentCase.firm as FirmKey];
-  const currentQuestion = currentCase.questions[currentQuestionIndex];
-  const isLastQuestion = currentQuestionIndex === currentCase.questions.length - 1;
+
+  const getCurrentQuestion = (): BranchQuestion | undefined => {
+    return currentCase.questions.find(q => q.id === currentQuestionId);
+  };
+
+  const currentQuestion = getCurrentQuestion();
+  const selectedOption = currentQuestion?.options.find(o => o.id === selectedOptionId);
+
+  const handleStart = () => {
+    setCurrentQuestionId(currentCase.startQuestionId);
+    setStage("question");
+  };
 
   const handleSelectOption = (optionId: string) => {
     if (showFeedback) return;
-    setSelectedOption(optionId);
+    setSelectedOptionId(optionId);
   };
 
   const handleSubmitAnswer = () => {
-    if (!selectedOption) return;
-    const option = currentQuestion.options?.find(o => o.id === selectedOption);
+    if (!selectedOptionId || !currentQuestion) return;
+    const option = currentQuestion.options.find(o => o.id === selectedOptionId);
     if (!option) return;
 
-    setShowFeedback(true);
-    if (option.correct) {
-      setScore(s => s + 20);
-    }
-    setAnswers(prev => [...prev, {
-      questionId: currentQuestion.id,
-      correct: option.correct,
-      selectedId: selectedOption,
+    const newScore = Math.max(0, Math.min(100, score + option.scoreImpact));
+    setScore(newScore);
+    setPathTaken(prev => [...prev, {
+      questionId: currentQuestionId,
+      optionId: selectedOptionId,
+      scoreImpact: option.scoreImpact,
     }]);
+    setQuestionCount(c => c + 1);
+    setShowFeedback(true);
   };
 
   const handleNext = () => {
-    if (isLastQuestion) {
+    if (!selectedOption) return;
+
+    if (selectedOption.nextQuestionId === "end") {
       setStage("final");
-    } else {
-      setCurrentQuestionIndex(i => i + 1);
-      setSelectedOption(null);
-      setShowFeedback(false);
-      setStage("question");
+      return;
     }
+
+    const nextQuestion = currentCase.questions.find(q => q.id === selectedOption.nextQuestionId);
+    if (!nextQuestion) {
+      setStage("final");
+      return;
+    }
+
+    setCurrentQuestionId(selectedOption.nextQuestionId);
+    setSelectedOptionId(null);
+    setShowFeedback(false);
   };
 
   const handleSubmitFinal = () => {
     setStage("complete");
   };
 
-  const correctAnswers = answers.filter(a => a.correct).length;
-  const finalScore = Math.round((correctAnswers / currentCase.questions.length) * 100);
+  const getScoreLabel = (s: number) => {
+    if (s >= 85) return "Exceptional";
+    if (s >= 70) return "Strong";
+    if (s >= 55) return "Competent";
+    if (s >= 40) return "Developing";
+    return "Needs Work";
+  };
+
+  const getScoreColor = (s: number) => {
+    if (s >= 85) return "var(--success)";
+    if (s >= 70) return "#84cc16";
+    if (s >= 55) return "var(--warning)";
+    if (s >= 40) return "#f97316";
+    return "var(--danger)";
+  };
 
   const navStyle: React.CSSProperties = {
     display: "flex",
@@ -86,14 +118,12 @@ function GuidedCaseInner() {
     zIndex: 100,
   };
 
+  // INTRO
   if (stage === "intro") {
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
-          <span
-            style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }}
-            onClick={() => router.push("/")}
-          >
+          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
           </span>
           <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>
@@ -101,7 +131,7 @@ function GuidedCaseInner() {
           </button>
         </nav>
 
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{
               display: "inline-block",
@@ -113,7 +143,7 @@ function GuidedCaseInner() {
               marginBottom: "24px",
               fontWeight: 600,
               letterSpacing: "0.06em",
-              textTransform: "uppercase",
+              textTransform: "uppercase" as const,
             }}>
               {firmConfig.name} · Guided Case · {currentCase.difficulty}
             </div>
@@ -126,46 +156,59 @@ function GuidedCaseInner() {
               {currentCase.overview}
             </p>
 
-            <div className="card" style={{ padding: "32px", marginBottom: "24px" }}>
-              <h3 style={{ fontSize: "13px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: "16px", fontFamily: "Inter, sans-serif" }}>
+            <div className="card" style={{ padding: "28px", marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "14px", fontFamily: "Inter, sans-serif" }}>
                 Client Background
               </h3>
-              <p style={{ fontSize: "15px", lineHeight: 1.75, color: "var(--text-primary)" }}>
-                {currentCase.clientBackground}
-              </p>
+              <p style={{ fontSize: "15px", lineHeight: 1.75 }}>{currentCase.clientBackground}</p>
             </div>
 
-            <div className="card" style={{ padding: "32px", marginBottom: "40px", borderLeft: `3px solid #111111` }}>
-              <h3 style={{ fontSize: "13px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: "12px", fontFamily: "Inter, sans-serif" }}>
+            <div className="card" style={{ padding: "28px", marginBottom: "40px", borderLeft: "3px solid #111111" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "12px", fontFamily: "Inter, sans-serif" }}>
                 Your Role
               </h3>
-              <p style={{ fontSize: "15px", lineHeight: 1.75 }}>
-                {currentCase.yourRole}
-              </p>
+              <p style={{ fontSize: "15px", lineHeight: 1.75 }}>{currentCase.yourRole}</p>
             </div>
 
-            <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "32px", padding: "20px 24px", background: "var(--bg-card)", borderRadius: "8px", border: "1px solid var(--border)" }}>
+            <div style={{
+              display: "flex",
+              gap: "16px",
+              padding: "20px 24px",
+              background: "var(--bg-card)",
+              borderRadius: "8px",
+              border: "1px solid var(--border)",
+              marginBottom: "32px",
+            }}>
               <div style={{ textAlign: "center", flex: 1 }}>
-                <div style={{ fontSize: "22px", fontWeight: 700, fontFamily: "Cormorant, serif" }}>{currentCase.questions.length}</div>
-                <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>Questions</div>
+                <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>Format</div>
+                <div style={{ fontSize: "14px", fontWeight: 600 }}>Branching Path</div>
               </div>
-              <div style={{ width: "1px", height: "40px", background: "var(--border)" }} />
+              <div style={{ width: "1px", background: "var(--border)" }} />
               <div style={{ textAlign: "center", flex: 1 }}>
-                <div style={{ fontSize: "22px", fontWeight: 700, fontFamily: "Cormorant, serif" }}>{currentCase.estimatedMinutes}</div>
-                <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>Minutes</div>
+                <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>Duration</div>
+                <div style={{ fontSize: "14px", fontWeight: 600 }}>{currentCase.estimatedMinutes} min</div>
               </div>
-              <div style={{ width: "1px", height: "40px", background: "var(--border)" }} />
+              <div style={{ width: "1px", background: "var(--border)" }} />
               <div style={{ textAlign: "center", flex: 1 }}>
-                <div style={{ fontSize: "22px", fontWeight: 700, fontFamily: "Cormorant, serif", textTransform: "capitalize" }}>{currentCase.difficulty}</div>
-                <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>Difficulty</div>
+                <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>Difficulty</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, textTransform: "capitalize" as const }}>{currentCase.difficulty}</div>
               </div>
             </div>
 
-            <button
-              className="btn-primary"
-              style={{ width: "100%", padding: "16px", fontSize: "15px" }}
-              onClick={() => setStage("question")}
-            >
+            <div style={{
+              padding: "16px 20px",
+              background: "var(--bg-card)",
+              borderRadius: "8px",
+              border: "1px solid var(--border)",
+              marginBottom: "32px",
+              fontSize: "13px",
+              color: "var(--text-secondary)",
+              lineHeight: 1.6,
+            }}>
+              Your choices lead to different paths through this case. There is no single correct answer — your score reflects the cumulative quality of your decisions. Read each option carefully. The best answer is not always the longest.
+            </div>
+
+            <button className="btn-primary" style={{ width: "100%", padding: "16px", fontSize: "15px" }} onClick={handleStart}>
               Begin Case →
             </button>
           </motion.div>
@@ -174,66 +217,74 @@ function GuidedCaseInner() {
     );
   }
 
-  if (stage === "question" || stage === "feedback") {
+  // QUESTION
+  if (stage === "question" && currentQuestion) {
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
-          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>
-            MyCasePrep
-          </span>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-              Question {currentQuestionIndex + 1} of {currentCase.questions.length}
+              Question {questionCount + 1}
             </span>
-            <div style={{ width: "120px", height: "4px", background: "var(--border)", borderRadius: "2px", overflow: "hidden" }}>
-              <div style={{
-                width: `${((currentQuestionIndex + 1) / currentCase.questions.length) * 100}%`,
-                height: "100%",
-                background: "#111111",
-                borderRadius: "2px",
-                transition: "width 0.3s",
-              }} />
+            <div style={{
+              fontSize: "13px",
+              fontWeight: 600,
+              color: getScoreColor(score),
+            }}>
+              Score: {score}
             </div>
           </div>
         </nav>
 
-        <div style={{ maxWidth: "820px", margin: "0 auto", padding: "48px 48px" }}>
-          <motion.div
-            key={currentQuestionIndex}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px" }}>
+          <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+
             <div style={{
               fontSize: "11px",
               fontWeight: 600,
               letterSpacing: "0.1em",
-              textTransform: "uppercase",
+              textTransform: "uppercase" as const,
               color: "var(--text-secondary)",
               marginBottom: "8px",
             }}>
-              Stage: {currentQuestion.stage}
+              {currentQuestion.stage}
             </div>
 
             <h2 style={{
-              fontSize: "clamp(18px, 2.5vw, 24px)",
+              fontSize: "clamp(17px, 2.2vw, 22px)",
               fontWeight: 400,
-              marginBottom: "32px",
-              lineHeight: 1.5,
+              marginBottom: currentQuestion.context ? "16px" : "32px",
+              lineHeight: 1.55,
               letterSpacing: "-0.01em",
             }}>
               {currentQuestion.question}
             </h2>
 
-            {/* Exhibit */}
+            {currentQuestion.context && (
+              <p style={{
+                fontSize: "14px",
+                color: "var(--text-secondary)",
+                lineHeight: 1.65,
+                marginBottom: "28px",
+                padding: "14px 18px",
+                background: "var(--bg-card)",
+                borderRadius: "8px",
+                border: "1px solid var(--border)",
+              }}>
+                {currentQuestion.context}
+              </p>
+            )}
+
             {currentQuestion.exhibit && (
-              <div className="card" style={{ padding: "28px", marginBottom: "32px" }}>
+              <div className="card" style={{ padding: "24px", marginBottom: "28px" }}>
                 <div style={{
                   fontSize: "11px",
                   fontWeight: 600,
                   letterSpacing: "0.08em",
-                  textTransform: "uppercase",
+                  textTransform: "uppercase" as const,
                   color: "var(--text-secondary)",
-                  marginBottom: "16px",
+                  marginBottom: "14px",
                 }}>
                   Exhibit: {currentQuestion.exhibit.title}
                 </div>
@@ -242,36 +293,39 @@ function GuidedCaseInner() {
                   lineHeight: 1.6,
                   color: "var(--text-primary)",
                   fontFamily: "Inter, sans-serif",
-                  whiteSpace: "pre-wrap",
-                  overflowX: "auto",
+                  whiteSpace: "pre-wrap" as const,
+                  overflowX: "auto" as const,
                 }}>
                   {currentQuestion.exhibit.data}
                 </pre>
               </div>
             )}
 
-            {/* Options */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px" }}>
-              {currentQuestion.options?.map((option) => {
-                const isSelected = selectedOption === option.id;
-                const isCorrect = option.correct;
-                const showResult = showFeedback;
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: "10px", marginBottom: "28px" }}>
+              {currentQuestion.options.map((option) => {
+                const isSelected = selectedOptionId === option.id;
 
                 let borderColor = "var(--border)";
                 let background = "var(--bg-card)";
-                let textColor = "var(--text-primary)";
 
-                if (showResult) {
-                  if (isCorrect) {
-                    borderColor = "var(--success)";
-                    background = "rgba(34,197,94,0.05)";
-                  } else if (isSelected && !isCorrect) {
-                    borderColor = "var(--danger)";
-                    background = "rgba(220,38,38,0.05)";
-                  }
-                } else if (isSelected) {
+                if (isSelected && !showFeedback) {
                   borderColor = "#111111";
                   background = "var(--bg-elevated)";
+                }
+
+                if (showFeedback && isSelected) {
+                  if (option.scoreImpact > 10) {
+                    borderColor = "var(--success)";
+                    background = "rgba(34,197,94,0.04)";
+                  } else if (option.scoreImpact > 0) {
+                    borderColor = "var(--warning)";
+                    background = "rgba(234,179,8,0.04)";
+                  } else if (option.scoreImpact < 0) {
+                    borderColor = "var(--danger)";
+                    background = "rgba(220,38,38,0.04)";
+                  } else {
+                    borderColor = "var(--border)";
+                  }
                 }
 
                 return (
@@ -279,44 +333,43 @@ function GuidedCaseInner() {
                     key={option.id}
                     onClick={() => handleSelectOption(option.id)}
                     style={{
-                      padding: "20px 24px",
+                      padding: "18px 22px",
                       borderRadius: "8px",
                       border: `1px solid ${borderColor}`,
                       background,
-                      color: textColor,
                       cursor: showFeedback ? "default" : "pointer",
                       transition: "all 0.15s",
                     }}
                   >
-                    <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                    <div style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
                       <div style={{
-                        width: "20px",
-                        height: "20px",
+                        width: "18px",
+                        height: "18px",
                         borderRadius: "50%",
-                        border: `2px solid ${isSelected || (showResult && isCorrect) ? borderColor : "var(--border)"}`,
-                        background: isSelected || (showResult && isCorrect) ? borderColor : "transparent",
+                        border: `2px solid ${isSelected ? borderColor : "var(--border)"}`,
+                        background: isSelected ? borderColor : "transparent",
                         flexShrink: 0,
-                        marginTop: "2px",
+                        marginTop: "3px",
+                        transition: "all 0.15s",
                       }} />
-                      <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{option.text}</p>
+                      <p style={{ fontSize: "15px", lineHeight: 1.65 }}>{option.text}</p>
                     </div>
 
-                    {/* Explanation */}
                     <AnimatePresence>
-                      {showFeedback && (isSelected || isCorrect) && (
+                      {showFeedback && isSelected && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           style={{
-                            marginTop: "16px",
-                            paddingTop: "16px",
+                            marginTop: "14px",
+                            paddingTop: "14px",
                             borderTop: "1px solid var(--border)",
                             fontSize: "14px",
                             lineHeight: 1.65,
-                            color: isCorrect ? "var(--success)" : "var(--danger)",
+                            color: option.scoreImpact > 10 ? "var(--success)" : option.scoreImpact > 0 ? "var(--warning)" : option.scoreImpact < 0 ? "var(--danger)" : "var(--text-secondary)",
                           }}
                         >
-                          {option.explanation}
+                          {option.feedback}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -328,9 +381,9 @@ function GuidedCaseInner() {
             {!showFeedback ? (
               <button
                 className="btn-primary"
-                style={{ width: "100%", padding: "14px", fontSize: "15px", opacity: selectedOption ? 1 : 0.5 }}
+                style={{ width: "100%", padding: "14px", fontSize: "15px", opacity: selectedOptionId ? 1 : 0.4 }}
                 onClick={handleSubmitAnswer}
-                disabled={!selectedOption}
+                disabled={!selectedOptionId}
               >
                 Submit Answer
               </button>
@@ -340,7 +393,7 @@ function GuidedCaseInner() {
                 style={{ width: "100%", padding: "14px", fontSize: "15px" }}
                 onClick={handleNext}
               >
-                {isLastQuestion ? "Continue to Final Recommendation →" : "Next Question →"}
+                {selectedOption?.nextQuestionId === "end" ? "Continue to Final Recommendation →" : "Next →"}
               </button>
             )}
           </motion.div>
@@ -349,13 +402,14 @@ function GuidedCaseInner() {
     );
   }
 
+  // FINAL RECOMMENDATION
   if (stage === "final") {
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
         </nav>
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px" }}>
               Final Recommendation
@@ -369,15 +423,15 @@ function GuidedCaseInner() {
               placeholder="Write your recommendation here. Be specific about actions, timeline, and expected impact..."
               style={{
                 width: "100%",
-                minHeight: "200px",
+                minHeight: "180px",
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",
                 borderRadius: "10px",
-                padding: "20px",
+                padding: "18px",
                 color: "var(--text-primary)",
                 fontSize: "15px",
                 fontFamily: "Inter, sans-serif",
-                resize: "vertical",
+                resize: "vertical" as const,
                 outline: "none",
                 lineHeight: 1.7,
                 marginBottom: "24px",
@@ -385,11 +439,11 @@ function GuidedCaseInner() {
             />
             <button
               className="btn-primary"
-              style={{ width: "100%", padding: "14px", fontSize: "15px", opacity: finalAnswer.trim().length > 50 ? 1 : 0.5 }}
+              style={{ width: "100%", padding: "14px", fontSize: "15px", opacity: finalAnswer.trim().length > 40 ? 1 : 0.4 }}
               onClick={handleSubmitFinal}
-              disabled={finalAnswer.trim().length < 50}
+              disabled={finalAnswer.trim().length < 40}
             >
-              See Results & Ideal Answer →
+              See Results →
             </button>
           </motion.div>
         </div>
@@ -397,93 +451,55 @@ function GuidedCaseInner() {
     );
   }
 
+  // COMPLETE
   if (stage === "complete") {
-    const scoreColor = finalScore >= 80 ? "var(--success)" : finalScore >= 60 ? "var(--warning)" : "var(--danger)";
-    const scoreLabel = finalScore >= 80 ? "Strong" : finalScore >= 60 ? "Developing" : "Needs Work";
+    const scoreColor = getScoreColor(score);
+    const scoreLabel = getScoreLabel(score);
 
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
-          <span
-            style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }}
-            onClick={() => router.push("/")}
-          >
+          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
           </span>
           <div style={{ display: "flex", gap: "12px" }}>
-            <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>
-              Back to Library
-            </button>
-            <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>
-              Practice More
-            </button>
+            <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>Library</button>
+            <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>Practice More</button>
           </div>
         </nav>
 
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
 
-            {/* Score */}
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
-              <div style={{ fontSize: "72px", fontWeight: 700, color: scoreColor, fontFamily: "Cormorant, serif", lineHeight: 1 }}>
-                {finalScore}
+              <div style={{ fontSize: "80px", fontWeight: 700, color: scoreColor, fontFamily: "Cormorant, serif", lineHeight: 1 }}>
+                {score}
               </div>
               <div style={{ fontSize: "16px", color: scoreColor, marginTop: "8px", fontWeight: 600 }}>{scoreLabel}</div>
               <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginTop: "4px" }}>
-                {correctAnswers} of {currentCase.questions.length} questions correct
+                {questionCount} decisions made across {questionCount} case moments
               </div>
             </div>
 
-            {/* Ideal Recommendation */}
-            <div className="card" style={{ padding: "32px", marginBottom: "32px" }}>
-              <h3 style={{
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "var(--text-secondary)",
-                marginBottom: "16px",
-                fontFamily: "Inter, sans-serif",
-              }}>
+            <div className="card" style={{ padding: "28px", marginBottom: "24px" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "16px", fontFamily: "Inter, sans-serif" }}>
                 Ideal Recommendation
               </h3>
-              <p style={{ fontSize: "15px", lineHeight: 1.8 }}>
-                {currentCase.idealRecommendation}
-              </p>
+              <p style={{ fontSize: "15px", lineHeight: 1.8 }}>{currentCase.idealRecommendation}</p>
             </div>
 
-            {/* Your Recommendation */}
-            <div className="card" style={{ padding: "32px", marginBottom: "32px", borderLeft: "3px solid var(--border)" }}>
-              <h3 style={{
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "var(--text-secondary)",
-                marginBottom: "16px",
-                fontFamily: "Inter, sans-serif",
-              }}>
+            <div className="card" style={{ padding: "28px", marginBottom: "24px", borderLeft: "3px solid var(--border)" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "16px", fontFamily: "Inter, sans-serif" }}>
                 Your Recommendation
               </h3>
-              <p style={{ fontSize: "15px", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-                {finalAnswer}
-              </p>
+              <p style={{ fontSize: "15px", lineHeight: 1.8, color: "var(--text-secondary)" }}>{finalAnswer}</p>
             </div>
 
-            {/* Key Takeaways */}
-            <div className="card" style={{ padding: "32px", marginBottom: "40px" }}>
-              <h3 style={{
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "var(--text-secondary)",
-                marginBottom: "20px",
-                fontFamily: "Inter, sans-serif",
-              }}>
+            <div className="card" style={{ padding: "28px", marginBottom: "40px" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "20px", fontFamily: "Inter, sans-serif" }}>
                 Key Takeaways
               </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: "14px" }}>
                 {currentCase.keyTakeaways.map((t, i) => (
                   <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
                     <div style={{
@@ -498,7 +514,7 @@ function GuidedCaseInner() {
                       fontSize: "11px",
                       fontWeight: 700,
                       flexShrink: 0,
-                      marginTop: "2px",
+                      marginTop: "1px",
                     }}>
                       {i + 1}
                     </div>
@@ -509,18 +525,10 @@ function GuidedCaseInner() {
             </div>
 
             <div style={{ display: "flex", gap: "12px" }}>
-              <button
-                className="btn-primary"
-                style={{ flex: 1, padding: "14px", fontSize: "15px" }}
-                onClick={() => router.push("/library")}
-              >
+              <button className="btn-primary" style={{ flex: 1, padding: "14px", fontSize: "15px" }} onClick={() => router.push("/library")}>
                 Try Another Case →
               </button>
-              <button
-                className="btn-secondary"
-                style={{ flex: 1, padding: "14px", fontSize: "15px" }}
-                onClick={() => router.push("/dashboard")}
-              >
+              <button className="btn-secondary" style={{ flex: 1, padding: "14px", fontSize: "15px" }} onClick={() => router.push("/dashboard")}>
                 AI Interview Mode
               </button>
             </div>
