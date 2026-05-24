@@ -2628,5 +2628,2599 @@ export const GUIDED_CASES: GuidedCase[] = [
       },
     ],
   },
+// ─────────────────────────────────────────────
+  // CASE G8: MCKINSEY — RETAIL BANK PROFITABILITY
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g8",
+    title: "FirstBank: Branch Portfolio Optimization",
+    type: "profitability",
+    difficulty: "intermediate",
+    firm: "mckinsey",
+    estimatedMinutes: 30,
+    overview: "A regional US bank has seen branch profitability decline significantly as digital banking adoption grows. McKinsey has been engaged to determine which branches to keep, close, or transform.",
+    clientBackground: "FirstBank operates 280 branches across four states with $42B in total assets. Net interest margin is 2.8% against an industry average of 3.1%. Digital banking adoption grew from 34% to 67% of transactions over five years. The CEO is under pressure from activist investors to improve ROE from 7.2% to 10%+. The CFO has proposed closing 80 branches immediately. The head of retail banking has pushed back hard, arguing closures will cause customer attrition.",
+    yourRole: "You are a McKinsey associate principal leading the branch optimization workstream. You have six weeks to deliver a recommendation. The board will review your findings in week seven.",
+    startQuestionId: "g8q1",
+    finalRecommendationPrompt: "The CEO asks: how many branches should we close, which ones, and what is the expected impact on ROE? Give me a specific answer I can defend to the activist investors.",
+    sampleRecommendation: "Close 43 branches in the low-need, poor-economics quadrant — these have 88% digital adoption and negative contribution margins with no strategic rationale to keep them. Transform 110 high-need, poor-economics branches into digital-advisory hubs at $380K cost savings each. Keep the 85 high-performing branches unchanged. This program improves annual contribution by $67M, moving ROE from 7.2% to approximately 8.4%. Reaching 10% ROE additionally requires NIM improvement and overhead reduction — branch optimization alone is not sufficient.",
+    idealRecommendation: "Close 43 branches (low-need, poor-economics), transform 110 into digital-advisory hubs saving $380K each annually, keep 85 high-performing branches. Net annual contribution improvement: $67M, improving ROE to approximately 8.4%. Closing the remaining 1.6pp to reach 10% ROE requires NIM improvement from 2.8% to 3.0% and corporate overhead reduction — branch action alone closes only half the gap.",
+    keyTakeaways: [
+      "Branch optimization is a portfolio decision requiring a two-dimensional framework — customer need for physical service and branch economics — not a single-metric ranking",
+      "Customer attrition from branch closures is highly dependent on proximity to the nearest remaining branch and the specific customer mix at each location",
+      "Digital advisory hub transformation preserves 92% of branch revenue at 53% of the cost — often superior to both keeping and closing",
+      "Branch optimization alone rarely closes an entire ROE gap — it must be combined with asset-liability management and overhead reduction for full impact",
+    ],
+    questions: [
+      {
+        id: "g8q1",
+        stage: "Framework",
+        question: "The CFO wants to close 80 branches immediately based on a single ranking by current profitability. The head of retail banking says this is too blunt and will cause massive attrition. How do you structure the branch optimization decision?",
+        options: [
+          {
+            id: "a",
+            text: "Agree with the CFO that profitability ranking is the right approach — branches losing money should close and the attrition risk is overstated since most customers will migrate to digital channels anyway.",
+            nextQuestionId: "g8q2b",
+            scoreImpact: -5,
+            feedback: "Single-metric profitability ranking ignores strategic value such as anchor branches that serve important demographics, CRA obligations in underserved communities, and the fact that some unprofitable branches serve customers who would leave the bank entirely if closed. The McKinsey framework requires two dimensions.",
+          },
+          {
+            id: "b",
+            text: "Build a two-dimensional framework: customer need for physical banking on one axis and branch economics on the other. This creates four quadrants — keep, transform, close, and monitor — and avoids the bluntness of a single-metric ranking.",
+            nextQuestionId: "g8q2a",
+            scoreImpact: 20,
+            feedback: "This is the McKinsey framework for branch optimization. The two-dimension approach separates the customer value question from the economic question and produces a more defensible and more nuanced recommendation than pure profitability ranking.",
+          },
+          {
+            id: "c",
+            text: "Survey customers at each branch to understand whether they would leave the bank if that branch closed, then close only those branches where customers say they would stay with the bank through digital channels.",
+            nextQuestionId: "g8q2c",
+            scoreImpact: -5,
+            feedback: "Customer surveys have well-documented bias — customers say they want to keep branches even when they rarely use them. Revealed preference from actual transaction data is far more reliable than stated preference from surveys.",
+          },
+        ],
+      },
+      {
+        id: "g8q2a",
+        stage: "Portfolio Analysis",
+        question: "You have built the two-dimensional framework and segmented all 280 branches. Review the exhibit and identify the recommended action for each quadrant.",
+        exhibit: {
+          type: "table",
+          title: "FirstBank Branch Portfolio Analysis",
+          data: `| Quadrant                    | Count | Avg P&L    | Digital Adoption | CRA Designated |
+|----------------------------|-------|------------|------------------|----------------|
+| High need, good economics  | 85    | +$420K/yr  | 45%              | 12%            |
+| High need, poor economics  | 110   | -$180K/yr  | 52%              | 34%            |
+| Low need, good economics   | 42    | +$210K/yr  | 81%              | 4%             |
+| Low need, poor economics   | 43    | -$340K/yr  | 88%              | 3%             |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Keep high-need good economics, transform high-need poor economics into digital-advisory hubs, close low-need poor economics immediately, and monitor low-need good economics for future closure as digital adoption continues rising.",
+            nextQuestionId: "g8q3a",
+            scoreImpact: 20,
+            feedback: "Correct quadrant mapping. This approach protects branches serving customers who need physical banking, recovers cost from the high-need underperformers through transformation, closes the clear candidates, and preserves profitable low-need branches while monitoring their declining strategic value.",
+          },
+          {
+            id: "b",
+            text: "Close all branches in the two poor economics quadrants immediately — 153 branches total — since any branch losing money represents destroyed shareholder value regardless of customer need.",
+            nextQuestionId: "g8q3b",
+            scoreImpact: -10,
+            feedback: "Closing all 110 high-need poor-economics branches without transformation would eliminate branches serving customers who cannot easily switch to digital. 34% have CRA obligations in underserved communities — closing them would trigger regulatory scrutiny and significant customer attrition.",
+          },
+          {
+            id: "c",
+            text: "Keep all high-need branches regardless of economics, and close only the 43 low-need poor-economics branches since those are the only ones with neither strategic nor financial justification for remaining open.",
+            nextQuestionId: "g8q3c",
+            scoreImpact: 5,
+            feedback: "Closing only the 43 clear candidates is correct, but keeping all 110 high-need poor-economics branches without transformation leaves significant cost recovery on the table. Transformation rather than pure retention for that quadrant is the more complete answer.",
+          },
+        ],
+      },
+      {
+        id: "g8q2b",
+        stage: "Portfolio Analysis",
+        question: "You have agreed to a profitability-based ranking and the top 80 closure candidates are identified. The head of retail banking shares that 38 of these 80 branches have 34% CRA designations in underserved communities. How does this change the analysis?",
+        options: [
+          {
+            id: "a",
+            text: "CRA-designated branches must be excluded from closure consideration entirely since the regulatory risk outweighs any cost savings — redesign the closure list to exclude all 38 CRA branches.",
+            nextQuestionId: "g8q3b",
+            scoreImpact: 5,
+            feedback: "Excluding all CRA branches is overly conservative. CRA obligations can be met through other means including community development lending and mobile banking outreach. The question is whether each specific branch is the most effective way to fulfill CRA obligations.",
+          },
+          {
+            id: "b",
+            text: "CRA obligations are a constraint that changes the closure decision for some branches — each CRA-designated branch in the closure list should be individually assessed for whether the CRA obligation can be maintained without a physical branch before deciding.",
+            nextQuestionId: "g8q3a",
+            scoreImpact: 15,
+            feedback: "Correct nuanced approach. CRA is a real constraint but not an absolute prohibition on closure. Individual assessment of whether the obligation can be maintained through other means — rather than blanket exclusion — is the more rigorous and commercially defensible position.",
+          },
+          {
+            id: "c",
+            text: "CRA designation is not a binding constraint since most banks have found ways to fulfill CRA obligations without branches — proceed with the original 80-closure plan and address CRA through increased community lending volumes.",
+            nextQuestionId: "g8q3b",
+            scoreImpact: -5,
+            feedback: "While alternative CRA fulfillment is possible, the regulator assesses compliance at the community level and physical branch presence is weighted heavily in many markets. Proceeding without individual assessment creates regulatory risk that should not be dismissed.",
+          },
+        ],
+      },
+      {
+        id: "g8q2c",
+        stage: "Portfolio Analysis",
+        question: "The survey results are in: 72% of customers say they would stay with FirstBank if their branch closed, and 28% say they would consider switching. The head of retail banking says: see, 28% attrition risk is huge and proves we cannot close any branches. How do you interpret this data?",
+        options: [
+          {
+            id: "a",
+            text: "The 28% stated attrition intention significantly overstates likely actual attrition — historical bank branch closure data shows actual attrition rates of 6-14% depending on proximity to the nearest remaining branch, not 28%.",
+            nextQuestionId: "g8q3a",
+            scoreImpact: 15,
+            feedback: "Correct interpretation. Survey-stated attrition intentions are consistently 2-3x higher than actual attrition when branches close. The right analysis uses historical attrition rates from comparable branch closures, not stated preference surveys.",
+          },
+          {
+            id: "b",
+            text: "The 28% attrition risk is accurate and confirms the head of retail banking is right — FirstBank should not close any branches and should instead focus on cost reduction within the existing branch network.",
+            nextQuestionId: "g8q3b",
+            scoreImpact: -10,
+            feedback: "Taking stated attrition intentions at face value ignores well-established survey bias. A bank that never closes branches because 28% of customers always say they might leave will never optimize its branch network.",
+          },
+          {
+            id: "c",
+            text: "The survey validates that branch closures are high-risk and suggests FirstBank should only close branches where the 28% potentially-departing customers are low-value accounts with minimal revenue impact.",
+            nextQuestionId: "g8q3c",
+            scoreImpact: 5,
+            feedback: "Segmenting at-risk customers by revenue is a valid additional analysis, but the fundamental problem is still that the 28% figure overstates actual attrition. Historical closure data should replace survey data as the primary attrition input.",
+          },
+        ],
+      },
+      {
+        id: "g8q3a",
+        stage: "Transformation Model",
+        question: "You have identified 110 high-need, poor-economics branches for transformation into digital-advisory hubs. Review the transformation model data and determine whether this is the right approach.",
+        exhibit: {
+          type: "table",
+          title: "Branch Transformation Model Options",
+          data: `| Model               | Staff  | Annual Cost | Revenue Retention | NPS Impact  |
+|--------------------|--------|-------------|-------------------|-------------|
+| Full service       | 7.8 FTE| $800K       | 100% baseline     | Baseline    |
+| Digital-advisory   | 3.2 FTE| $420K       | 92%               | +8 points   |
+| Micro-branch       | 2.1 FTE| $285K       | 78%               | -12 points  |
+| ATM only           | 0 FTE  | $45K        | 42%               | -45 points  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The digital-advisory model is best for the 110 high-need branches — it saves $380K per branch annually, retains 92% of revenue, and actually improves NPS by 8 points. This outperforms micro-branch and ATM-only on all dimensions except raw cost savings.",
+            nextQuestionId: "g8q4a",
+            scoreImpact: 20,
+            feedback: "Correct analysis. Digital-advisory hubs optimize the economics-revenue-retention tradeoff. The NPS improvement is particularly notable — transforming to a relationship model improves customer satisfaction while cutting costs. This is the McKinsey recommendation.",
+          },
+          {
+            id: "b",
+            text: "The micro-branch model at $285K annual cost is better than digital-advisory at $420K — the $135K additional savings per branch times 110 branches equals $14.85M in incremental annual savings that outweigh the 14pp revenue retention difference.",
+            nextQuestionId: "g8q4b",
+            scoreImpact: -5,
+            feedback: "The $14.85M incremental cost savings must be weighed against the 14pp revenue retention difference. 110 branches averaging $800K in revenue means 14% lower retention equals $12.3M in annual revenue loss — nearly offsetting the cost savings. Plus the -12 NPS impact creates downstream attrition risk.",
+          },
+          {
+            id: "c",
+            text: "ATM-only conversion maximizes cost savings at $755K per branch and the bank's already-high 67% digital adoption means customers have demonstrated they do not need in-person service at these locations.",
+            nextQuestionId: "g8q4c",
+            scoreImpact: -10,
+            feedback: "ATM-only retains only 42% of revenue. For the 110 high-need branches averaging $800K revenue, 58% revenue loss equals $464K per branch. Net savings after revenue loss: $755K cost savings minus $464K revenue loss equals $291K — less than the digital-advisory model's $380K net benefit per branch, with a catastrophic NPS impact.",
+          },
+        ],
+      },
+      {
+        id: "g8q3b",
+        stage: "Transformation Model",
+        question: "You are proceeding with a large-scale closure recommendation. The CFO asks you to quantify the revenue at risk from the closures so the board can assess the net financial impact.",
+        exhibit: {
+          type: "table",
+          title: "Revenue Attrition Analysis by Customer Segment",
+          data: `| Customer Segment         | Pct of Deposits | Historical Attrition | Revenue at Risk |
+|--------------------------|----------------|----------------------|-----------------|
+| Digital-first (88% dig)  | 45%            | 3%                   | Low             |
+| Hybrid (50-88% dig)      | 32%            | 12%                  | Medium          |
+| Branch-dependent (<50%)  | 23%            | 34%                  | High            |
+| Blended average          | 100%           | 14%                  |                 |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Use the blended 14% attrition rate across all closures — this gives a single defensible number for the board presentation and avoids the complexity of branch-by-branch segmentation.",
+            nextQuestionId: "g8q4b",
+            scoreImpact: 0,
+            feedback: "A blended rate applied uniformly misses the fact that different branches have very different customer mixes. A branch with 80% branch-dependent customers faces 34% attrition risk — applying 14% to it significantly understates the revenue at risk from that specific closure.",
+          },
+          {
+            id: "b",
+            text: "Model attrition branch-by-branch using the actual customer mix at each location and the proximity to the nearest remaining FirstBank branch, since these two factors together predict actual attrition far better than any blended average.",
+            nextQuestionId: "g8q4a",
+            scoreImpact: 20,
+            feedback: "Correct analytical approach. Branch-level customer mix and proximity to the nearest remaining branch are the two most predictive variables for actual attrition. Historical closure data confirms attrition drops to 6% when the nearest branch is within 2 miles.",
+          },
+          {
+            id: "c",
+            text: "Use the branch-dependent attrition rate of 34% for all closed branches as a conservative upper bound, then present this worst-case scenario to the board so they understand the maximum downside.",
+            nextQuestionId: "g8q4c",
+            scoreImpact: -5,
+            feedback: "Using 34% for all closures dramatically overstates revenue at risk for branches with high digital adoption. The worst-case approach might lead the board to reject closures that are genuinely financially sound based on an artificially inflated attrition estimate.",
+          },
+        ],
+      },
+      {
+        id: "g8q3c",
+        stage: "Transformation Model",
+        question: "You have recommended closing only the 43 clear-candidate branches. The activist investor representative on the board says: 43 closures out of 280 branches is too timid. We need at least 100 closures to move the ROE needle. How do you respond?",
+        options: [
+          {
+            id: "a",
+            text: "Increase the closure target to 100 branches to satisfy the activist investor — the board pressure is real and a recommendation the board rejects has no value.",
+            nextQuestionId: "g8q4c",
+            scoreImpact: -15,
+            feedback: "Changing a recommendation under investor pressure without analytical justification undermines consulting integrity. If 100 closures is not supported by the data, recommending it to satisfy an activist destroys the value of independent analysis.",
+          },
+          {
+            id: "b",
+            text: "Close 43 and transform 110 into digital-advisory hubs — the transformation program recovers $380K per branch annually on 110 branches, which is $41.8M per year. Combined with 43 closures, total contribution improvement is $67M. This addresses the ROE problem without destroying the customer relationships in the high-need segment.",
+            nextQuestionId: "g8q4a",
+            scoreImpact: 20,
+            feedback: "Strong counter-argument. Quantifying the transformation contribution and showing the activist investor that the total program impact is larger than closure alone is the right response. $67M annual improvement is a meaningful move toward the 10% ROE target.",
+          },
+          {
+            id: "c",
+            text: "Acknowledge the activist's point and propose commissioning additional analysis on a further 30-40 branches to identify additional closure candidates that might have been missed in the initial segmentation.",
+            nextQuestionId: "g8q4b",
+            scoreImpact: 5,
+            feedback: "Additional analysis is a reasonable bridge, but it delays the recommendation and the activist investor wants action. A more compelling response uses the data already in hand to show the full program impact including transformation.",
+          },
+        ],
+      },
+      {
+        id: "g8q4a",
+        stage: "ROE Impact",
+        question: "The CEO asks the critical question: will this branch program get FirstBank to 10% ROE? Walk through the math.",
+        exhibit: {
+          type: "table",
+          title: "ROE Impact Bridge Analysis",
+          data: `| Initiative                          | Annual P&L Impact | Notes                       |
+|------------------------------------|-------------------|-----------------------------|
+| Starting ROE                        |                   | 7.2% on $4.2B equity        |
+| Branch closures (43 branches)       | +$31M pre-tax     | Savings minus revenue loss  |
+| Hub transformations (110 branches)  | +$36M pre-tax     | $41.8M savings minus losses |
+| Total branch program                | +$67M pre-tax     |                             |
+| After-tax impact ($50M)             |                   |                             |
+| Pro-forma net income                |                   | $302M + $50M = $352M        |
+| Pro-forma ROE                       | 8.4%              | $352M divided by $4.2B      |
+| Gap to 10% target                   | 1.6pp             | Needs $67M more net income  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Yes — the branch program fully achieves the 10% ROE target by improving contribution by $67M pre-tax and the activist investor should be satisfied with this outcome.",
+            nextQuestionId: "g8q5a",
+            scoreImpact: -10,
+            feedback: "The numbers show ROE improving from 7.2% to 8.4% — not 10%. Telling the CEO the target is achieved when the math shows a 1.6pp gap remaining is a credibility failure that will be discovered immediately when the board reviews the analysis.",
+          },
+          {
+            id: "b",
+            text: "The branch program improves ROE from 7.2% to 8.4% — meaningful progress but 1.6pp short of the 10% target. Closing the remaining gap requires NIM improvement from 2.8% to 3.0% through better asset-liability management, and corporate overhead reduction. Branch optimization alone cannot get to 10%.",
+            nextQuestionId: "g8q5a",
+            scoreImpact: 20,
+            feedback: "Correct and honest answer. Presenting the branch program as a necessary but insufficient step toward 10% ROE, and identifying the additional levers needed, is what the CEO needs to hear to set appropriate board expectations.",
+          },
+          {
+            id: "c",
+            text: "The branch program cannot be evaluated against ROE without a full model of all bank operations including loan growth, deposit repricing, and interest rate sensitivity — this calculation is too simplified to present to the board.",
+            nextQuestionId: "g8q5b",
+            scoreImpact: -5,
+            feedback: "The ROE bridge provided is a standard management accounting tool appropriate for board presentations. Refusing to use it because it is not a full bank model is overly perfectionist and delays a decision that the board needs to make.",
+          },
+        ],
+      },
+      {
+        id: "g8q4b",
+        stage: "ROE Impact",
+        question: "Your analysis shows a 14% blended attrition rate across all closures. The head of retail banking calculates that at $800K average revenue per closed branch and 14% attrition, revenue at risk is $4.8M annually across 43 closures. He says: the cost savings are not worth this revenue loss. How do you evaluate his math?",
+        options: [
+          {
+            id: "a",
+            text: "His calculation is correct — $4.8M revenue loss against $14.7M in cost savings from 43 closures gives a net improvement of $9.9M, which is still positive and confirms closures are worth pursuing despite the attrition.",
+            nextQuestionId: "g8q5a",
+            scoreImpact: 10,
+            feedback: "Good counter-calculation. Net of attrition, closures still generate $9.9M in annual contribution improvement. The head of retail banking made an error by presenting the revenue loss without netting it against the cost savings.",
+          },
+          {
+            id: "b",
+            text: "The head of retail banking is right — $4.8M in annual revenue loss significantly erodes the closure value proposition and the program should be redesigned to focus on transformation rather than closures.",
+            nextQuestionId: "g8q5b",
+            scoreImpact: -5,
+            feedback: "Accepting his math without netting against cost savings is incomplete. The $4.8M revenue loss must be compared against the $14.7M in cost savings ($340K average annual loss per branch times 43). Net improvement of $9.9M is still significant and supports proceeding.",
+          },
+          {
+            id: "c",
+            text: "The 14% blended attrition rate should be replaced with branch-level attrition estimates based on customer mix and proximity to remaining branches, which will likely reduce the revenue at risk estimate significantly below $4.8M.",
+            nextQuestionId: "g8q5a",
+            scoreImpact: 15,
+            feedback: "Correct analytical improvement. Branch-level attrition modeling using customer mix and proximity data will produce a more accurate and likely lower revenue at risk estimate than the blended average. The head of retail banking may be overstating risk by using the blended rate.",
+          },
+        ],
+      },
+      {
+        id: "g8q4c",
+        stage: "ROE Impact",
+        question: "Your recommendation has either been too aggressive or too conservative in response to various stakeholder pressures. The partner pulls you aside before the board meeting: the board needs a number — how many closures and what is the ROE impact?",
+        options: [
+          {
+            id: "a",
+            text: "43 closures and 110 hub transformations. Total annual contribution improvement of $67M pre-tax, improving ROE from 7.2% to 8.4%. Reaching 10% additionally requires NIM improvement and overhead reduction — the branch program alone closes half the gap.",
+            nextQuestionId: "g8q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Specific numbers, specific financial impact, and honest acknowledgment that the branch program alone is not sufficient for the full target. This is what the board needs to make a decision.",
+          },
+          {
+            id: "b",
+            text: "100 closures as the activist investor requested — ROE impact will be higher than the 43-closure program and the board is more likely to accept a recommendation that aligns with the investor's stated preference.",
+            nextQuestionId: "g8q5b",
+            scoreImpact: -15,
+            feedback: "Recommending 100 closures to align with investor preference rather than analytical conclusion destroys the value of independent consulting. If 100 closures causes more revenue attrition than cost savings, this is a value-destructive recommendation.",
+          },
+          {
+            id: "c",
+            text: "43 closures only, targeting a $31M annual improvement and ROE moving from 7.2% to 7.9%. This is the most conservative and most defensible recommendation given the attrition uncertainty.",
+            nextQuestionId: "g8q5b",
+            scoreImpact: 0,
+            feedback: "Presenting only the closure program without the hub transformation understates the full program impact by $36M annually. The 110 hub transformations are a core part of the recommendation and should not be omitted to achieve conservatism.",
+          },
+        ],
+      },
+      {
+        id: "g8q5a",
+        stage: "Board Presentation",
+        question: "The board presentation is complete. The activist investor asks the final question: if 10% ROE requires additional actions beyond branch optimization, what are the other two most important levers and can management realistically achieve them?",
+        options: [
+          {
+            id: "a",
+            text: "NIM improvement from 2.8% to 3.0% through asset-liability management optimization is worth approximately $84M pre-tax at FirstBank's asset base. Corporate overhead reduction targeting $22M is the second lever. Both are achievable within 18-24 months and together with the branch program get FirstBank to approximately 10.2% ROE.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete answer. Quantified, sequenced, and closing the loop from the initial ROE gap to the full solution. The board has everything needed to approve the program and set management targets.",
+          },
+          {
+            id: "b",
+            text: "Loan growth and increasing credit risk appetite are the fastest paths to higher ROE — taking more risk would improve returns without requiring the operational changes that branch optimization requires.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Recommending increased credit risk appetite as a primary ROE lever is unlikely to be accepted by a bank board facing activist investor pressure — it trades short-term return for long-term risk and does not address the structural efficiency problem.",
+          },
+          {
+            id: "c",
+            text: "The additional levers are complex bank management decisions that require separate workstreams to analyze properly — branch optimization should be approved first and the additional levers addressed in a follow-on engagement.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Deferring the full ROE solution to a follow-on engagement is a reasonable consulting position but undersells the analysis. The NIM and overhead levers are quantifiable from available data and the board would benefit from seeing the full path to 10% ROE today.",
+          },
+        ],
+      },
+      {
+        id: "g8q5b",
+        stage: "Board Presentation",
+        question: "The board has concerns about the recommendation. Several directors say the analysis underweights customer attrition risk. How do you defend the analytical approach?",
+        options: [
+          {
+            id: "a",
+            text: "Historical branch closure data from comparable banks shows actual attrition of 6-14% depending on proximity to remaining branches — not the 28% survey figure or the 34% branch-dependent segment rate. The recommendation is built on observed behavior, not stated intentions.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Strong defense. Using historical revealed-preference data to counter the attrition concern is the right analytical move. Observed behavior from comparable closures is more reliable than any stated preference data and the board should find this compelling.",
+          },
+          {
+            id: "b",
+            text: "Acknowledge the board's concern and recommend delaying closure implementation for 12 months to gather more customer attrition data from a pilot closure of 5 branches before proceeding with the full program.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "A pilot is a reasonable risk mitigation approach, but it delays $67M in annual improvement by at least 12 months. The historical data from comparable banks is sufficient to proceed — a pilot should be proposed only if the board is not persuaded by the historical evidence.",
+          },
+          {
+            id: "c",
+            text: "Agree with the board that attrition risk is the primary uncertainty and recommend reducing the closure target from 43 to 20 branches until more data is available.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Cutting the recommendation in half under board pressure without new analytical justification undermines the value of the analysis. If the historical data supports 43 closures, that remains the right recommendation regardless of board discomfort.",
+          },
+        ],
+      },
+    ],
+  },
 
+  // ─────────────────────────────────────────────
+  // CASE G9: BCG — STREAMING PLATFORM GROWTH
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g9",
+    title: "StreamMax: Breaking the Subscriber Plateau",
+    type: "profitability",
+    difficulty: "intermediate",
+    firm: "bcg",
+    estimatedMinutes: 28,
+    overview: "A streaming platform has plateaued at 85 million subscribers and is losing ground to competitors. BCG has been engaged to develop a growth strategy.",
+    clientBackground: "StreamMax is a US-based streaming service launched in 2016 with 85M subscribers globally — 62M domestic and 23M international. Annual revenue is $12.4B with a 12% EBITDA margin. They spend $8.2B on content annually. Net subscriber adds were negative 2M last quarter. Monthly churn increased from 2.1% to 3.4% over 18 months. Netflix has 238M subscribers, Disney+ has 150M, and HBO Max has 95M. The CEO has set a target of 120M subscribers within three years.",
+    yourRole: "You are a BCG project leader on the media and entertainment practice. You are presenting preliminary findings to StreamMax's Chief Growth Officer after three weeks of analysis.",
+    startQuestionId: "g9q1",
+    finalRecommendationPrompt: "The CGO asks: what is StreamMax's path to 120M subscribers in three years, and what are the three most important strategic moves?",
+    sampleRecommendation: "StreamMax can reach 120M subscribers through three moves in sequence. First, launch an ad-supported tier at $4.99/month within six months — 28M churned users cite price as their primary reason for leaving and a lower tier could re-acquire 5-8M at positive economics given ad revenue. Second, expand into India and Brazil with localized content investment — both markets represent 15-20M additional addressable subscribers at $3-6/month. Third, pivot the incremental content dollar toward unscripted and sports-adjacent programming, which delivers 81-84% retention rates at 60-75% lower cost per hour than original drama.",
+    idealRecommendation: "Three moves: (1) Ad-supported tier launch — re-acquires 5-8M price-sensitive churners while attracting new lower-income subscribers. (2) India and Brazil international expansion — 15-20M additional subscribers in growing markets. (3) Content mix optimization toward unscripted and sports-adjacent content with higher retention per dollar. Combined, these three moves can add 35-40M subscribers over three years, reaching the 120M target.",
+    keyTakeaways: [
+      "In subscription businesses, churn reduction compounds more powerfully than new subscriber acquisition — 1pp monthly churn reduction retained over 12 months equals more than 10% new subscriber growth",
+      "Ad-supported tiers are a proven mechanism to expand TAM for streaming platforms without cannibalizing the premium subscriber base significantly",
+      "Content ROI varies enormously by genre — unscripted content often delivers better retention per dollar than prestige drama despite having lower cultural cachet",
+      "International expansion in streaming requires genuine local content investment, not just translated versions of domestic content",
+    ],
+    questions: [
+      {
+        id: "g9q1",
+        stage: "Diagnosis",
+        question: "StreamMax lost net subscribers last quarter and churn rose from 2.1% to 3.4% monthly. Before developing growth strategy, you need to understand why churn is rising. How do you approach the diagnosis?",
+        options: [
+          {
+            id: "a",
+            text: "Analyze the content library versus competitors to identify gaps since streaming churn is primarily driven by content quality and library depth relative to competitive alternatives.",
+            nextQuestionId: "g9q2b",
+            scoreImpact: 5,
+            feedback: "Content gap analysis is relevant but assumes the diagnosis before completing it. Churn can be driven by price, content, competing services, or technical experience — you need data before assuming content is the primary driver.",
+          },
+          {
+            id: "b",
+            text: "Review exit survey data from churned subscribers to identify the stated reasons for cancellation, then cross-reference with behavioral data on content consumption before cancellation to separate true causes from stated causes.",
+            nextQuestionId: "g9q2a",
+            scoreImpact: 20,
+            feedback: "Correct diagnostic approach. Combining stated reasons with behavioral data is the most rigorous way to identify true churn drivers. Subscribers often cite one reason when the behavioral pattern points to another.",
+          },
+          {
+            id: "c",
+            text: "Benchmark StreamMax's price point against all major streaming competitors to determine whether pricing is the most obvious cause of the churn increase before investing in more complex analysis.",
+            nextQuestionId: "g9q2c",
+            scoreImpact: 5,
+            feedback: "Pricing benchmarking is quick and useful, but as a standalone starting point it is too narrow. Price may be one of several churn drivers — going straight to price analysis before reviewing the full exit data may cause you to miss equally important factors.",
+          },
+        ],
+      },
+      {
+        id: "g9q2a",
+        stage: "Churn Diagnosis",
+        question: "Exit survey data and behavioral analysis are in. Review the exhibit and identify the primary churn driver.",
+        exhibit: {
+          type: "table",
+          title: "StreamMax Churn Analysis (Exit Survey n=24,000)",
+          data: `| Churn Reason               | Pct Citing | Change vs 18 Mo Ago |
+|---------------------------|------------|---------------------|
+| Price too high             | 34%        | +18pp               |
+| Not enough content I want  | 28%        | +11pp               |
+| Switching to competitor    | 22%        | +8pp                |
+| Password sharing concern   | 9%         | -4pp                |
+| Technical issues           | 4%         | -1pp                |
+| Other                      | 3%         | -32pp               |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Price sensitivity is clearly the primary driver at 34% and growing 18pp — this points directly to launching an ad-supported tier as the highest-priority intervention.",
+            nextQuestionId: "g9q3a",
+            scoreImpact: 15,
+            feedback: "Price is the largest and fastest-growing churn reason, making an ad-supported tier the logical first response. The +18pp growth also tells you this is a worsening problem, not a stable one — urgency is real.",
+          },
+          {
+            id: "b",
+            text: "Switching to competitors at 22% is the most actionable insight since it reveals that customers are finding better alternatives — the focus should be on competitive differentiation rather than price.",
+            nextQuestionId: "g9q3b",
+            scoreImpact: 0,
+            feedback: "Switching to competitors is a symptom, not a root cause — customers switch because of price, content gaps, or both. Treating it as a standalone driver leads to a competitive response that does not address the underlying reasons they are leaving.",
+          },
+          {
+            id: "c",
+            text: "Content gaps at 28% and growing 11pp combined with price at 34% and growing 18pp together represent 62% of churn and suggest a dual intervention is needed: both a lower-priced tier and a content library improvement.",
+            nextQuestionId: "g9q3a",
+            scoreImpact: 10,
+            feedback: "Combining both primary drivers is analytically complete. Price is larger but content is growing quickly too. The dual framing sets up the subsequent analysis on both content strategy and pricing architecture.",
+          },
+        ],
+      },
+      {
+        id: "g9q2b",
+        stage: "Churn Diagnosis",
+        question: "You have analyzed the content library. StreamMax's original drama catalog is 42% smaller than Netflix's. However, retention data shows StreamMax's own unscripted content has an 81% retention rate versus 68% for its original drama. The CGO says: we just need to spend more on drama. How do you respond?",
+        options: [
+          {
+            id: "a",
+            text: "The retention data directly contradicts that conclusion — unscripted at 81% versus drama at 68% means spending more on drama to close the Netflix gap would actually hurt retention per dollar spent. The content mix should shift toward unscripted, not toward more drama.",
+            nextQuestionId: "g9q3b",
+            scoreImpact: 15,
+            feedback: "Correct reading of the data. The retention comparison is the key insight — chasing Netflix on drama with lower budgets will produce inferior results per dollar compared to investing in the content type where StreamMax already outperforms. This challenges the received wisdom in streaming.",
+          },
+          {
+            id: "b",
+            text: "Agree with the CGO — the Netflix drama gap is the most visible competitive disadvantage and closing it will require significant investment even if the per-dollar returns are lower than unscripted.",
+            nextQuestionId: "g9q3c",
+            scoreImpact: -10,
+            feedback: "Agreeing with the CGO because drama gap is visible while ignoring the retention data is letting brand perception override financial analysis. The retention numbers clearly show where StreamMax's content investment generates the most subscriber value.",
+          },
+          {
+            id: "c",
+            text: "Suggest a balanced approach — invest equally in drama and unscripted — to address the competitive gap while also leveraging the retention advantage in unscripted content.",
+            nextQuestionId: "g9q3b",
+            scoreImpact: 5,
+            feedback: "A balanced approach is safer politically but sub-optimal analytically. The retention data makes a clear argument for shifting the incremental dollar toward unscripted. Equal investment in drama despite lower returns represents a capital allocation inefficiency.",
+          },
+        ],
+      },
+      {
+        id: "g9q2c",
+        stage: "Churn Diagnosis",
+        question: "Pricing benchmarking shows StreamMax at $14.99 standard tier — the same as Netflix standard. Disney+ offers $7.99 with ads. HBO Max offers $9.99 with ads. StreamMax has no ad-supported tier. The CGO says: we should raise prices to signal premium positioning. How do you evaluate this suggestion?",
+        options: [
+          {
+            id: "a",
+            text: "Raising prices when churn is already increasing and all competitors offer lower ad-supported tiers is likely to accelerate subscriber loss. Premium positioning requires product differentiation that justifies the premium — StreamMax does not have that differentiation today.",
+            nextQuestionId: "g9q3a",
+            scoreImpact: 15,
+            feedback: "Correct assessment. Price increases work for premium positioning only when accompanied by product differentiation. Without a clear reason why StreamMax is worth more than Netflix, raising prices will accelerate the churn problem rather than reframe the value proposition.",
+          },
+          {
+            id: "b",
+            text: "Agree with the CGO — premium positioning is a valid strategy and some subscriber loss from price-sensitive customers is acceptable if it improves the perception of the StreamMax brand among high-value subscribers.",
+            nextQuestionId: "g9q3c",
+            scoreImpact: -10,
+            feedback: "Without product differentiation to justify the premium, raising prices in a market where churn is already rising will accelerate net subscriber loss. Positioning premium pricing requires product changes first, not as a standalone lever.",
+          },
+          {
+            id: "c",
+            text: "The pricing data suggests adding a lower tier rather than raising prices — being the only major streaming service without an ad-supported option is a structural disadvantage that prevents capturing price-sensitive subscribers.",
+            nextQuestionId: "g9q3a",
+            scoreImpact: 10,
+            feedback: "Good insight from the pricing comparison. The absence of an ad-supported tier is increasingly anomalous in the market and prevents StreamMax from competing for a large segment of potential subscribers. This sets up the ad-tier analysis.",
+          },
+        ],
+      },
+      {
+        id: "g9q3a",
+        stage: "Ad-Supported Tier",
+        question: "You are recommending an ad-supported tier. The CFO is skeptical: our standard tier generates $14.99 per month and the ad tier would generate only $4.99 in subscription revenue. This is value destruction. How do you evaluate the ad tier economics?",
+        exhibit: {
+          type: "table",
+          title: "Ad-Supported Tier Economics Model",
+          data: `| Metric                        | Ad Tier ($4.99) | Standard Tier ($14.99) |
+|------------------------------|-----------------|------------------------|
+| Subscription revenue/user/mo | $4.99           | $14.99                 |
+| Ad revenue/user/mo (est)     | $4.50           | $0                     |
+| Total revenue/user/mo        | $9.49           | $14.99                 |
+| Content cost allocation/mo   | $8.20           | $8.20                  |
+| Gross profit/user/mo         | $1.29           | $6.79                  |
+| Gross margin                 | 14%             | 45%                    |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The CFO is correct — 14% gross margin versus 45% for the standard tier means every ad tier subscriber generates far less value. StreamMax should not launch the ad tier.",
+            nextQuestionId: "g9q4b",
+            scoreImpact: -10,
+            feedback: "This ignores the most important variable — incremental subscribers. A 14% gross margin on users who would otherwise not be subscribers at all is better than 0% on churned users. The comparison should be ad tier margin versus no subscriber at all, not versus the standard tier.",
+          },
+          {
+            id: "b",
+            text: "The relevant comparison is ad tier revenue versus zero revenue from churned and potential low-income subscribers who will not pay $14.99. At $9.49 blended revenue versus $0 for non-subscribers, the ad tier creates value for a segment that cannot currently access the platform.",
+            nextQuestionId: "g9q4a",
+            scoreImpact: 20,
+            feedback: "Correct economic framing. The ad tier is not competing against the standard tier — it is competing against the absence of subscription revenue from customers who cannot afford or will not pay the standard price. $9.49 blended revenue is significantly better than $0.",
+          },
+          {
+            id: "c",
+            text: "The ad tier makes sense only if the cannibalization rate from standard tier subscribers downgrading is below 15% — the CFO should commission a conjoint analysis to measure likely downgrade rates before proceeding.",
+            nextQuestionId: "g9q4b",
+            scoreImpact: 5,
+            feedback: "Cannibalization is a real risk and the 15% threshold framing is valid. However, deferring the decision pending additional research delays an urgently needed intervention. Netflix's experience shows cannibalization rates around 20% — the net economics still favor launching the tier.",
+          },
+        ],
+      },
+      {
+        id: "g9q3b",
+        stage: "Content Strategy",
+        question: "You have identified that unscripted content retains subscribers at 81% versus 68% for drama at significantly lower cost. The current $8.2B content budget is 78% allocated to drama. How should StreamMax reallocate?",
+        exhibit: {
+          type: "table",
+          title: "Content ROI by Genre",
+          data: `| Genre             | Viewing Hours Pct | Retention Rate | Cost Per Hour |
+|------------------|------------------|----------------|---------------|
+| Original drama   | 42%              | 68%            | $8.2M         |
+| Licensed content | 28%              | 54%            | $1.1M         |
+| Original unscripted| 18%            | 81%            | $1.8M         |
+| Sports adjacent  | 8%               | 84%            | $2.4M         |
+| International    | 4%               | 77%            | $0.9M         |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Eliminate all original drama spending immediately and redirect the entire $6.4B drama budget to unscripted content — the retention data is unambiguous and drama ROI is clearly inferior.",
+            nextQuestionId: "g9q4c",
+            scoreImpact: -10,
+            feedback: "Original drama still accounts for 42% of viewing hours and is why many subscribers joined. A sudden complete elimination would cause massive subscriber loss from drama fans before the unscripted investment generates equivalent engagement. Transition must be gradual.",
+          },
+          {
+            id: "b",
+            text: "Maintain the existing drama slate as a retention anchor but shift the incremental content investment dollar toward unscripted and sports-adjacent content, targeting a 60-40 drama-to-alternative split over three years.",
+            nextQuestionId: "g9q4a",
+            scoreImpact: 20,
+            feedback: "Correct approach. Protecting the existing drama base that viewers already depend on while redirecting the marginal investment toward higher-retention genres is the balanced, commercially sound recommendation.",
+          },
+          {
+            id: "c",
+            text: "Propose a 50-50 split between drama and all other genres since equal investment hedges against uncertainty about whether the retention advantage of unscripted is sustainable or a temporary preference shift.",
+            nextQuestionId: "g9q4b",
+            scoreImpact: 5,
+            feedback: "50-50 is more balanced than the current 78% drama allocation but is not fully justified by the data. The retention differential — 81% for unscripted versus 68% for drama at dramatically lower cost — argues for shifting more aggressively than 50-50.",
+          },
+        ],
+      },
+      {
+        id: "g9q3c",
+        stage: "Content Strategy",
+        question: "StreamMax is considering increasing drama spending by $1.5B annually to close the Netflix content gap. The CGO asks: will this stop the churn? How do you evaluate this investment?",
+        options: [
+          {
+            id: "a",
+            text: "An additional $1.5B in drama would produce content that competitors can match in subsequent years — it addresses the content gap symptom without solving the underlying subscriber economics problem. The retention data suggests this capital is better deployed in unscripted.",
+            nextQuestionId: "g9q4b",
+            scoreImpact: 15,
+            feedback: "Correct strategic insight. Drama spending arms races in streaming tend to be zero-sum — every dollar invested raises the competitive bar, not just StreamMax's position. Unscripted content is harder to replicate and delivers better retention per dollar.",
+          },
+          {
+            id: "b",
+            text: "Yes — closing the drama gap with Netflix is the most direct path to stopping churn since content quality is the primary driver of subscriber retention in the streaming category.",
+            nextQuestionId: "g9q4c",
+            scoreImpact: -5,
+            feedback: "This assumes content quality is the primary churn driver without consulting the exit survey data. Price is the largest stated reason at 34%, and unscripted content already outperforms drama on retention metrics. The premise of this recommendation is not supported by the available data.",
+          },
+          {
+            id: "c",
+            text: "Commission audience research to determine whether StreamMax subscribers specifically want more drama before committing $1.5B — the existing retention data may not reflect current subscriber preferences.",
+            nextQuestionId: "g9q4b",
+            scoreImpact: 0,
+            feedback: "Additional research is always tempting but $1.5B content investment decisions require acting on the best available data, not waiting for perfect information. The existing retention data is a strong signal that should influence the recommendation.",
+          },
+        ],
+      },
+      {
+        id: "g9q4a",
+        stage: "Growth Roadmap",
+        question: "You have recommendations on pricing tier and content mix. The CGO asks: what is the subscriber growth model that gets from 85M to 120M in three years?",
+        exhibit: {
+          type: "table",
+          title: "Subscriber Growth Initiative Model",
+          data: `| Initiative              | Subscriber Impact | Investment    | Timeline  |
+|------------------------|-------------------|---------------|-----------|
+| Ad tier launch          | +5-8M             | $120M tech    | 6 months  |
+| Churn reduction program | +8-12M retained   | $200M content | 12-18 mo  |
+| India expansion         | +7-10M            | $350M content | 18-24 mo  |
+| Brazil expansion        | +4-6M             | $200M content | 12-18 mo  |
+| Content mix shift       | +3-5M retained    | Reallocation  | 12 months |
+| Password sharing fix    | +2-3M             | $40M tech     | 6-9 mo    |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "All six initiatives in parallel — the total upside is 29-44M subscribers, well above the 35M needed to reach 120M, and parallel execution maximizes speed to the target.",
+            nextQuestionId: "g9q5a",
+            scoreImpact: 5,
+            feedback: "Running all six simultaneously risks organizational overload and execution dilution. More importantly, some initiatives are prerequisites for others — churn reduction should precede international expansion since you want a lower churn rate before entering new markets.",
+          },
+          {
+            id: "b",
+            text: "Sequence the initiatives: ad tier and password sharing in months 1-6 for quick wins, churn reduction and content mix shift in months 6-18, then India and Brazil expansion in months 12-36. Total upside: 29-44M subscribers, putting the 120M target within range.",
+            nextQuestionId: "g9q5a",
+            scoreImpact: 20,
+            feedback: "Correct sequencing logic. Quick wins first build momentum and fund the larger investments. Churn reduction before international expansion ensures you are not pouring new subscribers into a leaky bucket. The 29-44M range validates the 120M target as achievable.",
+          },
+          {
+            id: "c",
+            text: "Focus only on India expansion since at 7-10M subscribers it has the highest single-initiative upside and emerging market growth is the fastest path to scale given US market saturation.",
+            nextQuestionId: "g9q5b",
+            scoreImpact: -5,
+            feedback: "Single-initiative focus misses the compounding benefit of multiple smaller interventions that together deliver more than the sum of their parts. India also has the longest timeline at 18-24 months — quick wins from the ad tier and password sharing are available in 6 months.",
+          },
+        ],
+      },
+      {
+        id: "g9q4b",
+        stage: "Growth Roadmap",
+        question: "Your content or pricing recommendation has led down a suboptimal path. The CGO asks directly: what is the fastest path to 5M incremental subscribers in the next 12 months?",
+        options: [
+          {
+            id: "a",
+            text: "The ad-supported tier is the fastest path to 5M incremental subscribers within 12 months. It targets the 28M churned users who cited price as the primary reason for leaving — even a 15-20% re-acquisition rate yields 4-6M subscribers in the first year.",
+            nextQuestionId: "g9q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The ad tier re-acquisition math is compelling and the 12-month timeline is achievable. Targeting churned subscribers specifically is more efficient than acquiring brand-new subscribers since they have demonstrated prior willingness to pay for the product.",
+          },
+          {
+            id: "b",
+            text: "The fastest path is a major marketing spend increase of $500M focused on subscriber acquisition in the US market, since brand awareness gaps rather than product or pricing issues are limiting growth.",
+            nextQuestionId: "g9q5b",
+            scoreImpact: -10,
+            feedback: "StreamMax is a well-known brand in the US with 62M domestic subscribers. Awareness is not the constraint. The exit survey data clearly shows price and content gaps are driving churn — marketing spend does not address either root cause.",
+          },
+          {
+            id: "c",
+            text: "The fastest path is strategic partnerships with mobile carriers to bundle StreamMax with mobile plans and drive subscriber growth through embedded distribution.",
+            nextQuestionId: "g9q5b",
+            scoreImpact: 5,
+            feedback: "Carrier bundling can drive subscriber growth but requires 12-18 months of negotiation and integration before meaningful volume materializes. It is slower than an ad tier launch and does not address the underlying churn problem.",
+          },
+        ],
+      },
+      {
+        id: "g9q4c",
+        stage: "Growth Roadmap",
+        question: "Your content strategy recommendation has been too aggressive or too timid. The CGO says: I need a content strategy that I can actually sell to the board. Give me a specific recommendation with numbers.",
+        options: [
+          {
+            id: "a",
+            text: "Maintain the existing drama slate — approximately $6B — while redirecting $800M of the incremental content budget from drama expansion to unscripted and sports-adjacent content. This shifts the ratio from 78% drama to 68% drama over three years while improving expected retention rates by 3-4pp.",
+            nextQuestionId: "g9q5a",
+            scoreImpact: 10,
+            feedback: "Good recovery. Specific dollar allocation, specific ratio shift, and quantified retention impact gives the board exactly what it needs. This is the balanced recommendation that protects the base while improving marginal ROI.",
+          },
+          {
+            id: "b",
+            text: "Recommend a comprehensive content strategy review taking six months before committing to any reallocation, since content investment decisions should not be made without audience segmentation research.",
+            nextQuestionId: "g9q5b",
+            scoreImpact: -10,
+            feedback: "A six-month review of content strategy when the company is losing subscribers is not acceptable. The retention data already in hand is sufficient to make a directional recommendation and begin shifting the content mix.",
+          },
+          {
+            id: "c",
+            text: "Cut the total content budget from $8.2B to $6B and reallocate savings to subscriber acquisition marketing, since content costs are the primary driver of the negative EBITDA trajectory.",
+            nextQuestionId: "g9q5b",
+            scoreImpact: -5,
+            feedback: "Cutting content investment while trying to fix a content gap and churn problem is self-defeating. The issue is content mix efficiency, not total content spend level.",
+          },
+        ],
+      },
+      {
+        id: "g9q5a",
+        stage: "Final Recommendation",
+        question: "The CGO asks for the three-move strategy summary to take to the CEO. What are your three recommendations in priority order?",
+        options: [
+          {
+            id: "a",
+            text: "One: launch ad-supported tier within six months to re-acquire 5-8M price-sensitive churners. Two: expand into India and Brazil with localized content investment targeting 11-16M subscribers over three years. Three: shift incremental content dollars toward unscripted and sports-adjacent content to improve retention per dollar spent.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Strong three-move strategy. Sequenced correctly — quick win first, then growth markets, then structural improvement. Each move is specific, has a subscriber impact range, and builds on the diagnostic findings. The CGO says: that is the presentation.",
+          },
+          {
+            id: "b",
+            text: "One: increase drama content spending by $1.5B to close the Netflix gap. Two: raise prices to $17.99 to signal premium positioning. Three: launch in all emerging markets simultaneously to maximize global scale.",
+            nextQuestionId: "end",
+            scoreImpact: -15,
+            feedback: "All three recommendations contradict the diagnostic findings. More drama investment has lower retention ROI than unscripted. Price increases accelerate churn when price is already the top churn reason. Simultaneous multi-market launch overextends the organization.",
+          },
+          {
+            id: "c",
+            text: "One: reduce churn from 3.4% to 2.5% through service improvements and content investment. Two: add 5M subscribers through an ad tier. Three: expand internationally to add 10M more subscribers.",
+            nextQuestionId: "end",
+            scoreImpact: 10,
+            feedback: "Directionally right but the churn reduction framing is vague — how specifically? The other two moves are clear and the sequencing is reasonable. A stronger version would specify what drives the churn reduction rather than stating the target as the action.",
+          },
+        ],
+      },
+      {
+        id: "g9q5b",
+        stage: "Final Recommendation",
+        question: "Your recommendations have been inconsistent. The CGO gives you one final chance: the CEO asks tomorrow what the path to 120M looks like. What do you say?",
+        options: [
+          {
+            id: "a",
+            text: "The path to 120M requires 35M incremental subscribers over three years from three sources: 5-8M from an ad-supported tier re-acquiring price-sensitive churners, 11-16M from India and Brazil expansion with localized content, and 8-12M from improved retention through content mix optimization toward unscripted. Together these reach the 120M target at the midpoint.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Good recovery. Clear subscriber source breakdown, specific range estimates, and the math adds up to the 120M target. The CEO can present this to the board as a credible growth roadmap.",
+          },
+          {
+            id: "b",
+            text: "The 120M target is unrealistic in three years given current churn rates — a more achievable three-year target is 105M subscribers and the CEO should reset board expectations before committing to 120M.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Telling the CGO to lower the CEO's ambition as a first move is not a growth strategy. The initiative analysis shows 29-44M subscriber upside is achievable — 120M is within range at the midpoint. Make the case for how to get there rather than why you cannot.",
+          },
+          {
+            id: "c",
+            text: "The path to 120M requires a fundamental repositioning of StreamMax as a premium service with exclusive content partnerships and a dramatically improved user experience — this is a two to three year transformation, not a series of tactical moves.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Repositioning as strategy is valid long-term thinking but not actionable for a CEO going into a board meeting about hitting a specific subscriber target in three years. The tactical roadmap — ad tier, international expansion, content mix — is the more useful near-term answer.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G10: BAIN — RIDE-SHARING MARKET ENTRY
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g10",
+    title: "RideMax: Southeast Asia Market Entry",
+    type: "market_entry",
+    difficulty: "intermediate",
+    firm: "bain",
+    estimatedMinutes: 28,
+    overview: "A US-based ride-sharing company is considering entering Southeast Asia. Bain has been engaged to assess the opportunity and recommend an entry strategy.",
+    clientBackground: "RideMax operates in 40 US cities with 15% market share. They have $800M in cash available for international expansion. The SEA ride-hailing market is valued at $12B growing at 18% annually. Grab holds 65% market share across the region and Gojek holds 20%. The CEO wants to enter at least two SEA countries within 18 months.",
+    yourRole: "You are a Bain project leader on the transportation and technology practice. You have eight weeks to deliver a market entry recommendation.",
+    startQuestionId: "g10q1",
+    finalRecommendationPrompt: "The CEO asks: which two countries should we enter first, how should we enter, and what will it cost?",
+    sampleRecommendation: "Enter Vietnam and the Philippines as the first two markets. Vietnam has the most favorable competitive dynamics — Grab's share is lower than regional average and growth is fastest at 28%. The Philippines has the second-lowest Grab concentration and a large urban population in Manila. Entry mode should be organic launch rather than acquisition — the two qualified acquisition targets are priced at premiums not justified by their market positions. Total entry investment: $280M over 18 months covering licensing, driver incentives, customer acquisition, and technology localization.",
+    idealRecommendation: "Enter Vietnam and the Philippines first. Vietnam has the most attractive competitive dynamics and fastest growth. Philippines has a large urban market with manageable competitive intensity. Organic entry with $280M investment over 18 months is preferred over acquisition — available targets are overpriced. Driver incentive programs and a lower commission rate than Grab are the primary acquisition levers.",
+    keyTakeaways: [
+      "Market entry sequencing should prioritize markets where competitive intensity is lowest and growth is highest, not just where the market is largest",
+      "Entry mode decision — organic versus acquisition — depends on the availability of reasonably priced targets and the time pressure of the market opportunity",
+      "In platform businesses, driver supply drives demand — acquiring drivers is as important as acquiring riders in the early market entry phase",
+      "Working capital requirements for platform incentives can be 3-5x larger than technology investment in ride-sharing market entry",
+    ],
+    questions: [
+      {
+        id: "g10q1",
+        stage: "Market Assessment",
+        question: "The CEO wants to enter at least two SEA countries within 18 months. Before identifying which countries, how do you structure the market attractiveness assessment?",
+        options: [
+          {
+            id: "a",
+            text: "Rank countries by total market size — enter the largest markets first since scale creates the most opportunity for RideMax to build a competitive position quickly.",
+            nextQuestionId: "g10q2b",
+            scoreImpact: -5,
+            feedback: "Market size alone ignores competitive intensity, regulatory barriers, and growth rate. The largest markets are often the most competitive — entering where Grab is strongest is not the right first move for a new entrant with $800M in capital.",
+          },
+          {
+            id: "b",
+            text: "Evaluate each market on three dimensions: market attractiveness including size and growth, competitive intensity including Grab and Gojek share and behavior, and entry feasibility including regulatory environment and RideMax's ability to win.",
+            nextQuestionId: "g10q2a",
+            scoreImpact: 20,
+            feedback: "Correct three-dimension framework. Market attractiveness tells you if it is worth entering, competitive intensity tells you how hard it will be, and entry feasibility tells you whether RideMax specifically can win. All three are required for a sound market entry recommendation.",
+          },
+          {
+            id: "c",
+            text: "Focus exclusively on the regulatory environment since ride-sharing regulation is the primary barrier to entry in Asia and choosing markets with favorable regulations should come before any other consideration.",
+            nextQuestionId: "g10q2c",
+            scoreImpact: 5,
+            feedback: "Regulatory environment is an important filter but should be one of several dimensions rather than the sole criterion. A market with perfect regulation but dominant Grab penetration and low growth is still unattractive.",
+          },
+        ],
+      },
+      {
+        id: "g10q2a",
+        stage: "Country Prioritization",
+        question: "You have assessed all five major SEA markets. Review the exhibit and identify the top two entry candidates.",
+        exhibit: {
+          type: "table",
+          title: "SEA Market Assessment Summary",
+          data: `| Country     | Market Size | Growth | Grab Share | Gojek Share | Regulatory | RideMax Fit |
+|------------|-------------|--------|------------|-------------|------------|-------------|
+| Indonesia  | $4.8B       | 14%    | 58%        | 32%         | Moderate   | Low         |
+| Thailand   | $2.1B       | 16%    | 71%        | 8%          | Favorable  | Medium      |
+| Vietnam    | $1.8B       | 28%    | 52%        | 15%         | Favorable  | High        |
+| Philippines| $1.4B       | 22%    | 61%        | 12%         | Moderate   | High        |
+| Malaysia   | $1.2B       | 18%    | 74%        | 10%         | Favorable  | Medium      |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Indonesia and Thailand are the top two — Indonesia at $4.8B is the largest market and Thailand has favorable regulation. Size and regulatory favorability should take priority.",
+            nextQuestionId: "g10q3b",
+            scoreImpact: -5,
+            feedback: "Indonesia has Gojek at 32% entrenched alongside Grab at 58% — a combined 90% duopoly that would leave RideMax competing for 10% of the market. Thailand has Grab at 71% — the highest in the region. These are the two most competitively hostile markets.",
+          },
+          {
+            id: "b",
+            text: "Vietnam and Philippines are the top two — Vietnam has the fastest growth at 28% and lowest Grab share at 52%, and Philippines has the second-lowest Grab concentration with high RideMax fit and 22% growth.",
+            nextQuestionId: "g10q3a",
+            scoreImpact: 20,
+            feedback: "Correct selection. Vietnam combines fastest growth with lowest competitive intensity among the five markets. Philippines adds a second market with manageable Grab share and strong RideMax strategic fit. Together these offer the best entry conditions for a capital-constrained new entrant.",
+          },
+          {
+            id: "c",
+            text: "Thailand and Vietnam — both have favorable regulatory environments which is the primary barrier to entry, and Vietnam's growth is the highest in the region making it the clearest priority.",
+            nextQuestionId: "g10q3a",
+            scoreImpact: 5,
+            feedback: "Vietnam is correctly identified but Thailand with Grab at 71% market share is not the right second market. The Philippines with 22% growth and lower Grab concentration is a better second choice than Thailand despite Thailand's regulatory advantage.",
+          },
+        ],
+      },
+      {
+        id: "g10q2b",
+        stage: "Country Prioritization",
+        question: "You have ranked countries by market size. Indonesia is first at $4.8B and Thailand second at $2.1B. However, Indonesia has a combined Grab-Gojek duopoly at 90% share. The Bain partner asks: does market size justify entering a market with 90% duopoly concentration?",
+        options: [
+          {
+            id: "a",
+            text: "No — 90% duopoly concentration means RideMax enters competing for 10% of the market. The $4.8B market at 10% addressable share is effectively a $480M opportunity, smaller than Vietnam's $1.8B at 48% addressable share. Size must be adjusted for competitive addressability.",
+            nextQuestionId: "g10q3a",
+            scoreImpact: 15,
+            feedback: "Correct adjustment. Addressable share given competitive intensity is the right metric — raw market size overstates the opportunity in highly concentrated markets. This insight reorders the priority ranking significantly.",
+          },
+          {
+            id: "b",
+            text: "Yes — large markets justify entry even with high competitive concentration because the absolute opportunity is large enough to build a viable business even as a minor player with 5% share.",
+            nextQuestionId: "g10q3b",
+            scoreImpact: -10,
+            feedback: "5% of a market dominated by two well-capitalized incumbents is not a viable strategic position — it requires sustaining losses indefinitely without a path to competitive differentiation. Market size without competitive addressability is not sufficient justification.",
+          },
+          {
+            id: "c",
+            text: "The duopoly is actually an opportunity — when two players compete intensely against each other, a third entrant can sometimes exploit the conflict and carve out a position by serving underserved customer segments.",
+            nextQuestionId: "g10q3b",
+            scoreImpact: 0,
+            feedback: "The third-player opportunity thesis can work in some markets but requires identifying a specific underserved segment. In Indonesia, Grab and Gojek are competing intensely across all segments — the market is fully contested, not split into exploitable niches.",
+          },
+        ],
+      },
+      {
+        id: "g10q2c",
+        stage: "Country Prioritization",
+        question: "Your regulatory-first filter has identified Thailand, Vietnam, and Malaysia as having favorable regulatory environments. Among these three, how do you select the top two entry markets?",
+        options: [
+          {
+            id: "a",
+            text: "Among the three favorable-regulation markets, select Vietnam and Malaysia — both have growth above the SEA average and neither has Grab above 75% share.",
+            nextQuestionId: "g10q3a",
+            scoreImpact: 10,
+            feedback: "Vietnam is the right choice and Malaysia is a reasonable second given the regulatory constraint. However, the Philippines — despite moderate regulation — has better growth and RideMax fit than Malaysia and might be worth the regulatory complexity.",
+          },
+          {
+            id: "b",
+            text: "Vietnam and Thailand — Vietnam has the highest growth at 28% and Thailand is the second-largest favorable-regulation market. Growth combined with regulatory ease makes these the most attractive pairing.",
+            nextQuestionId: "g10q3b",
+            scoreImpact: -5,
+            feedback: "Thailand has Grab at 71% — the highest share in the favorable-regulation group. Selecting it over the Philippines despite higher competitive concentration prioritizes regulatory ease over competitive attractiveness, which is the wrong tradeoff.",
+          },
+          {
+            id: "c",
+            text: "Reassess the Philippines despite moderate regulation — its growth at 22% and high RideMax fit may outweigh the regulatory complexity, making it a better second choice than either Thailand or Malaysia.",
+            nextQuestionId: "g10q3a",
+            scoreImpact: 15,
+            feedback: "Good course correction. The Philippines' combination of growth, competitive room, and RideMax fit may justify accepting moderate regulatory complexity. A strong growth market with manageable competition is often worth more than an easy regulatory environment with heavy incumbent dominance.",
+          },
+        ],
+      },
+      {
+        id: "g10q3a",
+        stage: "Entry Mode",
+        question: "You have identified Vietnam and the Philippines as the priority markets. Now determine the entry mode. An investment bank has identified two acquisition targets — one in each country. Should RideMax enter via acquisition or organic launch?",
+        exhibit: {
+          type: "table",
+          title: "Entry Mode Comparison",
+          data: `| Factor             | Organic Launch           | Acquisition               |
+|-------------------|--------------------------|---------------------------|
+| Time to market     | 12-18 months             | 6-9 months post-close     |
+| Capital required   | $280M over 18 months     | $320-380M plus integration|
+| Driver network     | Build from zero          | Acquire existing network  |
+| Brand              | Build from zero          | Inherit local brand       |
+| Target available?  | n/a                      | Vietnam: $95M (18% share) |
+|                    |                          | Philippines: $85M (11% share)|`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Acquire both targets — the time savings of 6-9 months in each market is worth the additional $180-280M in acquisition cost, and inheriting an existing driver network avoids the hardest part of a platform cold-start problem.",
+            nextQuestionId: "g10q4b",
+            scoreImpact: 5,
+            feedback: "Acquisition is faster but the valuations need scrutiny. $95M for 18% share in a $1.8B market implies a $527M total market valuation — 29x revenue for a ride-hailing company with minority market position. That premium needs to be justified before committing.",
+          },
+          {
+            id: "b",
+            text: "Organic launch is preferred. The acquisition targets have minority share positions at valuations implying 25-30x revenue multiples — too expensive relative to what they bring. An organic launch with $280M allows RideMax to build a modern driver experience and technology stack rather than inheriting legacy systems.",
+            nextQuestionId: "g10q4a",
+            scoreImpact: 20,
+            feedback: "Correct entry mode recommendation. The acquisition valuations are not supported by the market positions on offer. Organic launch preserves capital for driver and customer incentives — which in platform businesses are the real competitive weapons during market entry.",
+          },
+          {
+            id: "c",
+            text: "Acquire the Vietnam target only since 18% market share is more strategic in a high-growth market, and organic launch in the Philippines since the 11% share Philippines acquisition does not justify the premium.",
+            nextQuestionId: "g10q4a",
+            scoreImpact: 10,
+            feedback: "Differentiated approach is reasonable but the Vietnam valuation also looks expensive at $95M for 18% share. The core question is whether the acquired driver network and brand accelerate market position enough to justify the premium in either market.",
+          },
+        ],
+      },
+      {
+        id: "g10q3b",
+        stage: "Entry Mode",
+        question: "You have identified markets with high competitive intensity. The CEO says: in a market dominated by Grab, we need an acquisition to get immediate scale. How do you evaluate this logic?",
+        options: [
+          {
+            id: "a",
+            text: "Acquisition only provides immediate scale if you acquire a target large enough to matter competitively. Buying a 10-18% share company in a Grab-dominated market gives you a weak starting position — the capital is better spent on driver incentives for organic launch in more favorable markets.",
+            nextQuestionId: "g10q4a",
+            scoreImpact: 15,
+            feedback: "Correct analysis. Acquisition of a minority-share player in a Grab-dominated market does not solve the fundamental competitive problem — you still need to take share from Grab. The capital efficiency of organic launch in Vietnam and the Philippines is superior.",
+          },
+          {
+            id: "b",
+            text: "Agree with the CEO — acquisition is the only path to immediate scale and RideMax should acquire the largest available target in each priority market, even at a premium, to establish a credible competitive position quickly.",
+            nextQuestionId: "g10q4b",
+            scoreImpact: -5,
+            feedback: "Speed-driven acquisition at any price can destroy value. The acquisitions available are minority-share positions at expensive multiples — they provide some scale but not enough to change the competitive dynamics meaningfully, and they reduce the capital available for the incentive wars that actually determine market entry outcomes.",
+          },
+          {
+            id: "c",
+            text: "Ask the CEO whether the 18-month timeline is truly fixed — if the timeline can extend to 24 months, organic launch becomes more viable and avoids the acquisition premium in competitive markets.",
+            nextQuestionId: "g10q4a",
+            scoreImpact: 10,
+            feedback: "Timeline flexibility is worth exploring, though the CEO's 18-month target likely reflects genuine market timing pressure. More importantly, the organic versus acquisition question is primarily about capital efficiency and competitive position, not just timing.",
+          },
+        ],
+      },
+      {
+        id: "g10q4a",
+        stage: "Investment Sizing",
+        question: "You have recommended organic entry into Vietnam and the Philippines. The CFO asks: what does $280M actually buy in terms of market entry activities, and is it enough to establish a competitive position?",
+        exhibit: {
+          type: "table",
+          title: "Investment Allocation for Organic Entry ($280M Total)",
+          data: `| Category                    | Vietnam | Philippines | Total  |
+|----------------------------|---------|-------------|--------|
+| Technology localization     | $25M    | $20M        | $45M   |
+| Driver incentive programs   | $60M    | $50M        | $110M  |
+| Customer acquisition        | $40M    | $35M        | $75M   |
+| Regulatory and licensing    | $8M     | $7M         | $15M   |
+| Operations setup            | $20M    | $15M        | $35M   |
+| Total                       | $153M   | $127M       | $280M  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "$280M is sufficient given the market sizes — Vietnam at $1.8B and the Philippines at $1.4B are smaller markets where incentive-based entry does not require the scale of capital needed in Indonesia or Thailand.",
+            nextQuestionId: "g10q5a",
+            scoreImpact: 10,
+            feedback: "Reasonable assessment. The smaller market sizes mean lower absolute incentive spending is needed to move the market. The allocation also correctly weights driver incentives at $110M as the largest line — in ride-sharing, driver supply is the primary competitive weapon during market entry.",
+          },
+          {
+            id: "b",
+            text: "The $110M in driver incentives is the most important line item — in a platform business, supply-side acquisition is more critical than demand-side in the early phases since rides cannot happen without drivers. This allocation reflects sound platform economics.",
+            nextQuestionId: "g10q5a",
+            scoreImpact: 20,
+            feedback: "Excellent insight. Identifying driver incentives as the strategic center of the investment allocation demonstrates understanding of platform economics. Without driver supply, customer acquisition marketing has nothing to fulfill — supply must lead demand in two-sided platforms.",
+          },
+          {
+            id: "c",
+            text: "$280M is insufficient — Grab spent over $1B to establish its position in each major market and RideMax would need at least $500M to credibly challenge them in two markets simultaneously.",
+            nextQuestionId: "g10q5b",
+            scoreImpact: -5,
+            feedback: "Grab's $1B+ per market was spent establishing first-mover position across all of SEA simultaneously. RideMax is entering specifically chosen smaller markets where the competitive environment is less entrenched. The per-market spend comparison is not directly applicable.",
+          },
+        ],
+      },
+      {
+        id: "g10q4b",
+        stage: "Investment Sizing",
+        question: "You are pursuing an acquisition-led strategy. The CFO points out that the two acquisitions plus integration costs would total $400-440M — leaving only $360-400M for market operations. Is this enough for a credible post-acquisition competitive push?",
+        options: [
+          {
+            id: "a",
+            text: "The remaining $360-400M is sufficient since the acquisitions provide an existing driver network and customer base that reduces the organic incentive spending required. The effective deployment efficiency improves with the acquired assets.",
+            nextQuestionId: "g10q5a",
+            scoreImpact: 5,
+            feedback: "This argument has some merit — acquired networks do reduce cold-start costs. However, the incentive wars required to take share from Grab still require substantial capital regardless of starting position, and $360M may be tight across two markets.",
+          },
+          {
+            id: "b",
+            text: "The capital split is too tight — $440M in acquisition plus integration costs leaves an average of $180M per market for operations. Grab can easily respond with $200-300M in counter-incentives given their capital position, which would overwhelm a $180M per market budget.",
+            nextQuestionId: "g10q5b",
+            scoreImpact: 15,
+            feedback: "Correct competitive analysis. The capital asymmetry is the core problem with acquisition-led strategy at this capital level. Grab has more than enough capital to respond with counter-incentives that exhaust RideMax's remaining budget in each market.",
+          },
+          {
+            id: "c",
+            text: "Request an additional $200M from the board to fund both acquisitions and sufficient operational capital — the entry opportunity is compelling enough to justify additional capital deployment beyond the initial $800M budget.",
+            nextQuestionId: "g10q5a",
+            scoreImpact: 0,
+            feedback: "Requesting additional capital is a valid option but should come after exhausting the alternatives within the existing budget. The organic entry approach in Vietnam and the Philippines accomplishes the market entry goal within $800M without requiring a board return for more capital.",
+          },
+        ],
+      },
+      {
+        id: "g10q5a",
+        stage: "Final Recommendation",
+        question: "The CEO asks for the final recommendation: two countries, entry mode, capital plan, and timeline.",
+        options: [
+          {
+            id: "a",
+            text: "Enter Vietnam and Philippines organically. Vietnam: highest growth at 28%, lowest Grab share at 52%, high RideMax fit. Philippines: 22% growth, manageable Grab share at 61%, large urban market in Manila. Total investment $280M over 18 months with $110M prioritized toward driver incentives. Target 8-12% share in each market by month 18.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete recommendation. Country selection justified, entry mode justified, capital allocation specific, and a market share target provides a measurable outcome for the board to evaluate performance against. The CEO says: let us build the business case.",
+          },
+          {
+            id: "b",
+            text: "Enter Indonesia and Thailand since they are the largest markets and market size is ultimately the most important determinant of long-term platform value in ride-sharing.",
+            nextQuestionId: "end",
+            scoreImpact: -15,
+            feedback: "This contradicts the entire market entry analysis. Indonesia has a 90% duopoly and Thailand has Grab at 71% — entering these markets with $800M would result in losses without establishing a viable competitive position.",
+          },
+          {
+            id: "c",
+            text: "Enter Vietnam first and use the results to determine whether the Philippines entry is warranted, rather than committing capital to both markets simultaneously before validating the Vietnam hypothesis.",
+            nextQuestionId: "end",
+            scoreImpact: 10,
+            feedback: "Staged entry is more conservative and reduces risk, but the CEO's mandate is two markets within 18 months. Sequential entry means the Philippines launch would begin after Vietnam results are in — potentially pushing the second market beyond the 18-month window.",
+          },
+        ],
+      },
+      {
+        id: "g10q5b",
+        stage: "Final Recommendation",
+        question: "Your investment sizing or country selection has had issues. The partner gives you one final opportunity before the CEO presentation. What is the correct recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "Vietnam and Philippines via organic entry at $280M total investment, with driver incentives as the primary capital deployment. Vietnam first given superior growth and lower competitive intensity, Philippines second within the 18-month window.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery. The core recommendation is correct — the right countries, the right entry mode, and the right capital allocation priority. The partner says: that is the answer, now build the supporting analysis.",
+          },
+          {
+            id: "b",
+            text: "Acknowledge to the CEO that the $800M capital budget is insufficient for a credible SEA entry and recommend deferring the expansion until RideMax can raise an additional $500M specifically for international markets.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Recommending to defer the entire international expansion because earlier analysis was flawed is an overreaction. The organic entry into Vietnam and the Philippines is achievable within $280M — well within the $800M budget. The analysis supports proceeding.",
+          },
+          {
+            id: "c",
+            text: "Recommend a partnership approach with Grab rather than independent entry — if Grab and RideMax collaborate on technology sharing and revenue split, both companies benefit more than in head-to-head competition.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Partnering with the dominant competitor you were hired to compete against is a strategic pivot that fundamentally changes the nature of the engagement. The client hired Bain to develop an independent market entry strategy, not a Grab partnership.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G11: DELOITTE — AIRLINE OPERATIONS
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g11",
+    title: "AirCore: Maintenance Operations Turnaround",
+    type: "operations",
+    difficulty: "intermediate",
+    firm: "deloitte",
+    estimatedMinutes: 28,
+    overview: "A major US airline has seen maintenance-related delays surge 34% and maintenance costs rise 28% over 18 months. Deloitte has been engaged to diagnose and fix the problem.",
+    clientBackground: "AirCore operates 450 aircraft with hubs in Chicago, Dallas, and Atlanta. They have 8,400 maintenance technicians across six maintenance bases. Maintenance-related delays are costing an estimated $595M annually in reduced revenue and increased costs. On-time performance fell from 81% to 74%. The COO has engaged Deloitte to identify root causes and recommend operational improvements.",
+    yourRole: "You are a Deloitte senior consultant on the operations practice. You have been on the ground at AirCore's Chicago maintenance base for two weeks conducting interviews and data analysis.",
+    startQuestionId: "g11q1",
+    finalRecommendationPrompt: "The COO asks: what are your top three operational changes AirCore must make to recover on-time performance, and what investment is required for each?",
+    sampleRecommendation: "Three changes: First, deploy predictive maintenance using AirCore's existing ACARS sensor data — $45M investment, estimated 55-65% reduction in unplanned component failures, $180M annual savings. Second, implement demand-sensing inventory optimization for parts — $12M investment, reduces AOG events by targeting the 89% increase in parts-unavailability delays, $67M annual savings. Third, redesign technician scheduling based on aircraft rotation patterns — $8M investment, reduces overtime and improves productivity, $45M annual savings. Total investment $65M, total annual savings $292M.",
+    idealRecommendation: "Three changes: (1) Predictive maintenance on ACARS data — $45M, $180M annual savings from 55-65% unplanned failure reduction. (2) Parts inventory optimization — $12M, $67M savings from AOG reduction. (3) Technician scheduling redesign — $8M, $45M savings. Combined $65M investment generates $292M in annual savings — payback under 3 months.",
+    keyTakeaways: [
+      "In maintenance operations, separating unplanned from planned downtime is essential — they have fundamentally different root causes and solutions",
+      "Predictive maintenance using existing sensor data is often the highest-ROI intervention because the data already exists but is not being used",
+      "Inventory management is frequently the hidden culprit in maintenance delays — parts availability is as critical as technician availability",
+      "Implementation sequencing in operations should prioritize quick wins that fund longer-term investments rather than tackling everything simultaneously",
+    ],
+    questions: [
+      {
+        id: "g11q1",
+        stage: "Problem Scoping",
+        question: "Maintenance-related delays are up 34% and costs are up 28%. Before diving into data, how do you structure the maintenance diagnostic?",
+        options: [
+          {
+            id: "a",
+            text: "Structure the diagnostic around three MECE buckets: people including technician availability, skills, and scheduling; parts including inventory, procurement, and supplier reliability; and processes including maintenance planning, documentation, and quality control.",
+            nextQuestionId: "g11q2a",
+            scoreImpact: 20,
+            feedback: "Excellent MECE framework. People, parts, and processes cover all fundamental inputs to maintenance operations and ensure no major category is missed. This is the Deloitte operations diagnostic structure for maintenance.",
+          },
+          {
+            id: "b",
+            text: "Focus immediately on the delay data since that is what is costing revenue — identify which delay categories are growing fastest and work backward to the operational root causes.",
+            nextQuestionId: "g11q2b",
+            scoreImpact: 10,
+            feedback: "Delay categorization is a valid starting point and will reveal where the problem is concentrated. The risk is focusing on symptoms — delay categories — rather than causes, but in this case the delay data directly points to root causes well enough to be useful.",
+          },
+          {
+            id: "c",
+            text: "Interview the most senior maintenance technicians at each base since front-line operators usually know exactly what is going wrong and why, which is faster than data analysis alone.",
+            nextQuestionId: "g11q2c",
+            scoreImpact: 0,
+            feedback: "Front-line interviews are valuable and should be part of the diagnostic, but starting with interviews before a data structure risks collecting opinions rather than evidence. The MECE framework gives interviews a structure that makes them more analytically useful.",
+          },
+        ],
+      },
+      {
+        id: "g11q2a",
+        stage: "Delay Analysis",
+        question: "You have structured the diagnostic around people, parts, and processes. The maintenance data team provides the delay root cause breakdown. Review the exhibit and identify the primary driver.",
+        exhibit: {
+          type: "table",
+          title: "AirCore Maintenance Delay Root Cause Analysis",
+          data: `| Delay Category            | Delays (12mo) | Avg Duration | Total Hours | YoY Change |
+|--------------------------|--------------|--------------|-------------|------------|
+| Unplanned component fail  | 4,820        | 3.2 hrs      | 15,424      | +67%       |
+| Parts not available (AOG) | 3,210        | 4.8 hrs      | 15,408      | +89%       |
+| Technician not available  | 1,890        | 1.4 hrs      | 2,646       | +12%       |
+| Documentation issues      | 1,420        | 1.1 hrs      | 1,562       | +8%        |
+| Third-party delays        | 980          | 3.6 hrs      | 3,528       | +31%       |
+| Other                     | 620          | 1.8 hrs      | 1,116       | +5%        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Technician availability at +12% is the most controllable driver and should be addressed first through scheduling improvements since people problems are faster to fix than equipment or supply chain issues.",
+            nextQuestionId: "g11q3c",
+            scoreImpact: -10,
+            feedback: "Technician availability represents only 2,646 delay hours and grew only 12% — it is the smallest major category and slowest-growing. Focusing on the most controllable rather than the most impactful driver is a classic prioritization error.",
+          },
+          {
+            id: "b",
+            text: "Unplanned component failures and parts unavailability together account for 76% of total delay hours and are growing 67% and 89% respectively — far faster than the 34% overall average. These two categories are the primary focus.",
+            nextQuestionId: "g11q3a",
+            scoreImpact: 20,
+            feedback: "Correct identification. 15,424 plus 15,408 hours equals 30,832 delay hours — 76% of the total. Both categories are growing far faster than the average, pointing to a predictive maintenance failure and a supply chain breakdown as the two root causes to investigate.",
+          },
+          {
+            id: "c",
+            text: "Third-party vendor delays at +31% are the most concerning because they are outside AirCore's direct control — unlike the other categories, AirCore cannot manage vendor delays through internal operations improvements.",
+            nextQuestionId: "g11q3b",
+            scoreImpact: 0,
+            feedback: "Third-party delays are 3,528 hours — 9% of total delay hours. While the external control challenge is real, focusing on a 9% category while the 76% primary drivers go unaddressed is a misallocation of analytical attention.",
+          },
+        ],
+      },
+      {
+        id: "g11q2b",
+        stage: "Delay Analysis",
+        question: "The delay data shows unplanned component failures up 67% and AOG parts events up 89%. These two categories together are 76% of delay hours. The COO says: both feel like a technician shortage problem — we need to hire more people. How do you respond?",
+        options: [
+          {
+            id: "a",
+            text: "Technician headcount grew 3% over the same period while delays grew 34% — the math does not support a headcount shortage as the primary cause. Unplanned component failures suggest a predictive maintenance gap, and AOG events suggest an inventory management failure, not a headcount issue.",
+            nextQuestionId: "g11q3a",
+            scoreImpact: 20,
+            feedback: "Strong data-driven pushback. Using the actual headcount growth data to contradict the COO's hypothesis is exactly right. The failure patterns clearly point to predictive maintenance and inventory management rather than staffing levels.",
+          },
+          {
+            id: "b",
+            text: "Agree with the COO provisionally and request 30 days to build a full workforce analysis before recommending either for or against additional hiring.",
+            nextQuestionId: "g11q3b",
+            scoreImpact: -5,
+            feedback: "The data already available — technician availability delays at +12% while overall delays grew 34%, and headcount up 3% — is sufficient to form a view without 30 more days of workforce analysis. Provisional agreement with the COO delays a diagnosis that is already clear.",
+          },
+          {
+            id: "c",
+            text: "The COO's instinct is reasonable — staffing is always a factor in maintenance operations and a hiring plan for 200 additional technicians should be included as part of a comprehensive operations improvement program.",
+            nextQuestionId: "g11q3c",
+            scoreImpact: -10,
+            feedback: "Recommending 200 hires based on an instinct without data support is poor consulting. If the diagnostic finds that predictive maintenance and inventory management are the primary drivers, adding headcount addresses neither root cause and wastes capital.",
+          },
+        ],
+      },
+      {
+        id: "g11q2c",
+        stage: "Delay Analysis",
+        question: "Your technician interviews point to two recurring themes: parts are never where they need to be, and aircraft keep breaking down in ways that should have been preventable. How do you translate these qualitative signals into a structured diagnostic?",
+        options: [
+          {
+            id: "a",
+            text: "These two themes map directly to the parts and processes buckets in the MECE framework — parts unavailability is the inventory and supply chain problem, and preventable breakdowns are the predictive maintenance problem. Quantify both with the delay data to size the relative importance.",
+            nextQuestionId: "g11q3a",
+            scoreImpact: 15,
+            feedback: "Good translation of qualitative signals to quantitative framework. The delay data will confirm that these two categories — AOG parts events and unplanned component failures — are indeed the largest delay drivers, validating the field observations.",
+          },
+          {
+            id: "b",
+            text: "Conduct more interviews with supervisors and base managers to triangulate whether the front-line technician signals are representative before investing in quantitative data analysis.",
+            nextQuestionId: "g11q3b",
+            scoreImpact: 0,
+            feedback: "Additional interviews may be useful for understanding context, but two consistent themes from multiple technicians across bases is a strong enough signal to proceed to quantitative validation. More interviews without data analysis risks analysis paralysis.",
+          },
+          {
+            id: "c",
+            text: "Take the parts problem as the higher priority since it is operationally simpler to fix — improving parts inventory is a logistics problem while improving predictive maintenance requires technology investment that takes longer to implement.",
+            nextQuestionId: "g11q3a",
+            scoreImpact: 5,
+            feedback: "Simplicity of fix is a valid factor in prioritization, though the primary criterion should be impact. Fortunately, the data analysis will show both are large contributors and both should be addressed — the sequencing can then account for implementation complexity.",
+          },
+        ],
+      },
+      {
+        id: "g11q3a",
+        stage: "Predictive Maintenance",
+        question: "You investigate the unplanned component failure trend. The data shows AirCore's 450 aircraft generate 50,000 data points per flight through ACARS systems, but this data is currently used only for flight logs and fuel efficiency tracking. What does this tell you?",
+        exhibit: {
+          type: "table",
+          title: "Component Failure Analysis by Category",
+          data: `| Component     | Failures | Predictable w/Sensors | Current Monitoring   | Competitor Practice      |
+|--------------|----------|----------------------|----------------------|--------------------------|
+| Engine       | 820      | 78%                  | Manual inspection    | Real-time sensor monitoring|
+| Avionics     | 1,240    | 62%                  | Post-flight log review| Real-time anomaly detection|
+| Hydraulics   | 980      | 71%                  | Manual inspection    | Sensor monitoring        |
+| Landing gear | 640      | 45%                  | Partial sensor       | Full sensor and ML       |
+| Cabin systems| 1,140    | 15%                  | Reactive only        | Reactive only            |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "AirCore has all the sensor data needed to predict 54% of component failures on average but is not using it for predictive maintenance. Implementing ML on existing ACARS data is a high-ROI intervention that requires no new hardware investment.",
+            nextQuestionId: "g11q4a",
+            scoreImpact: 20,
+            feedback: "This is the key insight. The data already exists — AirCore does not need to install new sensors. The opportunity is to use existing ACARS data for predictive failure detection, which competitors already do. The marginal cost of this intervention is analytics software and data science, not hardware.",
+          },
+          {
+            id: "b",
+            text: "Cabin systems with 1,140 failures should be the primary focus since it is the largest failure category, even though only 15% are predictable with sensors.",
+            nextQuestionId: "g11q4b",
+            scoreImpact: -5,
+            feedback: "Cabin systems have the most failures but only 15% are predictable — even perfect sensor deployment would only address 171 failures. Engines, hydraulics, and avionics with 71-78% predictability at 78% of sensors not deployed offer far more intervention leverage.",
+          },
+          {
+            id: "c",
+            text: "The data shows the industry norm is reactive maintenance for cabin systems, which validates that some level of reactive maintenance is acceptable. AirCore should focus only on engine and hydraulics where sensor monitoring is clearly superior to manual inspection.",
+            nextQuestionId: "g11q4a",
+            scoreImpact: 10,
+            feedback: "Correctly excluding cabin systems from the predictive maintenance recommendation is right — industry norm is reactive for cabin. Engines and hydraulics are the highest-leverage targets. Avionics with 62% predictability is also worth including in the full recommendation.",
+          },
+        ],
+      },
+      {
+        id: "g11q3b",
+        stage: "Parts Inventory",
+        question: "Third-party vendor delays and general inventory issues are your focus. You pull the parts inventory data. It shows AOG events increased from 1,700 to 3,210 per year. The average parts wait time grew from 3.1 hours to 6.2 hours. What is the root cause?",
+        exhibit: {
+          type: "table",
+          title: "Parts Inventory Performance Metrics",
+          data: `| Metric                                  | Current | 18 Mo Ago | Benchmark |
+|----------------------------------------|---------|-----------|-----------|
+| Parts fill rate                         | 67%     | 84%       | 92%       |
+| Critical parts stocked at all 6 bases  | 34%     | 78%       | 95%       |
+| Average supplier lead time (days)      | 8.2     | 4.6       | 3.8       |
+| Emergency order percentage             | 31%     | 12%       | 6%        |
+| Excess and obsolete inventory pct      | 28%     | 14%       | 8%        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The root cause is three compounding factors: poor demand forecasting causing the right parts to not be stocked at the right bases, supplier lead time deterioration creating longer waits when stockouts occur, and excess obsolete inventory tying up capital that should be deployed to high-demand parts.",
+            nextQuestionId: "g11q4a",
+            scoreImpact: 20,
+            feedback: "Complete and accurate root cause analysis. High obsolete inventory combined with low fill rate and low critical parts distribution is the classic symptoms of poor demand forecasting. The three-factor explanation covers all the data points and sets up a clear improvement roadmap.",
+          },
+          {
+            id: "b",
+            text: "The primary cause is supplier lead time deterioration from 4.6 to 8.2 days — almost doubling of external lead times is the driver of AOG events and should be addressed through supplier contract renegotiation.",
+            nextQuestionId: "g11q4b",
+            scoreImpact: 5,
+            feedback: "Supplier lead time is a contributing factor, but the fill rate falling from 84% to 67% and critical parts at only 34% of bases points to an internal forecasting and distribution problem as the larger driver. Supplier renegotiation helps but does not address the stock positioning failure.",
+          },
+          {
+            id: "c",
+            text: "The excess and obsolete inventory at 28% is the root cause — capital tied up in wrong parts reduces purchasing power for the right parts, creating a self-reinforcing cycle of stockouts and emergency orders.",
+            nextQuestionId: "g11q4a",
+            scoreImpact: 10,
+            feedback: "Excess inventory is a symptom and partial cause, but the deeper root is poor demand forecasting that led to ordering the wrong parts in the first place. Addressing the forecasting methodology is the more fundamental fix.",
+          },
+        ],
+      },
+      {
+        id: "g11q3c",
+        stage: "Technician Scheduling",
+        question: "You have focused on technician availability as the primary driver. The data shows technician availability grew only 12% while overall delays grew 34%. The partner asks: how do you reconcile this discrepancy?",
+        options: [
+          {
+            id: "a",
+            text: "The discrepancy confirms that technician availability is not the primary driver of the delay increase — if it were, the growth rates would be more proportional. Redirect the diagnostic to the categories that are growing faster: unplanned component failures at +67% and AOG parts events at +89%.",
+            nextQuestionId: "g11q3a",
+            scoreImpact: 15,
+            feedback: "Good analytical redirect. The growth rate discrepancy is the key signal — technician availability growing at one-third the rate of overall delays cannot be the primary cause. The redirect to the larger categories is the right move.",
+          },
+          {
+            id: "b",
+            text: "Technician availability growing at 12% is still a meaningful contributor in absolute terms — 2,646 delay hours is not trivial and should be addressed alongside the other categories.",
+            nextQuestionId: "g11q4b",
+            scoreImpact: 5,
+            feedback: "True that 2,646 hours is real, but the question is prioritization. With 30,832 hours in unplanned failures and AOG events, spending equivalent management attention on the 2,646-hour technician problem is poor resource allocation.",
+          },
+          {
+            id: "c",
+            text: "The discrepancy means the technician availability data is unreliable — technicians may not be logging availability delays accurately. Commission a data quality review before drawing any conclusions.",
+            nextQuestionId: "g11q4b",
+            scoreImpact: -10,
+            feedback: "Questioning the data quality to preserve a preferred hypothesis is not sound analysis. The most likely explanation for the discrepancy is the straightforward one: technician availability is not the primary driver. Redirect the analysis accordingly.",
+          },
+        ],
+      },
+      {
+        id: "g11q4a",
+        stage: "Investment Prioritization",
+        question: "The COO has been given three initiatives: predictive maintenance at $45M investment, parts inventory optimization at $12M, and technician scheduling redesign at $8M. He can only fund two. Which two do you recommend and why?",
+        options: [
+          {
+            id: "a",
+            text: "Predictive maintenance and inventory optimization — they address the two largest delay categories at 76% of total delay hours. Scheduling redesign at $8M can be funded from the first year savings of the other two initiatives once they generate returns.",
+            nextQuestionId: "g11q5a",
+            scoreImpact: 20,
+            feedback: "Correct prioritization. Address the largest problems first. The scheduling program can be self-funded from the early savings of the two larger initiatives — this sequencing is both analytically and financially sound.",
+          },
+          {
+            id: "b",
+            text: "Scheduling redesign and inventory optimization — both have faster implementation timelines than predictive maintenance and together address multiple delay categories at lower total investment of $20M.",
+            nextQuestionId: "g11q5b",
+            scoreImpact: -5,
+            feedback: "Scheduling redesign addresses only 7% of delay hours. Prioritizing a smaller problem for implementation speed while the $45M predictive maintenance program — which addresses 38% of delay hours — sits unfunded is poor resource allocation.",
+          },
+          {
+            id: "c",
+            text: "Predictive maintenance and scheduling redesign — the combination of the largest single intervention with the most operationally complex change gives the organization the best chance of a comprehensive transformation.",
+            nextQuestionId: "g11q5b",
+            scoreImpact: 5,
+            feedback: "Predictive maintenance is correctly prioritized but scheduling redesign over inventory optimization ignores the fact that AOG parts events are the second largest delay category at 38% of total hours. Inventory optimization has the clearer and more direct impact on the second-biggest problem.",
+          },
+        ],
+      },
+      {
+        id: "g11q4b",
+        stage: "Investment Prioritization",
+        question: "You have been focused on secondary drivers. The partner says: our initial analysis suggests the top two delay categories — unplanned failures and AOG parts — are 76% of the problem. Do your recommended investments address these specifically?",
+        options: [
+          {
+            id: "a",
+            text: "Acknowledge the gap and redirect: predictive maintenance on ACARS data directly addresses unplanned component failures at 38% of delay hours, and inventory optimization with demand-sensing directly addresses AOG parts events at 38% of delay hours. These two investments together target 76% of the problem.",
+            nextQuestionId: "g11q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Correctly identifying that the two recommended investments map precisely to the two largest delay categories is the right way to defend the recommendations to the COO.",
+          },
+          {
+            id: "b",
+            text: "Maintain the current recommendations — the initiatives recommended address important operational problems even if they are not specifically targeting the highest-volume delay categories.",
+            nextQuestionId: "g11q5b",
+            scoreImpact: -10,
+            feedback: "Defending recommendations that do not address the primary drivers after being given a clear hint from the partner is not credible consulting. The recommendation should be adjusted to target the 76% of the problem that the data identifies.",
+          },
+          {
+            id: "c",
+            text: "Request one additional week of analysis to validate whether the delay categories are correctly attributed before redirecting the investment recommendations.",
+            nextQuestionId: "g11q5b",
+            scoreImpact: -5,
+            feedback: "More time is not needed — the delay category data is clear and the attribution is direct. Requesting more time when the answer is in front of you wastes the COO's time and delays implementation of improvements that are costing $595M annually.",
+          },
+        ],
+      },
+      {
+        id: "g11q5a",
+        stage: "Final Recommendation",
+        question: "The COO asks for the final presentation: what are your three recommendations, what does each cost, and what is the combined financial impact?",
+        options: [
+          {
+            id: "a",
+            text: "Three recommendations: predictive maintenance on ACARS data at $45M targeting 55-65% reduction in unplanned failures saving $180M annually; parts inventory optimization at $12M targeting fill rate improvement from 67% to 90% saving $67M annually; and technician scheduling redesign at $8M saving $45M annually. Total $65M investment for $292M annual savings — payback under three months.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete recommendation package. Three specific initiatives with specific investments, specific metrics, and specific financial impacts. The combined payback of under three months is compelling for the COO and the board. This is a Deloitte-quality operations recommendation.",
+          },
+          {
+            id: "b",
+            text: "Three recommendations: hire 500 additional technicians, replace aging aircraft with newer models with better maintenance profiles, and renegotiate all third-party maintenance contracts. These address the systemic causes of maintenance deterioration.",
+            nextQuestionId: "end",
+            scoreImpact: -15,
+            feedback: "None of these three recommendations address the identified root causes — predictive maintenance gaps and parts inventory failures. Hiring technicians, replacing aircraft, and renegotiating contracts are expensive, slow, and not directly connected to the 76% of delay hours coming from unplanned failures and AOG events.",
+          },
+          {
+            id: "c",
+            text: "Two recommendations since three is too many for the COO to champion simultaneously: predictive maintenance at $45M and inventory optimization at $12M. Scheduling redesign can be addressed in a follow-on phase after these two are implemented.",
+            nextQuestionId: "end",
+            scoreImpact: 10,
+            feedback: "Reducing to two recommendations is defensible if the COO's implementation capacity is genuinely constrained. However, scheduling at $8M for $45M in annual savings is a 3.5-month payback that is hard to leave out. Three well-sequenced initiatives is manageable.",
+          },
+        ],
+      },
+      {
+        id: "g11q5b",
+        stage: "Final Recommendation",
+        question: "Your analysis has been off-track. The partner gives you the final opportunity before the COO meeting. What is the correct three-recommendation package?",
+        options: [
+          {
+            id: "a",
+            text: "Predictive maintenance at $45M using existing ACARS sensor data — $180M annual savings. Parts inventory optimization at $12M with demand-sensing forecasting — $67M savings. Technician scheduling redesign at $8M — $45M savings. Total $65M for $292M annual savings and under-three-month payback.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Good recovery. The correct package addresses the two primary delay categories directly and adds a high-ROI scheduling improvement. The financial summary is compelling and specific. The partner says: present it confidently.",
+          },
+          {
+            id: "b",
+            text: "Request a second two-week diagnostic phase before making recommendations — the analysis has been inconsistent and the COO deserves a thorough review before committing to a specific investment plan.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Requesting more time when the analysis is complete and the COO has a $595M annual problem is not acceptable. The data supports the three-recommendation package. Present it now.",
+          },
+          {
+            id: "c",
+            text: "Recommend one initiative only — predictive maintenance — since it has the highest single-initiative impact and the organization may not have the implementation capacity for multiple simultaneous programs.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Single-initiative focus is more conservative but leaves $112M in annual savings from inventory optimization and scheduling unaddressed. If the COO has implementation constraints, a phased approach — predictive maintenance first, then the others — is better than omitting them entirely.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G12: OLIVER WYMAN — INSURANCE M&A
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g12",
+    title: "InsureCo: HealthPredict Acquisition",
+    type: "merger_acquisition",
+    difficulty: "intermediate",
+    firm: "oliver_wyman",
+    estimatedMinutes: 30,
+    overview: "A top-five US health insurer is evaluating acquiring a health tech startup that uses AI to predict high-cost claimants before hospitalizations occur. Oliver Wyman has been engaged to evaluate the deal.",
+    clientBackground: "InsureCo is a $45B revenue health insurer with 18M members and a medical loss ratio of 87% against an industry best-in-class of 82%. HealthPredict is a 4-year-old startup with a proprietary CAR-T adjacent AI platform that identifies members at high risk of costly hospitalization 6-12 months in advance. Phase 2 data showed 19% reduction in hospitalizations for identified high-risk members. HealthPredict has $38M ARR growing 85% annually. The seller is asking $800M.",
+    yourRole: "You are an Oliver Wyman manager on the financial services practice. The InsureCo CFO is your day-to-day client. You have three weeks to deliver a go or no-go recommendation with financial analysis.",
+    startQuestionId: "g12q1",
+    finalRecommendationPrompt: "Should InsureCo acquire HealthPredict at $800M? What is the financial case and what are the key conditions?",
+    sampleRecommendation: "Yes, with conditions. The financial case is compelling: applying HealthPredict's technology to InsureCo's 18M members generates an estimated $1.1B in annual claims savings at a realistic 35% intervention success rate, improving MLR from 87% to approximately 84.6% — worth $1.08B in annual EBITDA improvement at a 15x multiple, the deal creates over $16B in enterprise value against an $800M acquisition price. Two conditions: independent validation of the 19% hospitalization reduction at scale, and a manufacturing partnership secured before close.",
+    idealRecommendation: "Acquire HealthPredict at $800M with two conditions: (1) independent clinical validation of the 19% result at InsureCo's 18M member scale; (2) earnout structure with $160M of the $800M tied to MLR improvement milestones. The $1.1B annual savings thesis makes the deal compelling even at conservative assumptions. The primary risk is technology performance at scale — proven on 2.1M members, unproven on 18M.",
+    keyTakeaways: [
+      "In insurance M&A, always anchor the financial analysis to the medical loss ratio — it is the single most important metric for insurers",
+      "AI technology acquisitions require careful validation of whether performance at small scale will replicate at large scale",
+      "Earnout structures are appropriate when there is genuine uncertainty about whether the acquired technology will perform as claimed",
+      "The most important risk in health tech acquisitions is often not the technology itself but adoption by physicians and members who must change behavior for the technology to deliver its promised value",
+    ],
+    questions: [
+      {
+        id: "g12q1",
+        stage: "Strategic Rationale",
+        question: "InsureCo's CEO says the acquisition is motivated by wanting to become more data-driven and reduce claims costs. How do you evaluate whether this acquisition makes strategic sense before looking at price?",
+        options: [
+          {
+            id: "a",
+            text: "Evaluate three sequential questions: does HealthPredict's technology actually work at InsureCo's scale; is $800M a fair price for the value it creates; and are there build or partner alternatives that achieve the same outcome at lower cost and risk?",
+            nextQuestionId: "g12q2a",
+            scoreImpact: 20,
+            feedback: "Correct sequential structure. Technology validation at scale is the most critical unknown. Financial valuation grounds the decision in numbers. And build or partner alternatives ensure InsureCo is not overpaying for something accessible another way. Oliver Wyman would structure the strategic rationale exactly this way.",
+          },
+          {
+            id: "b",
+            text: "Benchmark what competitors have done — if UnitedHealth and Aetna have made similar acquisitions, that validates the strategic logic and InsureCo should follow suit.",
+            nextQuestionId: "g12q2b",
+            scoreImpact: -5,
+            feedback: "Benchmarking competitor acquisitions is useful context but is not a rigorous strategic evaluation. Competitors may have made mistakes or have different strategic positions — the analysis must stand on InsureCo-specific financial logic, not peer precedent.",
+          },
+          {
+            id: "c",
+            text: "Survey InsureCo's physicians and care managers to determine whether they would actually use the HealthPredict platform before evaluating the strategic rationale.",
+            nextQuestionId: "g12q2c",
+            scoreImpact: -5,
+            feedback: "User adoption research is important but comes after establishing strategic and financial rationale. Doing user research before financial analysis puts the cart before the horse — and the primary risk may not be whether clinicians will use the technology but whether it works at scale.",
+          },
+        ],
+      },
+      {
+        id: "g12q2a",
+        stage: "Financial Analysis",
+        question: "Using the InsureCo data provided, calculate the potential annual financial value of applying HealthPredict's technology to InsureCo's full member base.",
+        exhibit: {
+          type: "table",
+          title: "InsureCo and HealthPredict Financial Data",
+          data: `| Metric                                     | Value      |
+|-------------------------------------------|------------|
+| InsureCo annual revenue                    | $45B       |
+| InsureCo medical loss ratio                | 87%        |
+| InsureCo annual claims paid                | $39.15B    |
+| InsureCo total members                     | 18M        |
+| HealthPredict identification rate          | 15%        |
+| HealthPredict hospitalization reduction    | 19%        |
+| Average hospitalization cost               | $28,000    |
+| Hospitalizations per 1,000 members/yr     | 85         |
+| HealthPredict annual license per member   | $18        |
+| Technology integration cost (one-time)    | $120M      |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Total hospitalizations: 18M times 85 per 1,000 equals 1.53M. High-risk members identified: 18M times 15% equals 2.7M — representing roughly 40% of hospitalizations or 612,000. 19% reduction equals 116,280 avoided hospitalizations. At $28,000 each equals $3.26B gross, adjusted for 35% intervention success equals approximately $1.14B net annual savings.",
+            nextQuestionId: "g12q3a",
+            scoreImpact: 20,
+            feedback: "Correct multi-step calculation. The intervention success rate adjustment is the critical nuance — not all identified high-risk members will accept or comply with care management interventions. The $1.14B net figure is the defensible number for the financial case.",
+          },
+          {
+            id: "b",
+            text: "Apply 19% reduction to all 39.15B in annual claims, giving $7.4B in annual savings — this is HealthPredict's full potential value to InsureCo if applied universally across all members.",
+            nextQuestionId: "g12q3b",
+            scoreImpact: -15,
+            feedback: "Applying 19% to all claims ignores that HealthPredict only identifies 15% of members as high-risk, only those members receive interventions, and only a fraction of interventions succeed. The gross potential is $7.4B but the realistic net is approximately one-seventh of that figure.",
+          },
+          {
+            id: "c",
+            text: "The financial value cannot be calculated without knowing HealthPredict's exact performance on InsureCo's specific member population, since 19% on 2.1M members may not replicate on 18M members.",
+            nextQuestionId: "g12q3b",
+            scoreImpact: 0,
+            feedback: "This concern is valid as a risk flag, but refusing to calculate the value because of this uncertainty is not useful for the CFO. The right approach is to calculate the value under the assumption that the 19% replicates, then explicitly flag scale risk as the key sensitivity.",
+          },
+        ],
+      },
+      {
+        id: "g12q2b",
+        stage: "Financial Analysis",
+        question: "Competitor benchmarking shows three similar acquisitions. The CFO asks: does the precedent support the $800M price for HealthPredict?",
+        exhibit: {
+          type: "table",
+          title: "Comparable Health Tech Acquisitions",
+          data: `| Company        | ARR   | Growth | EV/ARR | Notes                       |
+|---------------|-------|--------|--------|-----------------------------|
+| ClaimAI        | $45M  | 72%    | 18x    | AI claims processing        |
+| CarePredict    | $28M  | 91%    | 24x    | Care management AI          |
+| RiskScore Inc  | $62M  | 58%    | 15x    | Risk stratification         |
+| WellnessAI     | $31M  | 78%    | 22x    | Preventive care AI          |
+| Average        |       |        | 19.75x |                             |
+| HealthPredict  | $38M  |        | 21.1x  | ($800M divided by $38M)     |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "At 21.1x ARR versus a comparable average of 19.75x, HealthPredict is at a modest 7% premium to the market — justified by its 85% growth rate which is above most comparables. The price is fair.",
+            nextQuestionId: "g12q3a",
+            scoreImpact: 15,
+            feedback: "Correct use of comparables. The 7% premium is well within the range of rounding error given the wide range in comparables, and the 85% growth rate is a legitimate justification for a modest premium. The multiple analysis supports the $800M price.",
+          },
+          {
+            id: "b",
+            text: "The comparable average of 19.75x means HealthPredict at 21.1x is overpriced — InsureCo should push the price down to $750M to align with the market average.",
+            nextQuestionId: "g12q3b",
+            scoreImpact: -5,
+            feedback: "Mechanically applying the average multiple without adjusting for HealthPredict's above-average 85% growth rate is not rigorous valuation. CarePredict at 24x had 91% growth — HealthPredict at 85% growth deserves a premium to the 19.75x average.",
+          },
+          {
+            id: "c",
+            text: "Comparables are not useful here since HealthPredict is a unique asset with no direct precedent — the valuation should be based entirely on the NPV of the MLR improvement InsureCo expects to generate.",
+            nextQuestionId: "g12q3a",
+            scoreImpact: 5,
+            feedback: "Strategic value analysis is the right primary lens for InsureCo, but comparable multiples are a useful market-clearing check on whether the price is reasonable relative to how similar assets have been valued. Both approaches together are stronger than either alone.",
+          },
+        ],
+      },
+      {
+        id: "g12q2c",
+        stage: "Financial Analysis",
+        question: "Physician and care manager surveys show 71% say they would use the HealthPredict platform if it were available. The CFO asks: is this adoption rate sufficient to justify the acquisition?",
+        options: [
+          {
+            id: "a",
+            text: "71% stated adoption intention should be discounted significantly — survey-stated intent consistently overpredicts actual adoption. A more realistic working assumption is 40-50% actual adoption, and the financial case should be built on that lower figure.",
+            nextQuestionId: "g12q3a",
+            scoreImpact: 15,
+            feedback: "Correct application of survey bias adjustment. Using 40-50% actual adoption as the working assumption builds a more conservative and defensible financial case. If the case works at 40%, it certainly works at higher adoption rates.",
+          },
+          {
+            id: "b",
+            text: "71% adoption is strong validation — this adoption rate combined with the 19% hospitalization reduction provides sufficient confidence to proceed with the acquisition at $800M.",
+            nextQuestionId: "g12q3b",
+            scoreImpact: -5,
+            feedback: "71% stated adoption is not a sound basis for a $800M acquisition decision. Survey-stated intent consistently overpredicts behavior, and actual adoption of new clinical tools typically falls significantly below stated intent.",
+          },
+          {
+            id: "c",
+            text: "The adoption survey validates physician willingness but the key question is whether patients will comply with the recommended care management interventions after being identified as high-risk.",
+            nextQuestionId: "g12q3a",
+            scoreImpact: 10,
+            feedback: "Good additional nuance. Physician adoption is necessary but not sufficient — patient compliance with recommended interventions is a critical additional variable. Both must be considered in building a realistic financial model.",
+          },
+        ],
+      },
+      {
+        id: "g12q3a",
+        stage: "Valuation",
+        question: "Your financial analysis shows approximately $1.1B in annual net savings to InsureCo from the HealthPredict technology. The CFO asks: given this value, is $800M a good deal?",
+        options: [
+          {
+            id: "a",
+            text: "At $800M acquisition cost against $1.1B in year-one annual savings, the payback period is under one year and the NPV over five years is approximately $4-5B. This is an exceptionally strong financial case regardless of whether comparable multiples support the price.",
+            nextQuestionId: "g12q4a",
+            scoreImpact: 20,
+            feedback: "Correct framing. The strategic value NPV — $1.1B annual savings discounted over five years at InsureCo's cost of capital — vastly exceeds the $800M acquisition price. For a strategic acquirer, this is the primary valuation methodology. Comparable multiples are a secondary check.",
+          },
+          {
+            id: "b",
+            text: "The $1.1B annual savings estimate is too uncertain to use as the primary valuation basis — the financial case should rely primarily on comparable transaction multiples rather than speculative future savings.",
+            nextQuestionId: "g12q4b",
+            scoreImpact: -5,
+            feedback: "For a strategic acquirer like InsureCo, the whole rationale is the operational value creation — using only comparable multiples ignores the entire strategic rationale. Both approaches should be used, with strategic value as the primary metric.",
+          },
+          {
+            id: "c",
+            text: "$800M is expensive at 21x ARR but the $1.1B annual savings makes it compellingly cheap from a strategic value perspective. Recommend proceeding at $800M but with the earnout structure to protect against scale risk.",
+            nextQuestionId: "g12q4a",
+            scoreImpact: 15,
+            feedback: "Good balanced conclusion. Both the multiple analysis and the strategic value analysis are considered, and the earnout recommendation addresses the primary risk. This is the Oliver Wyman recommendation.",
+          },
+        ],
+      },
+      {
+        id: "g12q3b",
+        stage: "Valuation",
+        question: "Your financial analysis has been overly pessimistic about the value creation potential. The partner shares that a realistic calculation gives approximately $1.1B in annual savings. Given this, how do you revise your recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "Revise immediately — at $1.1B in annual savings against $800M acquisition cost, the payback is under one year and the strategic case is compelling. The recommendation should be to proceed with appropriate risk mitigations rather than declining.",
+            nextQuestionId: "g12q4a",
+            scoreImpact: 15,
+            feedback: "Good revision under partner guidance. When the financial case is this strong — sub-one-year payback — the question becomes how to manage the risks rather than whether to proceed.",
+          },
+          {
+            id: "b",
+            text: "The $1.1B estimate seems too optimistic and should be further discounted before revising the recommendation — a 50% haircut to $550M annual savings would still support the acquisition but at a lower confidence level.",
+            nextQuestionId: "g12q4b",
+            scoreImpact: 0,
+            feedback: "Additional conservatism after the partner has shared the correct calculation is unnecessary caution. The $1.1B already incorporates a 35% intervention success rate adjustment — further haircuts would need to be justified by specific additional uncertainty, not general risk aversion.",
+          },
+          {
+            id: "c",
+            text: "Maintain the original pessimistic assessment until independent clinical validation of the 19% hospitalization reduction is completed — no revision should occur until the core clinical assumption is validated.",
+            nextQuestionId: "g12q4b",
+            scoreImpact: -5,
+            feedback: "Independent clinical validation is a valid condition to attach to the recommendation, but it should be a condition of proceeding rather than a reason to withhold a go recommendation entirely. The financial case can be presented now with validation as a required pre-closing condition.",
+          },
+        ],
+      },
+      {
+        id: "g12q4a",
+        stage: "Deal Structure",
+        question: "The financial case supports the acquisition. The CFO asks: given the technology scale risk — proven on 2.1M members but unproven on 18M — how should the $800M be structured?",
+        options: [
+          {
+            id: "a",
+            text: "Full $800M upfront — the financial case is so strong that holding back consideration introduces unnecessary friction with the sellers and risks losing the deal to a competing bidder.",
+            nextQuestionId: "g12q5a",
+            scoreImpact: -5,
+            feedback: "Paying full price when there is genuine uncertainty about technology scale performance removes all downside protection for InsureCo. A compelling financial case does not eliminate the need for deal structure that protects against the most significant specific risk.",
+          },
+          {
+            id: "b",
+            text: "Structure as $640M upfront plus $160M earnout tied to MLR improvement milestones: $80M if MLR improves 1.5pp by year two and $80M if MLR improves 2.5pp by year three. This aligns seller incentives with the value driver while protecting InsureCo against scale failure.",
+            nextQuestionId: "g12q5a",
+            scoreImpact: 20,
+            feedback: "Correct structure. The 80/20 upfront/earnout split is sufficient to close the deal while the earnout directly ties additional consideration to the specific metric — MLR improvement — that justifies the acquisition price. Oliver Wyman standard recommendation for tech acquisitions with scale uncertainty.",
+          },
+          {
+            id: "c",
+            text: "Structure as $400M upfront plus $400M contingent — maximum protection for InsureCo against scale failure while keeping the total consideration unchanged if milestones are met.",
+            nextQuestionId: "g12q5b",
+            scoreImpact: -5,
+            feedback: "50/50 upfront/contingent is too aggressive for a deal with comparable transaction support at 21x ARR. HealthPredict's sellers would likely reject a deal where half the consideration is contingent — the risk of losing the deal is real.",
+          },
+        ],
+      },
+      {
+        id: "g12q4b",
+        stage: "Deal Structure",
+        question: "You have been overly cautious on the financial analysis. The partner asks: assuming the financial case is sound, what is the most important risk to address in the deal structure?",
+        options: [
+          {
+            id: "a",
+            text: "Technology scale risk — HealthPredict is proven on 2.1M members but InsureCo has 18M. An earnout tied to actual MLR improvement milestones protects InsureCo if the technology performs below expectations at full scale.",
+            nextQuestionId: "g12q5a",
+            scoreImpact: 15,
+            feedback: "Correct identification of the primary risk and the structural solution. Even after recovering the financial analysis, correctly identifying scale risk as the deal structure driver demonstrates the analytical instincts expected of an Oliver Wyman manager.",
+          },
+          {
+            id: "b",
+            text: "Physician adoption risk — if InsureCo's physicians do not use the platform, no MLR improvement will occur regardless of how well the technology performs. The deal should be conditioned on a physician adoption commitment from clinical leadership.",
+            nextQuestionId: "g12q5b",
+            scoreImpact: 5,
+            feedback: "Physician adoption is a real risk but it is partially within InsureCo's control through clinical change management programs. Scale validation of the technology itself is the more fundamental risk since adoption programs can be designed but the technology's performance at scale cannot be guaranteed.",
+          },
+          {
+            id: "c",
+            text: "Integration complexity risk — merging a 120-person startup into a large insurer will cause key talent to leave and the technology to deteriorate. The deal should include a three-year retention package for the top 20 HealthPredict engineers.",
+            nextQuestionId: "g12q5b",
+            scoreImpact: 0,
+            feedback: "Talent retention is a real integration risk and retention packages are appropriate, but this is a secondary operational concern. The primary deal structure risk is whether the technology performs at InsureCo scale — that is the risk the deal structure must address first.",
+          },
+        ],
+      },
+      {
+        id: "g12q5a",
+        stage: "Final Recommendation",
+        question: "The CFO asks for the final one-paragraph go or no-go recommendation with deal structure.",
+        options: [
+          {
+            id: "a",
+            text: "Go. The $1.1B annual savings thesis at a conservative 35% intervention success rate generates a sub-one-year payback on the $800M price. Structure as $640M upfront plus $160M in MLR-improvement earnouts. The primary condition is independent clinical validation of the 19% hospitalization reduction before closing. This is the best health tech acquisition opportunity in the market at this price.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete recommendation. Go or no-go is clear, the financial basis is stated, the deal structure is specific, and the primary condition is identified. The CFO has everything needed to take this to the board.",
+          },
+          {
+            id: "b",
+            text: "Conditional go pending a six-month pilot of the HealthPredict technology on a sample of 500,000 InsureCo members to validate the 19% result before committing $800M.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "A pilot is a conservative but reasonable alternative — it validates the technology before committing full capital. The downside is six months of delay during which a competitor could acquire HealthPredict. The earnout structure achieves similar risk protection without the timing risk.",
+          },
+          {
+            id: "c",
+            text: "No go — the technology scale risk from 2.1M to 18M members is too uncertain to justify $800M without several more years of performance data at larger scale.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Rejecting a deal with a sub-one-year payback because of scale uncertainty that can be managed through an earnout structure is overly conservative. The financial case is strong enough that risk should be managed through deal structure, not by declining the acquisition.",
+          },
+        ],
+      },
+      {
+        id: "g12q5b",
+        stage: "Final Recommendation",
+        question: "Your recommendation has been overly cautious throughout. The partner gives you one final chance: the CFO needs a yes or no with a specific deal structure in the next five minutes. What do you say?",
+        options: [
+          {
+            id: "a",
+            text: "Yes. Acquire HealthPredict at $800M structured as $640M upfront and $160M earnout tied to MLR improvement. The $1.1B annual savings thesis supports the price at current assumptions. Primary condition: independent clinical validation before closing.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Good decisive recovery. Clear go decision, specific deal structure, and the key condition stated. This is what the CFO needed and what Oliver Wyman is expected to deliver.",
+          },
+          {
+            id: "b",
+            text: "More analysis is needed — the physician adoption and technology scale questions create too much uncertainty to make a recommendation in five minutes without additional due diligence.",
+            nextQuestionId: "end",
+            scoreImpact: -15,
+            feedback: "Requesting more time when the partner has given you five minutes and three weeks of analysis are already complete is a failure. Oliver Wyman consultants are expected to form views under uncertainty, not defer indefinitely waiting for perfect information.",
+          },
+          {
+            id: "c",
+            text: "Yes at a lower price — counter-offer at $650M to reduce the scale risk premium, with an earnout of $150M if MLR improves as projected.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "The counter-offer is a reasonable negotiating position but the comparable analysis supports the $800M price. Recommending to negotiate down without strong analytical justification may signal weakness to the sellers and risk losing the deal at a price that is fair.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G13: KPMG — PHARMA MARKET ENTRY
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g13",
+    title: "GeneriPharma: US Generic Drug Entry",
+    type: "market_entry",
+    difficulty: "intermediate",
+    firm: "kpmg",
+    estimatedMinutes: 28,
+    overview: "A European generic pharmaceutical company wants to enter the US generic drug market. KPMG has been engaged to assess market attractiveness and recommend an entry strategy.",
+    clientBackground: "GeneriPharma is a $2.8B European generic pharmaceutical company headquartered in Germany with operations across 18 European markets. They have never operated in the US. The US generic drug market is approximately $98B and growing at 8% CAGR. Several major branded drugs lose patent protection between 2025 and 2028. GeneriPharma's CEO believes there is a significant opportunity to enter during this patent cliff window.",
+    yourRole: "You are a KPMG director on the financial services and pharma practice. You have six weeks to deliver a go or no-go entry recommendation with an implementation plan.",
+    startQuestionId: "g13q1",
+    finalRecommendationPrompt: "Should GeneriPharma enter the US generic drug market, and if yes, through what mode and targeting which therapeutic categories?",
+    sampleRecommendation: "Yes. Enter the US market through acquisition of a mid-sized US generic manufacturer — organic entry would take 5-7 years due to FDA ANDA filing backlogs and is too slow to capture the 2025-2027 patent cliff. Target acquisition: SunValley Pharma at $890M, which brings $520M ARR, CNS and diabetes focus directly aligned with the Jardiance 2025 and Vyvanse patent expirations, and established PBM distribution relationships. Entry investment: $890M acquisition plus $150M integration and launch capital.",
+    idealRecommendation: "Enter via acquisition of a US generic manufacturer. Organic entry is too slow for the patent cliff window. SunValley Pharma at $890M is the recommended target — CNS and diabetes focus aligns with near-term patent cliffs, established PBM relationships are the most valuable non-obvious asset. Total investment: approximately $1.04B including integration costs.",
+    keyTakeaways: [
+      "FDA regulatory approval — the ANDA filing process — is the primary barrier to entry in US generics and creates a 2-5 year organic entry timeline that often exceeds strategic windows",
+      "PBM relationships are the critical distribution asset in US generics — they determine whether a new generic launch gets formulary placement and volume",
+      "Patent cliffs create predictable, time-limited windows of above-normal profitability for first generic entrants that significantly exceed steady-state returns",
+      "In regulated industries, build versus buy almost always favors acquisition when time pressure exists because regulatory approvals cannot be accelerated with capital",
+    ],
+    questions: [
+      {
+        id: "g13q1",
+        stage: "Market Attractiveness",
+        question: "The CEO wants to know whether the US generic drug market is attractive enough to justify entry. How do you structure the attractiveness assessment?",
+        options: [
+          {
+            id: "a",
+            text: "Analyze the market on three dimensions: overall market attractiveness including size, growth, and profitability; the specific patent cliff opportunity including which drugs, when, and how much revenue is at stake; and GeneriPharma's ability to win given their European capabilities and capital.",
+            nextQuestionId: "g13q2a",
+            scoreImpact: 20,
+            feedback: "Correct three-dimension framework. General market attractiveness sets the baseline. The patent cliff is the specific time-sensitive opportunity. And GeneriPharma's ability to win ensures the recommendation is grounded in their specific capabilities, not just market conditions.",
+          },
+          {
+            id: "b",
+            text: "Compare the US generic market to European markets on profitability metrics to determine whether the US offers better returns than continuing to invest in European markets GeneriPharma already understands.",
+            nextQuestionId: "g13q2b",
+            scoreImpact: 5,
+            feedback: "Comparative market analysis is relevant context but frames the decision too narrowly. The CEO is asking whether to enter the US, not whether the US is better than Europe — the two are not mutually exclusive and capital can be deployed in both simultaneously.",
+          },
+          {
+            id: "c",
+            text: "Identify the top three generic drugs losing patent protection in 2025-2028 and assess whether GeneriPharma's existing product pipeline includes these molecules, since that determines whether entry is feasible quickly.",
+            nextQuestionId: "g13q2c",
+            scoreImpact: 5,
+            feedback: "Patent cliff analysis is important but assumes organic entry as the default mode. Acquisition of a US company with the right pipeline may be a more viable path than evaluating whether GeneriPharma's existing European pipeline applies to US patent opportunities.",
+          },
+        ],
+      },
+      {
+        id: "g13q2a",
+        stage: "Patent Cliff Analysis",
+        question: "You have assessed market attractiveness. The US generic market is $98B growing at 8% with 42% average gross margins. Now assess the specific patent cliff opportunity.",
+        exhibit: {
+          type: "table",
+          title: "US Patent Cliff 2025-2028 (Top Revenue Opportunities)",
+          data: `| Drug       | Category       | 2024 Revenue | Patent Date | Generic Premium Yr1 |
+|-----------|----------------|-------------|-------------|---------------------|
+| Eliquis   | Cardiovascular | $12B        | 2026        | 40-60% above steady |
+| Jardiance  | Diabetes       | $8B         | 2025        | 40-60% above steady |
+| Entresto  | Cardiovascular | $6B         | 2025        | 40-60% above steady |
+| Keytruda  | Oncology       | $25B        | 2028        | 40-60% above steady |
+| Ozempic   | GLP-1          | $14B        | 2031        | 40-60% above steady |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The 2025-2026 window is most immediately actionable — Jardiance and Entresto together represent $14B in branded revenue losing protection within 18 months. First generic entrants capture premium margins of 40-60% above steady-state prices for 12-24 months.",
+            nextQuestionId: "g13q3a",
+            scoreImpact: 20,
+            feedback: "Correct identification of the near-term window. Jardiance and Entresto losing patent in 2025 creates an immediate opportunity — but only for companies already in the US market or entering via acquisition before the patent expiration. Organic entry would miss this window entirely.",
+          },
+          {
+            id: "b",
+            text: "Keytruda at $25B in 2028 is the largest single opportunity and GeneriPharma should focus its entry strategy on positioning for this one drug even though the timeline is four years away.",
+            nextQuestionId: "g13q3b",
+            scoreImpact: -5,
+            feedback: "Waiting four years for one drug creates an extremely concentrated bet on a single asset. Oncology biologics like Keytruda also have complex biosimilar manufacturing requirements that may not fit GeneriPharma's small-molecule generic capabilities.",
+          },
+          {
+            id: "c",
+            text: "Ozempic and the GLP-1 class represent the largest long-term opportunity and should be the primary entry thesis since this category will dominate generic spending in the 2030s.",
+            nextQuestionId: "g13q3b",
+            scoreImpact: -5,
+            feedback: "Ozempic patent expiry is 2031 — seven years away. Building a US entry strategy around a 2031 patent cliff ignores the 2025-2026 window that is immediately available and would require significant capital to remain in market for seven years before the primary thesis materializes.",
+          },
+        ],
+      },
+      {
+        id: "g13q2b",
+        stage: "Patent Cliff Analysis",
+        question: "Your European comparison shows that US generic gross margins of 42% exceed European average margins of 31%. The CEO is persuaded on attractiveness. The next question is how to enter. What are the options?",
+        options: [
+          {
+            id: "a",
+            text: "Three entry modes exist: organic entry building US operations from scratch, acquisition of an existing US generic manufacturer, and a licensing or distribution partnership with a US company. Each has different speed, capital, and risk profiles.",
+            nextQuestionId: "g13q3a",
+            scoreImpact: 15,
+            feedback: "Correct framing of the three options. The key differentiator is speed — organic entry is slowest, acquisition is fastest, and partnerships are intermediate. For a patent cliff opportunity, speed to market is a critical variable.",
+          },
+          {
+            id: "b",
+            text: "The only viable entry mode for a company of GeneriPharma's scale is organic since acquisitions of US generic manufacturers are typically overpriced and partnerships lack strategic control.",
+            nextQuestionId: "g13q3b",
+            scoreImpact: -10,
+            feedback: "Assuming organic entry without evaluating acquisition alternatives ignores the most important variable — the FDA ANDA approval timeline of 36-48 months makes organic entry too slow for the 2025-2026 patent cliff window. Acquisitions should be evaluated before dismissing them.",
+          },
+          {
+            id: "c",
+            text: "Focus exclusively on acquisition options since organic entry timelines exceed the patent cliff window and partnerships lack the strategic control needed for full US market participation.",
+            nextQuestionId: "g13q3a",
+            scoreImpact: 10,
+            feedback: "Acquisition focus is directionally correct given the timeline constraint, though framing it as exclusive may be too binary. A licensing partnership could be a bridge strategy while an acquisition target is identified and closed. Evaluate all three before selecting.",
+          },
+        ],
+      },
+      {
+        id: "g13q2c",
+        stage: "Patent Cliff Analysis",
+        question: "You have focused on GeneriPharma's existing pipeline for US patent cliff opportunities. GeneriPharma's European products are primarily cardiovascular and respiratory molecules. Jardiance and Entresto are cardiovascular — both align. How does this change the entry analysis?",
+        options: [
+          {
+            id: "a",
+            text: "Pipeline alignment with the patent cliff improves the organic entry feasibility, but the FDA ANDA timeline of 36-48 months still means GeneriPharma cannot file and receive approval before the 2025 Jardiance and Entresto expirations. Acquisition of a company with existing ANDAs on file or approved is still faster.",
+            nextQuestionId: "g13q3a",
+            scoreImpact: 15,
+            feedback: "Correct constraint analysis. Pipeline alignment is positive but FDA approval timelines are fixed — even with the right molecules, GeneriPharma cannot get ANDA approvals faster than the 36-48 month FDA process. Acquisition bypasses this constraint.",
+          },
+          {
+            id: "b",
+            text: "Pipeline alignment confirms GeneriPharma should pursue organic entry — their cardiovascular expertise gives them a strong technical foundation and the ANDAs can be filed immediately to target the 2026 Eliquis patent expiry.",
+            nextQuestionId: "g13q3b",
+            scoreImpact: -5,
+            feedback: "Filing ANDAs immediately still means 36-48 months before approval — missing the 2025 window for Jardiance and Entresto, and potentially the 2026 window for Eliquis. Pipeline alignment improves the organic case but does not solve the timing problem.",
+          },
+          {
+            id: "c",
+            text: "Cardiovascular pipeline alignment is the strongest possible signal to proceed with organic entry — GeneriPharma has the technical capabilities and the relevant therapeutic knowledge to compete successfully in this segment.",
+            nextQuestionId: "g13q3b",
+            scoreImpact: -10,
+            feedback: "Technical capabilities and therapeutic knowledge are necessary but not sufficient for organic entry success in US generics. FDA regulatory approval timelines, PBM distribution relationships, and manufacturing compliance are all additional barriers that GeneriPharma lacks in the US regardless of their European capabilities.",
+          },
+        ],
+      },
+      {
+        id: "g13q3a",
+        stage: "Entry Mode",
+        question: "The CEO wants to pursue organic entry to maintain full strategic control. You need to evaluate whether organic entry is feasible given the timing. What is your assessment?",
+        exhibit: {
+          type: "table",
+          title: "Entry Mode Comparison: Organic vs Acquisition",
+          data: `| Factor                          | Organic Entry        | Acquisition            |
+|--------------------------------|----------------------|------------------------|
+| Time to first US revenue       | 4-6 years            | 6-12 months post-close |
+| Capital required               | $150-250M over 5 yrs | $800M-1.2B upfront     |
+| FDA manufacturing compliance   | Build from zero      | Acquired and approved  |
+| PBM distribution               | Build from zero      | Acquire existing       |
+| Capture 2025-2026 patent cliff | No                   | Yes if closed in 2024  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Organic entry is feasible long-term but definitively misses the 2025-2026 patent cliff window — the CEO's primary stated rationale for entering now. Acquisition is the only mode that captures the time-limited opportunity that justifies the entry investment.",
+            nextQuestionId: "g13q4a",
+            scoreImpact: 20,
+            feedback: "Correct conclusion. The patent cliff window drives the timing, and organic entry cannot capture it. This is the core argument for acquisition that should be presented clearly to the CEO rather than softened to preserve the organic preference.",
+          },
+          {
+            id: "b",
+            text: "Recommend a hybrid approach — file organic ANDAs now for the 2028 Keytruda opportunity while simultaneously evaluating acquisitions for the nearer-term patent cliff. This preserves optionality while maintaining the organic preference.",
+            nextQuestionId: "g13q4b",
+            scoreImpact: 5,
+            feedback: "Hybrid approach is creative but filing for Keytruda biosimilars requires complex biologic manufacturing capabilities that GeneriPharma likely does not have. The hybrid also delays the acquisition decision that is genuinely urgent given the 2025 patent expirations.",
+          },
+          {
+            id: "c",
+            text: "Support the CEO's organic preference — the 4-6 year timeline is long but GeneriPharma can build a sustainable US presence rather than paying an acquisition premium for assets that may not integrate well.",
+            nextQuestionId: "g13q4b",
+            scoreImpact: -10,
+            feedback: "Supporting an organic preference that the data clearly shows cannot capture the primary rationale for entering — the patent cliff — is not sound consulting. The CEO's preference does not override the timeline mathematics that organic entry cannot overcome.",
+          },
+        ],
+      },
+      {
+        id: "g13q3b",
+        stage: "Entry Mode",
+        question: "Your entry mode analysis has been suboptimal. The partner shares that organic entry definitively misses the 2025-2026 patent cliff given ANDA timelines. Given this, which acquisition target should GeneriPharma pursue?",
+        exhibit: {
+          type: "table",
+          title: "US Generic Acquisition Targets",
+          data: `| Company         | Revenue | EBITDA | Price  | Focus             | PBM Relationships |
+|----------------|---------|--------|--------|-------------------|-------------------|
+| MidWest Generics| $380M  | $72M   | $650M  | Cardiovascular    | Moderate          |
+| SunValley Pharma| $520M  | $98M   | $890M  | CNS and diabetes  | Strong            |
+| Atlantic Drug   | $290M  | $48M   | $480M  | Solid state/inject| Weak              |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "SunValley Pharma at $890M — CNS and diabetes focus aligns with Jardiance 2025 and Vyvanse already off-patent, strong PBM relationships are the most valuable non-obvious asset, and $520M revenue gives GeneriPharma the critical scale needed for US market presence.",
+            nextQuestionId: "g13q4a",
+            scoreImpact: 15,
+            feedback: "Correct target selection. The PBM relationship insight is particularly important — new generic launches need formulary placement to get volume, and PBM relationships are what determines that. SunValley's strong PBM network accelerates commercial success in a way that MidWest Generics' moderate relationships cannot.",
+          },
+          {
+            id: "b",
+            text: "Atlantic Drug at $480M — cheapest acquisition price preserves capital for organic pipeline investment after entry, and manufacturing expertise in solid state and injectables has broad applicability.",
+            nextQuestionId: "g13q4b",
+            scoreImpact: -10,
+            feedback: "Atlantic Drug has weak PBM relationships — the most critical commercial asset for US generic market success — and limited therapeutic alignment with the patent cliff opportunities. The cheapest acquisition price is not the right selection criterion.",
+          },
+          {
+            id: "c",
+            text: "MidWest Generics at $650M — cardiovascular focus directly aligns with Eliquis and Entresto patent cliffs in 2025-2026, and the lower price preserves $240M more capital for post-acquisition investment versus SunValley.",
+            nextQuestionId: "g13q4a",
+            scoreImpact: 10,
+            feedback: "MidWest Generics is a reasonable second choice — cardiovascular does align with the 2025-2026 cliff. SunValley is preferred because of stronger PBM relationships and broader therapeutic coverage, but MidWest is a defensible alternative if the capital preservation matters.",
+          },
+        ],
+      },
+      {
+        id: "g13q4a",
+        stage: "Financial Analysis",
+        question: "The CEO is persuaded on acquisition entry. Now quantify the financial case for the recommended target.",
+        options: [
+          {
+            id: "a",
+            text: "SunValley at $890M plus $150M integration equals $1.04B total. Revenue upside: SunValley's $520M plus $200-300M from patent cliff generics in years one to three equals approximately $720-820M pro-forma. At 9x EBITDA on 19% margins, exit value in five years would be $1.25B-$1.45B — a 20-40% return above cost.",
+            nextQuestionId: "g13q5a",
+            scoreImpact: 20,
+            feedback: "Solid financial modeling. The patent cliff revenue uplift is the key upside driver and the exit multiple analysis shows the financial case is strong even on conservative assumptions. The 20-40% return range is credible and defensible to the board.",
+          },
+          {
+            id: "b",
+            text: "The acquisition price of $890M is 9.1x EBITDA for SunValley, which is in line with the 8-10x range for mid-market pharma acquisitions. No detailed return model is needed since the multiple is market-standard.",
+            nextQuestionId: "g13q5b",
+            scoreImpact: 0,
+            feedback: "Multiple comparison confirms the price is fair but does not build the investment case. The board needs to understand what return the acquisition will generate, not just whether the price is market-standard.",
+          },
+          {
+            id: "c",
+            text: "The financial case cannot be fully quantified without knowing the exact market share SunValley will capture on the Jardiance and Vyvanse generics, which requires additional market intelligence before committing $890M.",
+            nextQuestionId: "g13q5b",
+            scoreImpact: -5,
+            feedback: "Using uncertainty about exact market share to avoid building the financial model is analytical avoidance. Industry benchmarks for first-to-market generic share provide reasonable estimates — the financial model should be built on these with explicit sensitivity assumptions.",
+          },
+        ],
+      },
+      {
+        id: "g13q4b",
+        stage: "Financial Analysis",
+        question: "Your entry mode or target selection has been suboptimal. The partner gives you the direct guidance: recommend SunValley Pharma acquisition at $890M. Build the financial case in three minutes.",
+        options: [
+          {
+            id: "a",
+            text: "$890M plus $150M integration equals $1.04B cost. SunValley $520M revenue plus $250M patent cliff upside equals $770M pro-forma. At 9x EBITDA on 19% margins, five-year exit value of approximately $1.3B represents a 25% return on invested capital — compelling for a strategic entry.",
+            nextQuestionId: "g13q5a",
+            scoreImpact: 15,
+            feedback: "Strong recovery. Clean financial case built quickly with reasonable assumptions. The 25% return framing gives the board a clear investment metric. The partner says: that is the number to present.",
+          },
+          {
+            id: "b",
+            text: "The financial case requires a full discounted cash flow model to be credible — a quick estimate would be misleading and the CEO deserves a rigorous analysis before committing $890M.",
+            nextQuestionId: "g13q5b",
+            scoreImpact: -10,
+            feedback: "Refusing to build a quick estimate when the partner explicitly says three minutes is not appropriate under time pressure. Consultants are expected to build directional financial cases quickly under constraints — the full DCF can follow but a quick estimate is needed now.",
+          },
+          {
+            id: "c",
+            text: "The $890M price at 9.1x EBITDA is market-standard, which is sufficient justification for the board — no additional financial modeling is needed beyond confirming the multiple is in range.",
+            nextQuestionId: "g13q5b",
+            scoreImpact: 0,
+            feedback: "Multiple confirmation is not a financial case — it is a sanity check. The board needs to understand the return on the investment, not just whether the price is fair relative to comparable transactions.",
+          },
+        ],
+      },
+      {
+        id: "g13q5a",
+        stage: "Final Recommendation",
+        question: "The CEO asks for the final recommendation: go or no-go, entry mode, target, and investment.",
+        options: [
+          {
+            id: "a",
+            text: "Go. Acquire SunValley Pharma at $890M plus $150M integration for $1.04B total entry investment. SunValley's CNS and diabetes focus aligns with the Jardiance 2025 and Vyvanse patent expirations. PBM relationships are the critical commercial asset that makes this target superior. Target 25% ROIC over five years through base revenue plus patent cliff upside.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete recommendation. Clear go decision, specific target, total investment stated, strategic rationale for target selection, key asset identified, and financial return quantified. The CEO says: prepare the board presentation.",
+          },
+          {
+            id: "b",
+            text: "Go, but negotiate the SunValley price down to $750M — the $890M ask is above the comparable multiple average and there is room to negotiate given GeneriPharma's financial position.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Price negotiation is a valid commercial consideration but SunValley at 9.1x EBITDA is within market range — aggressively negotiating below $890M risks losing the target to another buyer given the patent cliff timing pressure. The urgency argues against hard negotiating.",
+          },
+          {
+            id: "c",
+            text: "Conditional go — recommend proceeding with acquisition due diligence but not committing capital until HealthPredict's PBM relationship contracts are independently verified and the patent cliff revenue projections are audited.",
+            nextQuestionId: "end",
+            scoreImpact: 10,
+            feedback: "Due diligence conditions are appropriate — auditing PBM contracts and revenue projections is standard pre-close verification. This is a reasonable final recommendation structure, though calling out SunValley rather than HealthPredict specifically would improve precision.",
+          },
+        ],
+      },
+      {
+        id: "g13q5b",
+        stage: "Final Recommendation",
+        question: "Your analysis has been inconsistent. The partner gives you one final opportunity: what should GeneriPharma do?",
+        options: [
+          {
+            id: "a",
+            text: "Acquire SunValley Pharma at $890M plus $150M integration. Organic entry misses the 2025-2026 patent cliff. SunValley's CNS and diabetes focus and strong PBM relationships make it the best target. Total investment $1.04B targets 25% ROIC over five years.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Good recovery. The complete recommendation is present — mode, target, investment, rationale, and return. The partner says: that is what we needed two days ago.",
+          },
+          {
+            id: "b",
+            text: "Defer the US entry decision by 12 months to allow more time for due diligence on all acquisition targets and better visibility on the competitive response to the 2025 Jardiance patent expiration.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Deferring by 12 months means the Jardiance patent expires during the delay period — the primary time-sensitive opportunity is lost. The analysis supports acting now, not deferring.",
+          },
+          {
+            id: "c",
+            text: "Enter organically with ANDA filings for the 2028 patent cliff opportunities, accepting that near-term patent cliff timing is missed but building a more sustainable US presence over time.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Organic entry for the 2028 window after spending six weeks analyzing why the 2025-2026 window justifies immediate entry is not consistent with the strategic rationale established earlier. The primary opportunity is now and requires acquisition.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G14: ACCENTURE — RETAIL DIGITAL OPS
+  // INTERMEDIATE — 9 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g14",
+    title: "RetailMax: Omnichannel Transformation",
+    type: "operations",
+    difficulty: "intermediate",
+    firm: "accenture",
+    estimatedMinutes: 28,
+    overview: "A large US department store chain is losing market share to Amazon and specialty retailers. Accenture has been engaged to design and implement an omnichannel transformation.",
+    clientBackground: "RetailMax operates 180 department stores across 32 states with $8.4B in annual revenue. Online revenue is 12% of total versus a 35% category average. NPS is 42 versus 68 for best-in-class. Inventory accuracy is 71% versus 94% best practice. Click-and-collect capability exists at only 16% of stores. Same-day delivery capability is zero. The CEO has set a target of 25% digital revenue within two years.",
+    yourRole: "You are an Accenture senior manager on the retail technology practice. You are presenting a transformation roadmap to RetailMax's CTO and COO.",
+    startQuestionId: "g14q1",
+    finalRecommendationPrompt: "What is your omnichannel transformation roadmap for RetailMax, and what is the expected financial impact?",
+    sampleRecommendation: "Three-phase transformation over 24 months. Phase one: deploy RFID inventory tracking across all 180 stores — $45M investment, improves inventory accuracy from 71% to 94%, foundation for all other capabilities. Phase two: roll out click-and-collect to all stores and launch same-day delivery from 50 high-density locations — $93M combined, targeting the 54% of churned customers who cite inability to get products same-day. Phase three: unified commerce platform and AI demand forecasting — $120M, completes the digital infrastructure. Total investment $258M targeting $1.2B in incremental digital revenue and reaching 23% digital mix.",
+    idealRecommendation: "Three-phase transformation totaling $258M over 24 months. Phase one: RFID inventory accuracy ($45M) — foundation for everything else. Phase two: click-and-collect rollout plus same-day delivery launch ($93M) — directly addresses 54% of customers who cite fulfillment gaps. Phase three: unified commerce platform ($120M) — completes the infrastructure. Expected: $1.2B in incremental digital revenue reaching 23% digital mix — near the 25% target.",
+    keyTakeaways: [
+      "Inventory accuracy is the unsexy foundation of all omnichannel capability — you cannot offer same-day delivery if you do not know what is in your stores",
+      "Click-and-collect has a basket size effect — BOPIS customers spend 2-3x more than pure online customers due to incremental in-store purchases during pickup",
+      "Store-as-warehouse models allow retailers to compete with Amazon on delivery speed without building new distribution infrastructure",
+      "Digital transformation sequencing matters — building customer-facing features on a broken inventory foundation always fails",
+    ],
+    questions: [
+      {
+        id: "g14q1",
+        stage: "Root Cause",
+        question: "RetailMax's digital revenue is 12% versus a 35% category average. Before designing solutions, what is the root cause of this gap?",
+        options: [
+          {
+            id: "a",
+            text: "The digital gap is primarily a technology and investment problem — RetailMax has simply not invested enough in its digital capabilities compared to pure-play e-commerce competitors who have had digital as their primary channel from day one.",
+            nextQuestionId: "g14q2b",
+            scoreImpact: -5,
+            feedback: "Technology underinvestment is a symptom, not the root cause. The data on why customers do not shop RetailMax online — including inability to get products same-day, items shown online being unavailable in store — points to operational fulfillment and inventory problems, not simply a lack of digital features.",
+          },
+          {
+            id: "b",
+            text: "Connect the capability gap data to the customer feedback data: 54% of customers cite inability to get products same-day as a reason for not shopping online, and 48% cite items shown online not being available in store. These directly point to fulfillment capability and inventory accuracy as the root causes.",
+            nextQuestionId: "g14q2a",
+            scoreImpact: 20,
+            feedback: "Correct causal chain. The customer feedback data connects directly to the specific capability gaps — zero same-day delivery and 71% inventory accuracy. This analysis tells you exactly what to fix rather than describing the general problem of being behind digitally.",
+          },
+          {
+            id: "c",
+            text: "The gap reflects a strategic choice to prioritize in-store experience over digital — RetailMax should consider whether closing the digital gap is actually aligned with its brand positioning as a physical retail destination.",
+            nextQuestionId: "g14q2c",
+            scoreImpact: -10,
+            feedback: "Questioning whether closing the digital gap is the right strategy when the CEO has already set a 25% digital revenue target is not a useful framing. The engagement is to design how to close the gap, not whether to close it.",
+          },
+        ],
+      },
+      {
+        id: "g14q2a",
+        stage: "Business Case",
+        question: "You have identified fulfillment capability and inventory accuracy as root causes. Before designing the transformation, what is the financial case for closing these gaps?",
+        exhibit: {
+          type: "table",
+          title: "RetailMax Digital Capability vs Benchmark",
+          data: `| Capability                    | RetailMax | Category Avg | Best-in-Class |
+|-----------------------------|-----------|-------------|---------------|
+| Online revenue share         | 12%       | 35%         | 48%           |
+| Click-and-collect stores     | 16%       | 92%         | 100%          |
+| Same-day delivery stores     | 0%        | 68%         | 100%          |
+| Inventory accuracy           | 71%       | 88%         | 96%           |
+| Mobile app rating            | 2.8/5     | 4.1/5       | 4.6/5         |
+| Annual lost digital revenue  | $1.9B     |             |               |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The $1.9B in annual lost digital revenue versus category average is the primary business case driver — if RetailMax reaches 35% digital share from 12%, the incremental revenue is $1.9B at current revenue base. Even reaching 25% would add $1.1B in digital revenue annually.",
+            nextQuestionId: "g14q3a",
+            scoreImpact: 20,
+            feedback: "Correct framing of the business case. The $1.9B lost revenue versus category average is the most compelling number for the CTO and COO — it frames the transformation investment not as a cost but as recovery of value that is currently being lost every year.",
+          },
+          {
+            id: "b",
+            text: "The primary business case is NPS improvement — going from 42 to 68 would represent a 60% improvement in customer satisfaction and is more strategically important than the digital revenue gap.",
+            nextQuestionId: "g14q3b",
+            scoreImpact: 0,
+            feedback: "NPS improvement is a valuable outcome but NPS alone does not build a business case for a $250M+ transformation investment. Revenue impact is the primary financial metric that justifies capital allocation of this scale.",
+          },
+          {
+            id: "c",
+            text: "The mobile app rating of 2.8 versus 4.1 category average is the root cause of the digital gap and the primary business case driver — improving the app experience will unlock the majority of the digital revenue opportunity.",
+            nextQuestionId: "g14q3c",
+            scoreImpact: -5,
+            feedback: "A better app helps conversion but if inventory accuracy is 71%, improving the app means customers can browse products online that are then unavailable when they try to purchase or pick up. The app improvement sits on top of a broken foundation.",
+          },
+        ],
+      },
+      {
+        id: "g14q2b",
+        stage: "Business Case",
+        question: "You have framed this as a technology investment problem. The CTO says: our IT spend is already $420M annually — what specifically are we under-investing in? How do you respond?",
+        options: [
+          {
+            id: "a",
+            text: "Redirect to the customer data: 54% of customers cite fulfillment gaps and 48% cite inventory availability. These are operational infrastructure problems — inventory management systems and fulfillment capabilities — not general digital investment levels. The issue is where IT investment is directed, not how much is spent.",
+            nextQuestionId: "g14q2a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Redirecting from total IT spend to specific capability gaps grounded in customer feedback is the right analytical move. The CTO now understands that the problem is specific operational infrastructure, not overall investment levels.",
+          },
+          {
+            id: "b",
+            text: "Benchmark RetailMax's IT spend as a percentage of revenue against best-in-class digital retailers to identify the specific investment gap that explains the capability difference.",
+            nextQuestionId: "g14q3b",
+            scoreImpact: 0,
+            feedback: "IT spend benchmarking may show RetailMax is investing similar amounts to competitors but getting worse digital outcomes — suggesting allocation rather than level is the issue. This is relevant context but does not directly answer the CTO's question about what to invest in.",
+          },
+          {
+            id: "c",
+            text: "Confirm that IT spend is sufficient and redirect to organizational capability and change management as the real barriers to digital transformation progress.",
+            nextQuestionId: "g14q3c",
+            scoreImpact: -5,
+            feedback: "Change management is always a factor in transformation but concluding that IT spend is sufficient without reviewing the capability gaps first is premature. The customer feedback data points to specific capability investments that are clearly missing.",
+          },
+        ],
+      },
+      {
+        id: "g14q2c",
+        stage: "Business Case",
+        question: "You have questioned whether the 25% digital target is strategically appropriate. The CEO intervenes: the 25% target is set and non-negotiable. Focus on how to get there. How do you redirect the engagement?",
+        options: [
+          {
+            id: "a",
+            text: "Acknowledge the target is set and immediately pivot to the root cause analysis — connecting the capability gap data to customer feedback to identify the specific operational investments needed to reach 25% digital revenue.",
+            nextQuestionId: "g14q2a",
+            scoreImpact: 10,
+            feedback: "Good recovery. Accepting the strategic target and redirecting to the analytical work needed to achieve it is the right professional response. The CEO's direct intervention makes the pivot non-controversial.",
+          },
+          {
+            id: "b",
+            text: "Apologize for the strategic digression and request permission to restart the diagnostic from the beginning with a fresh focus on how to achieve the 25% target.",
+            nextQuestionId: "g14q3a",
+            scoreImpact: -5,
+            feedback: "Restarting from the beginning is unnecessary — the analysis so far has value and the pivot can happen immediately. Excessive apology and restart signals lack of confidence and wastes the client's time.",
+          },
+          {
+            id: "c",
+            text: "Note the strategic concern for future discussion and immediately deliver the capability gap analysis connecting customer feedback to specific operational investments needed for the 25% target.",
+            nextQuestionId: "g14q2a",
+            scoreImpact: 15,
+            feedback: "Smooth recovery. Flagging the concern briefly without dwelling on it and pivoting immediately to useful analysis is the most professional handling of this situation.",
+          },
+        ],
+      },
+      {
+        id: "g14q3a",
+        stage: "Transformation Roadmap",
+        question: "You have established the $1.9B lost revenue opportunity. Now design the transformation roadmap. What should the sequence of investments be and why?",
+        exhibit: {
+          type: "table",
+          title: "Transformation Initiative Options",
+          data: `| Initiative                  | Investment | Revenue Benefit | Timeline  |
+|----------------------------|------------|-----------------|-----------|
+| RFID inventory accuracy     | $45M       | $180M/yr        | 12 months |
+| Click-and-collect all stores| $28M       | $145M/yr        | 6 months  |
+| Same-day delivery 50 stores | $65M       | $280M/yr        | 12 months |
+| Mobile app redesign         | $38M       | $165M/yr        | 6 months  |
+| Ship-from-store all stores  | $120M      | $420M/yr        | 18 months |
+| Total                       | $296M      | $1,190M/yr      |           |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Sequence: RFID inventory accuracy first since it is the foundation for click-and-collect and same-day delivery; then click-and-collect and app redesign in parallel as they are both relatively fast and high-ROI; then same-day delivery once inventory is reliable; then ship-from-store last as the most complex and expensive.",
+            nextQuestionId: "g14q4a",
+            scoreImpact: 20,
+            feedback: "Correct sequencing logic. RFID as the foundation is essential — launching click-and-collect with 71% inventory accuracy means 29% of orders fail at pickup, destroying the customer experience. The remaining sequencing correctly prioritizes by speed-to-revenue and complexity.",
+          },
+          {
+            id: "b",
+            text: "Sequence: mobile app redesign first as it is the fastest and most visible digital improvement; then click-and-collect; then RFID; then same-day delivery and ship-from-store last.",
+            nextQuestionId: "g14q4b",
+            scoreImpact: -10,
+            feedback: "Leading with the mobile app while inventory accuracy is 71% means improving the customer's ability to browse products they then cannot reliably pick up or receive. App improvements built on broken fulfillment infrastructure produce negative customer experiences.",
+          },
+          {
+            id: "c",
+            text: "Launch all five initiatives simultaneously to maximize speed to the 25% digital revenue target — parallel implementation minimizes total transformation timeline.",
+            nextQuestionId: "g14q4c",
+            scoreImpact: -5,
+            feedback: "Simultaneous launch of five major technology initiatives overloads implementation capacity and creates technical dependencies — ship-from-store requires RFID to work reliably. Parallel streams that ignore sequencing dependencies produce integration failures.",
+          },
+        ],
+      },
+      {
+        id: "g14q3b",
+        stage: "Transformation Roadmap",
+        question: "You have been focused on NPS or benchmarking. The COO asks directly: what are the three most important investments for getting to 25% digital revenue and in what order?",
+        options: [
+          {
+            id: "a",
+            text: "RFID inventory accuracy first — foundation for everything; click-and-collect rollout to all 180 stores second — fastest path to digital revenue with 92% category adoption versus RetailMax's 16%; same-day delivery third — directly addresses the 54% of customers who cite inability to get products same-day.",
+            nextQuestionId: "g14q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The three investments are correctly identified and correctly sequenced. The rationale for each — foundation, fastest revenue, primary customer pain — gives the COO the business logic behind the prioritization.",
+          },
+          {
+            id: "b",
+            text: "Mobile app redesign first, then marketing investment to drive awareness of digital channels, then click-and-collect — these three together address the digital visibility and accessibility gaps.",
+            nextQuestionId: "g14q4b",
+            scoreImpact: -10,
+            feedback: "Marketing investment without fixing the fulfillment foundation will drive traffic to a broken experience. This sequence ignores the inventory accuracy problem that makes digital fulfillment unreliable.",
+          },
+          {
+            id: "c",
+            text: "Ship-from-store first since it has the highest revenue benefit at $420M annually and enables both same-day delivery and buy-online-ship-from-store at scale across all 180 locations.",
+            nextQuestionId: "g14q4c",
+            scoreImpact: -5,
+            feedback: "Ship-from-store at 71% inventory accuracy means 29% of ship-from-store orders fail because the item is not actually in the store despite showing as available. RFID accuracy must precede ship-from-store deployment.",
+          },
+        ],
+      },
+      {
+        id: "g14q3c",
+        stage: "Transformation Roadmap",
+        question: "The COO is skeptical of the app-led approach you have suggested. He says: we redesigned the app two years ago and it did not move digital sales. What is actually different this time?",
+        options: [
+          {
+            id: "a",
+            text: "The COO is right that app redesign alone did not work. This time the transformation must lead with inventory infrastructure — RFID accuracy and fulfillment capability — so that the app has reliable inventory data to show customers. App improvements only work when the fulfillment system behind them works.",
+            nextQuestionId: "g14q3a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The COO's historical experience validates the sequencing lesson — app improvements built on broken fulfillment infrastructure fail. This time the foundation comes first. The redirect to the correct sequence is the right analytical response.",
+          },
+          {
+            id: "b",
+            text: "This time is different because the new app will use AI-powered personalization and a redesigned UX that better matches competitor digital experiences, addressing the root causes of the prior app's underperformance.",
+            nextQuestionId: "g14q4b",
+            scoreImpact: -10,
+            feedback: "Arguing that the new app will succeed where the previous one failed, without addressing the COO's core insight that app redesigns have not worked, is not persuasive. The prior failure was likely because the fulfillment infrastructure was not fixed — not because the UX was wrong.",
+          },
+          {
+            id: "c",
+            text: "Acknowledge that app redesign alone is insufficient and propose adding a fulfillment reliability component — same-day delivery from select stores — as the differentiating addition to the prior app-led approach.",
+            nextQuestionId: "g14q3a",
+            scoreImpact: 10,
+            feedback: "Partial recovery. Acknowledging the app-only failure and adding fulfillment is an improvement, but still misses that inventory accuracy must be the first investment — same-day delivery without RFID creates unreliable promise fulfillment.",
+          },
+        ],
+      },
+      {
+        id: "g14q4a",
+        stage: "Business Case",
+        question: "The CTO asks: what does the full $296M transformation investment return in revenue and does it get RetailMax to the 25% digital target?",
+        options: [
+          {
+            id: "a",
+            text: "$296M investment generating $1,190M in annual revenue benefit equals a 4x first-year return and payback in under four months. Adding $1,190M to the current $1B digital revenue gives approximately $2.19B in digital revenue — 26% of the $8.4B total base, just above the 25% target.",
+            nextQuestionId: "g14q5a",
+            scoreImpact: 20,
+            feedback: "Correct and complete financial summary. 4x first-year return with sub-4-month payback is highly compelling for a CTO budget approval. The 26% digital share confirms the 25% target is achievable with this program — giving both the CTO and CEO what they need to approve.",
+          },
+          {
+            id: "b",
+            text: "The $1,190M revenue benefit is theoretical maximum — a realistic estimate accounting for implementation delays and partial adoption would be 50-60% of this, or $595-714M, reaching 19-20% digital share rather than 25%.",
+            nextQuestionId: "g14q5b",
+            scoreImpact: -5,
+            feedback: "Applying a 50% haircut without specific basis reduces a compelling business case unnecessarily. The $1,190M estimate already reflects realistic adoption curves from comparable retail transformations. General risk discounting without specific assumptions is not rigorous.",
+          },
+          {
+            id: "c",
+            text: "The ROI analysis cannot be completed without a detailed implementation timeline and store-by-store revenue impact model for each initiative — the aggregate numbers presented are insufficient for a CTO capital approval.",
+            nextQuestionId: "g14q5b",
+            scoreImpact: -10,
+            feedback: "The aggregate financial summary presented is exactly what a CTO capital approval presentation requires. Demanding a store-by-store model before presenting aggregate numbers delays the business case without adding proportional analytical value.",
+          },
+        ],
+      },
+      {
+        id: "g14q4b",
+        stage: "Business Case",
+        question: "Your transformation sequencing led with the app rather than the foundation. The COO says: we tried app-first before and it did not work. Why should we invest $296M this time? How do you recover?",
+        options: [
+          {
+            id: "a",
+            text: "The COO is right that app-first failed. The correct sequence this time is RFID inventory accuracy first — building the data foundation that makes digital fulfillment reliable. The app improvement sits on top of this foundation and works only when inventory accuracy supports it.",
+            nextQuestionId: "g14q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Acknowledging the prior failure, identifying the correct root cause, and presenting the right sequence gives the COO the answer he needed. He approves proceeding to the detailed plan.",
+          },
+          {
+            id: "b",
+            text: "This time is different because the $296M investment is significantly larger than prior digital investments, giving RetailMax the scale needed to achieve a real transformation rather than incremental improvements.",
+            nextQuestionId: "g14q5b",
+            scoreImpact: -10,
+            feedback: "More money invested in the same sequence that failed before will produce the same result. The COO's concern is about the approach, not the investment level. This response misses the insight.",
+          },
+          {
+            id: "c",
+            text: "Agree with the COO's skepticism and recommend commissioning a pilot of three stores to test all five initiatives before committing to the full $296M program across all 180 locations.",
+            nextQuestionId: "g14q5b",
+            scoreImpact: 5,
+            feedback: "A pilot is overly cautious given the urgency of the digital gap and the lost $1.9B in annual revenue. The sequence correction — leading with RFID — is the key change that addresses the prior failure. A pilot delays the answer by 12 months unnecessarily.",
+          },
+        ],
+      },
+      {
+        id: "g14q4c",
+        stage: "Business Case",
+        question: "Your transformation sequencing ignored technical dependencies. The technology team says ship-from-store cannot work reliably at 71% inventory accuracy. How do you redesign the roadmap?",
+        options: [
+          {
+            id: "a",
+            text: "Correct the sequencing: RFID inventory accuracy in phase one, then click-and-collect and same-day delivery in phase two once inventory is reliable at 90%+, then ship-from-store and unified commerce in phase three. The $296M total investment and $1,190M revenue benefit remain the same — only the sequence changes.",
+            nextQuestionId: "g14q5a",
+            scoreImpact: 15,
+            feedback: "Clean sequence correction. Acknowledging the dependency error and restating the correct order with the same financial case is the right move. The financial case is preserved while the implementation plan is fixed.",
+          },
+          {
+            id: "b",
+            text: "Accept the technical limitation and remove ship-from-store from the roadmap since it is the most complex and expensive initiative and the dependency makes it too risky.",
+            nextQuestionId: "g14q5b",
+            scoreImpact: -10,
+            feedback: "Removing the highest-revenue initiative ($420M annually) from the roadmap because of a sequence error that can be fixed is an overreaction. The solution is to fix the sequence, not eliminate the initiative.",
+          },
+          {
+            id: "c",
+            text: "Propose running RFID and ship-from-store in parallel — as RFID accuracy improves from 71% toward 94%, gradually expand ship-from-store to locations where accuracy is already above 85%.",
+            nextQuestionId: "g14q5a",
+            scoreImpact: 10,
+            feedback: "Parallel deployment with accuracy-based geographic rollout is a practical implementation approach. It is more complex to manage but allows faster time-to-revenue for ship-from-store in locations where accuracy is already adequate.",
+          },
+        ],
+      },
+      {
+        id: "g14q5a",
+        stage: "Final Recommendation",
+        question: "The CTO asks for the transformation roadmap in three phases with investment and revenue impact for each phase.",
+        options: [
+          {
+            id: "a",
+            text: "Phase one: RFID inventory accuracy across all 180 stores — $45M, 12 months, $180M annual savings. Phase two: click-and-collect all stores plus same-day delivery at 50 stores — $93M combined, 12 months, $425M annual revenue lift. Phase three: ship-from-store and unified commerce — $158M, 18 months, $585M annual revenue. Total: $296M for $1,190M annual benefit reaching 26% digital share.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent structured presentation. Three phases with specific investments, specific timelines, and specific revenue impacts for each. The total reconciles cleanly. The 26% digital share number closes the loop to the CEO's 25% target. The CTO approves proceeding to detailed project planning.",
+          },
+          {
+            id: "b",
+            text: "The transformation should be presented as a single integrated program rather than three phases since customers experience RetailMax as one brand and do not benefit from a phased approach.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Phasing is an internal implementation methodology, not a customer experience issue. The CTO asked specifically for a phased roadmap and the technical dependencies between initiatives make phasing mandatory regardless of how customers experience the brand.",
+          },
+          {
+            id: "c",
+            text: "Recommend reducing the total investment to $150M focused on the highest-ROI initiatives only — RFID and click-and-collect — to prove the model before committing the full $296M.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "A reduced first-phase investment is a reasonable capital management approach, but the business case for $296M with 4x ROI is compelling enough to justify the full program. The CEO needs to reach 25% digital share in two years — $150M may not get there in the required timeline.",
+          },
+        ],
+      },
+      {
+        id: "g14q5b",
+        stage: "Final Recommendation",
+        question: "Your roadmap has been inconsistent. The partner gives you one final opportunity before the CTO presentation. What is the correct transformation roadmap?",
+        options: [
+          {
+            id: "a",
+            text: "Three phases: RFID accuracy first ($45M, foundation), click-and-collect and same-day delivery second ($93M, fastest revenue), ship-from-store and unified commerce third ($158M, full capability). Total $296M for $1,190M annual revenue benefit reaching 26% digital share in 24 months.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery. The correct phases with correct sequencing, investment levels, and financial outcomes. The partner says: that is the presentation — lead with the sequence rationale and close with the 26% digital share outcome.",
+          },
+          {
+            id: "b",
+            text: "The transformation is too complex to summarize in three phases — recommend commissioning a detailed project plan before presenting to the CTO to ensure each initiative's dependencies are fully mapped.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "A three-phase roadmap is exactly the right level of abstraction for a CTO presentation. Detailed project planning comes after executive approval, not before. Refusing to present without a full project plan delays approval unnecessarily.",
+          },
+          {
+            id: "c",
+            text: "Focus only on phase one — RFID inventory accuracy at $45M — and propose returning with phases two and three after demonstrating phase one success to build confidence.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "A phase-one-only recommendation is too conservative given the urgency of the digital gap. The CTO needs to see the full roadmap to understand how phase one fits into the larger plan — approving only phase one without the full picture may result in under-funding the complete transformation.",
+          },
+        ],
+      },
+    ],
+  },
+  
 ];
