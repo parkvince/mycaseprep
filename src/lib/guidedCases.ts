@@ -5222,5 +5222,3235 @@ export const GUIDED_CASES: GuidedCase[] = [
       },
     ],
   },
-  
+  // ─────────────────────────────────────────────
+  // CASE G15: MCKINSEY — TECH RESTRUCTURING
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g15",
+    title: "CloudCore: Post-Hypergrowth Restructuring",
+    type: "operations",
+    difficulty: "advanced",
+    firm: "mckinsey",
+    estimatedMinutes: 40,
+    overview: "A B2B SaaS company that grew 10x during the pandemic is now facing an existential cost crisis. McKinsey has been engaged to redesign the cost structure and restore sustainable economics.",
+    clientBackground: "CloudCore provides cloud infrastructure management software to mid-enterprise clients. Revenue grew from $180M in 2019 to $1.8B in 2022 — a 10x increase in three years. Headcount grew from 800 to 6,200. In 2023 revenue growth decelerated to 12% while costs continued growing at 28%. EBITDA fell from positive 18% margin to negative 22%. The board has given the CEO 18 months to reach EBITDA breakeven or the company faces a down-round or forced sale.",
+    yourRole: "You are a McKinsey associate principal on the tech and digital practice. You have eight weeks to deliver a restructuring plan. The CEO has said clearly that this plan will determine whether the company survives.",
+    startQuestionId: "g15q1",
+    finalRecommendationPrompt: "What restructuring actions should CloudCore take to reach EBITDA breakeven within 18 months? Be specific about cost reduction targets, organizational changes, and sequencing.",
+    sampleRecommendation: "CloudCore must reduce annualized costs by $580M to reach breakeven. Three major actions: first, a workforce reduction of 35% targeting G&A functions running at 2x industry ratios and duplicate engineering teams from acquisition integrations — estimated savings $320M. Second, real estate rationalization closing 8 of 12 office locations under a hub-and-spoke model — estimated savings $85M. Third, cloud infrastructure spend consolidation where costs grew 340% against 900% revenue growth, indicating significant waste — estimated savings $175M. Execute the workforce announcement in week two, real estate over 6-12 months as leases permit, infrastructure over 6 months with the engineering team.",
+    idealRecommendation: "Three actions totaling $580M: (1) Workforce reduction of 35% focused on G&A at 2x industry ratio and duplicate engineering — $320M savings. (2) Real estate rationalization — $85M savings. (3) Infrastructure spend consolidation — $175M savings. Workforce announcement must happen once and decisively in week two. Retain the top 10% of engineers through a $45M retention program — they are the growth engine after restructuring.",
+    keyTakeaways: [
+      "Hypergrowth companies systematically over-hire in G&A and middle management because revenue growth masks inefficiency until growth decelerates",
+      "Workforce reductions must be done once and decisively — serial cuts destroy morale without fixing the economics and cause the best talent to leave preemptively",
+      "Infrastructure and vendor spend is often the least-examined cost bucket in tech companies and frequently contains 30-50% waste",
+      "The goal of a restructuring is to create a sustainable business not just hit a near-term target — talent retention during restructuring is as important as the cuts themselves",
+    ],
+    questions: [
+      {
+        id: "g15q1",
+        stage: "Cost Diagnosis",
+        question: "CloudCore must reduce costs by $580M to reach breakeven. Before identifying where to cut, how do you structure the cost diagnostic to ensure you find the right $580M rather than the easiest $580M?",
+        context: "The difference between the right cuts and the easy cuts is whether the company can grow again after the restructuring. How you approach this diagnostic will determine whether CloudCore survives long-term.",
+        options: [
+          {
+            id: "a",
+            text: "Benchmark every cost line against industry standards for SaaS companies at comparable revenue scale, identify the lines furthest above benchmark, and concentrate cuts where the gap to benchmark is largest regardless of which functions are involved.",
+            nextQuestionId: "g15q2a",
+            scoreImpact: 20,
+            feedback: "Correct approach. Benchmark-driven cuts are defensible, targeted, and ensure you are removing structural excess rather than cutting arbitrarily. McKinsey uses this methodology because it gives the CEO and board a fact base for every reduction rather than subjective judgments.",
+          },
+          {
+            id: "b",
+            text: "Ask the CEO and leadership team to identify their lowest-priority functions and cut those first since they have the operational knowledge to distinguish core from non-core activities better than an outside consultant.",
+            nextQuestionId: "g15q2b",
+            scoreImpact: -10,
+            feedback: "Leaders protect their own functions in restructurings — this approach produces cuts that are politically easy rather than economically optimal. McKinsey's value in a restructuring is specifically to provide the independent benchmark analysis that internal leaders cannot or will not do for their own areas.",
+          },
+          {
+            id: "c",
+            text: "Identify the functions with the largest absolute headcount and cut proportionally from each, ensuring no single function bears a disproportionate share of the reduction.",
+            nextQuestionId: "g15q2c",
+            scoreImpact: -5,
+            feedback: "Proportional cuts across all functions ignores the fact that some functions are dramatically more over-staffed than others relative to benchmark. Cutting equally from engineering and G&A when G&A is 2x benchmark and engineering is at benchmark destroys value.",
+          },
+        ],
+      },
+      {
+        id: "g15q2a",
+        stage: "Cost Benchmark Analysis",
+        question: "The benchmark analysis is complete. Review the data and identify where the excess costs are concentrated.",
+        exhibit: {
+          type: "table",
+          title: "CloudCore Cost Structure vs SaaS Benchmark",
+          data: `| Function        | 2022 Spend | Pct Revenue | Benchmark Pct | Excess vs Bench | Headcount |
+|----------------|------------|-------------|---------------|-----------------|-----------|
+| R&D            | $612M      | 34%         | 18-22%        | $216M           | 2,480     |
+| Sales/Mktg     | $504M      | 28%         | 20-25%        | $54M            | 1,560     |
+| G&A            | $414M      | 23%         | 8-12%         | $198M           | 1,480     |
+| Infrastructure | $252M      | 14%         | 8-10%         | $90M            | 0 (cloud) |
+| Total costs    | $1,782M    | 99%         | 65-70%        | $558M           |           |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "G&A and R&D are the primary excess areas. G&A at 23% of revenue versus 8-12% benchmark represents $198M in excess — the largest single gap. R&D at 34% versus 18-22% benchmark represents $216M excess but cutting engineering aggressively risks the product. Infrastructure at 14% versus 8-10% is a $90M opportunity with no headcount impact.",
+            nextQuestionId: "g15q3a",
+            scoreImpact: 20,
+            feedback: "Correct identification with appropriate nuance. G&A is the clearest excess with no strategic argument for being above benchmark. R&D excess requires more careful analysis since some of it may be legitimate investment. Infrastructure excess is high-ROI because it requires no layoffs.",
+          },
+          {
+            id: "b",
+            text: "Sales and marketing at $504M is the largest absolute spend line and should be the primary cut target since reducing customer acquisition costs improves unit economics immediately.",
+            nextQuestionId: "g15q3b",
+            scoreImpact: -10,
+            feedback: "Sales and marketing at 28% of revenue is only slightly above the 20-25% benchmark — the $54M excess is the smallest of the four categories. Cutting the revenue-generating function most aggressively while G&A at 2x benchmark goes largely untouched is the opposite of optimal.",
+          },
+          {
+            id: "c",
+            text: "Infrastructure at $252M should be cut first since it is pure cost with no headcount and no direct impact on employees, making it the easiest cut to execute without organizational disruption.",
+            nextQuestionId: "g15q3c",
+            scoreImpact: 5,
+            feedback: "Infrastructure cuts are relatively easy to execute but the $90M opportunity closes only 16% of the $558M gap. Starting with the smallest and easiest cut while the larger, harder cuts are delayed is not a restructuring plan — it is a delay tactic.",
+          },
+        ],
+      },
+      {
+        id: "g15q2b",
+        stage: "Cost Benchmark Analysis",
+        question: "Leadership has identified marketing, events, and travel as their lowest-priority cuts. Combined savings would be approximately $45M. The CFO says: this is not enough to reach $580M in savings. What do you do?",
+        options: [
+          {
+            id: "a",
+            text: "Present the benchmark analysis independently: G&A at 23% of revenue versus 8-12% benchmark represents $198M in structural excess that leadership cannot objectively see because they manage those functions. The benchmark forces the harder conversation the CEO needs to have.",
+            nextQuestionId: "g15q3a",
+            scoreImpact: 15,
+            feedback: "Correct use of independent analysis to surface what leadership cannot surface for itself. This is the McKinsey function in a restructuring — the benchmark creates an objective basis for cuts that would otherwise be politically blocked.",
+          },
+          {
+            id: "b",
+            text: "Accept the $45M from low-priority cuts and recommend additional revenue growth initiatives to close the remaining $535M gap through growth rather than further cost reduction.",
+            nextQuestionId: "g15q3b",
+            scoreImpact: -15,
+            feedback: "CloudCore's revenue growth decelerated to 12% while costs grew 28% — the growth thesis is already failing. Recommending growth to avoid difficult cuts when the company faces an 18-month survival deadline is not responsible consulting.",
+          },
+          {
+            id: "c",
+            text: "Propose a longer 36-month restructuring timeline that allows for more gradual cost reduction through natural attrition and performance management rather than forced reductions.",
+            nextQuestionId: "g15q3c",
+            scoreImpact: -10,
+            feedback: "The board gave 18 months, not 36. A 36-month plan that the board has explicitly said is not an option is not a recommendation — it is a refusal to engage with the constraint. Natural attrition at CloudCore's cost levels would take 5-7 years to reach breakeven.",
+          },
+        ],
+      },
+      {
+        id: "g15q2c",
+        stage: "Cost Benchmark Analysis",
+        question: "Proportional cuts across all functions would remove 35% from each department. The engineering team lead says: cutting 35% from R&D would kill three product lines that are our future growth engines. How do you respond?",
+        options: [
+          {
+            id: "a",
+            text: "The engineering team lead is raising a legitimate strategic concern. Proportional cuts are analytically wrong — G&A at 23% of revenue versus 8-12% benchmark is structurally over-staffed in a way R&D is not. Redirect the methodology to benchmark-driven cuts that concentrate reductions where excess is highest.",
+            nextQuestionId: "g15q3a",
+            scoreImpact: 10,
+            feedback: "Good recovery. The engineering team lead inadvertently exposed the flaw in the proportional approach. Using this feedback to redirect to the benchmark methodology is the right pivot.",
+          },
+          {
+            id: "b",
+            text: "Exempt R&D entirely from cuts to protect the product roadmap, and increase the cuts in Sales/Marketing and G&A proportionally to compensate for the R&D exemption.",
+            nextQuestionId: "g15q3a",
+            scoreImpact: 5,
+            feedback: "Partially right — R&D should not bear proportional cuts. But exempting R&D entirely without analyzing which engineering teams are genuinely strategic versus which are duplicate or low-productivity teams leaves $100M+ in legitimate R&D savings unaddressed.",
+          },
+          {
+            id: "c",
+            text: "Maintain the proportional approach but allow R&D to choose which 35% of projects to cut internally, giving them autonomy over the composition of the reduction.",
+            nextQuestionId: "g15q3c",
+            scoreImpact: -5,
+            feedback: "Letting R&D self-select which roles to cut replicates the same problem as asking leadership generally — they will cut the most recently hired or most junior rather than the structurally redundant teams created during hypergrowth acquisitions.",
+          },
+        ],
+      },
+      {
+        id: "g15q3a",
+        stage: "Workforce Reduction Design",
+        question: "G&A at $198M excess is the clearest target. The CFO asks: how do you cut $198M from G&A without destroying the administrative infrastructure the company needs to operate?",
+        exhibit: {
+          type: "table",
+          title: "G&A Function Breakdown",
+          data: `| Sub-function      | Headcount | Spend  | Benchmark HC | Excess HC | Notes                   |
+|------------------|-----------|--------|-------------|-----------|-------------------------|
+| HR               | 280       | $84M   | 95          | 185       | 1 HR per 22 employees   |
+| Finance          | 245       | $74M   | 110         | 135       | Duplicated FP&A teams   |
+| IT support       | 198       | $59M   | 145         | 53        | Pre-cloud support model |
+| Legal/compliance | 165       | $50M   | 120         | 45        | Near benchmark          |
+| Facilities       | 312       | $94M   | 180         | 132       | Pre-remote model        |
+| Executive staff  | 280       | $53M   | 90          | 190       | Hypergrowth hiring      |
+| Total G&A        | 1,480     | $414M  | 740         | 740       |                         |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "HR at 1 HR per 22 employees versus a 1 per 50 benchmark, facilities built for pre-remote headcount, and duplicated FP&A teams from acquisition integrations are the primary targets. These three sub-functions alone account for 502 excess headcount — 68% of the G&A excess. Concentrating cuts here preserves legal, compliance, and core IT support.",
+            nextQuestionId: "g15q4a",
+            scoreImpact: 20,
+            feedback: "Surgical and well-reasoned. Identifying the three sub-functions with the largest structural excess and the clearest organizational reasons for that excess — HR ratio, pre-remote facilities, duplicate FP&A — gives the CFO a defensible and specific plan rather than a blunt percentage cut.",
+          },
+          {
+            id: "b",
+            text: "Cut all G&A sub-functions to benchmark headcount simultaneously — 740 total reductions achieving exactly the excess shown in the benchmark analysis.",
+            nextQuestionId: "g15q4b",
+            scoreImpact: 5,
+            feedback: "Cutting all functions to benchmark simultaneously is analytically clean but operationally risky. Legal and compliance at near-benchmark would be cut unnecessarily, and simultaneous large reductions across all functions create more implementation chaos than phased cuts.",
+          },
+          {
+            id: "c",
+            text: "Focus exclusively on facilities at $94M and executive staff at $53M since these are the most defensible cuts publicly — facilities restructuring given remote work trends and executive staff reduction signals leadership sacrifice.",
+            nextQuestionId: "g15q4c",
+            scoreImpact: -5,
+            feedback: "Choosing cuts based on public defensibility rather than structural excess is the wrong optimization. Facilities plus executive staff saves approximately $80M — well short of the $198M G&A target — while leaving the largest excesses in HR and FP&A untouched.",
+          },
+        ],
+      },
+      {
+        id: "g15q3b",
+        stage: "Workforce Reduction Design",
+        question: "The CEO wants to focus restructuring on revenue-adjacent functions. You need to redirect her toward the G&A excess. What is the most compelling argument?",
+        options: [
+          {
+            id: "a",
+            text: "G&A at 23% of revenue versus 8-12% benchmark means CloudCore spends $11 in administrative overhead for every $100 in revenue above what comparable SaaS companies spend. This $198M structural excess has zero direct revenue contribution and is the highest-ROI restructuring target by definition.",
+            nextQuestionId: "g15q4a",
+            scoreImpact: 20,
+            feedback: "The per-dollar framing is exactly right. Expressing G&A excess as a revenue-proportional inefficiency makes the opportunity concrete and impossible to argue with. The CEO now understands why G&A is the right target rather than revenue-generating functions.",
+          },
+          {
+            id: "b",
+            text: "Show that comparable SaaS companies like Salesforce and Workday have lower G&A ratios as proof that CloudCore's overhead is excessive and that industry leaders operate successfully with leaner administrative functions.",
+            nextQuestionId: "g15q4a",
+            scoreImpact: 10,
+            feedback: "Peer examples are persuasive but slightly weaker than the direct benchmark analysis. Both work but the benchmark percentages are the more precise and harder-to-challenge version of the same argument.",
+          },
+          {
+            id: "c",
+            text: "Acknowledge the CEO's instinct to protect revenue functions and propose a 50-50 split between G&A cuts and sales and marketing cuts to achieve the $580M target while respecting her strategic priorities.",
+            nextQuestionId: "g15q4b",
+            scoreImpact: -10,
+            feedback: "Compromising the analytically correct recommendation to match the CEO's instinct is a classic consulting failure mode. Sales and marketing is only $54M above benchmark — cutting it disproportionately to protect G&A that is $198M above benchmark is economically irrational.",
+          },
+        ],
+      },
+      {
+        id: "g15q3c",
+        stage: "Workforce Reduction Design",
+        question: "Your restructuring approach has been suboptimal. The partner intervenes: G&A is the primary target — it is 2x industry benchmark with $198M in structural excess. Given this, design the G&A reduction program.",
+        options: [
+          {
+            id: "a",
+            text: "Target the three highest-excess G&A sub-functions: HR from 280 to 95 headcount, facilities from 312 to 180 headcount, and duplicated FP&A teams from 245 to 110 headcount. Total reduction of 452 people saving approximately $135M annually from G&A alone.",
+            nextQuestionId: "g15q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery with specificity. Targeting the three largest excesses by sub-function with specific headcount numbers gives the restructuring plan operational credibility. The $135M from G&A alone plus infrastructure savings and other reductions gets to the $580M target.",
+          },
+          {
+            id: "b",
+            text: "Recommend outsourcing the entire G&A function to a business process outsourcing firm to achieve benchmark cost ratios without a workforce reduction announcement.",
+            nextQuestionId: "g15q4c",
+            scoreImpact: -5,
+            feedback: "Full G&A outsourcing would take 18-24 months to implement, cost significant transition capital, and create a different set of operational risks. This is far too slow for an 18-month breakeven deadline and introduces new risks that do not exist with direct workforce reduction.",
+          },
+          {
+            id: "c",
+            text: "Cut G&A to exactly the industry benchmark midpoint of 10% of revenue by reducing all sub-functions proportionally, saving approximately $234M and exceeding the structural excess estimate.",
+            nextQuestionId: "g15q4a",
+            scoreImpact: 5,
+            feedback: "Getting to exactly the benchmark midpoint is an overly mechanical approach — some sub-functions like legal and compliance are near benchmark already and should not be cut. The surgical sub-function approach is more precise than forcing the entire department to a single ratio.",
+          },
+        ],
+      },
+      {
+        id: "g15q4a",
+        stage: "Infrastructure and Real Estate",
+        question: "G&A cuts are designed. Now address infrastructure and real estate. Infrastructure at 14% of revenue versus 8-10% benchmark represents a $90M opportunity. The CTO says: our infrastructure costs are high because we are growing fast and scale discounts will come. How do you evaluate this?",
+        exhibit: {
+          type: "table",
+          title: "CloudCore Infrastructure Spend Analysis",
+          data: `| Category              | 2022 Spend | 2019 Spend | Growth | Revenue Growth |
+|----------------------|------------|------------|--------|----------------|
+| Compute              | $98M       | $28M       | 250%   | 900%           |
+| Storage              | $62M       | $12M       | 417%   | 900%           |
+| Data transfer        | $44M       | $8M        | 450%   | 900%           |
+| Dev and test envs    | $48M       | $6M        | 700%   | 900%           |
+| Total infrastructure | $252M      | $54M       | 367%   | 900%           |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The CTO's scale discount argument would mean costs should grow slower than revenue — but compute, storage, and data transfer all grew slower than the 900% revenue growth. Dev and test environments grew 700% against 900% revenue — the scale discipline exists in production but the development environment spending looks uncontrolled and is the primary target.",
+            nextQuestionId: "g15q5a",
+            scoreImpact: 20,
+            feedback: "Excellent disaggregation. Separating production infrastructure — where scale is working — from development environments where 700% growth against 900% revenue indicates real waste is exactly the right analysis. This saves the CTO face on production while identifying the legitimate optimization target.",
+          },
+          {
+            id: "b",
+            text: "The CTO is correct — all infrastructure categories grew slower than the 900% revenue growth, which means infrastructure costs per unit of revenue are actually declining. There is no infrastructure problem to fix.",
+            nextQuestionId: "g15q5b",
+            scoreImpact: -10,
+            feedback: "Growing slower than revenue is not the same as being at benchmark. Infrastructure at 14% of revenue versus 8-10% benchmark means CloudCore still spends $50M+ more than comparable companies. Scale improvement and structural excess can coexist.",
+          },
+          {
+            id: "c",
+            text: "Accept the CTO's argument and remove infrastructure from the restructuring plan entirely, relying on scale discounts to naturally reduce infrastructure as a percentage of revenue over the next two to three years.",
+            nextQuestionId: "g15q5b",
+            scoreImpact: -15,
+            feedback: "Accepting an argument that contradicts the benchmark analysis without a counterargument is not sound consulting. CloudCore has 18 months to reach breakeven — waiting two to three years for scale discounts to close a $90M gap is not consistent with the urgency of the situation.",
+          },
+        ],
+      },
+      {
+        id: "g15q4b",
+        stage: "Infrastructure and Real Estate",
+        question: "Your G&A analysis has been incomplete. The partner says: you have identified $135M from G&A but need $580M total. Where does the remaining $445M come from? Build the full savings bridge.",
+        options: [
+          {
+            id: "a",
+            text: "Full savings bridge: G&A reduction $135M, R&D duplicate team elimination $185M, infrastructure optimization $90M, real estate rationalization $85M, sales and marketing efficiency $45M, and vendor and software rationalization $40M. Total $580M — exactly the breakeven target.",
+            nextQuestionId: "g15q5a",
+            scoreImpact: 20,
+            feedback: "Complete and balanced savings bridge. The R&D duplicate team elimination is the key missing piece — not a blanket R&D cut but specifically targeting teams created through acquisitions that duplicate existing capabilities. The bridge adds up cleanly and the partner approves proceeding.",
+          },
+          {
+            id: "b",
+            text: "The remaining $445M must come from revenue growth — cost cuts alone cannot close this gap without damaging the business, so a combination of $135M in G&A savings and $445M in incremental revenue from a price increase is the correct bridge.",
+            nextQuestionId: "g15q5b",
+            scoreImpact: -15,
+            feedback: "The board mandated cost cuts to reach breakeven, not revenue growth. Revenue at 12% growth and costs growing 28% means the gap is widening not closing — relying on revenue growth to close $445M of a $580M cost gap in 18 months is not a credible plan.",
+          },
+          {
+            id: "c",
+            text: "Cut an additional 35% from R&D beyond the G&A reductions to find the remaining savings — the largest headcount pool has the largest absolute savings potential.",
+            nextQuestionId: "g15q5b",
+            scoreImpact: -10,
+            feedback: "Cutting R&D by 35% purely because it is the largest headcount pool destroys the product capabilities that CloudCore needs to grow after restructuring. Benchmark analysis shows R&D at 34% of revenue versus 18-22% benchmark — the excess is real but the answer is targeted cuts to duplicate teams, not a blanket 35%.",
+          },
+        ],
+      },
+      {
+        id: "g15q4c",
+        stage: "Infrastructure and Real Estate",
+        question: "Your restructuring design has been piecemeal. The CFO says: we need $580M in savings and a plan that is credible enough to prevent the down-round. Show me the full savings bridge in five minutes.",
+        options: [
+          {
+            id: "a",
+            text: "G&A benchmark reduction $198M, R&D duplicate team elimination $185M, infrastructure dev environment optimization $90M, real estate hub-and-spoke consolidation $85M, sales and marketing efficiency $22M. Total $580M. Workforce announcements in week two, infrastructure and real estate over six to twelve months.",
+            nextQuestionId: "g15q5a",
+            scoreImpact: 15,
+            feedback: "Strong recovery under time pressure. Complete bridge totaling exactly $580M with a clear implementation sequence. The CFO says: this is what I needed. Now build the organizational design behind it.",
+          },
+          {
+            id: "b",
+            text: "The $580M target is too aggressive — a more sustainable restructuring of $350M over 24 months would achieve breakeven with lower organizational disruption and lower attrition of top talent.",
+            nextQuestionId: "g15q5b",
+            scoreImpact: -10,
+            feedback: "The board set 18 months and $580M as the constraint. Proposing a different target to the CFO who has the same 18-month pressure from the board is not useful consulting — it is delay.",
+          },
+          {
+            id: "c",
+            text: "The savings bridge requires two more weeks of analysis to properly attribute savings between workforce, infrastructure, and real estate before presenting to the CFO with confidence.",
+            nextQuestionId: "g15q5b",
+            scoreImpact: -5,
+            feedback: "Eight weeks of analysis have been completed. The CFO asked for the bridge in five minutes — requesting two more weeks when the data is already available is not responsive to the urgency.",
+          },
+        ],
+      },
+      {
+        id: "g15q5a",
+        stage: "Communication Strategy",
+        question: "The CEO asks: how and when do we communicate the workforce reduction to employees, and how do we retain the top engineers we cannot afford to lose?",
+        options: [
+          {
+            id: "a",
+            text: "Single-day execution: brief all managers 48 hours in advance under NDA, execute all individual notifications on the same morning within a 30-minute window, CEO all-hands that afternoon, public statement same day. Never allow news to leak before simultaneous notification — every day of ambiguity is a day of voluntary attrition of the people you want to keep.",
+            nextQuestionId: "g15q6a",
+            scoreImpact: 20,
+            feedback: "This is the McKinsey restructuring communication playbook. Single-day execution eliminates the ambiguity period where your best engineers — who have the most outside offers — leave preemptively. Manager preparation 48 hours in advance ensures they can support their teams in the moment.",
+          },
+          {
+            id: "b",
+            text: "Announce the restructuring plan publicly first so employees understand the strategic context before individual notifications happen over the following two weeks as managers identify specific affected roles.",
+            nextQuestionId: "g15q6b",
+            scoreImpact: -15,
+            feedback: "Announcing that significant cuts are coming without telling individuals who is affected for two weeks is the worst possible approach — it creates maximum uncertainty for maximum time, driving preemptive voluntary attrition of your most employable employees.",
+          },
+          {
+            id: "c",
+            text: "Execute the reduction in three tranches over six months to minimize organizational shock and allow performance assessment to guide each tranche rather than committing to all cuts immediately.",
+            nextQuestionId: "g15q6b",
+            scoreImpact: -10,
+            feedback: "Serial tranches extend organizational uncertainty indefinitely. Research on restructurings is clear — single-event reductions recover faster than serial ones. Three tranches over six months means six months where every employee wonders if they are next.",
+          },
+        ],
+      },
+      {
+        id: "g15q5b",
+        stage: "Communication Strategy",
+        question: "Your restructuring plan has gaps. The partner gives you a direct steer: the plan needs to be $580M in savings communicated in a single announcement. What is the most dangerous execution risk and how do you mitigate it?",
+        options: [
+          {
+            id: "a",
+            text: "The most dangerous execution risk is voluntary attrition of top engineering talent before and immediately after the announcement. Mitigate through a $45M retention program for the top 500 engineers — personal calls from the CEO within 72 hours, retention packages, and a compelling narrative about the growth trajectory post-restructuring.",
+            nextQuestionId: "g15q6a",
+            scoreImpact: 15,
+            feedback: "Correct identification of the primary risk. Top engineers have immediate outside options — without proactive retention, the restructuring will damage the product capabilities CloudCore needs for the recovery phase. $45M in retention against $580M in savings is an obvious trade.",
+          },
+          {
+            id: "b",
+            text: "The most dangerous risk is customer attrition if large enterprise customers perceive CloudCore as unstable after the restructuring announcement. Mitigate through a proactive customer communication program led by the CEO.",
+            nextQuestionId: "g15q6b",
+            scoreImpact: 5,
+            feedback: "Customer communication is a real risk but is manageable through proactive outreach and ensuring customer success headcount is protected. Engineering talent attrition is more existential because it directly damages the product that customers are paying for.",
+          },
+          {
+            id: "c",
+            text: "The most dangerous risk is negative media coverage of the layoffs damaging CloudCore's employer brand and making future hiring more expensive and difficult.",
+            nextQuestionId: "g15q6b",
+            scoreImpact: -5,
+            feedback: "Negative press about tech layoffs has become routine and rarely has lasting business impact at the company level. Employer brand damage is a real but relatively minor concern compared to the existential risk of top engineering talent voluntary departure.",
+          },
+        ],
+      },
+      {
+        id: "g15q6a",
+        stage: "Post-Restructuring Growth",
+        question: "The restructuring plan is complete. The board asks: after the $580M in cuts, what does the path to growth look like and how does CloudCore avoid returning to this situation in three years?",
+        options: [
+          {
+            id: "a",
+            text: "Three structural changes post-restructuring: implement a headcount-to-revenue ratio governance framework requiring board approval for any function exceeding benchmark ratios; shift engineering investment from hypergrowth feature breadth to depth in the two core product lines with highest net revenue retention; and establish a rule that G&A headcount cannot grow faster than revenue growth rate in any quarter.",
+            nextQuestionId: "g15q7a",
+            scoreImpact: 20,
+            feedback: "Excellent structural changes. Governance framework prevents future hypergrowth over-hiring. Engineering focus on depth over breadth improves NRR which is the most important SaaS growth metric. The G&A growth cap creates an automatic constraint that would have prevented the current crisis.",
+          },
+          {
+            id: "b",
+            text: "Return to aggressive hiring in 18-24 months once EBITDA breakeven is achieved to re-accelerate growth, since CloudCore's fundamental market opportunity has not changed and talent is the primary growth driver.",
+            nextQuestionId: "g15q7b",
+            scoreImpact: -10,
+            feedback: "Returning to aggressive hiring immediately after reaching breakeven recreates the problem. The structural governance changes — ratio caps, board approval thresholds, function-level benchmarks — are what prevent the cycle from repeating. Growth is fine; uncontrolled G&A growth relative to revenue is not.",
+          },
+          {
+            id: "c",
+            text: "Conduct a strategic review to determine whether CloudCore should pivot to a different market segment or geographic expansion to find a new growth vector that avoids the competitive pressures that caused the deceleration.",
+            nextQuestionId: "g15q7b",
+            scoreImpact: 0,
+            feedback: "A strategic pivot as the primary response to a cost crisis misdiagnoses the problem. The issue is not the market — it is the cost structure. The growth deceleration is a symptom of normal SaaS maturation, not a sign that the market is wrong. Fix the cost structure first, then evaluate strategy.",
+          },
+        ],
+      },
+      {
+        id: "g15q6b",
+        stage: "Post-Restructuring Growth",
+        question: "The restructuring communication has gaps. The partner asks: how do you protect the top engineering talent during the restructuring period to ensure CloudCore can grow after the cuts?",
+        options: [
+          {
+            id: "a",
+            text: "The top 10% of engineers generate 3x average output based on CloudCore's productivity data. A $45M retention package for the top 500 engineers covering 18-month retention bonuses tied to the restructuring timeline is the priority. The CEO must personally call each of these 500 within 72 hours of the announcement.",
+            nextQuestionId: "g15q7a",
+            scoreImpact: 15,
+            feedback: "Correct retention program design. The 3x productivity multiplier makes the $45M investment obvious math — losing 10% of engineers while reducing costs $580M could actually reduce total engineering output by 30% if the wrong 10% leaves. CEO personal calls signal that these engineers are valued.",
+          },
+          {
+            id: "b",
+            text: "Provide all engineering employees with identical retention packages to avoid creating hierarchy and resentment that could damage team cohesion during the restructuring period.",
+            nextQuestionId: "g15q7b",
+            scoreImpact: -5,
+            feedback: "Identical retention packages for all 2,480 engineers would cost $450M+ — 78% of the total savings target. Targeting the top 10% by productivity is the right allocation of limited retention capital.",
+          },
+          {
+            id: "c",
+            text: "Accept that some top engineering talent will leave during any major restructuring and plan to rehire after the company stabilizes, since retention programs rarely work in practice.",
+            nextQuestionId: "g15q7b",
+            scoreImpact: -10,
+            feedback: "Accepting top talent attrition as inevitable without attempting retention is a strategic failure. The top engineers are replaceable but replacement costs $180-280K each and ramp time is 6-12 months — during which product development slows precisely when the company needs to demonstrate recovery to customers and investors.",
+          },
+        ],
+      },
+      {
+        id: "g15q7a",
+        stage: "Final Recommendation",
+        question: "The board asks for the complete restructuring recommendation: actions, savings, timeline, and the single biggest risk. What is your final answer?",
+        options: [
+          {
+            id: "a",
+            text: "Three actions: G&A and R&D duplicate team reductions of 2,170 people saving $383M, infrastructure and real estate rationalization saving $175M, and vendor consolidation saving $22M — total $580M. Single announcement in week two. $45M retention program for top 500 engineers. Biggest risk: voluntary engineering attrition before the announcement leaks — mitigate through speed.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete recommendation. Three specific actions, the exact savings figure, the single-day communication plan, the retention program, and the primary risk with mitigation. The board approves proceeding. The CEO says: this is the plan we needed.",
+          },
+          {
+            id: "b",
+            text: "The restructuring is complete in design but requires an additional four weeks of organizational mapping before the announcement can proceed to ensure no critical roles are inadvertently included in the reduction.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Four more weeks of organizational mapping extends the ambiguity period — the most dangerous phase for voluntary attrition. The organizational design should be finalized in parallel with the savings analysis, not sequentially after it.",
+          },
+          {
+            id: "c",
+            text: "Present a range of scenarios: conservative at $350M saving with 1,200 reductions, base at $580M with 2,170 reductions, and aggressive at $750M with 2,800 reductions — let the board choose the risk-return tradeoff.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Scenario ranges are useful context but the board asked for a recommendation, not a menu. The base case of $580M is the analytically correct target — it is the breakeven threshold the board set. Present it as the recommendation with the scenarios as supporting sensitivity analysis.",
+          },
+        ],
+      },
+      {
+        id: "g15q7b",
+        stage: "Final Recommendation",
+        question: "Your restructuring plan has had inconsistencies. The partner gives you one final opportunity before the board presentation. What is the complete recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "Three actions totaling $580M: workforce reduction targeting G&A and R&D duplicates saving $383M, infrastructure and real estate optimization saving $175M, vendor rationalization saving $22M. Single-day announcement in week two. $45M retention for top 500 engineers. Post-restructuring: headcount-to-revenue ratio governance to prevent recurrence.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery. Complete recommendation with the right savings bridge, the right communication approach, the retention program, and the structural governance change that prevents recurrence. The partner says: present it with confidence.",
+          },
+          {
+            id: "b",
+            text: "Recommend delaying the restructuring announcement by 60 days to allow Q3 results to provide a cleaner financial baseline and give leadership more time to identify the right organizational structure post-reduction.",
+            nextQuestionId: "end",
+            scoreImpact: -15,
+            feedback: "Delaying 60 days when the company has 18 months to reach breakeven and every additional day extends the ambiguity period that drives voluntary attrition is not a defensible position. The partner will be very direct about this failure.",
+          },
+          {
+            id: "c",
+            text: "Recommend the board consider selling the company rather than restructuring, since the IPO window is closed and a strategic acquirer could implement the restructuring as part of an acquisition at a better valuation than a distressed down-round.",
+            nextQuestionId: "end",
+            scoreImpact: 0,
+            feedback: "A sale process is a legitimate board-level option but is not what McKinsey was hired to recommend. The restructuring plan is the deliverable. If the restructuring succeeds, it also improves the sale valuation — the two are not mutually exclusive and the board should see the restructuring plan before evaluating a sale.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G16: BAIN — SPORTS FRANCHISE ACQUISITION
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g16",
+    title: "GoalKeeper Capital: Football Club Acquisition",
+    type: "merger_acquisition",
+    difficulty: "advanced",
+    firm: "bain",
+    estimatedMinutes: 40,
+    overview: "A US private equity firm wants to acquire a Premier League football club. Bain has been engaged to evaluate the investment thesis and recommend a valuation.",
+    clientBackground: "GoalKeeper Capital is a $12B AUM PE firm that has never invested in sports. They are evaluating an acquisition of Riverside FC, a mid-table Premier League club based in London. The seller is asking £850M. Riverside FC generates £180M in annual revenue, plays in a stadium with 42,000 capacity at 94% average occupancy, and has £290M in player squad net book value. The club has £85M in net debt.",
+    yourRole: "You are a Bain manager on the consumer and retail practice covering entertainment and sports. This is a novel asset class for your team. You have six weeks to deliver a go or no-go recommendation with full financial analysis.",
+    startQuestionId: "g16q1",
+    finalRecommendationPrompt: "Should GoalKeeper Capital acquire Riverside FC at £850M? What is the investment thesis, what value creation levers exist, and what is the key risk?",
+    sampleRecommendation: "Yes. Riverside FC at £850M represents fair to slightly favorable value. The EV-to-revenue multiple of 5.2x sits below the Premier League median of 5.5x. The investment thesis rests on three value creation levers: commercial revenue development from 30% to 47% of revenue adds £31M annually worth £170M in enterprise value at 5.5x; stadium expansion to 55,000 capacity adds £35M annually; and US media rights investment adds £12-20M. Key risk is relegation — probability 71% at least once in a 7-year hold — which would reduce value 46-50%. Recommend acquisition with a 7-10 year hold and commercial development as the primary value creation focus.",
+    idealRecommendation: "Yes at £850M (5.2x EV/Revenue, below 5.5x median). Three value creation levers: commercial development adding £31M annually, stadium expansion adding £35M, US media rights adding £15M. Combined these add £250-300M in enterprise value at 5.5x exit multiple. Primary risk is relegation — must be stress-tested and management of on-pitch performance is critical.",
+    keyTakeaways: [
+      "Sports franchises are valued on revenue multiples not EBITDA because player investment cycles create lumpy earnings that make EBITDA unreliable across different management philosophies",
+      "Relegation risk is the binary downside scenario that must be modeled explicitly in any football club investment — it is not a tail risk but a likely event over a long hold",
+      "Commercial revenue is the primary PE value creation lever in football because broadcasting rights are set at the league level and matchday revenue is capacity-constrained",
+      "Fixed supply of Premier League licenses creates structural appreciation that distinguishes football from most other PE assets — the number of clubs is permanently capped at 20",
+    ],
+    questions: [
+      {
+        id: "g16q1",
+        stage: "Asset Class Education",
+        question: "GoalKeeper Capital has never invested in sports. Before evaluating this specific deal, how do you educate the IC on the unique characteristics of sports franchise investing?",
+        context: "The IC needs to understand why standard PE analytical frameworks apply differently to sports assets before evaluating a specific deal. Your framing here will determine how they evaluate the numbers.",
+        options: [
+          {
+            id: "a",
+            text: "Sports franchises are like any other consumer business — analyze revenue, costs, and EBITDA and apply an appropriate multiple. The main difference is the entertainment element which creates brand value that must be estimated separately.",
+            nextQuestionId: "g16q2b",
+            scoreImpact: -10,
+            feedback: "This framing misses the most important structural features of sports franchise investing: fixed supply of Premier League licenses, performance-dependent revenue, player cost structures that make EBITDA unreliable, and the relegation binary risk. Standard consumer business frameworks produce wrong valuations for sports assets.",
+          },
+          {
+            id: "b",
+            text: "Four unique characteristics distinguish sports franchise investing: revenue is partly performance-dependent from prize money and European competition; player wages are quasi-fixed costs that rise with competition for talent; valuation is done on revenue multiples not EBITDA due to player investment cycle lumpiness; and the fixed supply of 20 Premier League clubs creates permanent scarcity appreciation.",
+            nextQuestionId: "g16q2a",
+            scoreImpact: 20,
+            feedback: "This is the correct framework for the IC education. Fixed supply is the most important structural characteristic — it explains why Manchester City bought for £210M in 2008 is worth £4-5B today regardless of performance in any specific year. The IC now has the right lens for evaluating the deal.",
+          },
+          {
+            id: "c",
+            text: "Sports franchises should be evaluated primarily on player asset value since players are the primary revenue-generating assets and their market values are independently verifiable through transfer market data.",
+            nextQuestionId: "g16q2b",
+            scoreImpact: -5,
+            feedback: "Player asset values are relevant context but player market values are highly volatile, depreciate rapidly, and are subject to injury and form risk. Valuing a club primarily on player assets misses the brand, stadium, media rights, and commercial revenue streams that PE buyers actually acquire.",
+          },
+        ],
+      },
+      {
+        id: "g16q2a",
+        stage: "Valuation",
+        question: "The IC now understands the asset class. Is £850M a fair price for Riverside FC? Evaluate the comparable transaction data.",
+        exhibit: {
+          type: "table",
+          title: "Premier League Comparable Transactions",
+          data: `| Club             | Year | EV      | Revenue | EV/Rev | Notes                   |
+|-----------------|------|---------|---------|--------|-------------------------|
+| Chelsea FC       | 2022 | £4.25B  | £481M   | 8.8x   | Top-6 global brand      |
+| Manchester Utd   | 2023 | £5.0B   | £648M   | 7.7x   | Top-6 global brand      |
+| Liverpool (part) | 2023 | £2.8B   | £593M   | 4.7x   | Partial stake implied   |
+| Everton          | 2023 | £0.5B   | £171M   | 2.9x   | Financial distress      |
+| Bournemouth      | 2022 | £0.15B  | £142M   | 1.1x   | Pre-promotion price     |
+| Median ex outlier|      |         |         | 5.5x   |                         |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "At £850M on £180M revenue, the EV including £85M debt is £935M — 5.2x EV/Revenue. This is below the 5.5x median for stable mid-table clubs, excluding the distressed Everton and pre-promotion Bournemouth outliers. The price is fair to slightly favorable for a well-run mid-table club.",
+            nextQuestionId: "g16q3a",
+            scoreImpact: 20,
+            feedback: "Correct valuation analysis. Computing the enterprise value by adding debt to equity consideration, excluding the inappropriate comparables, and comparing to the clean median is exactly right. 5.2x versus 5.5x median suggests modest discount to fair value — a reasonable entry point.",
+          },
+          {
+            id: "b",
+            text: "Chelsea at 8.8x and Manchester United at 7.7x are the most relevant comparables since they are Premier League clubs of similar sporting ambition. Riverside at 5.2x is significantly below these benchmarks and represents excellent value.",
+            nextQuestionId: "g16q3b",
+            scoreImpact: -10,
+            feedback: "Chelsea and Manchester United are globally recognized brands with £480M+ in revenue — using them as the primary comparable for a £180M revenue club overstates the Riverside premium. The right comparables are mid-table stable clubs, not the top-six global brands.",
+          },
+          {
+            id: "c",
+            text: "Everton at 2.9x is the most relevant comparable since both are mid-table clubs with similar revenue scales, suggesting £850M significantly overpays relative to the realistic peer group.",
+            nextQuestionId: "g16q3b",
+            scoreImpact: -15,
+            feedback: "Everton's 2.9x reflects a club in financial distress with a points deduction penalty — not a stable mid-table club. Using the distressed outlier as the primary comparable systematically understates fair value and would lead to walking away from a reasonably priced asset.",
+          },
+        ],
+      },
+      {
+        id: "g16q2b",
+        stage: "Valuation",
+        question: "Your initial framework was incomplete. The partner suggests using revenue multiples and points to the comparable transaction table. The EV is £935M including debt. What is your valuation conclusion?",
+        exhibit: {
+          type: "table",
+          title: "Riverside FC Key Financial Data",
+          data: `| Metric                         | Value   | Notes                          |
+|-------------------------------|---------|--------------------------------|
+| Annual revenue                 | £180M   |                                |
+| Revenue: Broadcasting          | £72M    | 40% of total                   |
+| Revenue: Matchday              | £54M    | 30% of total                   |
+| Revenue: Commercial            | £54M    | 30% of total                   |
+| EBITDA before player amort     | £22M    |                                |
+| Wage to revenue ratio          | 81%     | Industry avg 60%               |
+| Player squad net book value    | £290M   |                                |
+| Stadium value freehold         | £180M   |                                |
+| Net debt                       | £85M    |                                |
+| Equity offer                   | £850M   |                                |
+| Implied EV                     | £935M   |                                |
+| EV/Revenue                     | 5.2x    |                                |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "At 5.2x EV/Revenue versus a 5.5x median for stable mid-table clubs, Riverside is modestly below fair value. Tangible asset backing of £470M (squad plus stadium) provides downside protection. The 81% wage-to-revenue ratio is elevated but represents a value creation opportunity through commercial development rather than a structural problem.",
+            nextQuestionId: "g16q3a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Correctly computing EV, comparing to the right benchmark multiple, and reframing the elevated wage ratio as a value creation opportunity rather than a disqualifier is the complete valuation view.",
+          },
+          {
+            id: "b",
+            text: "The EBITDA of £22M implies a 42x EV/EBITDA multiple which is extremely expensive — £850M for a business generating £22M in operating profit is not justifiable under standard PE return expectations.",
+            nextQuestionId: "g16q3b",
+            scoreImpact: -10,
+            feedback: "Applying EV/EBITDA to a football club ignores the asset class education — EBITDA in football is unreliable due to player amortization and investment cycles. The partner explained this in the IC education. Revenue multiples are the correct valuation methodology for sports franchises.",
+          },
+          {
+            id: "c",
+            text: "The tangible asset backing of £470M (squad plus stadium) relative to the £935M EV implies £465M in intangible value — too much to pay for brand and goodwill in a business with 81% wage-to-revenue.",
+            nextQuestionId: "g16q3b",
+            scoreImpact: -5,
+            feedback: "Decomposing the value into tangible and intangible is useful, but the £465M in intangible value includes the Premier League license — which has permanent scarcity value — the brand, and the media rights participation. These are not arbitrary goodwill but specific, quantifiable assets.",
+          },
+        ],
+      },
+      {
+        id: "g16q3a",
+        stage: "Value Creation",
+        question: "GoalKeeper Capital needs to understand the value creation opportunity beyond the base case. Which commercial development opportunity should be the primary value creation thesis?",
+        exhibit: {
+          type: "table",
+          title: "Value Creation Initiative Analysis",
+          data: `| Initiative                  | Investment | Annual Uplift | Timeline  | Precedent              |
+|----------------------------|------------|---------------|-----------|------------------------|
+| Commercial/sponsorship dev  | £12M       | £45-65M       | 2-3 years | Arsenal doubled 2015-20|
+| Stadium expansion 42k-55k  | £280M      | £35-45M       | 4-5 years | Tottenham new stadium  |
+| Women's team development    | £8M/yr     | £4-8M+brand   | 3-5 years | Chelsea Women top-3    |
+| US media rights investment  | £15M       | £12-20M       | 2-3 years | Wrexham 3x revenue     |
+| Youth academy monetization  | £5M        | £20-40M       | 5-10 years| Southampton model      |
+| Commercial benchmarking     |            |               |           |                        |
+| Top-6 clubs avg commercial  | £280M/yr   | 65% of rev    |           |                        |
+| Mid-table avg commercial    | £85M/yr    | 47% of rev    |           |                        |
+| Riverside current           | £54M/yr    | 30% of rev    |           |                        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Commercial development is the highest-priority value creation lever. Riverside at 30% commercial revenue versus 47% mid-table average represents a £31M annual gap. At a 5.5x exit multiple, closing this gap alone creates £170M in enterprise value against a £12M investment — a 14x return on that specific capital. Stadium expansion at £280M is too capital-intensive for a first priority.",
+            nextQuestionId: "g16q4a",
+            scoreImpact: 20,
+            feedback: "Correct prioritization with the right financial framing. The benchmarking gap analysis — Riverside at 30% versus 47% mid-table average — is specific and actionable. Converting the revenue gap to enterprise value creation at the exit multiple is exactly how Bain would frame the return to the IC.",
+          },
+          {
+            id: "b",
+            text: "Stadium expansion is the highest priority because the £35-45M annual revenue uplift is the largest single initiative and Riverside at 94% occupancy is clearly capacity-constrained — the demand exists to fill a larger stadium.",
+            nextQuestionId: "g16q4b",
+            scoreImpact: -5,
+            feedback: "Stadium expansion is a valid second-phase initiative but at £280M investment on top of the £850M acquisition price, it requires a capital commitment nearly double the commercial development program for similar annual revenue uplift. The ROIC comparison clearly favors commercial development first.",
+          },
+          {
+            id: "c",
+            text: "US media rights investment is the highest priority because the Wrexham precedent shows massive brand value creation potential and US sports media valuations are at historic highs providing a window to monetize now.",
+            nextQuestionId: "g16q4b",
+            scoreImpact: -5,
+            feedback: "Wrexham's Ryan Reynolds success is not replicable for most clubs — it depended on specific celebrity involvement and a documentary series. US media rights investment at £12-20M annual uplift is a real but smaller opportunity than the £31M commercial gap that is benchmarked against directly comparable clubs.",
+          },
+        ],
+      },
+      {
+        id: "g16q3b",
+        stage: "Value Creation",
+        question: "Your valuation has been off. The partner corrects the methodology to revenue multiples and confirms 5.2x is below the 5.5x median. Now identify the primary value creation lever.",
+        options: [
+          {
+            id: "a",
+            text: "Commercial revenue development is the primary lever. Riverside at 30% commercial versus 47% mid-table benchmark represents a £31M annual gap. At 5.5x exit multiple this is £170M in enterprise value creation against £12M investment. This is the PE thesis.",
+            nextQuestionId: "g16q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Correctly identifying the commercial gap and converting it to enterprise value at the exit multiple is the right value creation thesis. The 14x ROIC framing is compelling for the IC.",
+          },
+          {
+            id: "b",
+            text: "Player trading is the primary value creation lever — acquiring undervalued players and selling at a profit has generated 8-15% annual returns for clubs with strong scouting networks and data analytics capabilities.",
+            nextQuestionId: "g16q4b",
+            scoreImpact: -10,
+            feedback: "Player trading as a PE value creation strategy requires deep football expertise that GoalKeeper Capital does not have and is highly speculative. Commercial development is the business-oriented lever that a PE firm can drive without sports expertise.",
+          },
+          {
+            id: "c",
+            text: "Cost reduction through wage rationalization is the primary lever — the 81% wage-to-revenue ratio versus 60% industry average represents £37M in excess wages that should be recovered through contract renegotiations and player sales.",
+            nextQuestionId: "g16q4b",
+            scoreImpact: -5,
+            feedback: "Aggressively cutting wages at a mid-table club risks relegation — players who are released or not paid market rates leave for competitors. Relegation risk is far more costly than the £37M in wage savings. Commercial development improves the revenue denominator rather than cutting the wage numerator.",
+          },
+        ],
+      },
+      {
+        id: "g16q4a",
+        stage: "Relegation Risk",
+        question: "The IC asks the most important risk question: what happens to our investment if Riverside FC gets relegated to the Championship? Quantify the downside scenario.",
+        exhibit: {
+          type: "table",
+          title: "Relegation Financial Impact Analysis",
+          data: `| Revenue Stream              | Premier League | Championship Yr1 | Change      |
+|----------------------------|---------------|-----------------|-------------|
+| Broadcasting (PL distrib)   | £72M          | £8M             | -£64M       |
+| Broadcasting (parachute)    | £0M           | £44M            | +£44M       |
+| Matchday                    | £54M          | £41M            | -£13M       |
+| Commercial (step-down)      | £54M          | £35M            | -£19M       |
+| Total revenue               | £180M         | £128M           | -£52M (-29%)|
+| Comparable relegated clubs  |               |                 |             |
+| Sheffield United value drop |               |                 | -55%        |
+| Burnley value drop          |               |                 | -50%        |
+| Leicester City value drop   |               |                 | -46%        |
+| Average value decline       |               |                 | -50%        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Relegation reduces club value approximately 46-50% based on comparables — from £935M EV to approximately £467-505M, a loss of £430-468M on equity. With 18% annual relegation probability, the probability of at least one relegation over a 7-year hold is 71%. This is not a tail risk — it must be central to the investment decision and requires specific squad investment strategy to mitigate.",
+            nextQuestionId: "g16q5a",
+            scoreImpact: 20,
+            feedback: "Excellent probability analysis. 1 minus 0.82 to the 7th power equals 71% — relegation at least once is the most likely single outcome over a 7-year hold. Calling this a tail risk when it is actually the base case scenario would be an analytical failure that could destroy the investment.",
+          },
+          {
+            id: "b",
+            text: "Relegation is a manageable risk because parachute payments provide £44M in broadcast compensation in the first Championship year, partially offsetting the £64M PL broadcasting loss. Most relegated clubs return within 2-3 years so the disruption is temporary.",
+            nextQuestionId: "g16q5b",
+            scoreImpact: -5,
+            feedback: "Parachute payments only offset £44M of the £64M broadcasting loss — net revenue still falls £52M. More importantly, 50% value decline is not temporary if you need to exit during the Championship period. The probability math — 71% chance of at least one relegation — means this risk must be front and center.",
+          },
+          {
+            id: "c",
+            text: "Relegation risk is already priced into the 5.2x multiple — the discount to top-6 clubs at 7-8x reflects exactly this kind of performance uncertainty. No additional analysis is needed.",
+            nextQuestionId: "g16q5b",
+            scoreImpact: -10,
+            feedback: "The discount to top-6 clubs reflects revenue scale differences, not relegation risk specifically. Accepting that all discount is explained by relegation risk without quantifying the probability and financial impact would be an analytical failure that the IC would identify immediately.",
+          },
+        ],
+      },
+      {
+        id: "g16q4b",
+        stage: "Relegation Risk",
+        question: "Your value creation analysis has been suboptimal. The partner gives you the relegation risk data and asks: given a 71% probability of at least one relegation in a 7-year hold, is this investment still attractive?",
+        options: [
+          {
+            id: "a",
+            text: "Yes, with the right commercial development strategy. The commercial thesis — recovering the £31M gap to mid-table average — reduces the investment's dependence on on-pitch performance. If commercial revenue grows to £85M from £54M, the revenue base is more stable through relegation because commercial contracts often include step-down rather than step-out clauses.",
+            nextQuestionId: "g16q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Connecting the value creation thesis to the risk mitigation is the right analytical move. Commercial revenue growth specifically reduces performance dependency by improving the revenue streams that are most stable through a potential relegation event.",
+          },
+          {
+            id: "b",
+            text: "No — a 71% relegation probability over the hold period makes this investment unacceptable for institutional PE that requires predictable returns. GoalKeeper Capital should decline.",
+            nextQuestionId: "g16q5b",
+            scoreImpact: -10,
+            feedback: "71% probability of a temporary setback — not permanent value loss — combined with a below-median-multiple entry point and strong commercial upside makes this investment attractive even with relegation risk. All investments have risks; the question is whether the upside compensates for the risk at the entry price.",
+          },
+          {
+            id: "c",
+            text: "The 71% probability is overstated since Riverside has never been relegated in 22 years of Premier League membership, suggesting their historical performance is a better predictor than the league average base rate.",
+            nextQuestionId: "g16q5b",
+            scoreImpact: -5,
+            feedback: "Historical survival does not reduce future relegation probability if the underlying competitive dynamics change with ownership — and they often do when PE buyers impose financial discipline on squad investment. Using historical non-relegation to dismiss a structural probability analysis is selective reasoning.",
+          },
+        ],
+      },
+      {
+        id: "g16q5a",
+        stage: "Return Analysis",
+        question: "The IC asks for the expected IRR under base case and bear case scenarios. Build the return model.",
+        exhibit: {
+          type: "table",
+          title: "Scenario Return Analysis",
+          data: `| Scenario                         | Probability | Exit EV   | Equity Return | IRR Est   |
+|---------------------------------|-------------|-----------|---------------|-----------|
+| Base: PL, commercial dev, 7yr   | 45%         | £1.55B    | £1.47B        | 18-22%    |
+| Bear: one relegation, recovery  | 35%         | £1.1B     | £1.02B        | 8-11%     |
+| Stress: long Championship stay  | 15%         | £0.55B    | £0.47B        | -7 to -4% |
+| Bull: European competition      | 5%          | £2.2B     | £2.12B        | 28-34%    |
+| Probability-weighted EV         |             | £1.22B    | £1.14B        | 13-16%    |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Probability-weighted IRR of 13-16% clears GoalKeeper Capital's 10% hurdle rate in both the base and bear cases. Even the stress scenario — a two-plus year Championship stay — represents a loss of approximately £380M on equity, not total loss of investment. The risk-return profile supports proceeding at £850M.",
+            nextQuestionId: "g16q6a",
+            scoreImpact: 20,
+            feedback: "Correct return analysis and correct conclusion. Probability-weighted IRR above the hurdle rate, both base and bear cases clearing the hurdle independently, and a stress scenario that represents loss rather than total write-off — this is the complete financial case for the IC.",
+          },
+          {
+            id: "b",
+            text: "The 15% stress scenario probability at negative IRR makes this investment unacceptable — institutional PE cannot underwrite a scenario with negative returns even at 15% probability.",
+            nextQuestionId: "g16q6b",
+            scoreImpact: -10,
+            feedback: "No investment has zero probability of negative returns. 15% probability of a negative scenario in an asset with 13-16% probability-weighted IRR is well within acceptable PE risk parameters. Rejecting an investment because the stress scenario is negative is a criteria that would exclude virtually all PE investments.",
+          },
+          {
+            id: "c",
+            text: "The bull scenario at 5% probability and 28-34% IRR should be the primary focus since PE returns are driven by upside optionality and the European competition scenario creates the most value.",
+            nextQuestionId: "g16q6b",
+            scoreImpact: -5,
+            feedback: "Building an investment case around a 5% probability scenario is not sound institutional PE analysis. The probability-weighted return is the primary metric and the expected IRR of 13-16% is the number the IC needs — not the upside scenario IRR.",
+          },
+        ],
+      },
+      {
+        id: "g16q5b",
+        stage: "Return Analysis",
+        question: "Your risk analysis has been incomplete. The partner presents the scenario return model showing 13-16% probability-weighted IRR. Given this, what is your recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "Proceed. 13-16% probability-weighted IRR above the 10% hurdle rate with both base and bear cases clearing the hurdle independently makes this investment attractive. The commercial development thesis and the fixed supply of Premier League licenses provide the structural upside that justifies the relegation risk.",
+            nextQuestionId: "g16q6a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Connecting the IRR analysis to the specific structural features — hurdle clearance in multiple scenarios, commercial thesis, fixed supply — gives the IC the complete investment rationale.",
+          },
+          {
+            id: "b",
+            text: "Pass — the 71% relegation probability in the 7-year hold makes the bear case the most likely outcome and 8-11% IRR in the bear case is too close to the 10% hurdle to justify the operational complexity of managing a football club.",
+            nextQuestionId: "g16q6b",
+            scoreImpact: -10,
+            feedback: "The bear case at 8-11% IRR still clears the hurdle at the midpoint. Passing on an investment that clears the hurdle in the base, bear, and probability-weighted scenarios due to operational complexity concerns about managing a novel asset class is not a financial conclusion — it is a strategic preference.",
+          },
+          {
+            id: "c",
+            text: "Negotiate the price down to £700M to create additional margin of safety given the relegation risk, targeting a 20%+ IRR in the base case to compensate for the performance uncertainty.",
+            nextQuestionId: "g16q6a",
+            scoreImpact: 5,
+            feedback: "Price negotiation is a valid commercial position, but £700M is a 17.6% discount to the asking price that the seller is unlikely to accept given comparable transaction support at 5.5x. A more realistic negotiation target might be £820M — modest pressure rather than a material discount that risks losing the deal.",
+          },
+        ],
+      },
+      {
+        id: "g16q6a",
+        stage: "Governance Structure",
+        question: "GoalKeeper Capital wants to know how to govern the investment post-acquisition given their lack of football expertise. What governance structure do you recommend?",
+        options: [
+          {
+            id: "a",
+            text: "Three-layer governance: a board seat for GoalKeeper Capital focusing on commercial strategy, financial management, and value creation KPIs; a football advisory board of experienced former directors including a sporting director hire; and clear separation between commercial decisions where PE drives and sporting decisions where football expertise leads.",
+            nextQuestionId: "g16q7a",
+            scoreImpact: 20,
+            feedback: "Correct governance design. The separation between commercial and sporting decisions is the critical structural element — PE firms that over-extend into sporting decisions (squad selection, manager choice) without expertise consistently destroy value. GoalKeeper Capital's value-add is commercial development, not football management.",
+          },
+          {
+            id: "b",
+            text: "GoalKeeper Capital should take full operational control including sporting decisions since the financial discipline of PE ownership will improve decision-making across all club functions including player recruitment.",
+            nextQuestionId: "g16q7b",
+            scoreImpact: -15,
+            feedback: "PE firms taking full control of sporting decisions without football expertise is the most common value destruction pattern in football club acquisitions. Financial discipline in player recruitment leads to missing key signings, reducing squad quality, increasing relegation risk, and ultimately destroying the financial returns the PE firm was trying to protect.",
+          },
+          {
+            id: "c",
+            text: "Hire a CEO from a successful US sports franchise who understands PE-backed sports ownership and can apply North American sports business models to European football.",
+            nextQuestionId: "g16q7b",
+            scoreImpact: -5,
+            feedback: "US sports business models apply poorly to European football — fundamentally different structures around promotion and relegation, player transfers versus drafts, stadium ownership versus leasing, and media rights structures mean US sports expertise does not transfer well. A football-experienced CEO with commercial focus is the right hire.",
+          },
+        ],
+      },
+      {
+        id: "g16q6b",
+        stage: "Governance Structure",
+        question: "Your risk or return analysis has led to a tentative pass or incomplete recommendation. The partner challenges you: the financial case supports proceeding. What governance structure addresses the execution risk of a first-time sports investor?",
+        options: [
+          {
+            id: "a",
+            text: "Separate commercial and sporting governance: GoalKeeper Capital leads commercial strategy with a board seat and KPI framework; hire an experienced football CEO and sporting director who maintain sporting independence; set clear financial guardrails on squad investment but no interference in specific sporting decisions.",
+            nextQuestionId: "g16q7a",
+            scoreImpact: 10,
+            feedback: "Good recovery. The commercial and sporting separation is the right structural answer to first-time sports investor risk. GoalKeeper Capital adds value through commercial expertise and financial management — not through football decisions.",
+          },
+          {
+            id: "b",
+            text: "Partner with an existing football club ownership group to co-acquire Riverside FC, sharing governance and operational responsibilities to reduce GoalKeeper Capital's execution risk.",
+            nextQuestionId: "g16q7b",
+            scoreImpact: -5,
+            feedback: "Co-ownership introduces governance complexity and dilutes returns. If the financial case supports a standalone acquisition, co-investment with an operational partner is a more expensive solution than hiring the right management team.",
+          },
+          {
+            id: "c",
+            text: "Hire a McKinsey-affiliated sports practice to embed a consultant full-time in the club for the first two years to provide operational oversight while GoalKeeper Capital builds internal football expertise.",
+            nextQuestionId: "g16q7b",
+            scoreImpact: -10,
+            feedback: "Embedding a strategy consultant in day-to-day club operations is not a governance solution — it delays building the right leadership team and creates a dependency rather than the sustainable management structure the club needs.",
+          },
+        ],
+      },
+      {
+        id: "g16q7a",
+        stage: "Final Recommendation",
+        question: "The IC asks for the final recommendation: go or no-go, rationale, key conditions, and the single most important thing GoalKeeper Capital must get right.",
+        options: [
+          {
+            id: "a",
+            text: "Go at £850M. Rationale: 5.2x EV/Revenue below 5.5x median, commercial development thesis worth £170M in enterprise value creation, 13-16% probability-weighted IRR above 10% hurdle. Key condition: retain existing football management and hire a commercial CEO within 90 days. Most important thing: protect the commercial development program from being de-prioritized by short-term sporting performance pressures — this is what transforms the financial return.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Excellent complete recommendation. Go decision with clear rationale, specific entry price, quantified value creation, IRR analysis, condition, and the single most important execution priority. The IC has everything needed to approve the transaction. The Bain partner says: this is the presentation.",
+          },
+          {
+            id: "b",
+            text: "Go subject to negotiating the price to £780M — at this price the base case IRR improves to 21% and creates sufficient margin of safety for the relegation risk while remaining within the seller's likely acceptance range.",
+            nextQuestionId: "end",
+            scoreImpact: 10,
+            feedback: "Price negotiation to £780M is a reasonable commercial position and the IRR improvement is real. However, £850M already clears the hurdle comfortably — negotiating for price improvement at the risk of losing the deal to a competing bidder needs to be weighed against the current entry point attractiveness.",
+          },
+          {
+            id: "c",
+            text: "Conditional go — proceed only if due diligence confirms no undisclosed financial liabilities and the current manager signs a new three-year contract before closing to protect against the management stability risk during ownership transition.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Financial due diligence conditions are standard and appropriate. The manager contract condition is overly specific — manager tenures in football average 18 months and tying a club acquisition to a manager's contract creates unnecessary execution risk and leverage for the manager.",
+          },
+        ],
+      },
+      {
+        id: "g16q7b",
+        stage: "Final Recommendation",
+        question: "Your recommendation has had inconsistencies. The partner gives you one final opportunity. What should GoalKeeper Capital do with Riverside FC?",
+        options: [
+          {
+            id: "a",
+            text: "Acquire at £850M. Below-median multiple at 5.2x versus 5.5x, commercial development creates £170M in enterprise value at 14x ROIC on £12M investment, 13-16% probability-weighted IRR clears the 10% hurdle. Govern through commercial and sporting separation. Primary execution risk: relegation at 71% probability over 7-year hold — mitigate through squad investment discipline.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong complete recovery. All elements present — entry price justification, value creation thesis with specific returns, IRR analysis, governance structure, and primary risk with mitigation. The partner says: that is the answer we needed.",
+          },
+          {
+            id: "b",
+            text: "Pass. The combination of relegation risk, novel asset class for GoalKeeper Capital, and limited operational expertise in European football creates too much execution risk relative to the expected return.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Passing when the probability-weighted IRR of 13-16% clears the hurdle, the entry price is below the comparable median, and the value creation thesis is specific and quantified is an analytically unsound conclusion. Operational inexperience is addressed through governance structure, not by declining attractive investments.",
+          },
+          {
+            id: "c",
+            text: "Defer the decision by six months to observe Riverside's performance in the second half of the current season, since sporting performance data would provide better information on relegation risk before committing £850M.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Six months of additional observation may result in a higher asking price if Riverside performs well or a lower price if they struggle — both outcomes are binary on sporting results. The current financial case is sufficient to make the decision without waiting for half-season performance data.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G17: LEK — BIOTECH INVESTMENT
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g17",
+    title: "NovaBio: Pre-IPO Oncology Investment",
+    type: "merger_acquisition",
+    difficulty: "advanced",
+    firm: "lek",
+    estimatedMinutes: 42,
+    overview: "A healthcare-focused PE firm wants L.E.K. to evaluate a $450M pre-IPO investment in NovaBio, a clinical-stage biotech with a breakthrough oncology platform targeting solid tumors.",
+    clientBackground: "NovaBio is a 7-year-old Cambridge, MA biotech with a proprietary CAR-T cell therapy platform targeting solid tumors — historically the hardest cancer type for cell therapy to address. Their lead program NB-101 is in Phase 2 with FDA Breakthrough Therapy Designation. Phase 1 data showed 62% objective response rate versus 15% for standard of care in advanced pancreatic cancer. They have $180M in cash providing 18 months of runway and are seeking $450M in exchange for 25% ownership at a $1.8B pre-money valuation.",
+    yourRole: "You are an L.E.K. manager on the healthcare and life sciences practice. You have four weeks to deliver a go or no-go investment recommendation with full financial analysis.",
+    startQuestionId: "g17q1",
+    finalRecommendationPrompt: "Should the PE firm invest $450M in NovaBio at a $1.8B valuation? What is the risk-adjusted return, and what are the two most important conditions?",
+    sampleRecommendation: "Invest with two conditions. The risk-adjusted NPV is compelling: 45% probability of Phase 3 success times $8.5B exit value equals $3.8B expected value versus $1.8B entry — a 2.1x expected return translating to 25-32% IRR over 5-7 years. Condition one: independent scientific advisory board review of Phase 2 data before close — the n=29 Phase 1 result requires independent validation before committing $450M. Condition two: manufacturing partnership secured before close — NovaBio has no commercial manufacturing capability and CAR-T manufacturing is the most common post-approval failure mode. Without both conditions met, do not close.",
+    idealRecommendation: "Invest at $1.8B valuation with two conditions: (1) independent scientific review of Phase 2 data; (2) CDMO manufacturing partnership secured pre-close. Risk-adjusted expected return: $2.45B on $450M invested — 5.5x expected MOIC. Both base case and even the most likely failure scenario provide above-hurdle returns when probability-weighted correctly.",
+    keyTakeaways: [
+      "Biotech investing requires probability-weighted return analysis — the binary nature of clinical outcomes makes standard DCF inappropriate as the primary valuation method",
+      "Phase 2 to Phase 3 success rates in oncology average 40-55% — Phase 3 failure is the single most likely outcome and must be central to the investment analysis",
+      "CAR-T manufacturing is the most underappreciated constraint in cell therapy — manufacturing failures have derailed multiple approved products post-approval",
+      "FDA Breakthrough Therapy Designation is a meaningful positive signal but does not guarantee approval or predict Phase 3 success",
+    ],
+    questions: [
+      {
+        id: "g17q1",
+        stage: "Scientific Assessment",
+        question: "NovaBio's Phase 1 data shows 62% objective response rate in pancreatic cancer versus 15% for standard of care. How do you interpret this for investment purposes before committing $450M?",
+        context: "Phase 1 trials are designed for safety and dosing — not efficacy. Understanding what this data does and does not tell you is the critical first analytical step.",
+        options: [
+          {
+            id: "a",
+            text: "62% ORR in solid tumor CAR-T would be genuinely breakthrough — no solid tumor CAR-T has exceeded 20% ORR previously. However n=29 is too small to draw definitive conclusions. FDA Breakthrough Designation confirms the agency sees the same signal. The data justifies investment at risk-adjusted pricing but requires Phase 2 results to confirm before high conviction.",
+            nextQuestionId: "g17q2a",
+            scoreImpact: 20,
+            feedback: "Correctly balanced assessment. Acknowledging the genuine scientific breakthrough while appropriately flagging the small sample size and the correct role of the FDA designation — signal validation, not approval guarantee — is exactly the analytical maturity L.E.K. expects.",
+          },
+          {
+            id: "b",
+            text: "62% ORR is definitive proof of efficacy — combined with FDA Breakthrough Designation this represents a slam-dunk investment that should proceed immediately at the full $450M without conditions.",
+            nextQuestionId: "g17q2b",
+            scoreImpact: -15,
+            feedback: "n=29 is not definitive proof of anything — Phase 1 trials consistently overstate efficacy due to patient selection bias and optimal dosing conditions. Multiple drugs with impressive Phase 1 data have failed in Phase 3. The investment should be risk-adjusted, not unconditional.",
+          },
+          {
+            id: "c",
+            text: "62% ORR in n=29 is statistically meaningless — the confidence intervals on a 29-patient trial are too wide to support a $450M investment. Wait for Phase 3 data before investing.",
+            nextQuestionId: "g17q2c",
+            scoreImpact: -10,
+            feedback: "n=29 with 62% ORR is not statistically meaningless — it is early-stage evidence that justifies risk-adjusted investment. Pre-Phase 3 investment is precisely when the PE return opportunity exists. Waiting for Phase 3 data means investing after the major value catalyst at a dramatically higher valuation.",
+          },
+        ],
+      },
+      {
+        id: "g17q2a",
+        stage: "Market Sizing",
+        question: "If NB-101 is approved, what is the realistic peak commercial opportunity? Build the market sizing.",
+        exhibit: {
+          type: "table",
+          title: "NB-101 Commercial Opportunity Inputs",
+          data: `| Input                                | Value     | Notes                          |
+|-------------------------------------|-----------|--------------------------------|
+| Annual pancreatic cancer diagnoses  | 64,000    | US only                        |
+| Stage 3-4 addressable patients      | 48,000    | 75% of total                   |
+| Biomarker eligibility pct           | 35%       | Based on MSLN expression data  |
+| 5-year penetration at peak          | 45%       | Kymriah/Yescarta precedent     |
+| Expected net price per course       | $320,000  | After rebates from $450K list  |
+| Ex-US market factor                 | 1.6x      | EU plus Japan plus other       |
+| Peak US annual revenue              | $2.4B     | Calc below                     |
+| Peak global annual revenue          | $3.8B     | US times 1.6x                  |
+| P3 to approval success rate         | 85%       | With BTD                       |
+| P2 to P3 success rate (oncology)    | 45%       | Historical benchmark           |
+| Combined approval probability       | 38%       |                                |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "US peak sales: 48,000 addressable patients times 35% eligibility equals 16,800, times 45% penetration equals 7,560 patients annually, times $320,000 net price equals $2.42B. Global at 1.6x equals $3.87B. Risk-adjusted peak sales: $3.87B times 38% approval probability equals $1.47B expected peak annual revenue.",
+            nextQuestionId: "g17q3a",
+            scoreImpact: 20,
+            feedback: "Correct multi-step calculation. The risk-adjustment by approval probability is the critical step that separates rigorous biotech analysis from naive market sizing. $1.47B in risk-adjusted expected peak revenue sets up the investment valuation correctly.",
+          },
+          {
+            id: "b",
+            text: "Apply the 38% approval probability to the full global peak sales of $3.87B to get $1.47B risk-adjusted, but the right frame for the PE investment is the unadjusted $3.87B since PE investors underwrite to the success case.",
+            nextQuestionId: "g17q3b",
+            scoreImpact: -5,
+            feedback: "PE investors in biotech use probability-weighted analysis precisely because 62% of bets fail. Underwriting exclusively to the success case without probability weighting leads to systematic overpayment for clinical-stage assets.",
+          },
+          {
+            id: "c",
+            text: "The peak sales calculation requires knowing NovaBio's market share against competing CAR-T therapies that will likely be launched by Novartis and BMS in the same indication before NB-101 is approved.",
+            nextQuestionId: "g17q3b",
+            scoreImpact: -5,
+            feedback: "Competitive CAR-T therapies in solid tumors do not yet exist — the entire premise of NovaBio's breakthrough is that no prior solid tumor CAR-T has achieved significant response rates. Modeling competing products that have not yet been developed introduces unnecessary uncertainty into the primary market sizing.",
+          },
+        ],
+      },
+      {
+        id: "g17q2b",
+        stage: "Market Sizing",
+        question: "Your unconditional view of the Phase 1 data was too optimistic. The partner corrects you: Phase 2 to Phase 3 success in oncology is only 45%. Given this, how does it change your view of the market opportunity?",
+        options: [
+          {
+            id: "a",
+            text: "The 45% Phase 2 to Phase 3 success rate combined with 85% approval probability given success gives a combined 38% approval probability. Applying this to $3.87B peak global sales gives $1.47B in risk-adjusted expected peak revenue. The investment case must be built on this probability-weighted figure, not the $3.87B success case.",
+            nextQuestionId: "g17q3a",
+            scoreImpact: 15,
+            feedback: "Good correction. Applying the probability to the market sizing is the right analytical move. The $1.47B risk-adjusted figure is the foundation for the valuation, not the $3.87B unadjusted peak.",
+          },
+          {
+            id: "b",
+            text: "The 45% Phase 3 success rate means Phase 3 failure is the most likely single outcome — the investment should therefore not proceed since the odds are against success.",
+            nextQuestionId: "g17q3b",
+            scoreImpact: -10,
+            feedback: "45% probability of Phase 3 success is not the same as making the investment a bad bet. The correct analysis is whether the expected return — success case value times 45% plus failure case value times 55% — exceeds the investment cost. An investment with 45% probability of a 10x return can have positive expected value.",
+          },
+          {
+            id: "c",
+            text: "The 45% success rate means the market opportunity is effectively $0 since that rate means most oncology drugs fail to reach approval and investors should not assume NovaBio is different.",
+            nextQuestionId: "g17q3b",
+            scoreImpact: -15,
+            feedback: "This logic would mean no pre-Phase 3 biotech investment ever made sense — which would exclude the most valuable part of the healthcare PE asset class. The correct use of the 45% is as a probability weight on the success scenario value, not as a reason to assign zero value to the opportunity.",
+          },
+        ],
+      },
+      {
+        id: "g17q2c",
+        stage: "Market Sizing",
+        question: "You recommended waiting for Phase 3 data. The partner explains: the pre-Phase 3 window is when PE return opportunity exists. Post-Phase 3 success, valuation would be $8-12B. Given this, what is the case for investing now?",
+        options: [
+          {
+            id: "a",
+            text: "Investing at $1.8B pre-Phase 3 versus $8-12B post-Phase 3 success means the return opportunity is buying the success optionality at 15-22 cents on the dollar. The risk-adjusted case: 45% probability of getting to $8-12B from a $1.8B entry, plus 20% probability of a Phase 2 acquisition at $3-4B, plus 35% probability of some salvage value — totals well above the $1.8B entry.",
+            nextQuestionId: "g17q3a",
+            scoreImpact: 10,
+            feedback: "Good recovery. Framing the pre-Phase 3 investment as purchasing success optionality at a discount to post-Phase 3 valuation is the correct investment logic for clinical-stage biotech PE.",
+          },
+          {
+            id: "b",
+            text: "The post-Phase 3 valuation of $8-12B confirms the market expects NovaBio to succeed — this forward valuation should be used as the primary reference point for the current $1.8B entry price rather than risk-adjusted calculations.",
+            nextQuestionId: "g17q3b",
+            scoreImpact: -10,
+            feedback: "Post-Phase 3 success valuations are conditional on success — they are not market expectations of current value. The market is not pricing $8-12B certainty into NovaBio; it is pricing the probability-weighted outcome. Using the conditional success valuation as the reference point for current entry overstates the current expected value.",
+          },
+          {
+            id: "c",
+            text: "Even with the pre-Phase 3 entry advantage, the correct approach is to wait until Phase 2 results are available since those will dramatically de-risk the investment without losing the entire entry opportunity.",
+            nextQuestionId: "g17q3a",
+            scoreImpact: 5,
+            feedback: "Phase 2 results as a decision catalyst is a reasonable approach but NovaBio's $180M cash runway of 18 months means they will close this round before Phase 2 results are available. The choice is invest now or pass — waiting for Phase 2 means passing.",
+          },
+        ],
+      },
+      {
+        id: "g17q3a",
+        stage: "Manufacturing Risk",
+        question: "The IC asks about manufacturing — a question that reveals a critical risk. What is the manufacturing situation for a CAR-T therapy and why does it matter?",
+        exhibit: {
+          type: "table",
+          title: "NovaBio Manufacturing Readiness vs Requirements",
+          data: `| Parameter                   | NovaBio Current   | Commercial Requirement | Gap          |
+|----------------------------|-------------------|----------------------|--------------|
+| Manufacturing facility      | Academic contract | FDA-approved GMP     | Critical     |
+| Batch success rate          | 78%               | 95%+                 | Significant  |
+| Vein-to-vein time           | 28 days           | Target 14-18 days    | Significant  |
+| Cost per treatment (mfg)    | $180,000          | Target $80,000       | Major        |
+| Annual patient capacity     | 200               | 7,500+ at peak       | Critical     |
+| CDMOs at scale globally     | 3 available       | Need 1 committed     | Constrained  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "NovaBio has no commercial manufacturing capability — the gap between current state and commercial requirements is existential. The three global CDMOs capable of CAR-T at scale create a constrained supply of manufacturing partners. A committed CDMO partnership must be a pre-closing condition of this investment because manufacturing failures have derailed approved CAR-T programs post-approval.",
+            nextQuestionId: "g17q4a",
+            scoreImpact: 20,
+            feedback: "Correctly identifying manufacturing as an existential risk and making CDMO partnership a pre-closing condition is the single most important insight in this case. The Kymriah manufacturing failure that nearly resulted in FDA withdrawal of approval is the precedent that makes this condition non-negotiable.",
+          },
+          {
+            id: "b",
+            text: "Manufacturing is a commercialization problem that can be solved with capital after clinical approval — the investment should focus on the clinical value first and manufacturing scale-up is a routine challenge any biopharmaceutical company faces.",
+            nextQuestionId: "g17q4b",
+            scoreImpact: -15,
+            feedback: "CAR-T manufacturing is definitively not a routine pharmaceutical manufacturing challenge. It requires patient-specific cell collection, modification, and reinfusion within tight timeframes. The Novartis Kymriah launch showed that even a well-resourced company nearly had approval revoked due to manufacturing failures. This is not a routine scale-up problem.",
+          },
+          {
+            id: "c",
+            text: "NovaBio should build its own GMP manufacturing facility using the $450M investment capital since owning the manufacturing is a competitive advantage that reduces dependence on CDMOs.",
+            nextQuestionId: "g17q4b",
+            scoreImpact: -5,
+            feedback: "Building a proprietary CAR-T GMP facility from scratch would cost $300-500M and take 3-4 years — consuming most of the investment capital and delaying commercialization by years past the 18-month cash runway. CDMO partnership is faster, cheaper, and lower-risk than building from scratch.",
+          },
+        ],
+      },
+      {
+        id: "g17q3b",
+        stage: "Manufacturing Risk",
+        question: "Your probability analysis has been off. The partner says: manufacturing is the most underappreciated risk in this investment. Given the exhibit showing NovaBio has no commercial manufacturing capability, how does this change the investment recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "Manufacturing risk becomes a pre-closing condition — the investment should not close without a committed CDMO partnership from one of the three global-scale CAR-T manufacturers. Without it, clinical approval does not translate to commercial revenue.",
+            nextQuestionId: "g17q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Making manufacturing partnership a pre-closing condition is the right structural response to manufacturing risk. It protects the PE firm against the most specific and most existential non-clinical risk in this investment.",
+          },
+          {
+            id: "b",
+            text: "Manufacturing risk increases the required return threshold — the PE firm should reduce its investment to $300M to reflect the additional manufacturing uncertainty and demand a higher ownership stake.",
+            nextQuestionId: "g17q4b",
+            scoreImpact: -5,
+            feedback: "Reducing the investment amount does not address the manufacturing risk — it just reduces exposure to a risk that remains unmitigated. The right solution is to require the risk to be addressed through a CDMO partnership as a condition of closing, not to invest less while leaving the risk in place.",
+          },
+          {
+            id: "c",
+            text: "Accept manufacturing risk as inherent to biotech investing and include it in the scenario analysis as one of several ways the investment could underperform expectations.",
+            nextQuestionId: "g17q4b",
+            scoreImpact: -10,
+            feedback: "Accepting manufacturing risk without requiring mitigation when a specific and obtainable mitigation — CDMO partnership — exists is not sound investment practice. This risk is actionable before closing and should be required as a condition rather than accepted as unavoidable.",
+          },
+        ],
+      },
+      {
+        id: "g17q4a",
+        stage: "Competitive Landscape",
+        question: "NovaBio claims first-mover status in solid tumor CAR-T. How do you assess the competitive threat from Novartis, BMS, and Arcus Biosciences, who are also targeting CAR-T for solid tumors?",
+        exhibit: {
+          type: "table",
+          title: "Competitive Landscape in Solid Tumor CAR-T",
+          data: `| Company        | Program    | Target  | Stage   | ORR Best  | Notes                    |
+|---------------|------------|---------|---------|-----------|--------------------------|
+| NovaBio        | NB-101     | MSLN    | Phase 2 | 62%       | Pancreatic, n=29         |
+| Novartis       | CART-GPC3  | GPC3    | Phase 2 | 24%       | Liver cancer             |
+| BMS/Celgene    | BMS-986340 | EGFR    | Phase 1 | 18%       | Lung cancer              |
+| Arcus Bio      | AB-101     | MSLN    | Phase 1 | 31%       | Same target as NovaBio   |
+| Tmunity/Penn   | TMU-101    | PSCA    | Phase 1 | 15%       | Prostate cancer          |
+| Prior failures |            |         |         | Under 20% | 8 large pharma failures  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "NovaBio's 62% ORR versus Arcus's 31% ORR targeting the same antigen MSLN suggests NovaBio has a meaningfully superior product despite the same target. Core patents to 2038 and 3 published peer-reviewed papers validating the mechanism create IP moat. Large pharma's 8 failures validate why NovaBio's result is exceptional — if approval occurs, strategic acquisition by a large pharma buyer is more likely than head-to-head competition.",
+            nextQuestionId: "g17q5a",
+            scoreImpact: 20,
+            feedback: "Complete competitive analysis. The 2x ORR advantage over Arcus despite same antigen targeting is the most important competitive data point. The strategic acquisition exit thesis is well-supported — large pharma that has failed in solid tumor CAR-T would pay premium multiples for a Phase 3-ready validated program.",
+          },
+          {
+            id: "b",
+            text: "Arcus Biosciences targeting the same MSLN antigen as NovaBio is a direct competitive threat that could split the market and reduce NovaBio's peak sales potential by 30-50% if both programs reach approval.",
+            nextQuestionId: "g17q5b",
+            scoreImpact: -5,
+            feedback: "Arcus at 31% ORR versus NovaBio at 62% ORR with the same target antigen and same indication suggests NovaBio has a structurally superior product. In oncology, efficacy differentials of this magnitude typically result in dominant market share for the better drug rather than market splitting.",
+          },
+          {
+            id: "c",
+            text: "Large pharma's 8 prior failures in solid tumor CAR-T suggest the approach does not work at scale and NovaBio's Phase 1 result is likely an artifact of patient selection in a small trial rather than a genuine efficacy signal.",
+            nextQuestionId: "g17q5b",
+            scoreImpact: -10,
+            feedback: "Prior failures validate why NovaBio's result is exceptional, not suspicious. Each prior failure used different targets, constructs, and patient populations. The FDA Breakthrough Designation confirms the agency's independent scientific review found the signal credible. Citing prior failures as evidence against a superior technology misreads the scientific context.",
+          },
+        ],
+      },
+      {
+        id: "g17q4b",
+        stage: "Competitive Landscape",
+        question: "Your manufacturing or probability analysis has been incomplete. The partner asks: given NovaBio's 62% ORR versus Arcus's 31% on the same target, what does the competitive landscape tell you about the strength of NovaBio's IP position?",
+        options: [
+          {
+            id: "a",
+            text: "The 2x ORR advantage targeting the same antigen suggests NovaBio has a genuinely differentiated construct — same target but superior results implies the CAR-T engineering is the differentiator, not just the target antigen. Core patents to 2038 protect this construct. The competitive moat is strong.",
+            nextQuestionId: "g17q5a",
+            scoreImpact: 15,
+            feedback: "Correct IP analysis. The same-antigen, different-result comparison is the most powerful way to isolate the construct quality as the differentiating factor. Patents on the construct rather than the target provide more durable protection.",
+          },
+          {
+            id: "b",
+            text: "NovaBio's IP position is uncertain because MSLN as a target antigen is not proprietary — multiple companies target it, which means anyone could develop a superior construct and invalidate NovaBio's competitive advantage.",
+            nextQuestionId: "g17q5b",
+            scoreImpact: -5,
+            feedback: "NovaBio's patents are on the CAR construct and manufacturing process, not on the MSLN antigen itself. The competitive advantage is the engineered construct that achieves 62% ORR — which is what the patents protect. Antigen non-exclusivity does not undermine construct patent protection.",
+          },
+          {
+            id: "c",
+            text: "The competitive landscape is too uncertain at this stage to assess IP strength — Phase 1 data from multiple competitors will be available in 18-24 months and the investment decision should wait for this data.",
+            nextQuestionId: "g17q5b",
+            scoreImpact: -10,
+            feedback: "Waiting 18-24 months for competitive Phase 1 data means missing the investment window — NovaBio has 18 months of cash runway and will close this round now. The available data is sufficient for IP strength assessment. Perfect competitive intelligence is not available and is not required for this investment decision.",
+          },
+        ],
+      },
+      {
+        id: "g17q5a",
+        stage: "Scenario Analysis",
+        question: "Build the probability-weighted return analysis. The partner has structured five scenarios. Calculate the expected MOIC on the $450M investment.",
+        exhibit: {
+          type: "table",
+          title: "NovaBio Investment Scenario Analysis",
+          data: `| Scenario                                  | Prob | Exit EV  | PE 25% Value |
+|------------------------------------------|------|----------|--------------|
+| P3 success plus acquisition by large pharma| 32% | $21.6B   | $5.4B        |
+| P3 success plus IPO exit                  | 13% | $14.4B   | $3.6B        |
+| Phase 2 positive triggers acqui pre-P3   | 20% | $4.5B    | $1.1B        |
+| P3 failure with asset sale or licensing   | 25% | $0.6B    | $0.15B       |
+| Complete failure with no salvage          | 10% | $0       | $0           |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Expected PE value: 32% times $5.4B plus 13% times $3.6B plus 20% times $1.1B plus 25% times $0.15B plus 10% times $0 equals $1.73B plus $0.47B plus $0.22B plus $0.04B equals $2.46B. On $450M invested, expected MOIC is 5.5x. This exceeds virtually any PE return threshold and supports investment.",
+            nextQuestionId: "g17q6a",
+            scoreImpact: 20,
+            feedback: "Correct probability-weighted calculation. $2.46B expected value on $450M investment equals 5.5x MOIC. This is the rigorous biotech investment analysis — not cherry-picking the success scenario but computing the full expected value across all outcomes. The result clearly supports investment.",
+          },
+          {
+            id: "b",
+            text: "The Phase 2 acquisition scenario at 20% probability and $1.1B PE value provides downside protection above the $450M invested even in a non-approval outcome — this floor reduces the effective downside risk significantly.",
+            nextQuestionId: "g17q6a",
+            scoreImpact: 10,
+            feedback: "The downside protection insight is valid and important for the IC — the Phase 2 positive acquisition scenario provides a 2.4x return floor for a meaningful probability path. However, the full probability-weighted MOIC of 5.5x is the primary investment metric and should be the headline number.",
+          },
+          {
+            id: "c",
+            text: "The 35% probability of adverse scenarios (complete failure plus asset sale) creates too much downside risk for a $450M investment — institutional PE cannot accept this level of binary risk regardless of the upside.",
+            nextQuestionId: "g17q6b",
+            scoreImpact: -15,
+            feedback: "35% probability of adverse scenarios in biotech investing is completely normal and well within institutional PE parameters. The 5.5x expected MOIC on a probability-weighted basis is the relevant metric. Rejecting a 5.5x expected return investment because 35% of scenarios are adverse is analytically unsound.",
+          },
+        ],
+      },
+      {
+        id: "g17q5b",
+        stage: "Scenario Analysis",
+        question: "Your competitive analysis was unclear. The partner gives you the scenario analysis directly. The expected MOIC calculation gives 5.5x on $450M. Does this support investment?",
+        options: [
+          {
+            id: "a",
+            text: "Yes — 5.5x expected MOIC on a probability-weighted basis is well above standard PE return thresholds of 2-3x. Even discounting the success scenarios by 50% for execution risk gives 2.75x — still above threshold. The two conditions that protect this return are manufacturing CDMO partnership and independent scientific review of Phase 2 data.",
+            nextQuestionId: "g17q6a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Confirming that 5.5x clears the threshold even with additional conservatism, and connecting the return to the specific conditions that protect it, gives the IC the complete picture.",
+          },
+          {
+            id: "b",
+            text: "The 5.5x expected MOIC is too dependent on the high-probability acquisition scenario — if large pharma does not acquire NovaBio post-Phase 3, the IPO scenario gives only 3.6x and the return case weakens considerably.",
+            nextQuestionId: "g17q6b",
+            scoreImpact: -5,
+            feedback: "3.6x on the IPO scenario alone still exceeds standard PE return thresholds. The acquisition and IPO scenarios together have 45% combined probability and both produce excellent returns. Concern about which success path materializes misses that both paths exceed the hurdle.",
+          },
+          {
+            id: "c",
+            text: "The expected MOIC calculation is only valid if the scenarios and probabilities are accurately estimated — given the uncertainty in oncology clinical outcomes, the sensitivity of the conclusion to these inputs makes the analysis too uncertain to act on.",
+            nextQuestionId: "g17q6b",
+            scoreImpact: -10,
+            feedback: "All investment analysis under uncertainty is sensitive to input assumptions. The appropriate response is sensitivity analysis showing how the conclusion changes with different probability assumptions — not rejection of the methodology. Even at half the success probabilities, the expected MOIC supports investment.",
+          },
+        ],
+      },
+      {
+        id: "g17q6a",
+        stage: "Deal Structure",
+        question: "The IC is persuaded on the financial case. How should the $450M investment be structured to protect the PE firm against the key risks identified?",
+        options: [
+          {
+            id: "a",
+            text: "Standard equity at $1.8B pre-money for 25% ownership. Two pre-closing conditions: independent scientific advisory board validation of Phase 2 interim data; and a committed CDMO manufacturing partnership from one of the three global-scale operators. Plus a milestone-based tranche structure releasing $150M at Phase 3 initiation and $150M at Phase 3 completion to preserve capital if early milestones are not met.",
+            nextQuestionId: "g17q7a",
+            scoreImpact: 20,
+            feedback: "Complete deal structure. Two pre-closing conditions address the two primary non-financial risks. Tranche release structure preserves $300M of capital against Phase 3 execution risk while ensuring NovaBio has sufficient funding to execute. This structure optimizes capital efficiency while maintaining full 25% ownership.",
+          },
+          {
+            id: "b",
+            text: "Convertible note with a 20% discount to the next financing round — this preserves optionality to increase ownership if Phase 2 results are positive and limits downside if Phase 3 fails.",
+            nextQuestionId: "g17q7b",
+            scoreImpact: -5,
+            feedback: "A convertible note structure at this stage and investment size would be unusual and likely unacceptable to NovaBio's management. Pre-IPO PE investments at $1.8B valuation use equity, not convertible notes. The tranche structure provides capital protection more elegantly.",
+          },
+          {
+            id: "c",
+            text: "Full $450M upfront equity at $1.8B pre-money — the conditions and tranching create deal complexity that risks losing NovaBio to a competing investor who offers cleaner terms.",
+            nextQuestionId: "g17q7b",
+            scoreImpact: -10,
+            feedback: "Paying $450M upfront with no conditions or tranching removes all pre-closing risk mitigation on the manufacturing and scientific risks identified as the primary non-financial threats. Clean deal terms are not worth eliminating the conditions that protect the investment.",
+          },
+        ],
+      },
+      {
+        id: "g17q6b",
+        stage: "Deal Structure",
+        question: "Your probability analysis or competitive assessment has been incomplete. The partner confirms: the expected MOIC is 5.5x and the investment should proceed. What are the two most important conditions to attach?",
+        options: [
+          {
+            id: "a",
+            text: "Condition one: independent scientific advisory board validation of Phase 2 data before closing — the n=29 Phase 1 result must be confirmed by an independent clinical opinion. Condition two: committed CDMO manufacturing partnership from one of the three global-scale operators — without manufacturing capability, approval does not translate to revenue.",
+            nextQuestionId: "g17q7a",
+            scoreImpact: 15,
+            feedback: "Correct identification of the two conditions. Scientific validation addresses the small sample size risk in the clinical data. Manufacturing partnership addresses the most common post-approval failure mode in CAR-T. Both conditions are obtainable and actionable before closing.",
+          },
+          {
+            id: "b",
+            text: "Condition one: NovaBio must reach a specific Phase 2 enrollment milestone before closing. Condition two: the founding CEO must sign a five-year retention agreement to protect management continuity.",
+            nextQuestionId: "g17q7b",
+            scoreImpact: -5,
+            feedback: "Phase 2 enrollment milestone is too operational for a pre-closing condition — NovaBio controls enrollment pace and this could delay closing indefinitely. CEO retention is important but a standard closing condition handled through employment agreements, not a deal condition. The manufacturing and scientific review conditions are more material.",
+          },
+          {
+            id: "c",
+            text: "Condition one: NovaBio secures a co-investment from a major pharmaceutical company at the same valuation to provide validation. Condition two: the investment is tranched entirely based on Phase 3 milestones.",
+            nextQuestionId: "g17q7b",
+            scoreImpact: -10,
+            feedback: "Requiring pharma co-investment at the same valuation is unlikely to be feasible pre-Phase 3 and would delay closing significantly. Full Phase 3 milestone tranching — releasing no capital until Phase 3 milestones — would leave NovaBio without funding and trigger the 18-month cash runway expiry.",
+          },
+        ],
+      },
+      {
+        id: "g17q7a",
+        stage: "Final Recommendation",
+        question: "The IC asks for the final recommendation: go or no-go, valuation basis, expected MOIC, and the two conditions.",
+        options: [
+          {
+            id: "a",
+            text: "Invest $450M at $1.8B pre-money for 25% ownership. Scientific basis: 62% ORR in solid tumor CAR-T — first ever above 20% — with FDA Breakthrough Designation. Financial basis: 5.5x probability-weighted MOIC, 25-32% IRR. Two conditions: independent scientific review of Phase 2 data and committed CDMO manufacturing partnership. Structure as $150M at signing, $150M at Phase 3 initiation, $150M at Phase 3 completion.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Complete and compelling recommendation. Scientific rationale, financial analysis, structure, and two specific actionable conditions — all present. The IC has everything needed to approve the investment. The L.E.K. partner says: this is the standard we produce.",
+          },
+          {
+            id: "b",
+            text: "Invest $300M at a $1.2B pre-money valuation rather than $450M at $1.8B — reduced investment at lower valuation creates better entry economics and reduces capital at risk if Phase 3 fails.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Price negotiation is a valid commercial position but NovaBio is unlikely to accept a 33% valuation reduction. The $1.8B valuation is supported by the market and the financial case is compelling at the full $450M. Negotiating aggressively at the risk of losing the deal is not well-supported by the return analysis.",
+          },
+          {
+            id: "c",
+            text: "Pass and revisit after Phase 2 results are available in 18 months — the financial case is strong but the scientific risk from n=29 Phase 1 data is too high to commit $450M before Phase 2 confirmation.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Phase 2 results will not be available in 18 months — NovaBio's cash runway is 18 months, meaning this round closes now or not at all. Passing and revisiting is effectively passing permanently. The expected MOIC of 5.5x with appropriate pre-closing conditions is the correct framework for proceeding.",
+          },
+        ],
+      },
+      {
+        id: "g17q7b",
+        stage: "Final Recommendation",
+        question: "Your analysis has had gaps. The partner gives you one final opportunity: the IC needs a go or no-go with two conditions in three minutes. What do you say?",
+        options: [
+          {
+            id: "a",
+            text: "Invest $450M at $1.8B pre-money for 25% ownership. 5.5x probability-weighted MOIC, 25-32% IRR. Two conditions: independent scientific advisory board review of Phase 2 data, and committed CDMO manufacturing partnership before close. Tranche as $150M at signing, $150M at Phase 3 start, $150M at Phase 3 completion.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery under pressure. All key elements in a concise format — go decision, valuation, return, two conditions, structure. The IC can make the decision with this information.",
+          },
+          {
+            id: "b",
+            text: "The analysis supports investment but the manufacturing risk is too uncertain to commit $450M without additional due diligence on CDMO capacity and NovaBio's manufacturing timeline that would take another four weeks.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Requesting four more weeks when the partner said three minutes and the analysis is complete is a failure of responsiveness. The manufacturing risk is addressed by the CDMO partnership condition — it does not require four more weeks of analysis.",
+          },
+          {
+            id: "c",
+            text: "Pass — the 35% probability of adverse scenarios creates unacceptable binary risk for institutional capital and the manufacturing situation is too uncertain to support a $450M commitment at this stage.",
+            nextQuestionId: "end",
+            scoreImpact: -15,
+            feedback: "Passing on a 5.5x expected MOIC investment because 35% of scenarios are adverse — which is completely normal for biotech — after eight weeks of analysis that clearly supports investment is an analytical failure. The partner will be very direct in the debrief.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G18: OLIVER WYMAN — BANK STRESS TEST
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g18",
+    title: "MidFirst Bank: Stress Test and Capital Strategy",
+    type: "profitability",
+    difficulty: "advanced",
+    firm: "oliver_wyman",
+    estimatedMinutes: 38,
+    overview: "A regional US bank is preparing for its first Federal Reserve stress test. Oliver Wyman has been engaged to help management understand the likely outcomes and develop a capital optimization strategy.",
+    clientBackground: "MidFirst Bank has $78B in total assets, $62B in loans, and $8.2B in common equity tier 1 capital — a CET1 ratio of 10.5%. The bank has significant commercial real estate concentration at 34% of total loans versus a 22% peer average. Net interest margin is 3.4%. The CEO is concerned that the Fed's severe scenario will result in a capital shortfall that would restrict dividends and buybacks for two years.",
+    yourRole: "You are an Oliver Wyman manager on the financial services practice. You have 10 weeks before the Fed stress test submission. The CFO is your primary client.",
+    startQuestionId: "g18q1",
+    finalRecommendationPrompt: "What capital strategy should MidFirst Bank adopt before the stress test submission, and what is the expected post-stress CET1 ratio under the severe scenario?",
+    sampleRecommendation: "MidFirst should take three pre-submission actions. First, reduce CRE concentration from 34% to 28% through loan sales and risk transfers — this directly reduces stressed loss projections and may improve the post-stress CET1 by 80-120 basis points. Second, optimize risk-weighted assets through portfolio restructuring — moving $4B of low-yield high-risk-weight commercial loans to agency-backed structures reduces RWA by approximately $1.1B, improving the CET1 ratio by 14 basis points. Third, pre-position the PPNR model to reflect the bank's actual through-the-cycle margin resilience. Expected post-stress CET1 under severe scenario: 7.8-8.4%, above the 4.5% minimum but below peer average. Dividends can be maintained but buybacks should be suspended for two years.",
+    idealRecommendation: "Three actions: CRE concentration reduction to 28% (80-120 bps CET1 improvement), RWA optimization through portfolio restructuring (14 bps), and PPNR model pre-positioning. Expected post-stress CET1: 7.8-8.4% versus 4.5% minimum. Dividends maintainable; buybacks suspended for two years until CET1 rebuilds above 9%.",
+    keyTakeaways: [
+      "Stress testing is as much a management exercise as a regulatory one — the assumptions and model choices within Fed-approved ranges significantly affect outcomes",
+      "CRE concentration is the single most penalized portfolio characteristic in Fed stress tests because of the 2008 experience with commercial real estate losses",
+      "Pre-positioning means taking portfolio actions before the test submission date that reduce projected stressed losses — this is legitimate capital management, not manipulation",
+      "The difference between passing a stress test and passing well determines whether management can return capital to shareholders — the minimum threshold is not the management target",
+    ],
+    questions: [
+      {
+        id: "g18q1",
+        stage: "Stress Test Framework",
+        question: "The CFO asks: what exactly does the Fed stress test measure and what determines whether MidFirst passes or fails? Frame the analytical structure before looking at any numbers.",
+        options: [
+          {
+            id: "a",
+            text: "The stress test measures whether a bank maintains a minimum 4.5% CET1 ratio through a nine-quarter severely adverse scenario of GDP contraction, unemployment above 10%, and commercial real estate price declines of 40%. The CET1 ratio at the end of the scenario — starting capital minus stressed losses plus stressed revenues — determines the outcome. MidFirst at 10.5% starting CET1 must survive enough stressed losses to stay above 4.5%.",
+            nextQuestionId: "g18q2a",
+            scoreImpact: 20,
+            feedback: "Correct complete framework. Starting capital minus stressed losses plus stressed revenues equals ending CET1 ratio — this is the fundamental stress test equation. Understanding that MidFirst has 6pp of buffer from starting CET1 to the minimum threshold is the foundation for the entire analysis.",
+          },
+          {
+            id: "b",
+            text: "The stress test is primarily a qualitative assessment of management processes, governance frameworks, and capital planning procedures — quantitative results are secondary to demonstrating that the bank has robust internal controls.",
+            nextQuestionId: "g18q2b",
+            scoreImpact: -10,
+            feedback: "The Fed's Dodd-Frank stress test is primarily quantitative — the CET1 ratio under the severely adverse scenario is the headline outcome that determines whether capital distributions are restricted. Qualitative governance matters for CCAR but the quantitative stress test result determines capital action approvals.",
+          },
+          {
+            id: "c",
+            text: "The stress test measures whether the bank can survive three consecutive years of losses — any bank that does not generate positive net income in all three stress years automatically fails regardless of starting capital.",
+            nextQuestionId: "g18q2b",
+            scoreImpact: -5,
+            feedback: "Banks typically generate losses in stress scenarios — that is the point of the test. The measure is not whether income is positive in every year but whether the cumulative capital decline stays above the 4.5% minimum CET1 threshold at the end of nine quarters.",
+          },
+        ],
+      },
+      {
+        id: "g18q2a",
+        stage: "Loss Projection",
+        question: "Now estimate the stressed losses MidFirst will face. The CRE concentration at 34% of loans is the most significant risk factor. Review the exhibit and project the stressed capital position.",
+        exhibit: {
+          type: "table",
+          title: "MidFirst Loan Portfolio Stress Loss Analysis",
+          data: `| Segment            | Balance  | Pct of Loans | Stressed Loss Rate | Projected Loss |
+|-------------------|----------|-------------|-------------------|----------------|
+| CRE office         | $8.4B    | 13.5%       | 12.5%             | $1,050M        |
+| CRE retail         | $4.8B    | 7.7%        | 9.5%              | $456M          |
+| CRE multifamily    | $7.9B    | 12.7%       | 4.5%              | $356M          |
+| C&I loans          | $16.2B   | 26.1%       | 5.5%              | $891M          |
+| Residential mtg    | $12.4B   | 20.0%       | 2.8%              | $347M          |
+| Consumer/other     | $12.3B   | 19.8%       | 6.5%              | $800M          |
+| Total loans        | $62.0B   | 100%        | 6.3% avg          | $3,900M        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Total projected stressed losses of $3.9B over nine quarters. Starting CET1 of $8.2B. Stressed revenue (PPNR) estimated at $1.6B over nine quarters. Net capital reduction: $3.9B minus $1.6B equals $2.3B. Post-stress CET1: $8.2B minus $2.3B equals $5.9B on RWA of approximately $68B, giving a post-stress CET1 ratio of 8.7%. This passes the 4.5% minimum but the 6.3% average loss rate reflects the CRE concentration premium.",
+            nextQuestionId: "g18q3a",
+            scoreImpact: 20,
+            feedback: "Complete stress calculation. The 8.7% post-stress CET1 is above the minimum and above the 4.5% threshold by a comfortable margin. However, the CRE office concentration at 12.5% loss rate is the primary driver and the source of the concentration penalty relative to peers.",
+          },
+          {
+            id: "b",
+            text: "The projected losses of $3.9B are manageable given MidFirst's starting CET1 of $8.2B — the bank has enough capital to absorb these losses without concern. No pre-positioning actions are needed.",
+            nextQuestionId: "g18q3b",
+            scoreImpact: -5,
+            feedback: "Concluding no action is needed without completing the full CET1 ratio calculation is premature. The question is not whether $8.2B can absorb $3.9B in losses but what CET1 ratio results and whether that ratio restricts capital distributions. The calculation must be completed before concluding the bank is well-positioned.",
+          },
+          {
+            id: "c",
+            text: "Focus exclusively on the CRE office segment at $1.05B projected loss since it is the single largest loss driver and any pre-positioning should target this specific segment.",
+            nextQuestionId: "g18q3a",
+            scoreImpact: 5,
+            feedback: "CRE office is correctly identified as the largest single driver and is the right pre-positioning target. However, completing the full loss calculation to determine the overall CET1 outcome is still required before designing the pre-positioning strategy.",
+          },
+        ],
+      },
+      {
+        id: "g18q2b",
+        stage: "Loss Projection",
+        question: "The partner corrects the stress test framework. The quantitative CET1 ratio determines the outcome. MidFirst starts at 10.5% CET1 and must stay above 4.5%. Given CRE concentration at 34% of loans, what is the primary risk?",
+        options: [
+          {
+            id: "a",
+            text: "CRE concentration is the primary risk because the Fed's severe scenario includes a 40% commercial real estate price decline with 30%+ unemployment in specific markets. At 34% of loans versus 22% peer average, MidFirst faces a structural concentration penalty that will produce higher stressed loss rates than peers on comparable loan volumes.",
+            nextQuestionId: "g18q3a",
+            scoreImpact: 15,
+            feedback: "Correct identification. The CRE concentration penalty is the specific structural risk that differentiates MidFirst from its peers. Quantifying the concentration at 34% versus 22% average and connecting it to the severe scenario's specific CRE assumptions is the right diagnostic framing.",
+          },
+          {
+            id: "b",
+            text: "The primary risk is the bank's 3.4% net interest margin which is above average and may decline sharply in the stressed rate environment, reducing pre-provision net revenues significantly during the stress period.",
+            nextQuestionId: "g18q3b",
+            scoreImpact: -5,
+            feedback: "NIM above average is a potential revenue benefit in a stress scenario, not a risk. Above-peer NIM suggests MidFirst may generate relatively more PPNR during stress, which helps absorb losses. CRE concentration is the primary loss driver risk that requires attention.",
+          },
+          {
+            id: "c",
+            text: "The primary risk is operational and reputational — if market participants see MidFirst fail or perform poorly in the stress test, it could trigger deposit outflows that the test itself cannot model.",
+            nextQuestionId: "g18q3b",
+            scoreImpact: -10,
+            feedback: "Reputational risk is a real post-test concern but is not the primary analytical risk in designing the pre-positioning strategy. The CET1 ratio outcome under the severe scenario is what determines capital restriction and management action options — that is the primary risk to address.",
+          },
+        ],
+      },
+      {
+        id: "g18q3a",
+        stage: "Pre-Positioning Strategy",
+        question: "The post-stress CET1 of 8.7% passes the minimum but the CFO wants to improve it before submission. What pre-positioning actions are available and which should be prioritized?",
+        options: [
+          {
+            id: "a",
+            text: "Three pre-positioning levers in priority order: CRE concentration reduction through loan sales — reducing CRE from 34% to 28% directly lowers the highest-loss-rate exposure and may improve post-stress CET1 by 80-120 basis points; RWA optimization by restructuring $4B of low-yield high-risk-weight commercial loans — 14 bps improvement; and PPNR optimization by improving the through-the-cycle revenue model documentation.",
+            nextQuestionId: "g18q4a",
+            scoreImpact: 20,
+            feedback: "Correct priority ordering. CRE concentration reduction has the largest single impact because it directly reduces the highest loss rate segment. RWA optimization is lower impact but capital-efficient. PPNR documentation is qualitative but can meaningfully improve the revenue side of the equation.",
+          },
+          {
+            id: "b",
+            text: "Raise additional equity capital before the stress test submission to increase starting CET1 from 10.5% to 12% — the incremental 150 bps provides a larger buffer before hitting the 4.5% minimum.",
+            nextQuestionId: "g18q4b",
+            scoreImpact: -5,
+            feedback: "Raising equity capital is expensive and signals weakness to the market if done specifically for stress test pre-positioning. Portfolio pre-positioning that reduces stressed losses is more capital-efficient than raising expensive equity to buffer against losses you could prevent through portfolio management.",
+          },
+          {
+            id: "c",
+            text: "Lobby the Fed for more favorable CRE loss rate assumptions based on MidFirst's historical CRE loss experience which has been below the sector average for the past 10 years.",
+            nextQuestionId: "g18q4b",
+            scoreImpact: -10,
+            feedback: "Banks cannot lobby for specific loss rate assumptions in DFAST — the Fed applies standardized scenarios and internal model results are reviewed against Fed expectations. Using historical outperformance as an argument for lower loss rates is a legitimate PPNR documentation approach but cannot reduce the scenario assumptions themselves.",
+          },
+        ],
+      },
+      {
+        id: "g18q3b",
+        stage: "Pre-Positioning Strategy",
+        question: "The partner corrects your diagnosis and confirms CRE at 34% versus 22% peer average is the primary risk. What does this concentration mean for MidFirst's stressed loss rate relative to peers?",
+        options: [
+          {
+            id: "a",
+            text: "MidFirst's CRE concentration produces a structural loss rate premium of approximately 100-150 basis points above the peer average loss rate. With $62B in loans, 100 bps excess loss rate equals $620M in additional stressed losses that peers with similar portfolios do not face. This translates directly to lower post-stress CET1 than peers despite similar starting ratios.",
+            nextQuestionId: "g18q4a",
+            scoreImpact: 15,
+            feedback: "Correct quantification of the concentration penalty. The $620M differential in stressed losses from the CRE premium is the financial expression of why the concentration matters. This number should be the anchor for the pre-positioning strategy — specifically targeting reduction of this excess loss.",
+          },
+          {
+            id: "b",
+            text: "CRE concentration increases the variability of outcomes around the base case but does not necessarily increase expected stressed losses since MidFirst's CRE portfolio may be higher quality than the sector average suggests.",
+            nextQuestionId: "g18q4b",
+            scoreImpact: -5,
+            feedback: "The Fed's severe scenario applies standardized CRE loss rates by property type, not bank-specific historical performance. Portfolio quality arguments can be made in model documentation but the standardized scenario rates are the primary driver of concentration penalties — higher CRE concentration mechanically increases stressed losses.",
+          },
+          {
+            id: "c",
+            text: "The concentration risk is already reflected in MidFirst's current regulatory capital ratio since DFAST requirements are designed to capture exactly this type of portfolio concentration risk.",
+            nextQuestionId: "g18q4b",
+            scoreImpact: -10,
+            feedback: "Current regulatory capital ratios are based on risk weights, not stress test outcomes. A bank can have a high current CET1 ratio while having high CRE concentration that creates stress test vulnerability — the two measures capture different risks. The stress test specifically penalizes concentrations that regulatory capital ratios may not fully capture.",
+          },
+        ],
+      },
+      {
+        id: "g18q4a",
+        stage: "CRE Reduction Strategy",
+        question: "CRE concentration reduction is the priority. The CFO asks: how do we reduce CRE from 34% to 28% within the 10-week window and what is the cost?",
+        exhibit: {
+          type: "table",
+          title: "CRE Reduction Options",
+          data: `| Option              | Volume  | Timeline   | Economic Cost  | CET1 Impact   |
+|--------------------|---------|------------|---------------|---------------|
+| Loan sales at par  | $1.5B   | 4-6 weeks  | Minimal       | +18 bps       |
+| Loan sales at disc | $2.5B   | 3-4 weeks  | 2-3% discount | +25 bps loss  |
+| Credit risk transfer| $2.0B  | 6-8 weeks  | 1.5% premium  | +22 bps       |
+| Syndication out     | $1.2B   | 8-10 weeks | Relationship   | +14 bps       |
+| New origination cap | ongoing | Immediate  | Revenue impact | Long-term     |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Execute a combination: $1.5B in at-par loan sales for immediate balance reduction with minimal cost, plus $2.0B in credit risk transfer which hedges the credit risk without selling the relationship. Together $3.5B in CRE exposure reduction brings the concentration from 34% to approximately 28.5% within the 8-week window, improving post-stress CET1 by approximately 90 basis points.",
+            nextQuestionId: "g18q5a",
+            scoreImpact: 20,
+            feedback: "Correct combination strategy. At-par sales provide balance reduction without capital cost. Credit risk transfer hedges the remaining large exposures without breaking relationships or accepting discounts. The combined 90 bps improvement is the largest single lever available within the timeline.",
+          },
+          {
+            id: "b",
+            text: "Execute $2.5B in discounted loan sales immediately since speed is critical and the 2-3% discount is a manageable economic cost relative to the stress test benefit.",
+            nextQuestionId: "g18q5b",
+            scoreImpact: 5,
+            feedback: "Discounted loan sales achieve the concentration target quickly but the 2-3% discount on $2.5B equals $50-75M in realized losses that directly reduce current CET1 — partially offsetting the stress test benefit. The at-par plus credit risk transfer combination achieves similar results with less capital cost.",
+          },
+          {
+            id: "c",
+            text: "Implement an immediate new origination cap on CRE to prevent further concentration growth — this is the most operationally straightforward action and avoids the transaction costs of selling or transferring existing loans.",
+            nextQuestionId: "g18q5b",
+            scoreImpact: -10,
+            feedback: "A new origination cap prevents future CRE growth but does nothing to reduce the current 34% concentration within the 10-week stress test window. The stressed loss calculation is based on the portfolio at submission date — only reducing current concentration improves the stressed outcome.",
+          },
+        ],
+      },
+      {
+        id: "g18q4b",
+        stage: "CRE Reduction Strategy",
+        question: "Your analysis of CRE concentration risk was incomplete. The partner confirms that reducing CRE from 34% to 28% would improve post-stress CET1 by approximately 90 basis points. How do you execute this reduction in 10 weeks?",
+        options: [
+          {
+            id: "a",
+            text: "Two-track execution: immediate $1.5B at-par loan sales to the secondary market where demand for performing CRE paper is strong, plus $2.0B credit risk transfer through CLO structures that remove credit risk from the balance sheet without requiring relationship disruption.",
+            nextQuestionId: "g18q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The at-par sales plus credit risk transfer combination achieves the concentration target efficiently within the timeline without the economic cost of discounted sales.",
+          },
+          {
+            id: "b",
+            text: "Sell $3.5B of CRE loans in the secondary market at whatever discount is needed to achieve the volume within the 10-week window — speed is more important than economic optimization.",
+            nextQuestionId: "g18q5b",
+            scoreImpact: -5,
+            feedback: "Forced discounted sales signal weakness to counterparties and the discounts on $3.5B could be $70-105M in losses. The at-par plus credit risk transfer combination achieves the same concentration reduction with far less economic cost.",
+          },
+          {
+            id: "c",
+            text: "Request a regulatory extension from the Fed to give MidFirst more time to reduce CRE concentration before the stress test submission.",
+            nextQuestionId: "g18q5b",
+            scoreImpact: -15,
+            feedback: "Requesting a regulatory extension for pre-positioning reasons is not a realistic option — the Fed's stress test calendar is fixed and requesting an extension would signal to the regulator that MidFirst is struggling to manage its capital position, creating exactly the scrutiny the bank wants to avoid.",
+          },
+        ],
+      },
+      {
+        id: "g18q5a",
+        stage: "Capital Distribution Strategy",
+        question: "Post-stress CET1 is projected at 8.6% after pre-positioning actions. The CFO asks: what capital distribution strategy — dividends and buybacks — can MidFirst maintain over the next two years?",
+        exhibit: {
+          type: "table",
+          title: "Capital Distribution Analysis",
+          data: `| Scenario                     | Post-Stress CET1 | Fed Minimum | Headroom | Distribution Capacity |
+|-----------------------------|-----------------|-------------|----------|----------------------|
+| No pre-positioning          | 7.8%            | 4.5%        | 3.3pp    | Restricted           |
+| With CRE reduction          | 8.6%            | 4.5%        | 4.1pp    | Limited              |
+| Peer average                | 9.2%            | 4.5%        | 4.7pp    | Moderate             |
+| Best-in-class               | 11.4%           | 4.5%        | 6.9pp    | Full                 |
+| MidFirst target (2yr)       | 9.5%            | 4.5%        | 5.0pp    | Moderate             |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "With 8.6% post-stress CET1, MidFirst can maintain current dividend levels — dividends are contractual and the 4.1pp headroom above minimum supports them — but should suspend share buybacks for two years. Earnings retained over two years rather than used for buybacks will rebuild CET1 to approximately 9.5%, reaching the target to resume full capital distributions.",
+            nextQuestionId: "g18q6a",
+            scoreImpact: 20,
+            feedback: "Correct capital distribution recommendation. Dividends maintainable as contractual obligations with sufficient headroom. Buyback suspension is prudent capital management at 8.6% post-stress CET1 — suspending $400-600M in annual buybacks for two years rebuilds the ratio toward peer and target levels.",
+          },
+          {
+            id: "b",
+            text: "Suspend both dividends and buybacks immediately to maximize capital retention and reach the 9.5% target as quickly as possible — speed of capital rebuilding reduces regulatory scrutiny risk.",
+            nextQuestionId: "g18q6b",
+            scoreImpact: -5,
+            feedback: "Suspending dividends when the bank has 4.1pp of post-stress headroom above minimum and can maintain them through earnings is unnecessarily conservative and will signal weakness to equity investors. Dividend maintenance is supportable at 8.6% post-stress CET1.",
+          },
+          {
+            id: "c",
+            text: "Maintain both dividends and buybacks at current levels — the 8.6% post-stress CET1 is well above the 4.5% minimum and there is no analytical basis for restricting capital distributions.",
+            nextQuestionId: "g18q6b",
+            scoreImpact: -10,
+            feedback: "At 8.6% post-stress CET1 versus a 9.2% peer average and a 9.5% target, continuing full buybacks delays the capital rebuild to the target level. Prudent capital management at this post-stress ratio suggests buyback suspension while maintaining dividends.",
+          },
+        ],
+      },
+      {
+        id: "g18q5b",
+        stage: "Capital Distribution Strategy",
+        question: "Your CRE reduction execution was not optimal. The partner says: assume CRE reduction brings post-stress CET1 to 8.6% — 4.1pp above the minimum but below the 9.2% peer average. What capital distribution strategy does this support?",
+        options: [
+          {
+            id: "a",
+            text: "Maintain dividends — 4.1pp headroom above minimum is sufficient with 2.5x NIM resilience. Suspend buybacks for two years — at $450M per year, suspension retains $900M over two years, rebuilding CET1 to approximately 9.5% and reaching the target for full distribution resumption.",
+            nextQuestionId: "g18q6a",
+            scoreImpact: 15,
+            feedback: "Correct dividend and buyback decision. The mathematical case is clean — dividends are supportable, buybacks create the fastest path to the 9.5% target ratio that enables full distribution resumption.",
+          },
+          {
+            id: "b",
+            text: "Match peer capital distributions exactly — if peers are maintaining dividends and buybacks at 9.2% post-stress CET1, MidFirst at 8.6% should proportionally reduce distributions by the ratio of their CET1 headroom difference.",
+            nextQuestionId: "g18q6b",
+            scoreImpact: 0,
+            feedback: "Peer benchmarking for capital distribution is reasonable context but 8.6% at MidFirst with specific concentration risk is not directly comparable to 9.2% at peers with diversified portfolios. The decision should be based on MidFirst's specific capital trajectory, not a mechanical peer ratio.",
+          },
+          {
+            id: "c",
+            text: "Reduce dividends by 50% and suspend buybacks — the combination of below-peer CET1 and CRE concentration risk warrants more conservative distributions than peers to preserve flexibility.",
+            nextQuestionId: "g18q6b",
+            scoreImpact: -5,
+            feedback: "Cutting dividends when the bank has 4.1pp of post-stress headroom is more conservative than warranted and would damage the stock price without a proportional capital benefit. Dividend maintenance is supportable at this post-stress CET1 level.",
+          },
+        ],
+      },
+      {
+        id: "g18q6a",
+        stage: "Regulatory Communication",
+        question: "The CFO asks: how do we communicate the stress test results and our capital strategy to investors, and what is the key message?",
+        options: [
+          {
+            id: "a",
+            text: "Three-part investor communication: (1) Acknowledge the CRE concentration proactively — investors already know about it and pretending otherwise destroys credibility; (2) Present the specific pre-positioning actions taken and their quantified CET1 impact; (3) Commit to the two-year capital plan: dividend maintenance, buyback suspension, 9.5% CET1 target by year two. Lead with the actions taken, not the problem.",
+            nextQuestionId: "g18q7a",
+            scoreImpact: 20,
+            feedback: "Correct communication strategy. Proactive CRE acknowledgment with the pre-positioning narrative turns a potential negative into a management credibility story. The specific two-year plan with a quantified target gives investors the roadmap they need to maintain confidence.",
+          },
+          {
+            id: "b",
+            text: "Minimize discussion of CRE concentration in investor communications — highlighting it draws attention to a known weakness and may accelerate negative investor reaction before the official results are published.",
+            nextQuestionId: "g18q7b",
+            scoreImpact: -10,
+            feedback: "Minimizing CRE concentration discussion when investors already know about it from public filings destroys credibility. The risk of discovery is higher than the risk of proactive disclosure, and sophisticated bank analysts will penalize more for attempting to obscure a known risk than for addressing it directly.",
+          },
+          {
+            id: "c",
+            text: "Delay investor communication until after the official Fed stress test results are published — communicating before the official results creates information asymmetry and potential securities law concerns.",
+            nextQuestionId: "g18q7b",
+            scoreImpact: -5,
+            feedback: "Pre-result investor communication about capital strategy — without disclosing non-public specific results — is standard practice for banks preparing for stress tests. The capital plan including buyback suspension is a material disclosure that should be communicated promptly through appropriate channels.",
+          },
+        ],
+      },
+      {
+        id: "g18q6b",
+        stage: "Regulatory Communication",
+        question: "Your capital distribution recommendation was not optimal. The partner gives you the correct position: dividends maintained, buybacks suspended for two years. Now design the investor communication.",
+        options: [
+          {
+            id: "a",
+            text: "Lead with proactive CRE acknowledgment and the specific pre-positioning actions taken, present the 8.6% post-stress CET1 as above minimum with a clear path to 9.5% in two years, and commit to dividend maintenance with buyback suspension until CET1 reaches target.",
+            nextQuestionId: "g18q7a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Leading with actions taken rather than the problem, and providing a specific roadmap to the target ratio, is the right investor communication approach.",
+          },
+          {
+            id: "b",
+            text: "Present the stress test results without commentary on the buyback decision and let investors draw their own conclusions about the capital distribution implications.",
+            nextQuestionId: "g18q7b",
+            scoreImpact: -10,
+            feedback: "Buyback suspension is a material capital allocation decision that investors need to understand in context. Presenting the results without explaining the capital strategy creates uncertainty that is worse for the stock price than the buyback suspension itself.",
+          },
+          {
+            id: "c",
+            text: "Issue a press release immediately after results are available that emphasizes MidFirst passing the minimum threshold and does not specifically address the buyback suspension.",
+            nextQuestionId: "g18q7b",
+            scoreImpact: -5,
+            feedback: "Burying the buyback suspension rather than leading with the full capital strategy narrative will result in analysts writing their own narrative — which is typically less favorable than management's. Proactive disclosure with context is consistently better than reactive disclosure after analysts raise the question.",
+          },
+        ],
+      },
+      {
+        id: "g18q7a",
+        stage: "Final Recommendation",
+        question: "The CFO asks for the complete recommendation: three actions, expected post-stress CET1, and the capital distribution plan.",
+        options: [
+          {
+            id: "a",
+            text: "Three actions: CRE reduction to 28% through at-par loan sales and credit risk transfer saving approximately $620M in stressed losses and improving post-stress CET1 by 90 bps; RWA optimization through commercial loan restructuring improving CET1 by 14 bps; PPNR documentation of through-the-cycle margin resilience. Expected post-stress CET1: 8.6% under severe scenario. Capital plan: maintain dividends, suspend buybacks for two years, target 9.5% CET1 by year two.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Complete and specific recommendation. Three actions with quantified CET1 improvements, a specific post-stress ratio, and a two-year capital plan with a specific target. The CFO has everything needed to present to the board and regulators. Oliver Wyman quality.",
+          },
+          {
+            id: "b",
+            text: "Focus on the single most important action — CRE concentration reduction — and defer RWA optimization and PPNR documentation to a separate workstream after the stress test to avoid execution overload in 10 weeks.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "CRE reduction is correctly prioritized but RWA optimization and PPNR documentation are relatively low-effort parallel workstreams that should not be deferred. The CFO needs to understand the full picture of what is possible within the window, not just the single largest lever.",
+          },
+          {
+            id: "c",
+            text: "Recommend raising $1B in additional equity capital to increase starting CET1 from 10.5% to 11.8% — this eliminates all stress test concern and allows full capital distributions to continue without restriction.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Equity issuance is expensive, signals weakness, and dilutes existing shareholders. The pre-positioning actions available within the existing portfolio and capital structure are sufficient to address the stress test concern. $1B in equity is an unnecessarily costly solution when portfolio actions costing much less achieve the same result.",
+          },
+        ],
+      },
+      {
+        id: "g18q7b",
+        stage: "Final Recommendation",
+        question: "Your analysis has had several gaps. The partner gives you one final chance: the CFO needs the complete recommendation now. What do you tell him?",
+        options: [
+          {
+            id: "a",
+            text: "Three actions: reduce CRE from 34% to 28% via at-par sales and credit risk transfer for 90 bps CET1 improvement; RWA optimization for 14 bps; PPNR documentation. Post-stress CET1 result: 8.6%. Capital plan: maintain dividends, suspend buybacks for two years, rebuild to 9.5% target. Communicate proactively to investors with the CRE pre-positioning narrative.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery. All key elements present in a concise format. The CFO can take this to the board and regulators. The partner says: that is what we needed at the start of this conversation.",
+          },
+          {
+            id: "b",
+            text: "I need two more weeks to finalize the PPNR model documentation and validate the CRE loss rate assumptions against MidFirst's internal historical data before giving a final recommendation.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "The CFO asked for the recommendation now. Requesting two more weeks when the 10-week window has nearly closed and the analysis is complete is a failure of delivery. The recommendation must be given based on available data.",
+          },
+          {
+            id: "c",
+            text: "The stress test analysis shows MidFirst will pass the minimum threshold with or without pre-positioning actions. The pre-positioning program is optional and the CFO should evaluate whether the execution risk of the portfolio actions outweighs the modest CET1 improvement.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Characterizing a 90 bps CET1 improvement and the difference between restricted and unrestricted capital distributions as optional misses the strategic importance of the pre-positioning. The difference between 7.8% and 8.6% post-stress CET1 determines whether buybacks are suspended for two years or four — a material shareholder impact.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G19: BCG — CONSUMER GOODS TURNAROUND
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g19",
+    title: "PrimePackage: CPG Portfolio Restructuring",
+    type: "profitability",
+    difficulty: "advanced",
+    firm: "bcg",
+    estimatedMinutes: 38,
+    overview: "A large US consumer packaged goods company has seen its portfolio of 140 brands underperform peers for five consecutive years. BCG has been engaged to recommend a portfolio restructuring.",
+    clientBackground: "PrimePackage has $18B in annual revenue across 140 brands in personal care, household products, and food. Total shareholder return over five years is 12% versus the CPG sector average of 34%. Organic revenue growth is 1.2% versus 3.8% for peers. EBITDA margin is 14% versus 19% for best-in-class. The CEO has engaged BCG under pressure from activist investors who are calling for a spin-off or sale of underperforming categories.",
+    yourRole: "You are a BCG project leader on the consumer goods practice. You have 12 weeks to deliver a portfolio restructuring recommendation to the board.",
+    startQuestionId: "g19q1",
+    finalRecommendationPrompt: "What portfolio restructuring should PrimePackage execute, and what is the expected financial impact on organic growth, EBITDA margin, and TSR?",
+    sampleRecommendation: "Three actions: divest the bottom-quartile 35 brands generating $2.4B in revenue at 6% EBITDA margin — use proceeds to fund the top 20 brands with disproportionate marketing investment; acquire one bolt-on in the personal care premium segment to add a growth category; and restructure the organizational model from a category-based to a brand-based P&L structure. Expected impact: organic growth improves from 1.2% to 3.1%, EBITDA margin expands from 14% to 17.5% as portfolio mix shifts toward higher-margin brands, TSR improves toward peer average as the portfolio becomes more focused and analysts can apply appropriate growth multiples.",
+    idealRecommendation: "Divest 35 bottom-quartile brands ($2.4B revenue, 6% EBITDA), invest proceeds in top-20 brands and one premium bolt-on acquisition. Restructure to brand-based P&L. Expected: organic growth 3.1%, EBITDA 17.5%, TSR toward sector average. The conglomerate discount — estimated at 15-20% — begins to compress as portfolio clarity improves.",
+    keyTakeaways: [
+      "Conglomerate discounts in CPG are real and persistent — diversified portfolios of weak brands trade at lower multiples than focused portfolios of strong brands",
+      "In CPG portfolio strategy, divestiture of small non-core brands often generates more TSR than acquisition — resources concentrated on fewer stronger brands outperform",
+      "Marketing investment concentration is non-linear — doubling investment on a strong brand generates more than 2x the return of spreading the same investment across multiple weak brands",
+      "Organizational structure follows strategy — a brand-based P&L structure creates the accountability and resource allocation discipline that a category-based structure typically obscures",
+    ],
+    questions: [
+      {
+        id: "g19q1",
+        stage: "Portfolio Diagnosis",
+        question: "PrimePackage's TSR of 12% versus sector average of 34% is the headline problem. Before recommending specific actions, how do you diagnose the root cause of the underperformance?",
+        context: "Five years of underperformance suggests a structural issue rather than a cyclical one. Your diagnosis here will determine whether the recommendation is tactical or truly transformative.",
+        options: [
+          {
+            id: "a",
+            text: "Decompose the TSR gap into its three components: organic revenue growth contribution, margin expansion or compression contribution, and multiple re-rating contribution. Then identify which component explains most of the 22pp TSR gap and why PrimePackage underperforms on that specific dimension.",
+            nextQuestionId: "g19q2a",
+            scoreImpact: 20,
+            feedback: "Correct analytical approach. TSR decomposition into growth, margin, and multiple components is the BCG methodology for portfolio performance diagnosis. It ensures the recommendation addresses the actual driver of underperformance rather than the most visible symptom.",
+          },
+          {
+            id: "b",
+            text: "Benchmark PrimePackage's marketing spend as a percentage of revenue against peers since underspending on marketing is the most common driver of CPG organic growth underperformance.",
+            nextQuestionId: "g19q2b",
+            scoreImpact: -5,
+            feedback: "Marketing spend is one potential driver but a single-hypothesis investigation before completing the TSR decomposition risks misdiagnosing the problem. 140 brands with diverse performance suggests a portfolio mix and resource allocation issue that a marketing spend benchmark alone cannot capture.",
+          },
+          {
+            id: "c",
+            text: "Interview the CEOs of the key category divisions to understand their perspective on why growth is underperforming before conducting any quantitative analysis.",
+            nextQuestionId: "g19q2b",
+            scoreImpact: -10,
+            feedback: "Category CEOs will diagnose problems in terms of factors outside their control — competitive environment, retailer dynamics, supply chain — rather than the portfolio composition and resource allocation decisions that drive the structural underperformance. Quantitative TSR decomposition must anchor the diagnosis before qualitative interviews.",
+          },
+        ],
+      },
+      {
+        id: "g19q2a",
+        stage: "TSR Decomposition",
+        question: "The TSR decomposition analysis is complete. Review the exhibit and identify the primary driver of the 22pp TSR underperformance.",
+        exhibit: {
+          type: "table",
+          title: "PrimePackage TSR Decomposition vs Peers",
+          data: `| Component                | PrimePackage | Peer Average | Gap   | Notes                      |
+|-------------------------|-------------|-------------|-------|----------------------------|
+| Revenue growth (organic)| 1.2%/yr     | 3.8%/yr     | -2.6pp| 5yr avg contribution        |
+| Margin expansion        | +0.3pp/yr   | +0.8pp/yr   | -0.5pp| Slower margin improvement   |
+| Multiple re-rating      | -1.2x       | +0.4x       | -1.6x | EV/EBITDA moved from 12x-10.8x vs peers 12x-12.4x |
+| TSR contribution        | 12%         | 34%         | -22pp |                            |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Multiple compression is the largest single driver — PrimePackage's EV/EBITDA fell from 12x to 10.8x while peers expanded from 12x to 12.4x. This 1.6x relative multiple decline on a $18B revenue base at 14% EBITDA margins represents approximately $4B in market cap destruction from multiple alone. The portfolio complexity and growth underperformance are causing investors to apply a structural conglomerate discount.",
+            nextQuestionId: "g19q3a",
+            scoreImpact: 20,
+            feedback: "Correct identification of multiple compression as the dominant driver. The $4B market cap destruction from multiple decline is the most important insight — it means that even if growth and margins improved, the portfolio discount would persist unless the underlying portfolio complexity is addressed. This drives the divestiture recommendation.",
+          },
+          {
+            id: "b",
+            text: "Organic growth underperformance at 2.6pp below peers is the primary driver — 1.2% versus 3.8% means PrimePackage is losing market share in its core categories and the revenue growth gap compounds into a large TSR difference over five years.",
+            nextQuestionId: "g19q3b",
+            scoreImpact: 5,
+            feedback: "Growth underperformance is a real contributor but the multiple compression of 1.6x relative to peers represents more total TSR impact than the growth gap alone. The multiple compression reflects investors' assessment of the portfolio quality and growth trajectory — it is the market's verdict on the entire strategy, not just the recent growth rate.",
+          },
+          {
+            id: "c",
+            text: "Margin expansion at only 0.3pp per year versus 0.8pp for peers is the primary driver — the 0.5pp annual gap compounds into the TSR underperformance and reflects operational inefficiency across the broad portfolio.",
+            nextQuestionId: "g19q3c",
+            scoreImpact: -5,
+            feedback: "Margin improvement lagging peers is a contributing factor but the 0.5pp annual gap is the smallest component of the three TSR drivers. Multiple compression at 1.6x relative re-rating is the largest driver and points to a portfolio strategy problem that cannot be solved by operational efficiency alone.",
+          },
+        ],
+      },
+      {
+        id: "g19q2b",
+        stage: "TSR Decomposition",
+        question: "The partner shares the TSR decomposition showing multiple compression is the largest driver — PrimePackage's EV/EBITDA fell from 12x to 10.8x while peers expanded to 12.4x. What does this tell you about the root cause?",
+        options: [
+          {
+            id: "a",
+            text: "Multiple compression on a $2.5B EBITDA base represents approximately $4B in market cap destruction from valuation de-rating alone. This is the conglomerate discount in action — investors apply lower multiples to diversified portfolios of weak brands than to focused portfolios of strong brands. Portfolio simplification is the primary solution.",
+            nextQuestionId: "g19q3a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Connecting the multiple compression to the conglomerate discount and identifying portfolio simplification as the solution correctly diagnoses both the cause and the treatment.",
+          },
+          {
+            id: "b",
+            text: "Multiple compression reflects investor concern about the category mix — PrimePackage has too much exposure to household products which trade at lower multiples than personal care. The solution is to divest household products and acquire more personal care.",
+            nextQuestionId: "g19q3b",
+            scoreImpact: 0,
+            feedback: "Category mix is partially relevant but the primary issue is portfolio breadth — 140 brands across multiple categories creates complexity and resource diffusion that investors penalize regardless of the specific category mix. Category rebalancing without brand count reduction addresses the symptom rather than the cause.",
+          },
+          {
+            id: "c",
+            text: "Multiple compression is a market sentiment issue that will self-correct as the broader CPG sector experiences multiple expansion. PrimePackage should focus on operational execution and let the market re-rate naturally.",
+            nextQuestionId: "g19q3c",
+            scoreImpact: -10,
+            feedback: "Peers experienced multiple expansion over the same five years — this is not a market sentiment issue affecting all CPG companies equally. PrimePackage's specific relative de-rating is company-specific and reflects the portfolio and strategy, not broad sector sentiment.",
+          },
+        ],
+      },
+      {
+        id: "g19q3a",
+        stage: "Portfolio Segmentation",
+        question: "Multiple compression is driven by portfolio complexity. You need to segment the 140 brands to identify which to keep, grow, fix, or divest. What segmentation framework do you use?",
+        options: [
+          {
+            id: "a",
+            text: "Segment on two dimensions: category growth rate (market tailwind) and brand competitive position (relative market share and margin). This creates four quadrants: high-growth strong-position brands to invest behind; high-growth weak-position brands to fix or divest; low-growth strong-position brands to harvest; low-growth weak-position brands to divest.",
+            nextQuestionId: "g19q4a",
+            scoreImpact: 20,
+            feedback: "This is the BCG two-dimensional portfolio framework applied to brand management. The growth-position matrix is the analytically correct tool for identifying divestiture candidates (low-growth, weak-position) and investment candidates (high-growth, strong-position) simultaneously.",
+          },
+          {
+            id: "b",
+            text: "Segment by revenue size — keep all brands above $100M in annual revenue and divest all brands below $100M as non-scale assets that consume management time without sufficient strategic contribution.",
+            nextQuestionId: "g19q4b",
+            scoreImpact: -5,
+            feedback: "Revenue size alone ignores growth rate and competitive position. Some small brands may be in high-growth categories with strong positions that warrant investment — a size-only cutoff would divest some of the best future-growth assets. The two-dimensional framework captures what a size cutoff misses.",
+          },
+          {
+            id: "c",
+            text: "Segment by EBITDA margin — keep all brands generating above 18% EBITDA margin and divest all brands below 12% margin, since margin is the most direct indicator of brand strength and pricing power.",
+            nextQuestionId: "g19q4c",
+            scoreImpact: -5,
+            feedback: "Current margin reflects the current level of investment in a brand, not just its inherent strength. A high-growth brand with a strong position may have temporarily lower margin due to investment spending. Margin-only segmentation would divest growing brands and keep declining ones with temporarily high margins.",
+          },
+        ],
+      },
+      {
+        id: "g19q3b",
+        stage: "Portfolio Segmentation",
+        question: "Your diagnosis has been suboptimal. The partner confirms multiple compression is driven by portfolio complexity — 140 brands creating a conglomerate discount. How do you identify which 35 brands to divest?",
+        options: [
+          {
+            id: "a",
+            text: "Use the BCG growth-position matrix: segment all 140 brands by category growth rate and relative competitive position. The low-growth, weak-position quadrant should contain the primary divestiture candidates — brands where neither market tailwind nor brand strength justifies the management attention.",
+            nextQuestionId: "g19q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The two-dimensional matrix correctly identifies divestiture candidates on strategic grounds rather than arbitrary size or margin thresholds.",
+          },
+          {
+            id: "b",
+            text: "Rank all 140 brands by five-year CAGR and divest the bottom 35 by growth rate since growth is the primary multiple driver and eliminating low-growth brands improves the portfolio growth profile most efficiently.",
+            nextQuestionId: "g19q4b",
+            scoreImpact: 0,
+            feedback: "Growth ranking is a partial solution but misses competitive position — a low-growth brand with dominant market share in a stable category may be highly profitable and valuable despite low growth. The two-dimensional framework provides a more complete assessment.",
+          },
+          {
+            id: "c",
+            text: "Ask the activist investor which brands they want divested since they have clearly done their own portfolio analysis and their list is probably close to the optimal divestiture set.",
+            nextQuestionId: "g19q4c",
+            scoreImpact: -15,
+            feedback: "Outsourcing the divestiture identification to the activist investor is an abdication of BCG's analytical responsibility. Activist investors have their own financial motivations that may not align perfectly with the optimal long-term portfolio strategy. The BCG analysis must be independent.",
+          },
+        ],
+      },
+      {
+        id: "g19q3c",
+        stage: "Portfolio Segmentation",
+        question: "Your TSR analysis was incomplete. The partner corrects: multiple compression is the largest driver and requires portfolio simplification. To identify which brands to divest, what information do you need?",
+        options: [
+          {
+            id: "a",
+            text: "Brand-level data on category growth rate, relative market share versus direct competitors, current EBITDA margin, and management time allocation. These four inputs enable the growth-position segmentation that identifies structurally weak versus structurally strong brands.",
+            nextQuestionId: "g19q4a",
+            scoreImpact: 10,
+            feedback: "Good identification of the required data. The growth-position matrix requires exactly these four inputs to segment the portfolio correctly.",
+          },
+          {
+            id: "b",
+            text: "Comparable transaction data for each category to determine what price PrimePackage could receive for each brand — divestiture should prioritize the brands with the highest achievable valuation to maximize proceeds.",
+            nextQuestionId: "g19q4b",
+            scoreImpact: -5,
+            feedback: "Divestiture should be based on strategic logic — which brands do not fit the portfolio and would be better owned by a more focused acquirer — not on which brands generate the highest proceeds. Highest-valuation divestitures may include strategically important brands that should be retained.",
+          },
+          {
+            id: "c",
+            text: "Employee satisfaction data by brand — brands with low employee engagement are likely underperforming and are the first candidates for divestiture.",
+            nextQuestionId: "g19q4c",
+            scoreImpact: -10,
+            feedback: "Employee satisfaction is an output of brand health and management attention — not an independent input for portfolio strategy. Low engagement may reflect management neglect of a non-core brand rather than an inherent quality problem. This is not a sound basis for divestiture selection.",
+          },
+        ],
+      },
+      {
+        id: "g19q4a",
+        stage: "Divestiture Program",
+        question: "The portfolio segmentation identifies 35 brands in the low-growth, weak-position quadrant generating $2.4B in revenue at 6% EBITDA margin. The CFO asks: what do we do with the divestiture proceeds?",
+        exhibit: {
+          type: "table",
+          title: "Portfolio Segmentation Summary",
+          data: `| Quadrant                       | Brand Count | Revenue | EBITDA Margin | Recommendation     |
+|-------------------------------|------------|---------|---------------|--------------------|
+| High growth, strong position  | 20          | $5.4B   | 22%           | Invest disproportionate|
+| High growth, weak position    | 18          | $2.8B   | 11%           | Fix or divest       |
+| Low growth, strong position   | 67          | $7.4B   | 16%           | Harvest cash        |
+| Low growth, weak position     | 35          | $2.4B   | 6%            | Divest              |
+| Total                         | 140         | $18.0B  | 14% avg       |                     |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Proceeds from the $2.4B revenue divestiture — estimated at $800M-1.2B assuming 0.5-0.6x revenue multiple for subscale brands — should be deployed two-thirds to disproportionate marketing investment behind the 20 high-growth, strong-position brands and one-third to a premium personal care bolt-on acquisition to add a growth category.",
+            nextQuestionId: "g19q5a",
+            scoreImpact: 20,
+            feedback: "Correct capital allocation. Two-thirds to existing winners and one-third to bolt-on acquisition is the BCG portfolio restructuring playbook. Concentrating marketing investment on the 20 high-growth strong-position brands — not spreading across 85 retained brands — is the key insight that drives TSR recovery.",
+          },
+          {
+            id: "b",
+            text: "Return all divestiture proceeds to shareholders through a special dividend or accelerated buyback program — this directly addresses the activist investor's concern and demonstrates capital discipline.",
+            nextQuestionId: "g19q5b",
+            scoreImpact: -5,
+            feedback: "Returning all proceeds eliminates the opportunity to invest in the portfolio's growth trajectory. If the problem is portfolio complexity and low growth, investing behind the winners is more value-creating than returning capital from divestitures that do not change the underlying organic growth problem.",
+          },
+          {
+            id: "c",
+            text: "Reinvest all proceeds in new product development across the remaining 105 brands to accelerate innovation and improve the portfolio growth rate through internal investment.",
+            nextQuestionId: "g19q5b",
+            scoreImpact: -10,
+            feedback: "Spreading innovation investment across 105 brands replicates the resource diffusion problem that created the original underperformance. Concentrated investment in the top 20 brands is the thesis — distributing across 105 brands dilutes the impact.",
+          },
+        ],
+      },
+      {
+        id: "g19q4b",
+        stage: "Divestiture Program",
+        question: "Your portfolio segmentation was based on revenue size alone. The partner shares that the 35 divestiture candidates are in the low-growth, weak-position quadrant. How does the capital allocation strategy change if the divested brands generate $2.4B in revenue at only 6% EBITDA margin?",
+        options: [
+          {
+            id: "a",
+            text: "The 6% EBITDA margin on divested brands versus 22% margin on the top-20 high-growth brands creates a margin accretion opportunity — divestiture immediately improves portfolio EBITDA margin toward 16-17% as the low-margin brands leave. Proceeds should fund disproportionate investment in the top-20 brands to compound this margin improvement through growth.",
+            nextQuestionId: "g19q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The margin accretion point is important — removing the 35 brands at 6% EBITDA immediately improves the portfolio average margin even before any operational changes. Reinvesting behind the 22% margin brands compounds this effect.",
+          },
+          {
+            id: "b",
+            text: "Return the proceeds to shareholders since the 6% EBITDA margin on divested brands confirms they are not worth reinvesting in and the capital is better returned than deployed into an already struggling portfolio.",
+            nextQuestionId: "g19q5b",
+            scoreImpact: -5,
+            feedback: "The issue is not the divested brands' quality but where the proceeds go. The top-20 brands at 22% EBITDA margin are excellent investment candidates — the capital should flow to those winners, not to shareholders.",
+          },
+          {
+            id: "c",
+            text: "Use the proceeds to acquire brands in categories PrimePackage does not currently operate in to further diversify the portfolio and reduce single-category concentration risk.",
+            nextQuestionId: "g19q5b",
+            scoreImpact: -10,
+            feedback: "Further diversification compounds the complexity problem that is already creating the conglomerate discount. The strategy should focus the portfolio, not diversify it further.",
+          },
+        ],
+      },
+      {
+        id: "g19q4c",
+        stage: "Divestiture Program",
+        question: "Your portfolio analysis has been incomplete or suboptimal. The partner gives you the correct divestiture list: 35 low-growth, weak-position brands generating $2.4B at 6% EBITDA margin. What is the financial impact of the divestiture program?",
+        options: [
+          {
+            id: "a",
+            text: "Divestiture impact: remove $2.4B revenue at 6% margin leaves $15.6B revenue at higher blended margin. Portfolio EBITDA margin improves from 14% to approximately 15.8% immediately through mix shift alone. Organic growth rate improves as the low-growth brands that dragged the average below peers are removed. Multiple re-rating begins as portfolio complexity reduces.",
+            nextQuestionId: "g19q5a",
+            scoreImpact: 10,
+            feedback: "Good quantification of the immediate divestiture impact. The three benefits — margin improvement through mix shift, growth rate improvement through mix shift, and multiple re-rating from simplification — are all present and directionally correct.",
+          },
+          {
+            id: "b",
+            text: "The divestiture program will reduce revenue by 13% which will be viewed negatively by investors as a shrinking company and will likely compress the multiple further rather than expand it.",
+            nextQuestionId: "g19q5b",
+            scoreImpact: -10,
+            feedback: "Portfolio optimization divestitures of low-margin, low-growth assets are consistently viewed positively by CPG investors as evidence of management discipline. Nestle, Unilever, and P&G have all expanded multiples through divestiture programs despite revenue reduction.",
+          },
+          {
+            id: "c",
+            text: "The financial impact cannot be quantified without knowing the specific brands being divested and their individual contribution margins since portfolio mix effects are highly brand-specific.",
+            nextQuestionId: "g19q5b",
+            scoreImpact: -5,
+            feedback: "The quadrant-level data — $2.4B revenue at 6% EBITDA margin — is sufficient to estimate the portfolio impact. Insisting on brand-level detail before performing an aggregate analysis delays the strategic recommendation without proportional additional precision.",
+          },
+        ],
+      },
+      {
+        id: "g19q5a",
+        stage: "Organizational Design",
+        question: "The CFO asks: what organizational change does the portfolio restructuring require and why does organizational structure matter for TSR recovery?",
+        options: [
+          {
+            id: "a",
+            text: "The current category-based P&L structure — three CEOs running personal care, household products, and food — obscures individual brand performance and enables cross-subsidization where strong brands fund weak ones invisibly. Shifting to a brand-based P&L structure with explicit resource allocation decisions creates the accountability needed for the divestiture program to deliver sustained improvement.",
+            nextQuestionId: "g19q6a",
+            scoreImpact: 20,
+            feedback: "Correct organizational design insight. The category-based P&L structure is exactly what enables the conglomerate discount to persist — brand performance is invisible within category results, preventing the resource concentration discipline that the strategy requires. Brand-based P&L is the organizational expression of the portfolio focus strategy.",
+          },
+          {
+            id: "b",
+            text: "The organizational change required is primarily headcount reduction — 140 brands require 140 brand teams and reducing to 105 brands creates a natural opportunity to reduce overhead proportionally.",
+            nextQuestionId: "g19q6b",
+            scoreImpact: -5,
+            feedback: "Overhead reduction is a secondary benefit of brand reduction. The primary organizational change required is the P&L structure — moving from category to brand accountability. This structural change is more impactful for TSR than the headcount reduction from fewer brands.",
+          },
+          {
+            id: "c",
+            text: "Organizational structure should not change during a divestiture program — leadership attention should be focused on executing the divestitures rather than simultaneously redesigning the organization.",
+            nextQuestionId: "g19q6b",
+            scoreImpact: -10,
+            feedback: "Divestiture without organizational redesign partially defeats the purpose — if the category structure remains, the resource diffusion problem persists for the remaining 105 brands. The organizational change and the divestiture program must be concurrent to create the accountability and resource concentration that drives TSR improvement.",
+          },
+        ],
+      },
+      {
+        id: "g19q5b",
+        stage: "Organizational Design",
+        question: "Your capital allocation recommendation has been suboptimal. The partner gives you the correct allocation: two-thirds to top-20 brand investment, one-third to bolt-on acquisition. Now design the organizational structure to execute this strategy.",
+        options: [
+          {
+            id: "a",
+            text: "Shift from the current three-category P&L structure to a brand-based P&L where each retained brand has its own P&L accountability, explicit resource allocation, and performance reporting. The top-20 high-growth brands receive dedicated general management. Smaller brands are managed in clusters with shared services.",
+            nextQuestionId: "g19q6a",
+            scoreImpact: 15,
+            feedback: "Correct structural design. Brand-based P&L creates the performance visibility and resource allocation accountability that the category structure obscures. Tiering management attention — dedicated GMs for top-20, cluster management for others — is efficient and proportionate.",
+          },
+          {
+            id: "b",
+            text: "Maintain the category structure but add brand-level reporting dashboards that give leadership visibility into individual brand performance within each category P&L.",
+            nextQuestionId: "g19q6b",
+            scoreImpact: -5,
+            feedback: "Dashboards within a category structure provide visibility but not accountability. The category CEO can still cross-subsidize between brands and make resource allocation decisions that obscure poor brand performance. P&L structure determines accountability, not reporting dashboards.",
+          },
+          {
+            id: "c",
+            text: "Create a fourth structure — a global growth unit that separately manages the top-20 high-growth brands outside the three category divisions to give them independent strategic attention.",
+            nextQuestionId: "g19q6b",
+            scoreImpact: 0,
+            feedback: "A fourth parallel structure creates organizational complexity without solving the root problem for the remaining brands. The entire P&L structure needs to shift to brand-based accountability, not just create a separate unit for the top performers.",
+          },
+        ],
+      },
+      {
+        id: "g19q6a",
+        stage: "Financial Impact",
+        question: "The CEO asks: model the financial impact of the full restructuring program — what organic growth, EBITDA margin, and TSR should we target?",
+        exhibit: {
+          type: "table",
+          title: "Restructuring Financial Impact Model",
+          data: `| Metric               | Current  | Post-Divest | Post-Invest | Target Year 3 |
+|---------------------|----------|------------|-------------|---------------|
+| Revenue              | $18.0B   | $15.6B     | $16.2B      | $17.1B        |
+| Organic growth       | 1.2%     | 2.1%       | 2.8%        | 3.1%          |
+| EBITDA margin        | 14.0%    | 15.8%      | 16.5%       | 17.5%         |
+| EV/EBITDA multiple   | 10.8x    | 11.5x      | 12.0x       | 12.8x         |
+| Implied market cap   | $27.2B   | $28.5B     | $32.3B      | $38.3B        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The three-year restructuring program improves organic growth from 1.2% to 3.1% through portfolio mix improvement, EBITDA margin from 14% to 17.5% through divestiture mix shift and concentrated investment returns, and the multiple from 10.8x to 12.8x as the conglomerate discount compresses. Combined these drive implied market cap from $27.2B to $38.3B — a 41% increase representing 12% annualized TSR on top of dividends, closing the gap to the 34% sector average.",
+            nextQuestionId: "g19q7a",
+            scoreImpact: 20,
+            feedback: "Complete and quantified financial impact summary. The market cap improvement of $11.1B from the restructuring program is the number that will matter most to the activist investor and the board. The 41% improvement in implied market cap tells the strategic story better than any individual metric.",
+          },
+          {
+            id: "b",
+            text: "The revenue decline from $18B to $16.2B after divestiture and bolt-on acquisition is the headline risk — investors may react negatively to a company that is shrinking revenue even if margin and multiple improve.",
+            nextQuestionId: "g19q7b",
+            scoreImpact: -5,
+            feedback: "The model shows revenue recovering to $17.1B by year three through concentrated investment behind the top brands. More importantly, the $11.1B market cap increase is the investor communication story — revenue quality improvement through portfolio focus is consistently rewarded by CPG investors.",
+          },
+          {
+            id: "c",
+            text: "The financial model is too optimistic — the multiple re-rating from 10.8x to 12.8x assumes investors will respond positively to the restructuring in a predictable way that market dynamics cannot guarantee.",
+            nextQuestionId: "g19q7b",
+            scoreImpact: -5,
+            feedback: "Multiple re-rating assumptions should always be sensitized, but the 12.8x target is below the current peer average of 12.4x expanded from 12x — it is not an aggressive assumption. The model is conservative relative to what focused CPG portfolios have achieved in comparable restructurings.",
+          },
+        ],
+      },
+      {
+        id: "g19q6b",
+        stage: "Financial Impact",
+        question: "Your organizational design or capital allocation has been suboptimal. The partner gives you the financial impact model showing implied market cap growing from $27.2B to $38.3B over three years. What is the recommendation narrative?",
+        options: [
+          {
+            id: "a",
+            text: "The $11.1B increase in implied market cap — a 41% improvement — from divesting 35 brands, concentrating investment behind the top-20, and compressing the conglomerate discount is the compelling board narrative. This is not a cost-cutting story. It is a capital reallocation story that improves growth, margin, and multiple simultaneously.",
+            nextQuestionId: "g19q7a",
+            scoreImpact: 15,
+            feedback: "Excellent narrative framing. Positioning the recommendation as capital reallocation rather than cost-cutting is strategically correct and more compelling to the board and investors. The $11.1B market cap improvement quantifies the total value creation story.",
+          },
+          {
+            id: "b",
+            text: "Present the recommendation as a response to activist investor pressure — this gives the board political cover to approve the program and satisfies the immediate external stakeholder demand.",
+            nextQuestionId: "g19q7b",
+            scoreImpact: -10,
+            feedback: "Framing a strategic recommendation as a response to activist pressure reduces management credibility and suggests the company is being managed reactively rather than proactively. The recommendation should be presented on its strategic and financial merits, not as activist appeasement.",
+          },
+          {
+            id: "c",
+            text: "Lead with the revenue reduction risk and acknowledge upfront that the divestiture program shrinks the company before it can grow — positioning the risk first demonstrates transparency that the board will appreciate.",
+            nextQuestionId: "g19q7b",
+            scoreImpact: -5,
+            feedback: "Leading with the risk before the opportunity is a poor narrative structure for a board recommendation. Present the $11.1B market cap opportunity, then address the revenue transition risk as a managed and temporary tradeoff. The opportunity should anchor the recommendation.",
+          },
+        ],
+      },
+      {
+        id: "g19q7a",
+        stage: "Final Recommendation",
+        question: "The board asks for the complete restructuring recommendation: specific actions, financial targets, and implementation timeline.",
+        options: [
+          {
+            id: "a",
+            text: "Three actions: divest 35 low-growth, weak-position brands by year one for estimated proceeds of $1B; concentrate two-thirds of proceeds in disproportionate marketing investment behind the top-20 high-growth brands and one-third in a premium personal care bolt-on; shift to brand-based P&L structure by month six. Targets: organic growth 3.1%, EBITDA margin 17.5%, implied market cap $38.3B within three years.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Complete and specific recommendation. Three actions, specific financial targets, and a three-year timeline. The board has what it needs to approve the program and manage the activist investor. The BCG partner says: this is the presentation.",
+          },
+          {
+            id: "b",
+            text: "Recommend the board conduct a strategic review process over the next six months to evaluate all options including a full company sale, spin-off, and portfolio restructuring before committing to the divestiture program.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "A strategic review process when 12 weeks of BCG analysis have been completed and a clear recommendation exists delays action and signals indecision to the activist investor. The recommendation should be made with the analysis completed.",
+          },
+          {
+            id: "c",
+            text: "Recommend accepting the activist investor's proposal for a spin-off of the household products division since this is faster to execute than a brand-by-brand divestiture program and addresses the conglomerate discount more directly.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "A division spin-off is an alternative path to the same goal — reducing portfolio complexity and the conglomerate discount. It may be faster but is less surgical than the brand-based divestiture program and may separate strong household brands from the portfolio unnecessarily. The recommendation should present both as options with a clear preferred path.",
+          },
+        ],
+      },
+      {
+        id: "g19q7b",
+        stage: "Final Recommendation",
+        question: "Your analysis has had gaps. The partner gives you one final chance before the board presentation. What is the complete recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "Divest 35 low-growth weak-position brands by year one for approximately $1B in proceeds. Allocate two-thirds to disproportionate investment behind the top-20 growth brands and one-third to a premium bolt-on acquisition. Shift to brand-based P&L by month six. Three-year financial targets: organic growth 3.1%, EBITDA 17.5%, market cap $38.3B — a 41% improvement from today's $27.2B.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery. The complete recommendation is present — divestiture program, capital allocation, organizational change, and financial targets. The partner says: present it with confidence.",
+          },
+          {
+            id: "b",
+            text: "Recommend a two-year pause to improve operational execution before undertaking the portfolio restructuring, since operational improvement alone could recover margin to the 17.5% target without the disruption of a divestiture program.",
+            nextQuestionId: "end",
+            scoreImpact: -10,
+            feedback: "Five years of underperformance suggests that operational improvement within the current portfolio structure has already been attempted and is insufficient. The TSR decomposition shows multiple compression is the largest driver — no operational improvement fixes a conglomerate discount without portfolio simplification.",
+          },
+          {
+            id: "c",
+            text: "Divest all 35 divestiture candidates and return all proceeds to shareholders through buybacks to directly address the activist investor's demand for capital return.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "Returning all proceeds without reinvesting in the portfolio's growth trajectory addresses the near-term capital return demand but does not resolve the organic growth underperformance that drives the structural multiple discount. The growth investment is what converts the divestiture from a financial transaction into a strategic transformation.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G20: MCKINSEY — PRIVATE EQUITY EXIT
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g20",
+    title: "ApexLogistics: Pre-Exit Value Maximization",
+    type: "merger_acquisition",
+    difficulty: "advanced",
+    firm: "mckinsey",
+    estimatedMinutes: 40,
+    overview: "A PE-backed logistics company is preparing for an exit in 18-24 months. McKinsey has been engaged to identify the value maximization actions that will command the highest exit multiple.",
+    clientBackground: "ApexLogistics is a PE-backed last-mile logistics company with $1.2B in annual revenue growing at 18% and a 9% EBITDA margin. The PE sponsor acquired the company four years ago at $800M (0.67x revenue). The current market for logistics companies has strategic buyers paying 1.8-2.2x revenue for high-growth platforms with strong technology differentiation. Apex has proprietary route optimization software but customer NPS of 52 versus 68 for top logistics competitors. The sponsor wants to maximize exit value in 18-24 months.",
+    yourRole: "You are a McKinsey project leader on the operations and private equity practice. You have 10 weeks to deliver an exit readiness assessment and value maximization plan.",
+    startQuestionId: "g20q1",
+    finalRecommendationPrompt: "What are the three highest-priority actions to maximize exit value, and what is the realistic exit multiple range at 24 months if these actions are taken?",
+    sampleRecommendation: "Three priority actions: first, NPS improvement program targeting 65+ from 52 current — customer satisfaction is the primary due diligence risk factor and the gap to peers of 16 points will be flagged in every buyer process. Closing this gap adds 0.2-0.3x revenue to the exit multiple. Second, technology narrative development converting the route optimization software into a documented and monetizable SaaS asset — buyers pay 2.2x for tech platforms versus 1.8x for pure-play logistics operators, a 0.4x revenue multiple gap. Third, EBITDA margin expansion from 9% to 12% through automation investment — buyers model margin trajectory forward, not just current margins. Together these three actions should deliver an exit multiple of 2.0-2.3x revenue versus 1.6-1.8x without action — an additional $240-600M in exit proceeds on $1.2B current revenue.",
+    idealRecommendation: "Three actions: NPS improvement to 65+ (adds 0.2-0.3x exit multiple), technology narrative development as SaaS asset (adds 0.4x), and EBITDA expansion from 9% to 12% (adds 0.2-0.3x). Total multiple expansion from 1.6-1.8x without action to 2.0-2.3x with action — worth $240-600M in incremental exit proceeds.",
+    keyTakeaways: [
+      "PE exit value maximization is about multiple expansion not just EBITDA improvement — the multiple determines most of the exit value in a high-growth company",
+      "Technology narrative development can command a premium multiple even for companies that are operationally technology-enabled rather than pure SaaS businesses",
+      "NPS is the single metric buyers scrutinize most in due diligence because it predicts future growth and churn better than any other single customer metric",
+      "The most valuable exit preparation actions take 18-24 months to implement — starting the exit preparation process well before the exit window is what separates premium outcomes from average ones",
+    ],
+    questions: [
+      {
+        id: "g20q1",
+        stage: "Exit Readiness Assessment",
+        question: "The PE sponsor wants to maximize exit value in 18-24 months. Before recommending specific actions, how do you frame the value maximization opportunity?",
+        context: "Exit value is determined by EBITDA times exit multiple plus any valuation-specific adjustments. Understanding which component has the most leverage is the starting point for all exit preparation work.",
+        options: [
+          {
+            id: "a",
+            text: "Frame exit value as three levers in order of leverage: (1) Multiple expansion — the gap between Apex's likely current multiple and the strategic buyer maximum of 2.2x represents the largest incremental opportunity; (2) EBITDA growth — 18 months of 18% revenue growth at improving margins compounds significantly; (3) Narrative positioning — tech versus pure logistics framing changes both the buyer set and the multiple each buyer applies.",
+            nextQuestionId: "g20q2a",
+            scoreImpact: 20,
+            feedback: "Correct framing with the right priority ordering. Multiple expansion has more absolute dollar leverage on a $1.2B revenue business than EBITDA improvement at constant multiple. Identifying narrative positioning as a separate lever — not just a subset of operations — is the insight that separates sophisticated PE exit advisors from generic ones.",
+          },
+          {
+            id: "b",
+            text: "Focus the exit preparation on maximizing EBITDA margin improvement since buyers pay multiples on EBITDA and increasing margin from 9% to 14% over 18 months would directly increase the EBITDA base against which any multiple is applied.",
+            nextQuestionId: "g20q2b",
+            scoreImpact: -5,
+            feedback: "EBITDA improvement is important but prioritizing it over multiple expansion misses the larger opportunity. On $1.2B in revenue growing at 18%, the difference between a 1.8x and a 2.2x revenue multiple is $480M in exit value — larger than most achievable EBITDA margin improvements in 18 months.",
+          },
+          {
+            id: "c",
+            text: "Recommend the sponsor start the exit process immediately rather than in 18-24 months since current market conditions for logistics assets are favorable and waiting creates market timing risk.",
+            nextQuestionId: "g20q2b",
+            scoreImpact: -10,
+            feedback: "The sponsor asked McKinsey how to maximize exit value in 18-24 months — recommending an immediate exit before the value maximization work is done directly contradicts the engagement objective. Exiting now at an unprepared multiple leaves the most value creation on the table.",
+          },
+        ],
+      },
+      {
+        id: "g20q2a",
+        stage: "Due Diligence Risk Assessment",
+        question: "You have identified multiple expansion as the primary lever. Before designing improvement programs, what are the specific factors in Apex's profile that will suppress the exit multiple if not addressed?",
+        exhibit: {
+          type: "table",
+          title: "ApexLogistics vs Strategic Buyer Acquisition Criteria",
+          data: `| Criteria                    | ApexLogistics | Buyer Threshold | Gap       |
+|----------------------------|--------------|----------------|-----------|
+| Revenue growth rate         | 18%          | 15%+           | Exceeds   |
+| EBITDA margin               | 9%           | 12%+           | -3pp      |
+| Customer NPS                | 52           | 65+            | -13 pts   |
+| Customer concentration      | Top 3 = 42%  | Under 30%      | High risk |
+| Technology differentiation  | Proprietary  | Documented SaaS| Narrative |
+| Geographic coverage         | 22 markets   | 30+ markets    | Below     |
+| Same-day capability         | 68% of mkts  | 85%+           | -17pp     |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Three items will suppress the multiple materially: NPS at 52 versus the 65 threshold will be flagged in every buyer due diligence as a customer churn risk; customer concentration at 42% in the top three customers is a covenant-level risk for acquisition financing; and EBITDA at 9% versus 12% threshold means many financial buyers will not meet return hurdles. These three must be addressed before the exit.",
+            nextQuestionId: "g20q3a",
+            scoreImpact: 20,
+            feedback: "Correct identification of the three deal-breaker or discount-creating issues. NPS and customer concentration are the two most likely DD findings to create a buyer discount or price chip — they are both objective, visible, and commonly flagged in logistics acquisitions.",
+          },
+          {
+            id: "b",
+            text: "Geographic coverage at 22 versus 30 markets and same-day capability at 68% versus 85% threshold are the primary gaps since logistics strategic buyers value network density most highly in their acquisition criteria.",
+            nextQuestionId: "g20q3b",
+            scoreImpact: -5,
+            feedback: "Network gaps are real but take 18+ months to meaningfully close through organic expansion and require significant capital. NPS and customer concentration are more immediately addressable and create more acute due diligence risk — buyers model NPS-driven churn into revenue forecasts which directly impacts enterprise value.",
+          },
+          {
+            id: "c",
+            text: "Technology differentiation is the only gap that truly matters for multiple — strategic buyers pay 2.2x versus 1.8x for technology platforms and the documentation gap between having proprietary software and having a documented SaaS narrative is addressable in 18 months.",
+            nextQuestionId: "g20q3a",
+            scoreImpact: 5,
+            feedback: "Technology narrative is a real opportunity but it is not the only gap that matters. NPS at 52 and customer concentration at 42% are issues that actively suppress offers in due diligence — they must be addressed alongside the technology narrative for the full multiple expansion thesis to work.",
+          },
+        ],
+      },
+      {
+        id: "g20q2b",
+        stage: "Due Diligence Risk Assessment",
+        question: "The partner asks: buyers scrutinize three to five specific factors in logistics due diligence that determine the exit multiple. What are they for ApexLogistics?",
+        options: [
+          {
+            id: "a",
+            text: "Five buyer due diligence factors in priority order: NPS as a proxy for churn risk and growth quality; EBITDA margin trajectory as proof of operating leverage; customer concentration as financing risk; technology moat defensibility; and same-day and geographic coverage as network quality.",
+            nextQuestionId: "g20q3a",
+            scoreImpact: 15,
+            feedback: "Complete due diligence factor list in the right priority order. NPS leading is correct — it is the metric buyers use to model forward churn into their DCF. EBITDA trajectory second because buyers care about where margins are going, not just where they are today.",
+          },
+          {
+            id: "b",
+            text: "The primary due diligence factor is EBITDA multiple coverage — buyers need to see that the EBITDA can service acquisition debt at typical leverage ratios, and Apex at 9% margin may create covenant issues.",
+            nextQuestionId: "g20q3b",
+            scoreImpact: 0,
+            feedback: "Debt service coverage is relevant for financial buyers but strategic buyers like Amazon Logistics, FedEx, or UPS do not primarily underwrite logistics acquisitions on debt capacity. For strategic buyers, NPS, growth quality, and technology moat are more important valuation drivers.",
+          },
+          {
+            id: "c",
+            text: "Driver retention and fleet asset age are the two due diligence factors specific to last-mile logistics that most commonly create buyer discounts and require proactive pre-positioning.",
+            nextQuestionId: "g20q3b",
+            scoreImpact: -5,
+            feedback: "Driver retention and fleet age are operational factors that matter but are less impactful on the exit multiple than NPS, EBITDA margin, and customer concentration. These operational factors become price adjustment items rather than multiple determinants.",
+          },
+        ],
+      },
+      {
+        id: "g20q3a",
+        stage: "NPS Improvement Program",
+        question: "NPS at 52 versus 65 buyer threshold is a primary due diligence risk. Design the NPS improvement program. What are the specific drivers of the 13-point gap?",
+        exhibit: {
+          type: "table",
+          title: "ApexLogistics NPS Driver Analysis",
+          data: `| Driver                          | NPS Impact | Root Cause                     | Fix Complexity |
+|--------------------------------|------------|-------------------------------|----------------|
+| On-time delivery performance    | -6 pts     | Route optimization underused  | Medium         |
+| Communication on delays         | -4 pts     | No proactive notification     | Low            |
+| Claims resolution speed         | -3 pts     | Manual process, 8 day avg     | Low            |
+| Driver professionalism          | -2 pts     | Training inconsistency        | Medium         |
+| Technology integration quality  | +2 pts     | Proprietary app is best-in-cls| Positive       |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Prioritize the three highest-impact, lower-complexity drivers: proactive delay notification system closes the 4-point communication gap in 90 days; claims resolution digitization closes the 3-point claims gap in 120 days; and on-time delivery improvement through full deployment of the existing route optimization software closes 4 of the 6 on-time points in 12 months. Together these 11 points of improvement bring NPS to 63 — near the 65 threshold.",
+            nextQuestionId: "g20q4a",
+            scoreImpact: 20,
+            feedback: "Excellent prioritization. Using the root cause data to sequence fixes by impact per implementation complexity is exactly right. The key insight is that the route optimization software already exists but is underused — full deployment is not a new investment but a utilization improvement.",
+          },
+          {
+            id: "b",
+            text: "Hire a Chief Customer Officer immediately since NPS improvement requires sustained cultural change that technology fixes alone cannot deliver and executive accountability is the primary driver of NPS improvement programs.",
+            nextQuestionId: "g20q4b",
+            scoreImpact: -5,
+            feedback: "Hiring a CCO is a governance action that may help culture long-term but does not address the specific operational drivers identified in the analysis. A CCO hire does not fix the proactive notification gap, the claims resolution process, or the route optimization utilization in an 18-month window.",
+          },
+          {
+            id: "c",
+            text: "Launch an NPS survey redesign to improve how the question is asked and measured — if the measurement methodology is improved, the score may increase without requiring operational changes.",
+            nextQuestionId: "g20q4b",
+            scoreImpact: -15,
+            feedback: "Manipulating the measurement methodology to improve the score without improving the underlying customer experience is not a legitimate exit preparation action. Sophisticated buyers conduct their own customer interviews during due diligence and will identify discrepancies between reported NPS and actual customer sentiment.",
+          },
+        ],
+      },
+      {
+        id: "g20q3b",
+        stage: "NPS Improvement Program",
+        question: "The partner gives you the NPS driver analysis. The top three gaps are on-time delivery, delay communication, and claims resolution. What is the 18-month NPS improvement roadmap?",
+        options: [
+          {
+            id: "a",
+            text: "18-month roadmap: months 1-3 deploy proactive delay notification for immediate 4-point communication improvement; months 1-6 digitize claims resolution for 3-point improvement; months 3-18 achieve full route optimization deployment for 4-5 point on-time improvement. Total NPS improvement of 11-12 points bringing score to 63-64 — near the 65 threshold.",
+            nextQuestionId: "g20q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Sequenced roadmap with specific timeline, specific NPS impact per initiative, and a total that approaches the threshold. The 18-month horizon is tight but achievable with the right implementation focus.",
+          },
+          {
+            id: "b",
+            text: "Focus exclusively on driver professionalism since it is the most differentiated lever — commodity logistics companies can replicate technology but exceptional driver professionalism creates a customer experience moat that buyers will pay a premium for.",
+            nextQuestionId: "g20q4b",
+            scoreImpact: -10,
+            feedback: "Driver professionalism is a 2-point NPS impact — the smallest individual driver. Focusing on the smallest driver while ignoring the 6-point on-time gap and 4-point communication gap is poor prioritization.",
+          },
+          {
+            id: "c",
+            text: "Accept the 52 NPS as a market condition rather than a company-specific problem and pre-position in due diligence by showing that industry-wide NPS levels in logistics have declined due to driver shortages and volume pressures.",
+            nextQuestionId: "g20q4b",
+            scoreImpact: -10,
+            feedback: "Industry-wide context will be challenged by buyers who see competitors at 68 NPS. If industry NPS had declined broadly, the gap to peers would not be 13-16 points. This argument will not hold up in due diligence.",
+          },
+        ],
+      },
+      {
+        id: "g20q4a",
+        stage: "Technology Narrative",
+        question: "ApexLogistics has proprietary route optimization software. The exit multiple difference between a technology platform and a pure-play logistics operator is 0.4x revenue. How do you develop the technology narrative?",
+        options: [
+          {
+            id: "a",
+            text: "Four elements of a compelling technology narrative: document the software as a standalone asset with its own P&L showing license fee revenue or avoided cost per route; build a third-party validation dataset showing route efficiency improvement versus non-Apex routes; develop a SaaS-adjacent commercial model where the software is licensed to third-party fleets; and create a technology due diligence data room with IP documentation, architecture diagrams, and API documentation.",
+            nextQuestionId: "g20q5a",
+            scoreImpact: 20,
+            feedback: "Complete technology narrative development plan. The third-party licensing element is particularly important — even generating $5-10M in external license revenue transforms the narrative from internal tool to commercial software platform, meaningfully shifting buyer categorization and the multiple applied.",
+          },
+          {
+            id: "b",
+            text: "Hire a technology investment banker who specializes in SaaS companies to present ApexLogistics as a technology company rather than a logistics company and target technology-focused buyers who pay higher multiples.",
+            nextQuestionId: "g20q5b",
+            scoreImpact: -5,
+            feedback: "Technology banker positioning without underlying technology commercial evidence is not persuasive in due diligence. Buyers will conduct technical due diligence on the software itself — the narrative must be supported by commercial reality, not just investment banking framing.",
+          },
+          {
+            id: "c",
+            text: "Rebrand ApexLogistics as ApexTech to signal the technology-forward positioning to potential acquirers and reduce the association with traditional logistics companies that trade at lower multiples.",
+            nextQuestionId: "g20q5b",
+            scoreImpact: -10,
+            feedback: "Rebranding without substance is a superficial action that sophisticated buyers immediately look through. A company with $1.2B in logistics revenue and a fleet of drivers does not become a technology company through renaming. The substance of the technology narrative — commercial evidence, IP documentation — must exist before the presentation.",
+          },
+        ],
+      },
+      {
+        id: "g20q4b",
+        stage: "Technology Narrative",
+        question: "The partner confirms the technology narrative is worth 0.4x in the exit multiple. How specifically does Apex convert proprietary software into a documented SaaS-adjacent asset?",
+        options: [
+          {
+            id: "a",
+            text: "Three steps: document the software's economic contribution through A/B testing showing route cost improvement versus non-optimized routes; launch a limited external licensing pilot to two to three regional third-party carriers at $50K per year to establish commercial precedent; and build IP documentation including patents filed and architecture documentation for the technology due diligence data room.",
+            nextQuestionId: "g20q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. A/B testing documentation gives buyers proof of ROI. External licensing pilot — even at small scale — establishes commercial evidence. IP documentation is table stakes for technology buyer due diligence. All three are achievable in 18 months.",
+          },
+          {
+            id: "b",
+            text: "File patents on the route optimization algorithm immediately and present the patent portfolio as the primary IP asset to sophisticated technology buyers who value IP protection highly.",
+            nextQuestionId: "g20q5b",
+            scoreImpact: 0,
+            feedback: "Patent filing is a legitimate IP protection action but patents alone do not command a premium exit multiple. Buyers want commercial evidence that the technology creates economic value — patents protect that value but do not substitute for demonstrating that the value exists.",
+          },
+          {
+            id: "c",
+            text: "Build a consumer-facing mobile app using the route optimization technology to demonstrate direct-to-consumer technology capability that will attract technology-focused strategic buyers.",
+            nextQuestionId: "g20q5b",
+            scoreImpact: -5,
+            feedback: "A B2C consumer app is a significant development investment with 12-18 month build time that would not generate meaningful revenue or users within the exit window. The technology narrative should be built on the existing B2B software value, not a new consumer product.",
+          },
+        ],
+      },
+      {
+        id: "g20q5a",
+        stage: "EBITDA Expansion",
+        question: "EBITDA at 9% versus 12% buyer threshold is the third gap. How do you close 3pp of EBITDA margin in 18 months without compromising the growth and NPS improvement programs?",
+        exhibit: {
+          type: "table",
+          title: "EBITDA Improvement Opportunity Analysis",
+          data: `| Initiative                    | Annual Saving | Timeline  | NPS Impact  |
+|------------------------------|--------------|-----------|-------------|
+| Last-mile route automation    | $28M (2.3pp) | 12 months | Positive    |
+| Sort center labor automation  | $18M (1.5pp) | 15 months | Neutral     |
+| Fuel management optimization  | $12M (1.0pp) | 6 months  | Neutral     |
+| Customer portal self-service  | $8M  (0.7pp) | 9 months  | Positive    |
+| Driver incentive restructuring| $6M  (0.5pp) | 3 months  | Uncertain   |
+| Total available               | $72M (6.0pp) |           |             |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Prioritize the four initiatives with neutral or positive NPS impact: fuel management optimization in 6 months (1.0pp), customer portal in 9 months (0.7pp), route automation in 12 months (2.3pp). These three together deliver 4.0pp of margin improvement to 13% EBITDA while avoiding the driver incentive restructuring that carries NPS risk. Exceeds the 12% threshold without compromising the NPS program.",
+            nextQuestionId: "g20q6a",
+            scoreImpact: 20,
+            feedback: "Excellent integrated prioritization. Explicitly filtering out the driver incentive restructuring due to NPS risk shows that you are optimizing across multiple objectives simultaneously — not treating each program in isolation. 4.0pp improvement to 13% EBITDA exceeds the 12% threshold.",
+          },
+          {
+            id: "b",
+            text: "Execute all five initiatives simultaneously to maximize total EBITDA improvement and reach 15% margin — buyers will value the highest achievable margin at exit and parallel execution minimizes the timeline.",
+            nextQuestionId: "g20q6b",
+            scoreImpact: -5,
+            feedback: "Driver incentive restructuring with uncertain NPS impact should not be executed during an NPS improvement program — a negative NPS consequence would undermine the 13-point gap closure that is the primary exit value maximization initiative.",
+          },
+          {
+            id: "c",
+            text: "Focus exclusively on fuel management optimization since at 1.0pp of margin improvement for only 6 months of implementation it has the highest ROIC and can be completed well before the exit process begins.",
+            nextQuestionId: "g20q6b",
+            scoreImpact: -5,
+            feedback: "Fuel optimization alone closes only 1.0pp of the 3pp margin gap. Exiting at 10% EBITDA margin still falls short of the 12% buyer threshold and leaves both the sort center and route automation savings on the table.",
+          },
+        ],
+      },
+      {
+        id: "g20q5b",
+        stage: "EBITDA Expansion",
+        question: "The technology narrative work has been suboptimal. The partner confirms three specific EBITDA initiatives avoid NPS risk: fuel management, customer portal, and route automation. What is the combined margin improvement?",
+        options: [
+          {
+            id: "a",
+            text: "Three initiatives: fuel management at 1.0pp in 6 months, customer portal at 0.7pp in 9 months, route automation at 2.3pp in 12 months. Total 4.0pp of improvement over 12 months bringing EBITDA margin from 9% to 13% — exceeding the 12% buyer threshold by 1pp and improving the EBITDA base for multiple application.",
+            nextQuestionId: "g20q6a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Correct identification of the three NPS-safe initiatives with specific timing and margin impact. The 13% outcome exceeds the buyer threshold and improves the EBITDA base — both important for exit multiple and absolute EBITDA.",
+          },
+          {
+            id: "b",
+            text: "Include driver incentive restructuring for an additional 0.5pp to reach 13.5% margin — the NPS risk is uncertain and the additional margin improvement justifies accepting some potential NPS impact.",
+            nextQuestionId: "g20q6b",
+            scoreImpact: -5,
+            feedback: "Uncertain NPS risk during an NPS improvement program targeting 13 points of gap closure is not an acceptable tradeoff for 0.5pp of margin. The cost of failing to reach the 65 NPS threshold is 0.2-0.3x on the exit multiple — far greater than the value of 0.5pp margin improvement.",
+          },
+          {
+            id: "c",
+            text: "The 4.0pp margin improvement should be communicated as a pipeline of efficiency investments that will continue post-acquisition, creating additional upside for the buyer rather than being captured in the pre-exit period.",
+            nextQuestionId: "g20q6b",
+            scoreImpact: -10,
+            feedback: "Leaving efficiency improvements as buyer upside rather than capturing them pre-exit reduces the exit multiple for the seller. Buyers pay multiples on demonstrated performance, not promised performance — delivering the margin improvement pre-exit is worth significantly more than promising it post-exit.",
+          },
+        ],
+      },
+      {
+        id: "g20q6a",
+        stage: "Exit Multiple Model",
+        question: "The three programs are designed. Now model the exit multiple range with and without the improvement programs.",
+        exhibit: {
+          type: "table",
+          title: "Exit Multiple Scenario Analysis",
+          data: `| Scenario                         | Revenue | EBITDA % | NPS  | Tech Score | Exit Multiple | Exit Value |
+|---------------------------------|---------|----------|------|------------|--------------|------------|
+| Do nothing, exit now             | $1.26B  | 9%       | 52   | Internal   | 1.6-1.8x rev | $2.0-2.3B  |
+| Growth only, exit at 24mo       | $1.48B  | 9%       | 52   | Internal   | 1.7-1.9x rev | $2.5-2.8B  |
+| Full program, exit at 24mo      | $1.48B  | 13%      | 65   | SaaS-adj   | 2.0-2.3x rev | $2.96-3.4B |
+| Full program, strategic buyer   | $1.48B  | 13%      | 65   | SaaS-adj   | 2.2-2.5x rev | $3.26-3.7B |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The value of the improvement programs is the difference between growth-only at $2.5-2.8B and full program at $2.96-3.4B — an incremental $460-600M in exit proceeds from the NPS, technology, and margin programs beyond what growth alone would deliver. The programs return 3-4x their implementation costs in exit value.",
+            nextQuestionId: "g20q7a",
+            scoreImpact: 20,
+            feedback: "Excellent framing of the program ROI as incremental exit value. The $460-600M incremental exit value from the programs is the number that tells the PE sponsor whether to fund the improvement initiatives. 3-4x return on implementation costs is a compelling investment argument.",
+          },
+          {
+            id: "b",
+            text: "The strategic buyer scenario at 2.2-2.5x is the target — the exit preparation program should be specifically designed to attract Amazon, FedEx, or UPS as strategic acquirers who will pay the highest multiples.",
+            nextQuestionId: "g20q7b",
+            scoreImpact: 5,
+            feedback: "Targeting strategic buyers is a valid exit strategy but the multiple analysis should first establish the base case and then show the strategic premium as upside rather than leading with the strategic buyer scenario as the primary benchmark.",
+          },
+          {
+            id: "c",
+            text: "The do-nothing exit now scenario at 1.6-1.8x should be seriously considered since 18-24 months of market risk may reduce the achievable multiple to below the growth-only scenario's 1.7-1.9x.",
+            nextQuestionId: "g20q7b",
+            scoreImpact: -10,
+            feedback: "Market risk cuts both ways — it could also be higher in 24 months. The $460-600M in incremental exit value from the improvement programs is not market-dependent — it reflects specific due diligence discount removal that is within management's control regardless of market conditions.",
+          },
+        ],
+      },
+      {
+        id: "g20q6b",
+        stage: "Exit Multiple Model",
+        question: "Your EBITDA or technology work has been suboptimal. The partner shows you the exit multiple table. The difference between growth-only and full program exit is $460-600M. How do you present this to the PE sponsor?",
+        options: [
+          {
+            id: "a",
+            text: "The $460-600M incremental exit value from the three improvement programs — NPS to 65, technology narrative, EBITDA to 13% — represents a 3-4x return on the approximately $150M implementation cost. For a PE sponsor whose total investment is $800M, this is the clearest incremental return opportunity available in the exit window.",
+            nextQuestionId: "g20q7a",
+            scoreImpact: 15,
+            feedback: "Good recovery. ROI framing against implementation cost is exactly what the PE sponsor needs to approve the programs. The 3-4x return on $150M in program investment is a compelling argument for funding the improvement work.",
+          },
+          {
+            id: "b",
+            text: "The incremental exit value is uncertain because exit multiples depend on market conditions at the time of the exit rather than on company-specific metrics — the PE sponsor should focus on controlling timing rather than investing in improvement programs.",
+            nextQuestionId: "g20q7b",
+            scoreImpact: -10,
+            feedback: "Market timing risk is real but the company-specific improvements — NPS gap closure, EBITDA margin, technology narrative — reduce due diligence discounts that are applied regardless of market conditions. These are not market-dependent improvements.",
+          },
+          {
+            id: "c",
+            text: "Present the strategic buyer scenario at 2.2-2.5x as the primary exit target and design the entire program around making ApexLogistics attractive specifically to Amazon.",
+            nextQuestionId: "g20q7b",
+            scoreImpact: -5,
+            feedback: "Designing the exit program around a single strategic buyer creates concentration risk in the exit process. The improvement programs should make ApexLogistics attractive to the broadest possible buyer set — strategic and financial — to create competitive tension that maximizes price.",
+          },
+        ],
+      },
+      {
+        id: "g20q7a",
+        stage: "Final Recommendation",
+        question: "The PE sponsor asks for the complete value maximization plan: three actions, expected multiple improvement, and implementation budget.",
+        options: [
+          {
+            id: "a",
+            text: "Three actions: NPS improvement to 65 through notification automation, claims digitization, and full route optimization deployment — $35M implementation, worth 0.2-0.3x exit multiple improvement; technology narrative development with external licensing pilot — $15M, worth 0.4x multiple improvement; EBITDA expansion from 9% to 13% through fuel, portal, and route automation — $100M capex, worth 0.2-0.3x. Total $150M program for $460-600M incremental exit value — 3-4x ROIC.",
+            nextQuestionId: "end",
+            scoreImpact: 20,
+            feedback: "Complete and compelling recommendation. Three specific actions with specific costs, specific multiple impacts, and a total program ROI that makes the investment case clear to the PE sponsor. McKinsey quality exit preparation planning.",
+          },
+          {
+            id: "b",
+            text: "Recommend the PE sponsor hire a dedicated CEO of exit preparation reporting directly to the sponsor to execute the value maximization program independently of the operating management team.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "A separate CEO of exit preparation creates organizational confusion and signals to the management team that they are not trusted to execute the improvement programs. The existing management team should own the programs with McKinsey supporting the execution.",
+          },
+          {
+            id: "c",
+            text: "Present three scenarios — aggressive full program at $150M investment, moderate program at $60M, and minimal program at $20M — and let the PE sponsor choose based on their appetite for implementation risk.",
+            nextQuestionId: "end",
+            scoreImpact: 5,
+            feedback: "Scenario optionality is a valid consulting deliverable but the partner asked for a specific recommendation with specific actions. The analysis clearly supports the full program at $150M for $460-600M incremental exit value — present this as the recommendation with the scenarios as supporting material.",
+          },
+        ],
+      },
+      {
+        id: "g20q7b",
+        stage: "Final Recommendation",
+        question: "Your analysis has had gaps. The partner gives you one final chance. The PE sponsor needs a specific three-action plan with implementation budget and expected exit multiple range.",
+        options: [
+          {
+            id: "a",
+            text: "Three actions: NPS to 65 at $35M for 0.2-0.3x multiple improvement; technology SaaS narrative at $15M for 0.4x improvement; EBITDA to 13% at $100M for 0.2-0.3x improvement. Total $150M program, exit multiple target 2.0-2.3x revenue versus 1.7-1.9x without action, incremental exit value $460-600M — a 3-4x return on implementation cost.",
+            nextQuestionId: "end",
+            scoreImpact: 15,
+            feedback: "Strong recovery. All key elements are present — three specific actions, specific costs, specific multiple impacts, and the overall ROI case. The sponsor can make the capital allocation decision with this information.",
+          },
+          {
+            id: "b",
+            text: "Delay the exit by six months to 30 months to allow the full programs to be completed and results to compound before starting the sales process.",
+            nextQuestionId: "end",
+            scoreImpact: -5,
+            feedback: "The sponsor set a 18-24 month window. The programs are designed to be completed within that window. Recommending delay beyond the sponsor's stated timeline requires a specific argument for why the extended timeline creates more value than the market timing risk — which has not been established.",
+          },
+          {
+            id: "c",
+            text: "Recommend the PE sponsor explore a dual-track process — simultaneous IPO and strategic sale — to maximize competitive tension and ensure the highest possible exit value from the current portfolio.",
+            nextQuestionId: "end",
+            scoreImpact: 0,
+            feedback: "Dual-track is a legitimate exit execution strategy but is an investment banking recommendation, not an exit preparation recommendation. The sponsor asked how to maximize the value before the exit process starts — dual-track only matters during the process itself.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // CASE G21: STRATEGY& — ENERGY TRANSITION
+  // ADVANCED — 12 NODES
+  // ─────────────────────────────────────────────
+  {
+    id: "g21",
+    title: "PowerGrid: Utility Energy Transition Strategy",
+    type: "market_entry",
+    difficulty: "advanced",
+    firm: "strategy_and",
+    estimatedMinutes: 42,
+    overview: "A large US investor-owned utility is facing an existential strategic choice about how fast to transition its generation portfolio from fossil fuels to renewables. Strategy& has been engaged to develop a 10-year transition roadmap.",
+    clientBackground: "PowerGrid is a $14B revenue regulated utility serving 4.2 million customers across three mid-Atlantic states. Its generation fleet is 68% coal and gas, 20% nuclear, and 12% renewable. The three state regulators have set a 2035 carbon-free requirement. Federal IRA incentives provide 30-40% tax credits on renewable investment. PowerGrid has $8.2B in rate base and generates $1.8B in annual EBITDA. The CEO faces three strategic options: fast transition targeting 2032 carbon-free, moderate transition targeting 2035, or slow transition fighting the 2035 timeline through regulatory and legal challenge.",
+    yourRole: "You are a Strategy& director on the energy and utilities practice. You have 12 weeks to deliver a strategic recommendation and implementation roadmap to the board.",
+    startQuestionId: "g21q1",
+    finalRecommendationPrompt: "Which transition path should PowerGrid pursue — fast, moderate, or slow — and what is the 10-year financial and strategic rationale?",
+    sampleRecommendation: "Pursue the fast transition path targeting 2032 carbon-free completion. Financial rationale: IRA tax credits of 30-40% on renewable investment reduce the net capital cost of the $18B renewable buildout by $5.4-7.2B, making the economics superior to either the moderate or slow paths. Strategic rationale: first-mover advantage in the three-state region on carbon-free position creates a 15-20 year regulatory relationship advantage with state commissions that determines rate case outcomes. Risk rationale: the slow transition path faces regulatory non-compliance risk, stranded asset risk, and customer attrition to community solar that makes it the highest-risk option despite appearing conservative.",
+    idealRecommendation: "Fast transition to 2032. IRA economics improve the fast path net cost below the moderate path after tax credits. First-mover regulatory relationship advantage compounds for 15-20 years in rate cases. Slow transition is actually the highest-risk path due to stranded asset risk and regulatory conflict. The $18B investment over 10 years generates $4.2B in rate base growth and associated regulated returns at 9-10% ROE.",
+    keyTakeaways: [
+      "In regulated utilities, the speed of strategic transition is partly determined by regulators who set allowed returns — the utility that aligns early with regulatory intent gets better rate case outcomes for 15-20 years",
+      "IRA tax credits fundamentally changed the economics of renewable investment — what was previously the most expensive transition path is now often the cheapest after federal incentives",
+      "Stranded asset risk is the hidden financial risk in slow transition — coal plants that are forced to retire early create write-offs that the utility, not ratepayers, absorbs when there is a compliance mandate",
+      "Customer attrition to community solar and distributed generation is an existential risk to the traditional utility business model that accelerates with every year of perceived slow transition",
+    ],
+    questions: [
+      {
+        id: "g21q1",
+        stage: "Strategic Framework",
+        question: "The CEO has presented three options: fast transition to 2032, moderate to 2035, or slow transition fighting the 2035 mandate. Before analyzing the financial case for each, how do you frame the strategic decision?",
+        context: "This is not a standard strategy case — the regulatory environment, IRA incentives, and customer dynamics create non-obvious interactions between the three paths. The framing here will determine whether the board gets a financial optimization or a true strategic assessment.",
+        options: [
+          {
+            id: "a",
+            text: "Evaluate each path on four dimensions: net financial cost after IRA incentives; regulatory relationship impact on future rate case outcomes; stranded asset risk from potential early retirement of fossil assets; and customer retention risk as distributed generation alternatives grow. The interaction between these four creates the non-obvious answer.",
+            nextQuestionId: "g21q2a",
+            scoreImpact: 20,
+            feedback: "Correct four-dimension framework. The non-obvious insight the board needs is that slow transition — which appears conservative — actually creates the most financial risk through stranded assets and regulatory conflict. The four-dimension framework is the only structure that reveals this.",
+          },
+          {
+            id: "b",
+            text: "Frame this as a pure capital allocation decision — calculate the NPV of each transition path based on the required capital investment and the regulated returns PowerGrid can earn on that rate base.",
+            nextQuestionId: "g21q2b",
+            scoreImpact: -5,
+            feedback: "NPV analysis is necessary but insufficient. The regulated utility business model means the rate base growth from renewable investment actually generates regulated returns — capital investment is not a cost but a revenue generator in this industry. A pure capital allocation NPV misses this fundamental feature of utility economics.",
+          },
+          {
+            id: "c",
+            text: "Recommend the moderate transition to 2035 as the default since it meets the regulatory mandate without the accelerated investment required for the fast path and avoids the legal and regulatory conflict of the slow path.",
+            nextQuestionId: "g21q2b",
+            scoreImpact: -10,
+            feedback: "Recommending the middle option as the default before conducting any analysis is not strategic advising — it is risk aversion masquerading as analysis. The board needs the financial and strategic case for each path before a recommendation can be made.",
+          },
+        ],
+      },
+      {
+        id: "g21q2a",
+        stage: "IRA Economics",
+        question: "IRA tax credits of 30-40% on renewable investment are a critical input. How do they change the relative economics of the three transition paths?",
+        exhibit: {
+          type: "table",
+          title: "Transition Path Economics with IRA Incentives",
+          data: `| Path     | Gross Invest | IRA Credit | Net Invest | Rate Base Add | Reg Return | Annual Rev |
+|---------|-------------|------------|------------|--------------|------------|------------|
+| Fast    | $18.0B      | $6.3B      | $11.7B     | $18.0B       | 9.5%       | $1.71B     |
+| Moderate| $16.2B      | $4.9B      | $11.3B     | $16.2B       | 9.5%       | $1.54B     |
+| Slow    | $12.4B      | $2.8B      | $9.6B      | $12.4B       | 9.5%       | $1.18B     |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "IRA credits fundamentally reverse the expected ranking. The fast path has gross investment of $18B but net investment of $11.7B — only $400M more than the moderate path at $11.3B net. For $400M more in net investment, PowerGrid adds $1.8B in additional rate base generating $171M more in annual regulated revenue — a 43% return on incremental investment. The fast path is economically superior to moderate after IRA credits.",
+            nextQuestionId: "g21q3a",
+            scoreImpact: 20,
+            feedback: "This is the most important analytical insight in the case. IRA credits reduce the net investment gap between fast and moderate from $1.8B gross to $400M net, while the rate base and regulated revenue difference is enormous. The economics clearly favor the fast path — a conclusion that most clients would not expect without this analysis.",
+          },
+          {
+            id: "b",
+            text: "The slow path at $9.6B net investment is cheapest and should be preferred since minimizing capital expenditure is the right objective for a utility trying to manage customer rate increases.",
+            nextQuestionId: "g21q3b",
+            scoreImpact: -10,
+            feedback: "In regulated utilities, capital investment is not a cost — it is a rate base addition that generates regulated returns. The slow path's $9.6B net investment generates only $1.18B in annual regulated revenue compared to $1.71B for the fast path. Lower capital does not mean better economics in a regulated utility context.",
+          },
+          {
+            id: "c",
+            text: "The IRA credits are similar across all three paths as a percentage so they do not change the relative ranking — the moderate path remains the cheapest in absolute net investment terms.",
+            nextQuestionId: "g21q3b",
+            scoreImpact: -5,
+            feedback: "IRA credits are NOT similar as a percentage — they range from 22.6% on the slow path to 35% on the fast path because later investments qualify for higher ITC adders under the IRA's domestic content and energy community provisions. The credits compound the economics in favor of the fast path.",
+          },
+        ],
+      },
+      {
+        id: "g21q2b",
+        stage: "IRA Economics",
+        question: "The partner corrects the framework to include IRA economics. The fast path at $11.7B net investment versus the moderate path at $11.3B net is only $400M more. The fast path adds $1.8B more in rate base. How does this change the strategic recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "The $400M net investment difference for $1.8B in additional rate base generating $171M in annual regulated revenue at 9.5% ROE represents a 43% return on incremental capital — far above the 9.5% regulated return. IRA economics make the fast path economically superior to the moderate path, which changes the recommendation from moderate to fast.",
+            nextQuestionId: "g21q3a",
+            scoreImpact: 15,
+            feedback: "Good recovery. The incremental return calculation is the analytical core — 43% return on incremental net investment versus the 9.5% baseline shows the fast path generates exceptional returns on the marginal capital. The recommendation changes from moderate to fast based on this analysis.",
+          },
+          {
+            id: "b",
+            text: "The $400M additional net investment on the fast path is still a meaningful capital difference that requires careful consideration of PowerGrid's balance sheet capacity and credit rating implications.",
+            nextQuestionId: "g21q3b",
+            scoreImpact: -5,
+            feedback: "$400M incremental net investment for a utility with $8.2B in rate base and $1.8B in EBITDA is a 4.9% rate base increase — well within utility balance sheet capacity. Balance sheet concern at this scale does not override a 43% incremental return.",
+          },
+          {
+            id: "c",
+            text: "The IRA economics favor the fast path but the regulatory approval process for an accelerated transition may take 12-18 months longer than the moderate path, partially offsetting the economic advantage.",
+            nextQuestionId: "g21q3a",
+            scoreImpact: 5,
+            feedback: "Regulatory timing is a valid consideration but the three-state regulators have already set the 2035 mandate — they are incentivized to approve a fast transition plan. The regulatory delay risk is lower on the fast path than the analysis suggests.",
+          },
+        ],
+      },
+      {
+        id: "g21q3a",
+        stage: "Stranded Asset Risk",
+        question: "The slow transition path appears conservative but carries stranded asset risk. How do you quantify this risk and why does it make slow transition actually the highest-risk option?",
+        exhibit: {
+          type: "table",
+          title: "Fossil Fleet Stranded Asset Analysis",
+          data: `| Asset             | Net Book Value | Remaining Life | Slow Path Risk        | Fast Path Risk |
+|------------------|---------------|---------------|----------------------|----------------|
+| Coal plants (4)   | $2.8B         | 2032-2040     | High (mandate 2035)  | None (retired) |
+| Gas peakers (12)  | $1.4B         | 2030-2038     | Medium               | Low            |
+| Gas combined cycle| $1.9B         | 2028-2036     | Medium               | Low            |
+| Nuclear (2)       | $0.8B         | 2035-2045     | None                 | None           |
+| Total at risk     | $6.1B         |               |                      |                |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "The slow path leaves $4.2B in coal and gas assets at direct stranded asset risk — if the 2035 mandate holds and regulators deny recovery of unretired fossil assets (which they are increasingly willing to do), PowerGrid absorbs these write-offs against equity. At a 20% tax benefit, the after-tax equity impact is $3.4B — larger than the entire $11.7B fast path net investment's annual rate base return over 20 years.",
+            nextQuestionId: "g21q4a",
+            scoreImpact: 20,
+            feedback: "Correct and compelling stranded asset quantification. The $3.4B after-tax equity risk from stranded coal and gas assets is the financial proof that slow transition is not conservative — it is the highest financial risk option. This is the insight that will change the board's framing of the decision.",
+          },
+          {
+            id: "b",
+            text: "Stranded asset risk can be managed through regulatory advocacy to ensure cost recovery for fossil assets — utilities have historically been able to recover stranded costs through securitization and rate base recovery mechanisms.",
+            nextQuestionId: "g21q4b",
+            scoreImpact: -10,
+            feedback: "Historical stranded cost recovery is no longer the regulatory baseline. Multiple state commissions have explicitly denied or limited fossil asset cost recovery when utilities choose to retain assets beyond the useful life implied by the state's clean energy mandate. The regulatory landscape has shifted.",
+          },
+          {
+            id: "c",
+            text: "Stranded asset risk is a secondary consideration since the primary risk to PowerGrid's financial stability is the execution risk of deploying $18B in renewable investment in 10 years.",
+            nextQuestionId: "g21q4b",
+            scoreImpact: -5,
+            feedback: "Execution risk on $18B in renewable investment is a real operational concern, but $3.4B in potential equity write-offs from stranded assets is an immediate financial risk that occurs regardless of execution quality. Execution risk does not offset or supersede stranded asset risk.",
+          },
+        ],
+      },
+      {
+        id: "g21q3b",
+        stage: "Stranded Asset Risk",
+        question: "The partner gives you the stranded asset analysis: $4.2B in coal and gas assets at risk under the slow path, creating $3.4B in after-tax equity exposure. How does this change the strategic recommendation?",
+        options: [
+          {
+            id: "a",
+            text: "The $3.4B stranded asset equity risk makes the slow path financially riskier than either the fast or moderate paths despite its lower capital investment. Combined with the IRA economics that make fast transition only $400M more in net investment than moderate, the fast transition is both economically superior and lower-risk than the alternatives.",
+            nextQuestionId: "g21q4a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Connecting the stranded asset risk to the overall risk ranking — slow is highest risk, not lowest — is the key insight the board needs to select the fast transition path.",
+          },
+          {
+            id: "b",
+            text: "The stranded asset risk validates the moderate transition path as the best balance — it retires the fossil assets by 2035 to eliminate stranded risk while not incurring the full $18B investment of the fast path.",
+            nextQuestionId: "g21q4b",
+            scoreImpact: -5,
+            feedback: "Given that the fast path is only $400M more in net investment than moderate after IRA credits, and generates $171M more in annual regulated revenue, the moderate path's apparent cost advantage is minimal. The fast path's additional regulatory relationship advantage makes it superior to the moderate path as well.",
+          },
+          {
+            id: "c",
+            text: "Stranded asset risk should be disclosed to regulators as a financial constraint that limits PowerGrid's ability to accelerate the transition and justifies regulatory support for slower retirement timelines.",
+            nextQuestionId: "g21q4b",
+            scoreImpact: -10,
+            feedback: "Citing stranded asset risk as a constraint that justifies slow transition is exactly backwards — stranded asset risk is created by slow transition, not a reason to adopt it. Regulators in the three states who have set a 2035 mandate will not sympathize with this argument.",
+          },
+        ],
+      },
+      {
+        id: "g21q4a",
+        stage: "Customer Retention Risk",
+        question: "The fourth dimension is customer attrition risk. Community solar and distributed generation are growing rapidly in all three states. How does transition speed affect customer retention?",
+        exhibit: {
+          type: "table",
+          title: "Customer Attrition Risk Model by Transition Path",
+          data: `| Customer Segment            | Pct of Rev | Slow Path Attrition | Mod Path  | Fast Path |
+|----------------------------|-----------|---------------------|-----------|-----------|
+| Large commercial/industrial | 32%       | 8-12%               | 4-6%      | 1-3%      |
+| Small commercial            | 28%       | 5-8%                | 3-5%      | 1-2%      |
+| Residential high-income     | 18%       | 6-10%               | 3-5%      | 1-2%      |
+| Residential general         | 22%       | 2-4%                | 1-3%      | 0-1%      |
+| Revenue at risk (midpoint)  |           | $1.26B/yr           | $630M/yr  | $280M/yr  |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Slow path customer attrition at $1.26B annually versus $280M on the fast path creates a $980M annual revenue difference that compounds dramatically. Over five years before the 2035 mandate forces the issue, slow path attrition destroys $4.9B in accumulated revenue versus $1.4B on the fast path — a $3.5B difference that dwarfs any capital cost advantage of the slow path.",
+            nextQuestionId: "g21q5a",
+            scoreImpact: 20,
+            feedback: "Excellent compounding analysis. Five-year accumulated attrition difference of $3.5B is larger than the stranded asset risk and confirms that slow transition is catastrophically more expensive than it appears from capital investment comparisons alone.",
+          },
+          {
+            id: "b",
+            text: "Customer attrition is a long-term risk that cannot be quantified precisely since community solar economics depend on future policy and technology prices that are uncertain.",
+            nextQuestionId: "g21q5b",
+            scoreImpact: -10,
+            feedback: "Community solar and distributed generation are already growing — this is not a future scenario but a current trend. The attrition rates shown reflect current behavior by customers who have already left or are leaving. Dismissing this data as imprecise understates a quantifiable and accelerating risk.",
+          },
+          {
+            id: "c",
+            text: "Large commercial and industrial customers at 8-12% attrition on the slow path are the primary focus since they represent 32% of revenue and have the most established alternatives to utility service.",
+            nextQuestionId: "g21q5a",
+            scoreImpact: 5,
+            feedback: "C&I customer attrition is the largest individual segment risk. However, the full portfolio attrition of $1.26B annually must be the headline number, not just the C&I component. Presenting only the C&I risk understates the total financial exposure.",
+          },
+        ],
+      },
+      {
+        id: "g21q4b",
+        stage: "Customer Retention Risk",
+        question: "Your analysis has been incomplete. The partner shares that slow path customer attrition creates $1.26B in annual at-risk revenue versus $280M for the fast path. What does this do to the overall case for transition speed?",
+        options: [
+          {
+            id: "a",
+            text: "The customer attrition differential of $980M annually makes the slow path financially devastating — even before considering stranded assets or regulatory conflict. Five years of $980M annual differential equals $4.9B in lost revenue that permanently impairs the utility's rate base rationale. Fast transition is not just economically superior — it is the survival strategy.",
+            nextQuestionId: "g21q5a",
+            scoreImpact: 15,
+            feedback: "Good recovery. Framing fast transition as a survival strategy rather than just an economically superior option gives the board the urgency the situation requires. The combination of $3.4B stranded asset risk plus $4.9B in five-year attrition risk makes slow transition existentially dangerous.",
+          },
+          {
+            id: "b",
+            text: "Customer attrition on the slow path is primarily a commercial challenge that can be addressed through rate redesign and value-added services — the utility does not need to accelerate transition to retain customers.",
+            nextQuestionId: "g21q5b",
+            scoreImpact: -10,
+            feedback: "Rate redesign and value-added services cannot retain commercial and industrial customers who have access to on-site generation and community solar at rates below the utility's cost of service. The economics of distributed energy are what drive attrition, not dissatisfaction with services.",
+          },
+          {
+            id: "c",
+            text: "The customer attrition data should be presented to regulators as evidence that the 2035 mandate is too aggressive and that rate increases from fast transition will accelerate attrition beyond the modeled levels.",
+            nextQuestionId: "g21q5b",
+            scoreImpact: -5,
+            feedback: "The attrition model shows the slow path has MORE attrition than the fast path — the opposite of this argument. Customers leave for clean energy alternatives when they perceive the utility is not transitioning — a counter-argument built on this data would be internally inconsistent.",
+          },
+        ],
+      },
+      {
+        id: "g21q5a",
+        stage: "Regulatory Strategy",
+        question: "The board asks: how does transition speed affect PowerGrid's regulatory relationship and rate case outcomes over the next 15-20 years?",
+        options: [
+          {
+            id: "a",
+            text: "State commissions that have set 2035 mandates will develop long-term relationships that favor utilities that aligned with their policy intent. PowerGrid's rate cases occur every 2-3 years — 5-7 cases over the next 15 years. A utility perceived as a willing transition partner typically receives 20-50 bps higher allowed ROE, faster rate case timelines, and less regulatory scrutiny on rate increases. Over 15 years at $18B+ in rate base, 25 bps of additional allowed ROE is worth $45M annually or $675M NPV.",
+            nextQuestionId: "g21q6a",
+            scoreImpact: 20,
+            feedback: "The regulatory relationship quantification is the most sophisticated element of this analysis. $675M NPV from 25 bps of additional allowed ROE over 15 years is a concrete financial value attached to an intangible strategic asset — exactly the analytical rigor that separates Strategy& quality work from generic strategy advice.",
+          },
+          {
+            id: "b",
+            text: "Regulatory relationships are important but cannot be reliably quantified — the value of being a preferred utility partner depends on the specific commissioners at the time of each rate case which is unpredictable.",
+            nextQuestionId: "g21q6b",
+            scoreImpact: -5,
+            feedback: "While specific commissioners change, regulatory culture and institutional memory persist. Academic research on utility rate cases consistently shows 15-30 bps of systematic allowed ROE advantage for utilities with stronger regulatory relationships. This is quantifiable even if imprecise.",
+          },
+          {
+            id: "c",
+            text: "Regulatory strategy should be handled by PowerGrid's regulatory affairs team with outside legal counsel — this is outside the scope of the Strategy& energy transition engagement.",
+            nextQuestionId: "g21q6b",
+            scoreImpact: -10,
+            feedback: "Regulatory strategy is central to the value of any transition path recommendation — the allowed ROE and rate case outcomes over 15-20 years are the most important financial variables for a regulated utility. Scoping out regulatory strategy from an energy transition engagement produces an analytically incomplete recommendation.",
+          },
+        ],
+      },
+      {
+        id: "g21q5b",
+        stage: "Regulatory Strategy",
+        question: "The partner confirms that a 25 bps regulatory relationship advantage over 15 years is worth $675M NPV. How does this affect the overall financial comparison between the three paths?",
+        options: [
+          {
+            id: "a",
+            text: "Adding the regulatory relationship value to the IRA economics and subtracting the stranded asset risk and customer attrition risk makes the fast path's total value advantage over the slow path approximately $8-9B over 15 years. This is not a marginal preference for fast transition — it is an overwhelming financial argument.",
+            nextQuestionId: "g21q6a",
+            scoreImpact: 15,
+            feedback: "Good synthesis. Combining all four financial components into a total advantage calculation gives the board a single compelling number rather than four separate considerations. $8-9B in total value advantage over 15 years is the board narrative.",
+          },
+          {
+            id: "b",
+            text: "The regulatory relationship advantage only materializes if state commissions remain committed to clean energy policies for the full 15-20 years — political changes could eliminate this advantage.",
+            nextQuestionId: "g21q6b",
+            scoreImpact: -5,
+            feedback: "Political risk in energy regulation is real but the 2035 mandates are statutory in all three states — they require legislative action to reverse, not just a change in governor or commission composition. The 15-20 year relationship advantage is well-supported by the statutory timeline.",
+          },
+          {
+            id: "c",
+            text: "The regulatory advantage confirms moderate transition is optimal since it still aligns with the 2035 mandate while avoiding the execution risk of the accelerated fast path.",
+            nextQuestionId: "g21q6b",
+            scoreImpact: -10,
+            feedback: "The regulatory advantage is larger for the fast path than the moderate path because early alignment signals stronger strategic commitment to regulators. Meeting the mandate at exactly 2035 generates less goodwill than completing carbon-free transition three years early.",
+          },
+        ],
+      },
+      {
+        id: "g21q6a",
+        stage: "Implementation Roadmap",
+        question: "The board has accepted the fast transition recommendation. Design the high-level 10-year implementation roadmap.",
+        exhibit: {
+          type: "table",
+          title: "Fast Transition Implementation Phases",
+          data: `| Phase       | Years  | Actions                          | Capex  | Rate Base Add |
+|------------|--------|----------------------------------|--------|---------------|
+| Foundation  | 1-3    | Solar and wind buildout phase 1  | $5.2B  | $5.2B         |
+| Expansion   | 4-6    | Offshore wind, battery storage   | $7.1B  | $7.1B         |
+| Completion  | 7-10   | Remaining buildout, coal retire  | $5.7B  | $5.7B         |
+| Total       | 1-10   |                                  | $18.0B | $18.0B        |`,
+        },
+        options: [
+          {
+            id: "a",
+            text: "Three-phase implementation: foundation years 1-3 building solar and wind while maintaining coal and gas for reliability, capturing early IRA credits; expansion years 4-6 deploying offshore wind and battery storage which enables more coal retirement; completion years 7-10 retiring all remaining fossil generation and reaching carbon-free by 2032. Critical parallel workstreams: regulatory filing in year one, workforce transition for coal plant employees11:16 PM beginning year two, and transmission upgrades in years 2-5.",
+nextQuestionId: "g21q7a",
+scoreImpact: 20,
+feedback: "Complete implementation roadmap. The parallel workstreams — regulatory, workforce, transmission — are what distinguish a real implementation plan from a financial model. Workforce transition beginning in year two allows three to five years before the coal plant retirements in years seven to ten, which is the socially and operationally responsible timeline.",
+},
+{
+id: "b",
+text: "Prioritize coal retirement in the first three years to immediately reduce carbon emissions and demonstrate commitment to the 2032 target, then build replacement renewable capacity in parallel.",
+nextQuestionId: "g21q7b",
+scoreImpact: -15,
+feedback: "Retiring coal before replacement renewable capacity is built would create reliability violations and potential blackouts. Grid reliability requires that replacement capacity be in service before fossil retirements — the sequence is build first, retire second.",
+},
+{
+id: "c",
+text: "Outsource the entire renewable buildout to an independent power producer through long-term power purchase agreements to avoid the capital investment and execution risk of company-owned renewable development.",
+nextQuestionId: "g21q7b",
+scoreImpact: -10,
+feedback: "PPAs do not add to the utility's rate base — they are purchased power expenses, not capital investments. Choosing PPAs over company-owned development forgoes $18B in rate base addition and $1.71B in annual regulated revenue. For a regulated utility, company-owned development is financially superior to PPAs.",
+},
+],
+},
+{
+id: "g21q6b",
+stage: "Implementation Roadmap",
+question: "Your analysis has been inconsistent. The partner gives you the fast transition recommendation. Design the three-phase implementation in two minutes.",
+options: [
+{
+id: "a",
+text: "Phase one years 1-3: solar and wind buildout phase one at $5.2B, regulatory filing year one, workforce transition planning year two. Phase two years 4-6: offshore wind and battery storage at $7.1B, transmission upgrades, first coal retirements. Phase three years 7-10: final buildout at $5.7B, all fossil retirement, carbon-free by 2032. Total $18B over 10 years.",
+nextQuestionId: "g21q7a",
+scoreImpact: 15,
+feedback: "Good recovery under time pressure. Three phases with capital, timeline, and key parallel workstreams. The sequencing — build before retire — is correct and the regulatory and workforce workstreams show operational sophistication.",
+},
+{
+id: "b",
+text: "The implementation roadmap should be developed by the operations and project management teams after the board approves the strategic direction — this level of detail is outside the Strategy& engagement scope.",
+nextQuestionId: "g21q7b",
+scoreImpact: -10,
+feedback: "The board asked for a recommendation and roadmap — the implementation roadmap is part of the deliverable, not a separate follow-on work. Strategy& engagements deliver both the recommendation and the path to execution.",
+},
+{
+id: "c",
+text: "Implement all $18B simultaneously in the first five years to compress the timeline to 2028 and provide additional buffer against the 2035 mandate risk.",
+nextQuestionId: "g21q7b",
+scoreImpact: -5,
+feedback: "Deploying $18B in five years instead of 10 doubles the annual capital deployment rate, creates significant execution risk, and requires rate increases that may accelerate the customer attrition the strategy is designed to prevent. Phased deployment is operationally and financially optimal.",
+},
+],
+},
+{
+id: "g21q7a",
+stage: "Final Recommendation",
+question: "The board asks for the complete recommendation: which path, financial rationale, key risks, and board approval required.",
+options: [
+{
+id: "a",
+text: "Fast transition to 2032. Financial rationale: IRA economics make fast path net cost only $400M more than moderate, generating $1.8B in additional rate base with $171M in annual regulated revenue — 43% incremental return. Risk rationale: slow path carries $3.4B in stranded asset risk plus $4.9B in five-year customer attrition — making it the highest-risk not lowest-risk option. Regulatory rationale: $675M NPV advantage from regulatory relationship over 15 years. Board approvals needed: $18B capital program authorization and 10-year rate case strategy.",
+nextQuestionId: "end",
+scoreImpact: 20,
+feedback: "Complete and compelling recommendation. Financial rationale quantified, risk rationale quantified, regulatory rationale quantified, and specific board approvals identified. The CEO can present this with confidence. Strategy& quality.",
+},
+{
+id: "b",
+text: "Moderate transition to 2035 is the recommendation — it meets the mandate without the execution risk of the fast path and avoids the regulatory conflict of the slow path.",
+nextQuestionId: "end",
+scoreImpact: -10,
+feedback: "This recommendation contradicts the analysis. The IRA economics show the fast path is only $400M more in net investment than moderate. The $3.4B stranded asset risk and $4.9B customer attrition risk make slow the worst path. The regulatory relationship advantage favors fast over moderate. The analysis clearly supports fast transition.",
+},
+{
+id: "c",
+text: "Present all three options to the board with equal weighting and let the board decide based on their risk tolerance rather than making a specific recommendation.",
+nextQuestionId: "end",
+scoreImpact: -5,
+feedback: "Presenting all three options with equal weighting when the analysis clearly favors one is not a recommendation — it is a menu. The board hired Strategy& for a recommendation, not for an options list that defers the decision back to them.",
+},
+],
+},
+{
+id: "g21q7b",
+stage: "Final Recommendation",
+question: "Your analysis has had significant gaps. The partner gives you one final chance. The CEO and board need the complete recommendation now.",
+options: [
+{
+id: "a",
+text: "Fast transition to 2032. IRA economics make fast only $400M more in net investment than moderate with $171M more in annual regulated revenue — 43% incremental ROI. Slow path is highest risk at $3.4B stranded asset exposure plus $4.9B five-year customer attrition. Regulatory relationship advantage worth $675M NPV over 15 years. Three-phase $18B implementation over 10 years. Board approval needed for capital program and rate case strategy.",
+nextQuestionId: "end",
+scoreImpact: 15,
+feedback: "Strong recovery. All quantified rationale present — IRA economics, stranded asset risk, customer attrition, regulatory value. The board has the complete financial case. The partner says: that is what we needed.",
+},
+{
+id: "b",
+text: "The analysis is not sufficiently complete to make a recommendation with confidence — additional modeling on IRA credit eligibility and stranded cost recovery precedent is needed before committing to a path.",
+nextQuestionId: "end",
+scoreImpact: -15,
+feedback: "The analysis has been running for 12 weeks. Requesting more time when the board is waiting for the final recommendation is a failure of delivery. The available analysis is sufficient for the recommendation.",
+},
+{
+id: "c",
+text: "Slow transition with regulatory advocacy — fight the 2035 mandate through regulatory and legal challenge to buy time while the technology and economics of the transition continue to improve.",
+nextQuestionId: "end",
+scoreImpact: -10,
+feedback: "Slow transition is the worst option across every financial dimension — highest stranded asset risk, highest customer attrition, worst IRA economics, worst regulatory relationship. Recommending it after 12 weeks of analysis showing its inferiority would be a complete analytical failure.",
+},
+],
+},
+],
+},
+
 ];
