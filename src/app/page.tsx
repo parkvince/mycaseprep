@@ -325,7 +325,7 @@ export default function LandingPage() {
         }}>
           MyCasePrep
         </span>
-        <span>Built by Vince Park · 2025</span>
+        <span>Built by Vince Park · 2026</span>
       </footer>
     </main>
   );
