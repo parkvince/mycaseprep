@@ -147,24 +147,33 @@ export default function LandingPage() {
             Practice with a realistic AI interviewer. Get firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-            {isSignedIn ? (
-              <button
-                className="btn-primary"
-                style={{ fontSize: "15px", padding: "11px 28px" }}
-                onClick={() => router.push("/dashboard")}
-              >
-                Start practicing →
-              </button>
-            ) : (
-              <button
-                className="btn-primary"
-                style={{ fontSize: "15px", padding: "11px 28px" }}
-                onClick={() => router.push("/auth/sign-up")}
-              >
-                Get started free
-              </button>
-            )}
-          </div>
+  {isSignedIn ? (
+    <>
+      <button
+        className="btn-primary"
+        style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
+        onClick={() => router.push("/dashboard")}
+      >
+        AI Cases →
+      </button>
+      <button
+        className="btn-primary"
+        style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
+        onClick={() => router.push("/library")}
+      >
+        Guided Cases →
+      </button>
+    </>
+  ) : (
+    <button
+      className="btn-primary"
+      style={{ fontSize: "15px", padding: "11px 28px" }}
+      onClick={() => router.push("/auth/sign-up")}
+    >
+      Get started free
+    </button>
+  )}
+</div>
         </motion.div>
       </section>
 

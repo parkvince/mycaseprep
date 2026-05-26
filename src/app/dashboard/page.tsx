@@ -136,22 +136,22 @@ export default function DashboardPage() {
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "60px 48px" }}>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: "48px" }}
-        >
-          <h1 style={{
-            fontSize: "clamp(26px, 3vw, 38px)",
-            fontWeight: 400,
-            marginBottom: "8px",
-            letterSpacing: "-0.01em",
-          }}>
-            Start a Case
-          </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
-            Configure your simulation and start practicing.
-          </p>
-        </motion.div>
+  initial={{ opacity: 0, y: 16 }}
+  animate={{ opacity: 1, y: 0 }}
+  style={{ marginBottom: "48px" }}
+>
+  <h1 style={{
+    fontSize: "clamp(26px, 3vw, 38px)",
+    fontWeight: 400,
+    marginBottom: "8px",
+    letterSpacing: "-0.01em",
+  }}>
+    Start a Case
+  </h1>
+  <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
+    Configure your simulation and start practicing.
+  </p>
+</motion.div>
 
         {/* Firm */}
         <motion.div

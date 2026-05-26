@@ -121,32 +121,32 @@ function FeedbackInner() {
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
       <nav style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "20px 48px",
-        borderBottom: "1px solid var(--border)",
-        position: "sticky",
-        top: 0,
-        background: "rgba(10,10,15,0.95)",
-        backdropFilter: "blur(10px)",
-        zIndex: 100,
-      }}>
-        <span
-          style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 700, cursor: "pointer" }}
-          onClick={() => router.push("/dashboard")}
-        >
-          MyCasePrep
-        </span>
-        <div style={{ display: "flex", gap: "12px" }}>
-          <button className="btn-secondary" onClick={() => router.push("/case/new")}>
-            Practice Again
-          </button>
-          <button className="btn-primary" onClick={() => router.push("/dashboard")}>
-            Dashboard
-          </button>
-        </div>
-      </nav>
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "0 48px",
+  height: "60px",
+  borderBottom: "1px solid var(--border)",
+  position: "sticky",
+  top: 0,
+  background: "rgba(255,255,255,0.98)",
+  zIndex: 100,
+}}>
+  <span
+    style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, color: "#111111", cursor: "pointer" }}
+    onClick={() => router.push("/")}
+  >
+    MyCasePrep
+  </span>
+  <div style={{ display: "flex", gap: "12px" }}>
+    <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>
+      Practice Again
+    </button>
+    <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/")}>
+      Dashboard
+    </button>
+  </div>
+</nav>
 
       <div style={{ maxWidth: "860px", margin: "0 auto", padding: "60px 48px" }}>
 
@@ -368,14 +368,14 @@ function FeedbackInner() {
           <button
             className="btn-primary glow"
             style={{ flex: 1, padding: "16px", fontSize: "15px" }}
-            onClick={() => router.push("/case/new")}
+            onClick={() => router.push("/dashboard")}
           >
             Practice Another Case →
           </button>
           <button
             className="btn-secondary"
             style={{ flex: 1, padding: "16px", fontSize: "15px" }}
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/")}
           >
             Back to Dashboard
           </button>
