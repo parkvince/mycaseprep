@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Message } from "@/types";
@@ -25,7 +25,6 @@ const INTERVIEWER = INTERVIEWERS[Math.floor(Math.random() * INTERVIEWERS.length)
 
 function InterviewInner() {
   const router = useRouter();
-  const params = useSearchParams();
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
@@ -34,17 +33,7 @@ function InterviewInner() {
   const [casePrompt, setCasePrompt] = useState("");
   const [caseContext, setCaseContext] = useState("");
   const [ready, setReady] = useState(false);
-
-  const firmConfig = FIRM_CONFIGS[firm];
-
-  const [transcript, setTranscript] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: `Good morning. I'm James Chen, Senior Engagement Manager at ${firmConfig.name}. Thank you for taking the time to meet with me today.\n\n${casePrompt}\n\nPlease take a moment to read through the case. Feel free to ask any clarifying questions when you're ready.`,
-      timestamp: new Date(),
-    },
-  ]);
-
+  const [transcript, setTranscript] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -64,6 +53,29 @@ function InterviewInner() {
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
+    const raw = sessionStorage.getItem("caseData");
+    if (raw) {
+      const data = JSON.parse(raw);
+      setFirm(data.firm ?? "mckinsey");
+      setDifficulty(data.difficulty ?? "intermediate");
+      setPersonality(data.personality ?? "strict");
+      setCaseTitle(data.title ?? "Case Interview");
+      setCasePrompt(data.prompt ?? "");
+      setCaseContext(data.context ?? "");
+    }
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready || !casePrompt) return;
+    setTranscript([{
+      role: "assistant",
+      content: `Good morning. I'm ${INTERVIEWER.name}, Senior Engagement Manager at ${FIRM_CONFIGS[firm].name}. Thank you for taking the time to meet with me today.\n\n${casePrompt}\n\nPlease take a moment to read through the case. Feel free to ask any clarifying questions when you're ready.`,
+      timestamp: new Date(),
+    }]);
+  }, [ready, casePrompt, firm]);
+
+  useEffect(() => {
     synthRef.current = window.speechSynthesis;
     return () => {
       synthRef.current?.cancel();
@@ -76,13 +88,15 @@ function InterviewInner() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
+  const firmConfig = FIRM_CONFIGS[firm];
+
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60).toString().padStart(2, "0");
     const s = (secs % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
 
-const speak = (text: string) => {
+  const speak = (text: string) => {
     if (!synthRef.current) return;
     synthRef.current.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -136,7 +150,7 @@ const speak = (text: string) => {
 
     setSessionStarted(true);
     timerRef.current = setInterval(() => setElapsedTime(t => t + 1), 1000);
-    setTimeout(() => speak(transcript[0].content), 500);
+    setTimeout(() => speak(transcript[0]?.content ?? ""), 500);
   };
 
   const startListening = () => {
@@ -218,18 +232,17 @@ const speak = (text: string) => {
     synthRef.current?.cancel();
     streamRef.current?.getTracks().forEach(t => t.stop());
 
-    const evalParams = new URLSearchParams({
+    sessionStorage.setItem("transcriptData", JSON.stringify({
       firm,
       difficulty,
-      hintsUsed: hintsUsed.toString(),
-      duration: elapsedTime.toString(),
-      transcript: encodeURIComponent(JSON.stringify(transcript)),
-    });
+      hintsUsed,
+      duration: elapsedTime,
+      transcript,
+    }));
 
-    router.push(`/case/feedback?${evalParams.toString()}`);
+    router.push("/case/feedback");
   };
 
-  // Pre-session screen
   if (!sessionStarted) {
     return (
       <main style={{
@@ -467,7 +480,6 @@ const speak = (text: string) => {
               }}
             />
 
-            {/* Speaking indicator */}
             <AnimatePresence>
               {isSpeaking && (
                 <motion.div
@@ -503,7 +515,6 @@ const speak = (text: string) => {
               )}
             </AnimatePresence>
 
-            {/* Loading indicator */}
             {loading && (
               <div style={{
                 position: "absolute",
@@ -520,7 +531,6 @@ const speak = (text: string) => {
               </div>
             )}
 
-            {/* Name tag */}
             <div style={{
               position: "absolute",
               bottom: "16px",
@@ -627,7 +637,6 @@ const speak = (text: string) => {
           flexDirection: "column",
           overflow: "hidden",
         }}>
-          {/* Hint */}
           <AnimatePresence>
             {showHint && (
               <motion.div
@@ -662,7 +671,6 @@ const speak = (text: string) => {
             )}
           </AnimatePresence>
 
-          {/* Transcript */}
           <div style={{
             flex: 1,
             overflowY: "auto",
@@ -726,7 +734,6 @@ const speak = (text: string) => {
             <div ref={bottomRef} />
           </div>
 
-          {/* Input */}
           <div style={{
             padding: "12px 16px",
             borderTop: "1px solid rgba(255,255,255,0.08)",
