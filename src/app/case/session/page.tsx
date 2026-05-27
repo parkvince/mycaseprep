@@ -331,6 +331,7 @@ function SessionInner() {
               fontSize: "15px",
               lineHeight: 1.7,
               whiteSpace: "pre-wrap",
+              color: msg.role === "user" ? "#ffffff" : "var(--text-primary)",
             }}>
               {msg.content}
             </div>

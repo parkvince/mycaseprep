@@ -33,41 +33,49 @@ export default function DashboardPage() {
   const firmEntries = Object.entries(FIRM_CONFIGS) as [FirmKey, typeof FIRM_CONFIGS[FirmKey]][];
 
   const handleStart = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/case/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firm: selectedFirm,
-          type: selectedType,
-          difficulty: selectedDifficulty,
-        }),
-      });
+  setLoading(true);
+  try {
+    const res = await fetch("/api/case/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firm: selectedFirm,
+        type: selectedType,
+        difficulty: selectedDifficulty,
+      }),
+    });
 
-      const caseData = await res.json();
-
-      sessionStorage.setItem("caseData", JSON.stringify({
-  firm: selectedFirm,
-  type: selectedType,
-  difficulty: selectedDifficulty,
-  mode: selectedMode,
-  personality,
-  title: caseData.title,
-  prompt: caseData.prompt,
-  context: caseData.context ?? "",
-}));
-
-const route = selectedMode === "live"
-  ? `/case/interview`
-  : `/case/session`;
-
-router.push(route);
-    } catch (err) {
-      console.error(err);
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("API error:", res.status, text);
       setLoading(false);
+      return;
     }
-  };
+
+    const caseData = await res.json();
+    console.log("caseData received:", caseData);
+
+    sessionStorage.setItem("caseData", JSON.stringify({
+      firm: selectedFirm,
+      type: selectedType,
+      difficulty: selectedDifficulty,
+      mode: selectedMode,
+      personality,
+      title: caseData.title,
+      prompt: caseData.prompt,
+      context: caseData.context ?? "",
+    }));
+
+    const route = selectedMode === "live"
+      ? `/case/interview`
+      : `/case/session`;
+
+    router.push(route);
+  } catch (err) {
+    console.error(err);
+    setLoading(false);
+  }
+};
 
   const sectionLabel: React.CSSProperties = {
     fontSize: "11px",
