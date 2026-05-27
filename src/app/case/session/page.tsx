@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Mode, Message } from "@/types";
@@ -8,26 +8,16 @@ import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 
 function SessionInner() {
   const router = useRouter();
-  const params = useSearchParams();
 
-  const firm = (params.get("firm") ?? "mckinsey") as FirmKey;
-  const difficulty = (params.get("difficulty") ?? "intermediate") as Difficulty;
-  const mode = (params.get("mode") ?? "text") as Mode;
-  const personality = (params.get("personality") ?? "strict") as "strict" | "friendly";
-  const caseTitle = params.get("title") ?? "Case Interview";
-  const casePrompt = params.get("prompt") ?? "";
-  const caseContext = params.get("context") ?? "";
-
-  const firmConfig = FIRM_CONFIGS[firm];
-
-  const [transcript, setTranscript] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: `Welcome. I'm your ${firmConfig.name} interviewer today.\n\n${casePrompt}\n\nTake a moment to read through the prompt. When you're ready, feel free to ask any clarifying questions.`,
-      timestamp: new Date(),
-    },
-  ]);
-
+  const [firm, setFirm] = useState<FirmKey>("mckinsey");
+  const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
+  const [mode, setMode] = useState<Mode>("text");
+  const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
+  const [caseTitle, setCaseTitle] = useState("Case Interview");
+  const [casePrompt, setCasePrompt] = useState("");
+  const [caseContext, setCaseContext] = useState("");
+  const [ready, setReady] = useState(false);
+  const [transcript, setTranscript] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
@@ -41,6 +31,30 @@ function SessionInner() {
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
+    const raw = sessionStorage.getItem("caseData");
+    if (raw) {
+      const data = JSON.parse(raw);
+      setFirm(data.firm ?? "mckinsey");
+      setDifficulty(data.difficulty ?? "intermediate");
+      setMode(data.mode ?? "text");
+      setPersonality(data.personality ?? "strict");
+      setCaseTitle(data.title ?? "Case Interview");
+      setCasePrompt(data.prompt ?? "");
+      setCaseContext(data.context ?? "");
+    }
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready || !casePrompt) return;
+    setTranscript([{
+      role: "assistant",
+      content: `Welcome. I'm your ${FIRM_CONFIGS[firm].name} interviewer today.\n\n${casePrompt}\n\nTake a moment to read through the prompt. When you're ready, feel free to ask any clarifying questions.`,
+      timestamp: new Date(),
+    }]);
+  }, [ready, casePrompt, firm]);
+
+  useEffect(() => {
     timerRef.current = setInterval(() => {
       setElapsedTime((t) => t + 1);
     }, 1000);
@@ -52,6 +66,8 @@ function SessionInner() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
+
+  const firmConfig = FIRM_CONFIGS[firm];
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60).toString().padStart(2, "0");
@@ -111,32 +127,36 @@ function SessionInner() {
   const handleEndSession = () => {
     if (timerRef.current) clearInterval(timerRef.current);
 
-    const evalParams = new URLSearchParams({
+    sessionStorage.setItem("transcriptData", JSON.stringify({
       firm,
       difficulty,
-      hintsUsed: hintsUsed.toString(),
-      duration: elapsedTime.toString(),
-      transcript: encodeURIComponent(JSON.stringify(transcript)),
-    });
+      hintsUsed,
+      duration: elapsedTime,
+      transcript,
+    }));
 
-    router.push(`/case/feedback?${evalParams.toString()}`);
+    router.push("/case/feedback");
   };
 
   const startRecording = () => {
     const SpeechRecognitionAPI =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognitionAPI) {
       alert("Your browser does not support voice input. Please use Chrome.");
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const recognition = new SpeechRecognitionAPI();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (event: any) => {
       const t = Array.from(event.results)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((r: any) => r[0].transcript)
         .join("");
       setInput(t);

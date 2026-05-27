@@ -47,22 +47,22 @@ export default function DashboardPage() {
 
       const caseData = await res.json();
 
-      const params = new URLSearchParams({
-        firm: selectedFirm,
-        type: selectedType,
-        difficulty: selectedDifficulty,
-        mode: selectedMode,
-        personality,
-        title: caseData.title,
-        prompt: caseData.prompt,
-        context: caseData.context ?? "",
-      });
+      sessionStorage.setItem("caseData", JSON.stringify({
+  firm: selectedFirm,
+  type: selectedType,
+  difficulty: selectedDifficulty,
+  mode: selectedMode,
+  personality,
+  title: caseData.title,
+  prompt: caseData.prompt,
+  context: caseData.context ?? "",
+}));
 
-      const route = selectedMode === "live"
-        ? `/case/interview?${params.toString()}`
-        : `/case/session?${params.toString()}`;
+const route = selectedMode === "live"
+  ? `/case/interview`
+  : `/case/session`;
 
-      router.push(route);
+router.push(route);
     } catch (err) {
       console.error(err);
       setLoading(false);

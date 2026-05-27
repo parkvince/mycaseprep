@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
@@ -8,50 +8,58 @@ import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 
 function FeedbackInner() {
-  const router = useRouter();
-  const params = useSearchParams();
+const router = useRouter();
 
-  const firm = (params.get("firm") ?? "mckinsey") as FirmKey;
-  const difficulty = (params.get("difficulty") ?? "intermediate") as Difficulty;
-  const hintsUsed = parseInt(params.get("hintsUsed") ?? "0");
-  const duration = parseInt(params.get("duration") ?? "0");
-  const transcriptRaw = params.get("transcript") ?? "[]";
+const [firm, setFirm] = useState<FirmKey>("mckinsey");
+const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
+const [hintsUsed, setHintsUsed] = useState(0);
+const [duration, setDuration] = useState(0);
+const [transcriptRaw, setTranscriptRaw] = useState("[]");
+const [dataLoaded, setDataLoaded] = useState(false);
 
-  const firmConfig = FIRM_CONFIGS[firm];
+const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+const [loading, setLoading] = useState(true);
+const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal">("overview");
 
-  const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal">("overview");
+useEffect(() => {
+  const raw = sessionStorage.getItem("transcriptData");
+  if (raw) {
+    const data = JSON.parse(raw);
+    setFirm(data.firm ?? "mckinsey");
+    setDifficulty(data.difficulty ?? "intermediate");
+    setHintsUsed(data.hintsUsed ?? 0);
+    setDuration(data.duration ?? 0);
+    setTranscriptRaw(JSON.stringify(data.transcript ?? []));
+  } else {
+    setLoading(false);
+  }
+  setDataLoaded(true);
+}, []);
 
-  useEffect(() => {
-    const evaluate = async () => {
-      try {
-        const transcript = JSON.parse(decodeURIComponent(transcriptRaw));
+useEffect(() => {
+  if (!dataLoaded || transcriptRaw === "[]") return;
+  const evaluate = async () => {
+    try {
+      const transcript = JSON.parse(transcriptRaw);
+      const res = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firm, difficulty, hintsUsed, transcript }),
+      });
+      const data = await res.json();
+      setEvaluation(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  evaluate();
+}, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed]);
 
-        const res = await fetch("/api/evaluate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firm,
-            difficulty,
-            hintsUsed,
-            transcript,
-          }),
-        });
+const firmConfig = FIRM_CONFIGS[firm];
 
-        const data = await res.json();
-        setEvaluation(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    evaluate();
-  }, []);
-
-  const tabStyle = (active: boolean): React.CSSProperties => ({
+const tabStyle = (active: boolean): React.CSSProperties => ({
     padding: "10px 24px",
     borderRadius: "8px",
     border: "none",
