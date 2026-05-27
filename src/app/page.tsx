@@ -125,17 +125,32 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 style={{
-            fontSize: "clamp(40px, 6vw, 68px)",
-            lineHeight: 1.08,
-            fontWeight: 400,
-            marginBottom: "24px",
-            letterSpacing: "-0.02em",
-          }}>
-            Ace your consulting
-            <br />
-            case interview.
-          </h1>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+  <span style={{
+    fontSize: "11px",
+    fontWeight: 600,
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    color: "#111111",
+    background: "#f0f0f0",
+    border: "1px solid #e0e0e0",
+    borderRadius: "20px",
+    padding: "5px 14px",
+  }}>
+    Beta
+  </span>
+</div>
+<h1 style={{
+  fontSize: "clamp(40px, 6vw, 68px)",
+  lineHeight: 1.08,
+  fontWeight: 400,
+  marginBottom: "24px",
+  letterSpacing: "-0.02em",
+}}>
+  Ace your consulting
+  <br />
+  case interview.
+</h1>
           <p style={{
             fontSize: "17px",
             color: "var(--text-secondary)",

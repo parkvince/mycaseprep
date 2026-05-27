@@ -27,12 +27,13 @@ function InterviewInner() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const firm = (params.get("firm") ?? "mckinsey") as FirmKey;
-  const difficulty = (params.get("difficulty") ?? "intermediate") as Difficulty;
-  const personality = (params.get("personality") ?? "strict") as "strict" | "friendly";
-  const caseTitle = params.get("title") ?? "Case Interview";
-  const casePrompt = params.get("prompt") ?? "";
-  const caseContext = params.get("context") ?? "";
+  const [firm, setFirm] = useState<FirmKey>("mckinsey");
+  const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
+  const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
+  const [caseTitle, setCaseTitle] = useState("Case Interview");
+  const [casePrompt, setCasePrompt] = useState("");
+  const [caseContext, setCaseContext] = useState("");
+  const [ready, setReady] = useState(false);
 
   const firmConfig = FIRM_CONFIGS[firm];
 
