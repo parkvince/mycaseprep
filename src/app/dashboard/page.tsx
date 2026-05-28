@@ -134,9 +134,9 @@ export default function DashboardPage() {
           <button
             className="btn-secondary"
             style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/settings")}
+            onClick={() => router.push("/history")}
           >
-            Settings
+            History
           </button>
         </div>
       </nav>

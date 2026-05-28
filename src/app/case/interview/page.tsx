@@ -238,6 +238,7 @@ function InterviewInner() {
       hintsUsed,
       duration: elapsedTime,
       transcript,
+      caseTitle,
     }));
 
     router.push("/case/feedback");

@@ -8,58 +8,76 @@ import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 
 function FeedbackInner() {
-const router = useRouter();
+  const router = useRouter();
 
-const [firm, setFirm] = useState<FirmKey>("mckinsey");
-const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
-const [hintsUsed, setHintsUsed] = useState(0);
-const [duration, setDuration] = useState(0);
-const [transcriptRaw, setTranscriptRaw] = useState("[]");
-const [dataLoaded, setDataLoaded] = useState(false);
+  const [firm, setFirm] = useState<FirmKey>("mckinsey");
+  const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [transcriptRaw, setTranscriptRaw] = useState("[]");
+  const [caseTitle, setCaseTitle] = useState("Case Interview");
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
-const [loading, setLoading] = useState(true);
-const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal">("overview");
+  const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal">("overview");
 
-useEffect(() => {
-  const raw = sessionStorage.getItem("transcriptData");
-  if (raw) {
-    const data = JSON.parse(raw);
-    setFirm(data.firm ?? "mckinsey");
-    setDifficulty(data.difficulty ?? "intermediate");
-    setHintsUsed(data.hintsUsed ?? 0);
-    setDuration(data.duration ?? 0);
-    setTranscriptRaw(JSON.stringify(data.transcript ?? []));
-  } else {
-    setLoading(false);
-  }
-  setDataLoaded(true);
-}, []);
-
-useEffect(() => {
-  if (!dataLoaded || transcriptRaw === "[]") return;
-  const evaluate = async () => {
-    try {
-      const transcript = JSON.parse(transcriptRaw);
-      const res = await fetch("/api/evaluate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firm, difficulty, hintsUsed, transcript }),
-      });
-      const data = await res.json();
-      setEvaluation(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
+  useEffect(() => {
+    const raw = sessionStorage.getItem("transcriptData");
+    if (raw) {
+      const data = JSON.parse(raw);
+      setFirm(data.firm ?? "mckinsey");
+      setDifficulty(data.difficulty ?? "intermediate");
+      setHintsUsed(data.hintsUsed ?? 0);
+      setDuration(data.duration ?? 0);
+      setTranscriptRaw(JSON.stringify(data.transcript ?? []));
+      setCaseTitle(data.caseTitle ?? "Case Interview");
+    } else {
       setLoading(false);
     }
-  };
-  evaluate();
-}, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed]);
+    setDataLoaded(true);
+  }, []);
 
-const firmConfig = FIRM_CONFIGS[firm];
+  useEffect(() => {
+    if (!dataLoaded || transcriptRaw === "[]") return;
+    const evaluate = async () => {
+      try {
+        const transcript = JSON.parse(transcriptRaw);
+        const res = await fetch("/api/evaluate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ firm, difficulty, hintsUsed, transcript }),
+        });
+        const data = await res.json();
+        setEvaluation(data);
 
-const tabStyle = (active: boolean): React.CSSProperties => ({
+        // Save session to database
+        await fetch("/api/sessions/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "ai",
+            firm,
+            difficulty,
+            caseTitle,
+            duration,
+            hintsUsed,
+            overallScore: data.overallScore,
+            transcript,
+          }),
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    evaluate();
+  }, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed, caseTitle, duration]);
+
+  const firmConfig = FIRM_CONFIGS[firm];
+
+  const tabStyle = (active: boolean): React.CSSProperties => ({
     padding: "10px 24px",
     borderRadius: "8px",
     border: "none",
@@ -129,35 +147,34 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
       <nav style={{
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "0 48px",
-  height: "60px",
-  borderBottom: "1px solid var(--border)",
-  position: "sticky",
-  top: 0,
-  background: "rgba(255,255,255,0.98)",
-  zIndex: 100,
-}}>
-  <span
-    style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, color: "#111111", cursor: "pointer" }}
-    onClick={() => router.push("/")}
-  >
-    MyCasePrep
-  </span>
-  <div style={{ display: "flex", gap: "12px" }}>
-    <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>
-      Practice Again
-    </button>
-    <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/")}>
-      Dashboard
-    </button>
-  </div>
-</nav>
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0 48px",
+        height: "60px",
+        borderBottom: "1px solid var(--border)",
+        position: "sticky",
+        top: 0,
+        background: "rgba(255,255,255,0.98)",
+        zIndex: 100,
+      }}>
+        <span
+          style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, color: "#111111", cursor: "pointer" }}
+          onClick={() => router.push("/")}
+        >
+          MyCasePrep
+        </span>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>
+            Practice Again
+          </button>
+          <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/history")}>
+            View History
+          </button>
+        </div>
+      </nav>
 
       <div style={{ maxWidth: "860px", margin: "0 auto", padding: "60px 48px" }}>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -209,7 +226,6 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
           </div>
         </motion.div>
 
-        {/* Tabs */}
         <div style={{
           display: "flex",
           gap: "4px",
@@ -225,7 +241,6 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
           <button style={tabStyle(activeTab === "ideal")} onClick={() => setActiveTab("ideal")}>Top 1% Answer</button>
         </div>
 
-        {/* Overview Tab */}
         {activeTab === "overview" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -310,7 +325,6 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
           </motion.div>
         )}
 
-        {/* Breakdown Tab */}
         {activeTab === "breakdown" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -347,7 +361,6 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
           </motion.div>
         )}
 
-        {/* Ideal Answer Tab */}
         {activeTab === "ideal" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -383,9 +396,9 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
           <button
             className="btn-secondary"
             style={{ flex: 1, padding: "16px", fontSize: "15px" }}
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/history")}
           >
-            Back to Dashboard
+            View History
           </button>
         </div>
       </div>
@@ -400,4 +413,3 @@ export default function FeedbackPage() {
     </Suspense>
   );
 }
-//end
