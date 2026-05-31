@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -13,6 +12,15 @@ model User {
   email     String
   createdAt DateTime  @default(now())
   sessions  Session[]
+  usage     Usage?
+}
+
+model Usage {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  casesUsed    Int      @default(0)
+  windowStart  DateTime @default(now())
 }
 
 model Session {

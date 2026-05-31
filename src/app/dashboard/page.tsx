@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { CaseType, Difficulty, FirmKey, Mode } from "@/types";
@@ -21,61 +21,102 @@ const difficulties: { label: string; value: Difficulty; desc: string }[] = [
   { label: "Advanced", value: "advanced", desc: "Partner-level rigor, high ambiguity" },
 ];
 
+interface UsageStatus {
+  allowed: boolean;
+  casesUsed: number;
+  casesRemaining: number;
+  resetsAt: string | null;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
 
   const [selectedFirm, setSelectedFirm] = useState<FirmKey>("mckinsey");
   const [selectedType, setSelectedType] = useState<CaseType>("random");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("intermediate");
-  const [selectedMode, setSelectedMode] = useState<Mode | "live">("text");  const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
+  const [selectedMode, setSelectedMode] = useState<Mode | "live">("text");
+  const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
   const [loading, setLoading] = useState(false);
+  const [usage, setUsage] = useState<UsageStatus | null>(null);
+  const [usageLoading, setUsageLoading] = useState(true);
 
   const firmEntries = Object.entries(FIRM_CONFIGS) as [FirmKey, typeof FIRM_CONFIGS[FirmKey]][];
 
+  useEffect(() => {
+    const checkUsage = async () => {
+      try {
+        const res = await fetch("/api/usage/check");
+        const data = await res.json();
+        setUsage(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setUsageLoading(false);
+      }
+    };
+    checkUsage();
+  }, []);
+
+  const formatResetsAt = (resetsAt: string) => {
+    const diff = new Date(resetsAt).getTime() - Date.now();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  };
+
   const handleStart = async () => {
-  setLoading(true);
-  try {
-    const res = await fetch("/api/case/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    if (!usage?.allowed) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/case/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firm: selectedFirm,
+          type: selectedType,
+          difficulty: selectedDifficulty,
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("API error:", res.status, text);
+        setLoading(false);
+        return;
+      }
+
+      const caseData = await res.json();
+
+      // Increment usage counter as soon as case is generated
+      await fetch("/api/usage/increment", { method: "POST" });
+
+      sessionStorage.setItem("caseData", JSON.stringify({
         firm: selectedFirm,
         type: selectedType,
         difficulty: selectedDifficulty,
-      }),
-    });
+        mode: selectedMode,
+        personality,
+        title: caseData.title,
+        prompt: caseData.prompt,
+        context: caseData.context ?? "",
+      }));
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("API error:", res.status, text);
+      // Refresh usage state
+      const usageRes = await fetch("/api/usage/check");
+      const usageData = await usageRes.json();
+      setUsage(usageData);
+
+      const route = selectedMode === "live"
+        ? `/case/interview`
+        : `/case/session`;
+
+      router.push(route);
+    } catch (err) {
+      console.error(err);
       setLoading(false);
-      return;
     }
-
-    const caseData = await res.json();
-    console.log("caseData received:", caseData);
-
-    sessionStorage.setItem("caseData", JSON.stringify({
-      firm: selectedFirm,
-      type: selectedType,
-      difficulty: selectedDifficulty,
-      mode: selectedMode,
-      personality,
-      title: caseData.title,
-      prompt: caseData.prompt,
-      context: caseData.context ?? "",
-    }));
-
-    const route = selectedMode === "live"
-      ? `/case/interview`
-      : `/case/session`;
-
-    router.push(route);
-  } catch (err) {
-    console.error(err);
-    setLoading(false);
-  }
-};
+  };
 
   const sectionLabel: React.CSSProperties = {
     fontSize: "11px",
@@ -112,6 +153,7 @@ export default function DashboardPage() {
         zIndex: 100,
       }}>
         <span
+          suppressHydrationWarning
           style={{
             fontFamily: "Cormorant, serif",
             fontSize: "22px",
@@ -144,29 +186,92 @@ export default function DashboardPage() {
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "60px 48px" }}>
 
         <motion.div
-  initial={{ opacity: 0, y: 16 }}
-  animate={{ opacity: 1, y: 0 }}
-  style={{ marginBottom: "48px" }}
->
-  <h1 style={{
-    fontSize: "clamp(26px, 3vw, 38px)",
-    fontWeight: 400,
-    marginBottom: "8px",
-    letterSpacing: "-0.01em",
-  }}>
-    Start a Case
-  </h1>
-  <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
-    Configure your simulation and start practicing.
-  </p>
-</motion.div>
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ marginBottom: "48px" }}
+        >
+          <h1 style={{
+            fontSize: "clamp(26px, 3vw, 38px)",
+            fontWeight: 400,
+            marginBottom: "8px",
+            letterSpacing: "-0.01em",
+          }}>
+            Start a Case
+          </h1>
+          <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
+            Configure your simulation and start practicing.
+          </p>
+        </motion.div>
+
+        {/* Usage banner */}
+        {!usageLoading && usage && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              marginBottom: "32px",
+              padding: "16px 20px",
+              borderRadius: "10px",
+              border: `1px solid ${usage.allowed ? "var(--border)" : "#fca5a5"}`,
+              background: usage.allowed ? "var(--bg-card)" : "#fff5f5",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <div style={{
+                fontSize: "13px",
+                fontWeight: 600,
+                color: usage.allowed ? "var(--text-primary)" : "#dc2626",
+                marginBottom: "2px",
+              }}>
+                {usage.allowed
+                  ? `${usage.casesRemaining} AI case${usage.casesRemaining !== 1 ? "s" : ""} remaining this window`
+                  : "AI case limit reached for this window"}
+              </div>
+              <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
+                {usage.allowed
+                  ? `${usage.casesUsed} of 2 used · resets every 12 hours`
+                  : usage.resetsAt
+                    ? `Resets in ${formatResetsAt(usage.resetsAt)} · Try a guided case in the meantime`
+                    : "Resets every 12 hours"}
+              </div>
+            </div>
+            {!usage.allowed && (
+              <button
+                className="btn-primary"
+                style={{ padding: "8px 18px", fontSize: "13px", flexShrink: 0 }}
+                onClick={() => router.push("/library")}
+              >
+                Browse Guided Cases →
+              </button>
+            )}
+            {usage.allowed && (
+              <div style={{ display: "flex", gap: "6px" }}>
+                {[0, 1].map((i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: "10px",
+                      height: "10px",
+                      borderRadius: "50%",
+                      background: i < usage.casesUsed ? "var(--text-secondary)" : "#111111",
+                      border: "1px solid #111111",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* Firm */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          style={{ marginBottom: "40px" }}
+          style={{ marginBottom: "40px", opacity: usage?.allowed === false ? 0.4 : 1, pointerEvents: usage?.allowed === false ? "none" : "auto" }}
         >
           <p style={sectionLabel}>Firm</p>
           <div style={{
@@ -196,7 +301,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          style={{ marginBottom: "40px" }}
+          style={{ marginBottom: "40px", opacity: usage?.allowed === false ? 0.4 : 1, pointerEvents: usage?.allowed === false ? "none" : "auto" }}
         >
           <p style={sectionLabel}>Case Type</p>
           <div style={{
@@ -224,7 +329,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          style={{ marginBottom: "40px" }}
+          style={{ marginBottom: "40px", opacity: usage?.allowed === false ? 0.4 : 1, pointerEvents: usage?.allowed === false ? "none" : "auto" }}
         >
           <p style={sectionLabel}>Difficulty</p>
           <div style={{
@@ -250,7 +355,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          style={{ marginBottom: "40px" }}
+          style={{ marginBottom: "40px", opacity: usage?.allowed === false ? 0.4 : 1, pointerEvents: usage?.allowed === false ? "none" : "auto" }}
         >
           <p style={sectionLabel}>Mode</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
@@ -297,7 +402,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          style={{ marginBottom: "48px" }}
+          style={{ marginBottom: "48px", opacity: usage?.allowed === false ? 0.4 : 1, pointerEvents: usage?.allowed === false ? "none" : "auto" }}
         >
           <p style={sectionLabel}>Interviewer Style</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px" }}>
@@ -324,19 +429,44 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <button
-            className="btn-primary"
-            style={{
-              width: "100%",
-              padding: "16px",
-              fontSize: "15px",
-              opacity: loading ? 0.7 : 1,
-            }}
-            onClick={handleStart}
-            disabled={loading}
-          >
-            {loading ? "Generating your case..." : "Start Simulation →"}
-          </button>
+          {usage?.allowed === false ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <button
+                className="btn-primary"
+                style={{
+                  width: "100%",
+                  padding: "16px",
+                  fontSize: "15px",
+                  opacity: 0.4,
+                  cursor: "not-allowed",
+                }}
+                disabled
+              >
+                No AI Cases Remaining
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ width: "100%", padding: "16px", fontSize: "15px" }}
+                onClick={() => router.push("/library")}
+              >
+                Browse Guided Cases Instead →
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn-primary"
+              style={{
+                width: "100%",
+                padding: "16px",
+                fontSize: "15px",
+                opacity: loading ? 0.7 : 1,
+              }}
+              onClick={handleStart}
+              disabled={loading || usageLoading}
+            >
+              {loading ? "Generating your case..." : "Start Simulation →"}
+            </button>
+          )}
         </motion.div>
 
       </div>
