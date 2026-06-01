@@ -3,7 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MyCasePrep — AI Consulting Interview Simulator",
+  title: "MyCP - AI Case Practice",
   description:
     "Practice consulting case interviews with AI. Get firm-specific feedback from McKinsey, Bain, BCG and more.",
 };
