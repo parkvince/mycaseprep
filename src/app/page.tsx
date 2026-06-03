@@ -16,32 +16,32 @@ const features = [
   {
     number: "01",
     title: "Firm-Specific Feedback",
-    desc: "Get graded exactly how McKinsey, Bain, and BCG would evaluate you. Each firm has its own rubric and feedback style.",
+    desc: "Graded the way McKinsey, Bain, and BCG actually evaluate candidates. Each firm has its own rubric.",
   },
   {
     number: "02",
-    title: "AI Interviewer",
-    desc: "A realistic AI interviewer that never gives away answers. It pushes back, asks follow-ups, and holds a high bar.",
+    title: "Realistic Interviewer",
+    desc: "An interviewer that never gives away answers. It pushes back, asks follow-ups, and holds a high bar.",
   },
   {
     number: "03",
     title: "Detailed Scorecard",
-    desc: "Structure, quantitative accuracy, communication — each dimension scored, explained, and benchmarked.",
+    desc: "Structure, quantitative accuracy, communication — each dimension scored and benchmarked against top candidates.",
   },
   {
     number: "04",
-    title: "Voice + Text Modes",
-    desc: "Practice speaking out loud or typing your answers. Both modes simulate real interview conditions.",
+    title: "Voice + Text",
+    desc: "Practice speaking out loud or typing your answers. Both modes replicate real interview conditions.",
   },
   {
     number: "05",
-    title: "Top 1% Answers",
-    desc: "After each case, see exactly what the best candidates would have said differently.",
+    title: "Model Answers",
+    desc: "After each case, see exactly what the strongest candidates would have said differently.",
   },
   {
     number: "06",
     title: "Performance Tracking",
-    desc: "Track your improvement across every session. Identify your weak spots before your real interview.",
+    desc: "Every session is saved. Track your score over time and see where you keep losing points.",
   },
 ];
 
@@ -126,31 +126,31 @@ export default function LandingPage() {
           transition={{ duration: 0.5 }}
         >
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-  <span style={{
-    fontSize: "11px",
-    fontWeight: 600,
-    letterSpacing: "0.1em",
-    textTransform: "uppercase",
-    color: "#111111",
-    background: "#f0f0f0",
-    border: "1px solid #e0e0e0",
-    borderRadius: "20px",
-    padding: "5px 14px",
-  }}>
-    Beta
-  </span>
-</div>
-<h1 style={{
-  fontSize: "clamp(40px, 6vw, 68px)",
-  lineHeight: 1.08,
-  fontWeight: 400,
-  marginBottom: "24px",
-  letterSpacing: "-0.02em",
-}}>
-  Ace your consulting
-  <br />
-  case interview.
-</h1>
+            <span style={{
+              fontSize: "11px",
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "#111111",
+              background: "#f0f0f0",
+              border: "1px solid #e0e0e0",
+              borderRadius: "20px",
+              padding: "5px 14px",
+            }}>
+              Beta
+            </span>
+          </div>
+          <h1 style={{
+            fontSize: "clamp(40px, 6vw, 68px)",
+            lineHeight: 1.08,
+            fontWeight: 400,
+            marginBottom: "24px",
+            letterSpacing: "-0.02em",
+          }}>
+            Ace your consulting
+            <br />
+            case interview.
+          </h1>
           <p style={{
             fontSize: "17px",
             color: "var(--text-secondary)",
@@ -159,36 +159,36 @@ export default function LandingPage() {
             maxWidth: "480px",
             margin: "0 auto 36px",
           }}>
-            Practice with a realistic AI interviewer. Get firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
+            Practice with a realistic interviewer simulation. Firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-  {isSignedIn ? (
-    <>
-      <button
-        className="btn-primary"
-        style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
-        onClick={() => router.push("/dashboard")}
-      >
-        AI Cases →
-      </button>
-      <button
-        className="btn-primary"
-        style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
-        onClick={() => router.push("/library")}
-      >
-        Guided Cases →
-      </button>
-    </>
-  ) : (
-    <button
-      className="btn-primary"
-      style={{ fontSize: "15px", padding: "11px 28px" }}
-      onClick={() => router.push("/auth/sign-up")}
-    >
-      Get started free
-    </button>
-  )}
-</div>
+            {isSignedIn ? (
+              <>
+                <button
+                  className="btn-primary"
+                  style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
+                  onClick={() => router.push("/dashboard")}
+                >
+                  Cases →
+                </button>
+                <button
+                  className="btn-primary"
+                  style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
+                  onClick={() => router.push("/library")}
+                >
+                  Guided Cases →
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn-primary"
+                style={{ fontSize: "15px", padding: "11px 28px" }}
+                onClick={() => router.push("/auth/sign-up")}
+              >
+                Get started free
+              </button>
+            )}
+          </div>
         </motion.div>
       </section>
 
@@ -243,7 +243,7 @@ export default function LandingPage() {
           marginBottom: "64px",
           letterSpacing: "-0.01em",
         }}>
-          Everything you need to get the offer.
+          Built for serious prep.
         </h2>
         <div style={{
           display: "grid",
@@ -305,7 +305,7 @@ export default function LandingPage() {
           marginBottom: "16px",
           letterSpacing: "-0.01em",
         }}>
-          Ready to start practicing?
+          Start practicing today.
         </h2>
         <p style={{
           color: "var(--text-secondary)",
@@ -319,7 +319,7 @@ export default function LandingPage() {
           style={{ fontSize: "15px", padding: "11px 28px" }}
           onClick={() => router.push(isSignedIn ? "/dashboard" : "/auth/sign-up")}
         >
-          {isSignedIn ? "Start practicing →" : "Get started free"}
+          {isSignedIn ? "Go to cases →" : "Get started free"}
         </button>
       </section>
 
