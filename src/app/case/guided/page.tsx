@@ -18,10 +18,11 @@ function GuidedCaseInner() {
   const [currentQuestionId, setCurrentQuestionId] = useState<string>("");
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [score, setScore] = useState(50); // starts at 50, goes up/down
+  const [score, setScore] = useState(50);
   const [questionCount, setQuestionCount] = useState(0);
   const [pathTaken, setPathTaken] = useState<{ questionId: string; optionId: string; scoreImpact: number }[]>([]);
   const [finalAnswer, setFinalAnswer] = useState("");
+  const [saving, setSaving] = useState(false);
 
   if (!currentCase) {
     return (
@@ -31,6 +32,7 @@ function GuidedCaseInner() {
     );
   }
 
+  const totalQuestions = currentCase.questions.length;
   const firmConfig = FIRM_CONFIGS[currentCase.firm as FirmKey];
 
   const getCurrentQuestion = (): BranchQuestion | undefined => {
@@ -85,8 +87,28 @@ function GuidedCaseInner() {
     setShowFeedback(false);
   };
 
-  const handleSubmitFinal = () => {
-    setStage("complete");
+  const handleSubmitFinal = async () => {
+    setSaving(true);
+    try {
+      await fetch("/api/sessions/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "guided",
+          firm: currentCase.firm,
+          difficulty: currentCase.difficulty,
+          caseTitle: currentCase.title,
+          duration: questionCount * 120,
+          hintsUsed: 0,
+          guidedScore: score,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to save session:", err);
+    } finally {
+      setSaving(false);
+      setStage("complete");
+    }
   };
 
   const getScoreLabel = (s: number) => {
@@ -205,7 +227,7 @@ function GuidedCaseInner() {
               color: "var(--text-secondary)",
               lineHeight: 1.6,
             }}>
-              Your choices lead to different paths through this case. There is no single correct answer — your score reflects the cumulative quality of your decisions. Read each option carefully. The best answer is not always the longest.
+              Each answer routes you down a different path. Your score reflects every decision you make. Read carefully — the right answer is not always the most obvious one.
             </div>
 
             <button className="btn-primary" style={{ width: "100%", padding: "16px", fontSize: "15px" }} onClick={handleStart}>
@@ -219,6 +241,8 @@ function GuidedCaseInner() {
 
   // QUESTION
   if (stage === "question" && currentQuestion) {
+    const progressPct = Math.min((questionCount / totalQuestions) * 100, 95);
+
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
@@ -236,6 +260,16 @@ function GuidedCaseInner() {
             </div>
           </div>
         </nav>
+
+        {/* Progress bar */}
+        <div style={{ height: "3px", background: "var(--border)", width: "100%" }}>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 0.4 }}
+            style={{ height: "100%", background: "#111111" }}
+          />
+        </div>
 
         <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px" }}>
           <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
@@ -289,12 +323,13 @@ function GuidedCaseInner() {
                   Exhibit: {currentQuestion.exhibit.title}
                 </div>
                 <pre style={{
-                  fontSize: "13px",
+                  fontSize: "12px",
                   lineHeight: 1.6,
                   color: "var(--text-primary)",
-                  fontFamily: "Inter, sans-serif",
-                  whiteSpace: "pre-wrap" as const,
+                  fontFamily: "'Courier New', Courier, monospace",
+                  whiteSpace: "pre" as const,
                   overflowX: "auto" as const,
+                  margin: 0,
                 }}>
                   {currentQuestion.exhibit.data}
                 </pre>
@@ -439,11 +474,11 @@ function GuidedCaseInner() {
             />
             <button
               className="btn-primary"
-              style={{ width: "100%", padding: "14px", fontSize: "15px", opacity: finalAnswer.trim().length > 40 ? 1 : 0.4 }}
+              style={{ width: "100%", padding: "14px", fontSize: "15px", opacity: finalAnswer.trim().length > 40 ? (saving ? 0.7 : 1) : 0.4 }}
               onClick={handleSubmitFinal}
-              disabled={finalAnswer.trim().length < 40}
+              disabled={finalAnswer.trim().length < 40 || saving}
             >
-              See Results →
+              {saving ? "Saving..." : "See Results →"}
             </button>
           </motion.div>
         </div>
@@ -464,6 +499,7 @@ function GuidedCaseInner() {
           </span>
           <div style={{ display: "flex", gap: "12px" }}>
             <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>Library</button>
+            <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/history")}>History</button>
             <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>Practice More</button>
           </div>
         </nav>
@@ -477,7 +513,7 @@ function GuidedCaseInner() {
               </div>
               <div style={{ fontSize: "16px", color: scoreColor, marginTop: "8px", fontWeight: 600 }}>{scoreLabel}</div>
               <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginTop: "4px" }}>
-                {questionCount} decisions made across {questionCount} case moments
+                {questionCount} decisions across {questionCount} case moments
               </div>
             </div>
 
@@ -528,8 +564,8 @@ function GuidedCaseInner() {
               <button className="btn-primary" style={{ flex: 1, padding: "14px", fontSize: "15px" }} onClick={() => router.push("/library")}>
                 Try Another Case →
               </button>
-              <button className="btn-secondary" style={{ flex: 1, padding: "14px", fontSize: "15px" }} onClick={() => router.push("/dashboard")}>
-                AI Interview Mode
+              <button className="btn-secondary" style={{ flex: 1, padding: "14px", fontSize: "15px" }} onClick={() => router.push("/history")}>
+                View History
               </button>
             </div>
           </motion.div>
