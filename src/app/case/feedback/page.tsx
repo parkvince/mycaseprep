@@ -7,6 +7,12 @@ import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string | Date;
+}
+
 function FeedbackInner() {
   const router = useRouter();
 
@@ -17,10 +23,11 @@ function FeedbackInner() {
   const [transcriptRaw, setTranscriptRaw] = useState("[]");
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [transcript, setTranscript] = useState<Message[]>([]);
 
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal" | "transcript">("overview");
 
   useEffect(() => {
     const raw = sessionStorage.getItem("transcriptData");
@@ -30,7 +37,9 @@ function FeedbackInner() {
       setDifficulty(data.difficulty ?? "intermediate");
       setHintsUsed(data.hintsUsed ?? 0);
       setDuration(data.duration ?? 0);
-      setTranscriptRaw(JSON.stringify(data.transcript ?? []));
+      const t = data.transcript ?? [];
+      setTranscriptRaw(JSON.stringify(t));
+      setTranscript(t);
       setCaseTitle(data.caseTitle ?? "Case Interview");
     } else {
       setLoading(false);
@@ -42,16 +51,15 @@ function FeedbackInner() {
     if (!dataLoaded || transcriptRaw === "[]") return;
     const evaluate = async () => {
       try {
-        const transcript = JSON.parse(transcriptRaw);
+        const t = JSON.parse(transcriptRaw);
         const res = await fetch("/api/evaluate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firm, difficulty, hintsUsed, transcript }),
+          body: JSON.stringify({ firm, difficulty, hintsUsed, transcript: t }),
         });
         const data = await res.json();
         setEvaluation(data);
 
-        // Save session to database
         await fetch("/api/sessions/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -63,7 +71,7 @@ function FeedbackInner() {
             duration,
             hintsUsed,
             overallScore: data.overallScore,
-            transcript,
+            transcript: t,
           }),
         });
       } catch (err) {
@@ -78,7 +86,7 @@ function FeedbackInner() {
   const firmConfig = FIRM_CONFIGS[firm];
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: "10px 24px",
+    padding: "10px 20px",
     borderRadius: "8px",
     border: "none",
     background: active ? "var(--accent)" : "transparent",
@@ -88,6 +96,7 @@ function FeedbackInner() {
     fontFamily: "DM Sans, sans-serif",
     fontWeight: 500,
     transition: "all 0.2s",
+    whiteSpace: "nowrap",
   });
 
   if (loading) {
@@ -226,6 +235,7 @@ function FeedbackInner() {
           </div>
         </motion.div>
 
+        {/* Tabs */}
         <div style={{
           display: "flex",
           gap: "4px",
@@ -235,12 +245,17 @@ function FeedbackInner() {
           borderRadius: "10px",
           border: "1px solid var(--border)",
           width: "fit-content",
+          flexWrap: "wrap",
         }}>
           <button style={tabStyle(activeTab === "overview")} onClick={() => setActiveTab("overview")}>Overview</button>
           <button style={tabStyle(activeTab === "breakdown")} onClick={() => setActiveTab("breakdown")}>Score Breakdown</button>
           <button style={tabStyle(activeTab === "ideal")} onClick={() => setActiveTab("ideal")}>Top 1% Answer</button>
+          {transcript.length > 0 && (
+            <button style={tabStyle(activeTab === "transcript")} onClick={() => setActiveTab("transcript")}>Transcript</button>
+          )}
         </div>
 
+        {/* Overview Tab */}
         {activeTab === "overview" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -325,6 +340,7 @@ function FeedbackInner() {
           </motion.div>
         )}
 
+        {/* Breakdown Tab */}
         {activeTab === "breakdown" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -361,6 +377,7 @@ function FeedbackInner() {
           </motion.div>
         )}
 
+        {/* Ideal Answer Tab */}
         {activeTab === "ideal" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -382,6 +399,85 @@ function FeedbackInner() {
             <p style={{ fontSize: "15px", lineHeight: 1.8 }}>
               {evaluation.topCandidateResponse}
             </p>
+          </motion.div>
+        )}
+
+        {/* Transcript Tab */}
+        {activeTab === "transcript" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          >
+            <div style={{
+              padding: "14px 18px",
+              background: "var(--bg-card)",
+              border: "1px solid var(--border)",
+              borderRadius: "8px",
+              fontSize: "13px",
+              color: "var(--text-secondary)",
+            }}>
+              {transcript.length} messages · {formatDuration(duration)} session
+            </div>
+
+            {transcript.map((msg, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px",
+                  alignItems: msg.role === "user" ? "flex-end" : "flex-start",
+                }}
+              >
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}>
+                  {msg.role === "assistant" && (
+                    <div style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "50%",
+                      background: firmConfig.color,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "10px",
+                      fontWeight: 700,
+                      color: "white",
+                      flexShrink: 0,
+                    }}>
+                      {firmConfig.name.charAt(0)}
+                    </div>
+                  )}
+                  <span style={{
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    color: "var(--text-secondary)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}>
+                    {msg.role === "user" ? "You" : firmConfig.name}
+                  </span>
+                </div>
+
+                <div style={{
+                  maxWidth: "720px",
+                  padding: "16px 20px",
+                  borderRadius: msg.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
+                  background: msg.role === "user" ? "#111111" : "var(--bg-card)",
+                  border: msg.role === "assistant" ? "1px solid var(--border)" : "none",
+                  fontSize: "15px",
+                  lineHeight: 1.7,
+                  whiteSpace: "pre-wrap",
+                  color: msg.role === "user" ? "#ffffff" : "var(--text-primary)",
+                }}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
           </motion.div>
         )}
 
