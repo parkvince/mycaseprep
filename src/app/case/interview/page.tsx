@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
+import { useUser } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
@@ -30,8 +31,100 @@ function renderContent(text: string): React.ReactNode[] {
   );
 }
 
+// SVG icons — clean stroke style like Google Meet
+const MicIcon = ({ muted }: { muted: boolean }) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {muted ? (
+      <>
+        <line x1="1" y1="1" x2="23" y2="23" />
+        <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+        <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
+        <line x1="12" y1="19" x2="12" y2="23" />
+        <line x1="8" y1="23" x2="16" y2="23" />
+      </>
+    ) : (
+      <>
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+        <line x1="12" y1="19" x2="12" y2="23" />
+        <line x1="8" y1="23" x2="16" y2="23" />
+      </>
+    )}
+  </svg>
+);
+
+const CameraIcon = ({ off }: { off: boolean }) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {off ? (
+      <>
+        <line x1="1" y1="1" x2="23" y2="23" />
+        <path d="M21 21H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3m3-3h6l2 3h4a2 2 0 0 1 2 2v9.34" />
+        <circle cx="12" cy="13" r="3" />
+      </>
+    ) : (
+      <>
+        <path d="M23 7l-7 5 7 5V7z" />
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+      </>
+    )}
+  </svg>
+);
+
+const EndCallIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" transform="rotate(135 12 12)" />
+  </svg>
+);
+
+const ChatIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+const CaseIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="16" y1="13" x2="8" y2="13" />
+    <line x1="16" y1="17" x2="8" y2="17" />
+    <polyline points="10 9 9 9 8 9" />
+  </svg>
+);
+
+const HintIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 8v4" />
+    <path d="M12 16h.01" />
+  </svg>
+);
+
+// Dynamic hints based on interview stage
+function getHint(hintsUsed: number, caseContext: string, casePrompt: string): string {
+  const stage = hintsUsed % 3;
+  if (stage === 0) {
+    return caseContext || "Start by clarifying the objective and laying out a MECE framework with 2–3 key buckets before diving into analysis.";
+  }
+  if (stage === 1) {
+    const promptLower = casePrompt.toLowerCase();
+    if (promptLower.includes("profit") || promptLower.includes("revenue") || promptLower.includes("cost")) {
+      return "Break profitability into Revenue and Costs. For revenue: price × volume. For costs: fixed vs. variable, then by function (COGS, SG&A, etc.).";
+    }
+    if (promptLower.includes("market entry") || promptLower.includes("enter")) {
+      return "For market entry, cover: market attractiveness (size, growth, competition), company fit (capabilities, synergies), and entry mode (build, buy, partner).";
+    }
+    if (promptLower.includes("merger") || promptLower.includes("acqui")) {
+      return "Evaluate M&A on three dimensions: strategic fit (why), financial impact (value creation), and integration risk (execution).";
+    }
+    return "Quantify wherever possible. Interviewers want to see you work through numbers — even rough estimates show structured thinking.";
+  }
+  return "Summarize your analysis so far and state a clear hypothesis. A good consultant doesn't wait until the end — drive toward a recommendation at each step.";
+}
+
 function InterviewInner() {
   const router = useRouter();
+  const { user } = useUser();
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
@@ -56,8 +149,6 @@ function InterviewInner() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userVideoEnabled, setUserVideoEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
-  const [joinHovered, setJoinHovered] = useState(false);
-  const [backHovered, setBackHovered] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -103,31 +194,38 @@ function InterviewInner() {
     };
   }, []);
 
+  // Attach stream to video element whenever both are ready
+  useEffect(() => {
+    if (userVideoEnabled && userVideoRef.current && streamRef.current) {
+      userVideoRef.current.srcObject = streamRef.current;
+      userVideoRef.current.play().catch(() => {});
+    }
+  }, [userVideoEnabled]);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
-  // Audio level detection for user speaking indicator
   const startAudioMonitor = (stream: MediaStream) => {
     try {
-      const ctx = new AudioContext();
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 256;
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = 0.3;
       const source = ctx.createMediaStreamSource(stream);
       source.connect(analyser);
       audioContextRef.current = ctx;
       analyserRef.current = analyser;
-
+      const data = new Uint8Array(analyser.frequencyBinCount);
       const check = () => {
-        const data = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(data);
         const vol = data.reduce((a, b) => a + b, 0) / data.length;
-        setUserSpeaking(vol > 8);
+        setUserSpeaking(vol > 10);
         audioFrameRef.current = requestAnimationFrame(check);
       };
       check();
     } catch (e) {
-      console.error("Audio monitor failed:", e);
+      console.error("Audio monitor error:", e);
     }
   };
 
@@ -144,42 +242,67 @@ function InterviewInner() {
     synthRef.current.cancel();
     const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
     const utterance = new SpeechSynthesisUtterance(clean);
+
+    // Wait for voices to load
+    const trySpeak = () => {
+      const voices = synthRef.current!.getVoices();
+      let preferred;
+      if (INTERVIEWER.gender === "male") {
+        preferred = voices.find(v => v.name.includes("Daniel") || v.name.includes("Alex") || v.name.includes("Google UK English Male"))
+          ?? voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male"))
+          ?? voices.find(v => v.lang.startsWith("en"));
+      } else {
+        preferred = voices.find(v => v.name.includes("Samantha") || v.name.includes("Victoria") || v.name.includes("Google UK English Female"))
+          ?? voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female"))
+          ?? voices.find(v => v.lang.startsWith("en"));
+      }
+      if (preferred) utterance.voice = preferred;
+      utterance.rate = INTERVIEWER.gender === "female" ? 0.94 : 0.92;
+      utterance.pitch = INTERVIEWER.gender === "female" ? 1.05 : 0.95;
+      setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      synthRef.current!.speak(utterance);
+    };
+
     const voices = synthRef.current.getVoices();
-    let preferred;
-    if (INTERVIEWER.gender === "male") {
-      preferred = voices.find(v => v.name.includes("Daniel") || v.name.includes("Alex") || v.name.includes("Google UK English Male"))
-        ?? voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male"));
+    if (voices.length > 0) {
+      trySpeak();
     } else {
-      preferred = voices.find(v => v.name.includes("Samantha") || v.name.includes("Victoria") || v.name.includes("Google UK English Female"))
-        ?? voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female"));
+      synthRef.current.onvoiceschanged = () => trySpeak();
     }
-    if (preferred) utterance.voice = preferred;
-    utterance.rate = INTERVIEWER.gender === "female" ? 0.94 : 0.92;
-    utterance.pitch = INTERVIEWER.gender === "female" ? 1.05 : 0.95;
-    setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-    synthRef.current.speak(utterance);
   };
 
   const startSession = async () => {
+    let gotStream = false;
+
+    // Try video + audio first
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" },
+        audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 44100 },
+      });
       streamRef.current = stream;
-      if (userVideoRef.current) userVideoRef.current.srcObject = stream;
       setUserVideoEnabled(true);
       startAudioMonitor(stream);
+      gotStream = true;
     } catch {
-      // try audio only
+      // Try audio only
       try {
-        const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const audioStream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true },
+        });
         streamRef.current = audioStream;
         startAudioMonitor(audioStream);
-      } catch { /* no permission */ }
+        gotStream = true;
+      } catch {
+        // No permission at all — continue without
+      }
     }
+
     setSessionStarted(true);
     timerRef.current = setInterval(() => setElapsedTime(t => t + 1), 1000);
-    setTimeout(() => speak(transcript[0]?.content ?? ""), 800);
+    setTimeout(() => speak(transcript[0]?.content ?? ""), 600);
   };
 
   const toggleMute = () => {
@@ -265,6 +388,38 @@ function InterviewInner() {
     router.push("/case/feedback");
   };
 
+  const handleHint = () => {
+    setHintsUsed(h => h + 1);
+    setShowHint(true);
+  };
+
+  const currentHint = getHint(hintsUsed, caseContext, casePrompt);
+
+  // Bottom bar button style — consistent size regardless of active state
+  const ctrlBtn = (active = false, danger = false): React.CSSProperties => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "4px",
+    width: "72px",
+    height: "56px",
+    borderRadius: "10px",
+    border: `1px solid ${danger ? "#dc2626" : active ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.1)"}`,
+    background: danger ? "#dc2626" : active ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.06)",
+    color: danger ? "#ffffff" : active ? "#818cf8" : "rgba(255,255,255,0.7)",
+    cursor: "pointer",
+    flexShrink: 0,
+    transition: "background 0.15s, border-color 0.15s, color 0.15s",
+  });
+
+  const ctrlLabel: React.CSSProperties = {
+    fontSize: "10px",
+    fontFamily: "Inter, sans-serif",
+    fontWeight: 500,
+    lineHeight: 1,
+  };
+
   // ─── PRE-SESSION ───────────────────────────────────────────────
   if (!sessionStarted) {
     return (
@@ -275,119 +430,161 @@ function InterviewInner() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: "24px",
         color: "#ffffff",
-        padding: "40px 24px",
-        overflowY: "auto",
+        overflow: "hidden",
+        padding: "0 24px",
       }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "12px" }}>
+        <div style={{
+          width: "100%",
+          maxWidth: "520px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "20px",
+        }}>
+          {/* Firm label */}
+          <p style={{
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.3)",
+            margin: 0,
+          }}>
             {firmConfig.name} · Live Interview
           </p>
-          <h1 style={{ fontFamily: "Cormorant, serif", fontSize: "clamp(24px, 4vw, 46px)", fontWeight: 400, marginBottom: "6px", lineHeight: 1.1, maxWidth: "700px" }}>
+
+          {/* Case title — always one line, truncated */}
+          <h1 style={{
+            fontFamily: "Cormorant, serif",
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            fontWeight: 400,
+            margin: 0,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            width: "100%",
+            textAlign: "center",
+            lineHeight: 1.2,
+          }}>
             {caseTitle}
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "14px" }}>{difficulty} difficulty</p>
-        </div>
 
-        {/* Interviewer avatar — fixed circular crop */}
-        <div style={{
-          width: "110px",
-          height: "110px",
-          borderRadius: "50%",
-          overflow: "hidden",
-          border: "2.5px solid rgba(255,255,255,0.15)",
-          flexShrink: 0,
-          background: "#1a1a1a",
-        }}>
-          <img
-            src={INTERVIEWER.image}
-            alt={INTERVIEWER.name}
-            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
-          />
-        </div>
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "13px", margin: 0 }}>
+            {difficulty} difficulty
+          </p>
 
-        <div style={{ textAlign: "center" }}>
-          <p style={{ fontSize: "15px", fontWeight: 600, marginBottom: "3px" }}>{INTERVIEWER.name}</p>
-          <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>{INTERVIEWER.title}, {firmConfig.name}</p>
-        </div>
-
-        {/* Case brief — full text, scrollable */}
-        {casePrompt && (
-          <div style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.09)",
-            borderRadius: "12px",
-            padding: "20px 24px",
-            maxWidth: "560px",
-            width: "100%",
-            maxHeight: "200px",
-            overflowY: "auto",
-          }}>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginBottom: "10px" }}>
-              Case Brief
+          {/* Interviewer */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+            <div style={{
+              width: "88px",
+              height: "88px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: "2px solid rgba(255,255,255,0.12)",
+              flexShrink: 0,
+            }}>
+              <img
+                src={INTERVIEWER.image}
+                alt={INTERVIEWER.name}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
+              />
             </div>
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.62)", lineHeight: 1.75, margin: 0 }}>
-              {casePrompt}
-            </p>
+            <div style={{ textAlign: "center" }}>
+              <p style={{ fontSize: "14px", fontWeight: 600, margin: 0 }}>{INTERVIEWER.name}</p>
+              <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", margin: "2px 0 0" }}>
+                {INTERVIEWER.title}, {firmConfig.name}
+              </p>
+            </div>
           </div>
-        )}
 
-        <div style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "10px",
-          padding: "13px 20px",
-          maxWidth: "420px",
-          textAlign: "center",
-        }}>
-          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", lineHeight: 1.6, margin: 0 }}>
+          {/* Case brief — full text, no clipping, contained height */}
+          {casePrompt && (
+            <div style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.09)",
+              borderRadius: "10px",
+              padding: "16px 20px",
+              width: "100%",
+            }}>
+              <div style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.25)",
+                marginBottom: "8px",
+              }}>
+                Case Brief
+              </div>
+              <p style={{
+                fontSize: "13px",
+                color: "rgba(255,255,255,0.6)",
+                lineHeight: 1.7,
+                margin: 0,
+                display: "-webkit-box",
+                WebkitLineClamp: 5,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}>
+                {casePrompt}
+              </p>
+            </div>
+          )}
+
+          {/* Instructions */}
+          <p style={{
+            fontSize: "12px",
+            color: "rgba(255,255,255,0.35)",
+            textAlign: "center",
+            lineHeight: 1.6,
+            margin: 0,
+          }}>
             The interviewer speaks first. Respond by voice or text. You can mute at any time.
           </p>
+
+          {/* Join button — no scale transform, glow on hover via CSS */}
+          <style>{`
+            .join-btn { transition: box-shadow 0.2s, background 0.2s !important; }
+            .join-btn:hover { background: #f0f0f0 !important; box-shadow: 0 0 0 4px rgba(255,255,255,0.1), 0 8px 24px rgba(255,255,255,0.12) !important; }
+          `}</style>
+          <button
+            onClick={startSession}
+            className="join-btn"
+            style={{
+              background: "#ffffff",
+              color: "#111111",
+              border: "none",
+              borderRadius: "10px",
+              padding: "13px 0",
+              width: "100%",
+              fontSize: "15px",
+              fontWeight: 700,
+              cursor: "pointer",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Join Interview
+          </button>
+
+          <button
+            onClick={() => router.push("/dashboard")}
+            style={{
+              background: "transparent",
+              color: "rgba(255,255,255,0.25)",
+              border: "none",
+              fontSize: "13px",
+              cursor: "pointer",
+              fontFamily: "Inter, sans-serif",
+              transition: "color 0.2s",
+              padding: "4px 0",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.25)")}
+          >
+            Back
+          </button>
         </div>
-
-        {/* Join Interview — cool hover */}
-        <button
-          onClick={startSession}
-          onMouseEnter={() => setJoinHovered(true)}
-          onMouseLeave={() => setJoinHovered(false)}
-          style={{
-            background: joinHovered ? "#f5f5f5" : "#ffffff",
-            color: "#111111",
-            border: "none",
-            borderRadius: "10px",
-            padding: "14px 48px",
-            fontSize: "15px",
-            fontWeight: 700,
-            cursor: "pointer",
-            fontFamily: "Inter, sans-serif",
-            transition: "all 0.2s",
-            transform: joinHovered ? "scale(1.04)" : "scale(1)",
-            boxShadow: joinHovered
-              ? "0 0 0 4px rgba(255,255,255,0.12), 0 8px 32px rgba(255,255,255,0.15)"
-              : "0 0 0 0px transparent",
-          }}
-        >
-          {joinHovered ? "Join →" : "Join Interview"}
-        </button>
-
-        <button
-          onClick={() => router.push("/dashboard")}
-          onMouseEnter={() => setBackHovered(true)}
-          onMouseLeave={() => setBackHovered(false)}
-          style={{
-            background: "transparent",
-            color: backHovered ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)",
-            border: "none",
-            fontSize: "13px",
-            cursor: "pointer",
-            fontFamily: "Inter, sans-serif",
-            transition: "color 0.2s",
-            letterSpacing: "0.01em",
-          }}
-        >
-          ← Back
-        </button>
       </main>
     );
   }
@@ -401,74 +598,173 @@ function InterviewInner() {
       flexDirection: "column",
       color: "#ffffff",
       overflow: "hidden",
-      userSelect: "none",
     }}>
 
-      {/* Top status bar */}
+      {/* Top bar */}
       <div style={{
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "8px 20px",
+        padding: "0 20px",
+        height: "44px",
         background: "#1a1a1a",
         borderBottom: "1px solid rgba(255,255,255,0.06)",
         flexShrink: 0,
-        height: "44px",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "17px", fontWeight: 500 }}>MyCasePrep</span>
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e" }} />
-          <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>Live · {firmConfig.name}</span>
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e", flexShrink: 0 }} />
+          <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "300px" }}>
+            {caseTitle} · {firmConfig.name}
+          </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
           <div style={{
             padding: "3px 10px",
             borderRadius: "20px",
             fontSize: "11px",
             fontWeight: 600,
-            background: isSpeaking ? "rgba(34,197,94,0.15)" : loading ? "rgba(255,255,255,0.08)" : "rgba(99,102,241,0.15)",
-            color: isSpeaking ? "#22c55e" : loading ? "rgba(255,255,255,0.4)" : "#818cf8",
-            border: `1px solid ${isSpeaking ? "rgba(34,197,94,0.3)" : loading ? "rgba(255,255,255,0.1)" : "rgba(99,102,241,0.3)"}`,
+            background: isSpeaking ? "rgba(34,197,94,0.15)" : loading ? "rgba(255,255,255,0.07)" : "rgba(99,102,241,0.15)",
+            color: isSpeaking ? "#22c55e" : loading ? "rgba(255,255,255,0.35)" : "#818cf8",
+            border: `1px solid ${isSpeaking ? "rgba(34,197,94,0.3)" : loading ? "rgba(255,255,255,0.08)" : "rgba(99,102,241,0.3)"}`,
             transition: "all 0.3s",
           }}>
             {loading ? "Thinking..." : isSpeaking ? "Interviewer speaking" : "Your turn"}
           </div>
-          <span style={{ fontFamily: "monospace", fontSize: "13px", color: "rgba(255,255,255,0.35)", minWidth: "42px" }}>
+          <span style={{ fontFamily: "monospace", fontSize: "13px", color: "rgba(255,255,255,0.35)" }}>
             {formatTime(elapsedTime)}
           </span>
         </div>
       </div>
 
-      {/* Main content */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
+      {/* Hint overlay — always visible, outside chat panel */}
+      <AnimatePresence>
+        {showHint && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            style={{
+              position: "absolute",
+              top: "52px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "480px",
+              maxWidth: "90vw",
+              background: "#1e1e2e",
+              border: "1px solid rgba(99,102,241,0.35)",
+              borderRadius: "10px",
+              padding: "14px 16px",
+              zIndex: 400,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#818cf8", marginBottom: "6px" }}>
+                  Hint {hintsUsed}
+                </div>
+                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.75)", lineHeight: 1.65, margin: 0 }}>
+                  {currentHint}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowHint(false)}
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "rgba(255,255,255,0.5)",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  width: "24px",
+                  height: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                ×
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Case brief overlay — centered above bottom bar */}
+      <AnimatePresence>
+        {showCaseOverlay && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            style={{
+              position: "absolute",
+              bottom: "80px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "540px",
+              maxWidth: "90vw",
+              background: "#1e1e1e",
+              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: "12px",
+              zIndex: 300,
+              boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
+              maxHeight: "50vh",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "14px 18px",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              flexShrink: 0,
+            }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
+                Case Brief
+              </span>
+              <button
+                onClick={() => setShowCaseOverlay(false)}
+                style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: "18px", lineHeight: 1, padding: "0 2px" }}
+              >
+                ×
+              </button>
+            </div>
+            <div style={{ overflowY: "auto", padding: "16px 18px" }}>
+              <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.8, margin: 0, whiteSpace: "pre-wrap" }}>
+                {casePrompt}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main layout */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
         {/* Video area */}
-        <div style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          position: "relative",
-        }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
-          {/* Videos — side by side */}
+          {/* Video tiles — side by side */}
           <div style={{
             flex: 1,
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "8px",
-            padding: "12px",
-            paddingBottom: "0",
+            padding: "12px 12px 8px",
             overflow: "hidden",
           }}>
-
             {/* Interviewer tile */}
             <div style={{
               borderRadius: "12px",
               overflow: "hidden",
               background: "#1e1e1e",
               position: "relative",
-              border: isSpeaking ? "2px solid #22c55e" : "2px solid transparent",
+              border: `2px solid ${isSpeaking ? "#22c55e" : "rgba(255,255,255,0.05)"}`,
               transition: "border-color 0.25s",
             }}>
               <img
@@ -477,7 +773,6 @@ function InterviewInner() {
                 style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
               />
 
-              {/* Speaking animation */}
               <AnimatePresence>
                 {isSpeaking && (
                   <motion.div
@@ -486,13 +781,13 @@ function InterviewInner() {
                     exit={{ opacity: 0 }}
                     style={{
                       position: "absolute",
-                      bottom: "48px",
+                      bottom: "44px",
                       left: "50%",
                       transform: "translateX(-50%)",
                       display: "flex",
                       gap: "3px",
                       alignItems: "center",
-                      background: "rgba(0,0,0,0.6)",
+                      background: "rgba(0,0,0,0.65)",
                       borderRadius: "20px",
                       padding: "6px 14px",
                     }}
@@ -500,22 +795,20 @@ function InterviewInner() {
                     {[0, 1, 2, 3, 4].map(i => (
                       <motion.div
                         key={i}
-                        animate={{ height: ["3px", "16px", "3px"] }}
+                        animate={{ height: ["3px", "14px", "3px"] }}
                         transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.09 }}
                         style={{ width: "3px", background: "#22c55e", borderRadius: "2px" }}
                       />
                     ))}
-                    <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", marginLeft: "6px" }}>Speaking</span>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              {/* Thinking dots */}
               {loading && !isSpeaking && (
                 <div style={{
-                  position: "absolute", bottom: "48px", left: "50%", transform: "translateX(-50%)",
+                  position: "absolute", bottom: "44px", left: "50%", transform: "translateX(-50%)",
                   background: "rgba(0,0,0,0.6)", borderRadius: "20px", padding: "7px 14px",
-                  display: "flex", gap: "5px", alignItems: "center",
+                  display: "flex", gap: "4px", alignItems: "center",
                 }}>
                   {[0, 1, 2].map(i => (
                     <motion.div key={i} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
@@ -524,7 +817,6 @@ function InterviewInner() {
                 </div>
               )}
 
-              {/* Name tag */}
               <div style={{
                 position: "absolute", bottom: "10px", left: "12px",
                 background: "rgba(0,0,0,0.65)", borderRadius: "6px", padding: "4px 10px",
@@ -533,12 +825,11 @@ function InterviewInner() {
                 <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.4)", margin: 0 }}>{firmConfig.name}</p>
               </div>
 
-              {/* Mute interviewer */}
               <button
                 onClick={() => { synthRef.current?.cancel(); setIsSpeaking(false); }}
                 style={{
                   position: "absolute", top: "10px", right: "10px",
-                  background: "rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.12)",
+                  background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: "6px", padding: "4px 10px", fontSize: "11px",
                   color: "rgba(255,255,255,0.45)", cursor: "pointer", fontFamily: "Inter, sans-serif",
                 }}
@@ -553,40 +844,51 @@ function InterviewInner() {
               overflow: "hidden",
               background: "#1e1e1e",
               position: "relative",
-              border: userSpeaking && !isMuted ? "2px solid #22c55e" : "2px solid transparent",
+              border: `2px solid ${userSpeaking && !isMuted ? "#22c55e" : "rgba(255,255,255,0.05)"}`,
               transition: "border-color 0.15s",
             }}>
               {userVideoEnabled && !isVideoOff ? (
                 <video
                   ref={userVideoRef}
-                  autoPlay muted playsInline
+                  autoPlay
+                  muted
+                  playsInline
                   style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)", display: "block" }}
                 />
               ) : (
                 <div style={{
                   width: "100%", height: "100%", display: "flex", flexDirection: "column",
-                  alignItems: "center", justifyContent: "center", gap: "10px",
+                  alignItems: "center", justifyContent: "center", gap: "12px",
                 }}>
-                  <div style={{
-                    width: "56px", height: "56px", borderRadius: "50%",
-                    background: "rgba(255,255,255,0.08)",
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "22px",
-                  }}>
-                    👤
-                  </div>
-                  <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", margin: 0 }}>
-                    {isVideoOff ? "Camera off" : "Camera unavailable"}
-                  </p>
+                  {/* Clerk profile picture or initials fallback */}
+                  {user?.imageUrl ? (
+                    <div style={{ width: "72px", height: "72px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.1)" }}>
+                      <img src={user.imageUrl} alt="You" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
+                  ) : (
+                    <div style={{
+                      width: "72px", height: "72px", borderRadius: "50%",
+                      background: "rgba(255,255,255,0.08)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "24px", fontWeight: 700, color: "rgba(255,255,255,0.4)",
+                    }}>
+                      {user?.firstName?.charAt(0) ?? "Y"}
+                    </div>
+                  )}
+                  {isVideoOff && (
+                    <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.2)", margin: 0 }}>Camera off</p>
+                  )}
                 </div>
               )}
 
-              {/* Name tag */}
               <div style={{
                 position: "absolute", bottom: "10px", left: "12px",
                 background: "rgba(0,0,0,0.65)", borderRadius: "6px", padding: "4px 10px",
                 display: "flex", alignItems: "center", gap: "6px",
               }}>
-                <p style={{ fontSize: "12px", fontWeight: 600, margin: 0 }}>You</p>
+                <p style={{ fontSize: "12px", fontWeight: 600, margin: 0 }}>
+                  {user?.firstName ?? "You"}
+                </p>
                 {isMuted && <span style={{ fontSize: "10px", color: "#ef4444" }}>Muted</span>}
                 {userSpeaking && !isMuted && (
                   <div style={{ display: "flex", gap: "2px", alignItems: "center" }}>
@@ -600,9 +902,9 @@ function InterviewInner() {
             </div>
           </div>
 
-          {/* Zoom-style bottom controls */}
+          {/* Bottom control bar */}
           <div style={{
-            height: "64px",
+            height: "68px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -612,149 +914,36 @@ function InterviewInner() {
             flexShrink: 0,
             padding: "0 16px",
           }}>
-            {/* Mute */}
-            <button
-              onClick={toggleMute}
-              title={isMuted ? "Unmute" : "Mute"}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "3px",
-                background: isMuted ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.07)",
-                border: `1px solid ${isMuted ? "rgba(239,68,68,0.4)" : "rgba(255,255,255,0.1)"}`,
-                borderRadius: "10px",
-                padding: "8px 16px",
-                cursor: "pointer",
-                color: isMuted ? "#ef4444" : "rgba(255,255,255,0.75)",
-                transition: "all 0.15s",
-                minWidth: "64px",
-              }}
-            >
-              <span style={{ fontSize: "18px" }}>{isMuted ? "🔇" : "🎤"}</span>
-              <span style={{ fontSize: "10px", fontFamily: "Inter, sans-serif", fontWeight: 500 }}>
-                {isMuted ? "Unmute" : "Mute"}
-              </span>
+            <button onClick={toggleMute} style={ctrlBtn(isMuted)}>
+              <MicIcon muted={isMuted} />
+              <span style={ctrlLabel}>{isMuted ? "Unmute" : "Mute"}</span>
             </button>
 
-            {/* Video */}
-            <button
-              onClick={toggleVideo}
-              title={isVideoOff ? "Start Video" : "Stop Video"}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "3px",
-                background: isVideoOff ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.07)",
-                border: `1px solid ${isVideoOff ? "rgba(239,68,68,0.4)" : "rgba(255,255,255,0.1)"}`,
-                borderRadius: "10px",
-                padding: "8px 16px",
-                cursor: "pointer",
-                color: isVideoOff ? "#ef4444" : "rgba(255,255,255,0.75)",
-                transition: "all 0.15s",
-                minWidth: "64px",
-              }}
-            >
-              <span style={{ fontSize: "18px" }}>{isVideoOff ? "📷" : "📹"}</span>
-              <span style={{ fontSize: "10px", fontFamily: "Inter, sans-serif", fontWeight: 500 }}>
-                {isVideoOff ? "Start Video" : "Stop Video"}
-              </span>
+            <button onClick={toggleVideo} style={ctrlBtn(isVideoOff)}>
+              <CameraIcon off={isVideoOff} />
+              <span style={ctrlLabel}>{isVideoOff ? "Start Video" : "Stop Video"}</span>
             </button>
 
-            {/* Hint */}
-            <button
-              onClick={() => { setHintsUsed(h => h + 1); setShowHint(true); }}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "3px",
-                background: "rgba(255,255,255,0.07)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "10px",
-                padding: "8px 16px",
-                cursor: "pointer",
-                color: "rgba(255,255,255,0.75)",
-                transition: "all 0.15s",
-                minWidth: "64px",
-              }}
-            >
-              <span style={{ fontSize: "18px" }}>💡</span>
-              <span style={{ fontSize: "10px", fontFamily: "Inter, sans-serif", fontWeight: 500 }}>
-                Hint {hintsUsed > 0 ? `(${hintsUsed})` : ""}
-              </span>
+            <button onClick={handleHint} style={ctrlBtn(false)}>
+              <HintIcon />
+              <span style={ctrlLabel}>Hint {hintsUsed > 0 ? `(${hintsUsed})` : ""}</span>
             </button>
 
-            {/* Case brief */}
-            <button
-              onClick={() => setShowCaseOverlay(v => !v)}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "3px",
-                background: showCaseOverlay ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.07)",
-                border: `1px solid ${showCaseOverlay ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.1)"}`,
-                borderRadius: "10px",
-                padding: "8px 16px",
-                cursor: "pointer",
-                color: showCaseOverlay ? "#818cf8" : "rgba(255,255,255,0.75)",
-                transition: "all 0.15s",
-                minWidth: "64px",
-              }}
-            >
-              <span style={{ fontSize: "18px" }}>📄</span>
-              <span style={{ fontSize: "10px", fontFamily: "Inter, sans-serif", fontWeight: 500 }}>Case</span>
+            <button onClick={() => setShowCaseOverlay(v => !v)} style={ctrlBtn(showCaseOverlay)}>
+              <CaseIcon />
+              <span style={ctrlLabel}>Case</span>
             </button>
 
-            {/* Chat toggle */}
-            <button
-              onClick={() => setShowChat(v => !v)}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "3px",
-                background: showChat ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.07)",
-                border: `1px solid ${showChat ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.1)"}`,
-                borderRadius: "10px",
-                padding: "8px 16px",
-                cursor: "pointer",
-                color: showChat ? "#818cf8" : "rgba(255,255,255,0.75)",
-                transition: "all 0.15s",
-                minWidth: "64px",
-              }}
-            >
-              <span style={{ fontSize: "18px" }}>💬</span>
-              <span style={{ fontSize: "10px", fontFamily: "Inter, sans-serif", fontWeight: 500 }}>
-                {showChat ? "Hide Chat" : "Chat"}
-              </span>
+            <button onClick={() => setShowChat(v => !v)} style={ctrlBtn(showChat)}>
+              <ChatIcon />
+              <span style={ctrlLabel}>{showChat ? "Hide Chat" : "Chat"}</span>
             </button>
 
-            {/* Spacer */}
             <div style={{ flex: 1 }} />
 
-            {/* End call */}
-            <button
-              onClick={handleEndSession}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "3px",
-                background: "#dc2626",
-                border: "1px solid #dc2626",
-                borderRadius: "10px",
-                padding: "8px 20px",
-                cursor: "pointer",
-                color: "#ffffff",
-                transition: "all 0.15s",
-                minWidth: "72px",
-              }}
-            >
-              <span style={{ fontSize: "18px" }}>📵</span>
-              <span style={{ fontSize: "10px", fontFamily: "Inter, sans-serif", fontWeight: 600 }}>End</span>
+            <button onClick={handleEndSession} style={ctrlBtn(false, true)}>
+              <EndCallIcon />
+              <span style={ctrlLabel}>End</span>
             </button>
           </div>
         </div>
@@ -764,7 +953,7 @@ function InterviewInner() {
           {showChat && (
             <motion.div
               initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 320, opacity: 1 }}
+              animate={{ width: 300, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
               style={{
@@ -776,34 +965,32 @@ function InterviewInner() {
                 flexShrink: 0,
               }}
             >
-              {/* Chat header */}
               <div style={{
-                padding: "12px 16px",
+                padding: "10px 14px",
                 borderBottom: "1px solid rgba(255,255,255,0.07)",
-                fontSize: "12px",
+                fontSize: "11px",
                 fontWeight: 600,
-                letterSpacing: "0.06em",
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
-                color: "rgba(255,255,255,0.3)",
+                color: "rgba(255,255,255,0.25)",
                 flexShrink: 0,
               }}>
                 Transcript
               </div>
 
-              {/* Messages */}
               <div style={{ flex: 1, overflowY: "auto", padding: "12px", display: "flex", flexDirection: "column", gap: "10px" }}>
                 {transcript.map((msg, i) => (
                   <div key={i} style={{ display: "flex", flexDirection: "column", gap: "3px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
                     <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      {msg.role === "user" ? "You" : INTERVIEWER.name}
+                      {msg.role === "user" ? (user?.firstName ?? "You") : INTERVIEWER.name}
                     </span>
                     <div style={{
-                      maxWidth: "88%",
+                      maxWidth: "90%",
                       padding: "9px 12px",
                       borderRadius: msg.role === "user" ? "11px 3px 11px 11px" : "3px 11px 11px 11px",
                       background: msg.role === "user" ? "rgba(99,102,241,0.22)" : "rgba(255,255,255,0.06)",
                       fontSize: "13px",
-                      lineHeight: 1.65,
+                      lineHeight: 1.6,
                       color: "rgba(255,255,255,0.8)",
                     }}>
                       {renderContent(msg.content)}
@@ -823,8 +1010,8 @@ function InterviewInner() {
                 {isListening && interimText && (
                   <div style={{
                     padding: "9px 12px", borderRadius: "11px 3px 11px 11px",
-                    background: "rgba(99,102,241,0.08)", border: "1px dashed rgba(99,102,241,0.25)",
-                    fontSize: "12px", color: "rgba(255,255,255,0.35)", alignSelf: "flex-end", maxWidth: "88%",
+                    background: "rgba(99,102,241,0.07)", border: "1px dashed rgba(99,102,241,0.25)",
+                    fontSize: "12px", color: "rgba(255,255,255,0.3)", alignSelf: "flex-end", maxWidth: "90%",
                   }}>
                     {interimText}
                   </div>
@@ -832,22 +1019,6 @@ function InterviewInner() {
 
                 <div ref={bottomRef} />
               </div>
-
-              {/* Hint panel */}
-              <AnimatePresence>
-                {showHint && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    style={{ padding: "10px 14px", background: "rgba(99,102,241,0.08)", borderTop: "1px solid rgba(99,102,241,0.15)", fontSize: "12px", color: "rgba(255,255,255,0.6)", flexShrink: 0 }}
-                  >
-                    <strong style={{ color: "#818cf8" }}>Hint: </strong>
-                    {caseContext || "Structure your answer using a MECE framework before diving into analysis."}
-                    <button onClick={() => setShowHint(false)} style={{ marginLeft: "8px", background: "none", border: "none", color: "#818cf8", cursor: "pointer", fontSize: "12px" }}>×</button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               {/* Input */}
               <div style={{ padding: "10px 12px", borderTop: "1px solid rgba(255,255,255,0.07)", flexShrink: 0, display: "flex", flexDirection: "column", gap: "7px" }}>
@@ -868,8 +1039,8 @@ function InterviewInner() {
                     fontSize: "13px",
                     fontFamily: "Inter, sans-serif",
                     resize: "none",
-                    minHeight: "56px",
-                    maxHeight: "100px",
+                    minHeight: "52px",
+                    maxHeight: "96px",
                     outline: "none",
                     lineHeight: 1.5,
                     boxSizing: "border-box",
@@ -896,12 +1067,7 @@ function InterviewInner() {
                       gap: "4px",
                     }}
                   >
-                    {isListening ? (
-                      <>
-                        <motion.span animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 1, repeat: Infinity }}>●</motion.span>
-                        {input.trim() ? "Done →" : "Stop"}
-                      </>
-                    ) : "🎙 Speak"}
+                    {isListening ? (input.trim() ? "Done" : "Stop") : "Speak"}
                   </button>
                   <button
                     onClick={() => sendMessage(input)}
@@ -927,48 +1093,6 @@ function InterviewInner() {
           )}
         </AnimatePresence>
       </div>
-
-      {/* Case brief overlay */}
-      <AnimatePresence>
-        {showCaseOverlay && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            style={{
-              position: "absolute",
-              bottom: "80px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "500px",
-              maxWidth: "90vw",
-              background: "#1e1e1e",
-              border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: "14px",
-              padding: "20px",
-              zIndex: 300,
-              boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
-              maxHeight: "55vh",
-              overflowY: "auto",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
-                Case Brief
-              </span>
-              <button
-                onClick={() => setShowCaseOverlay(false)}
-                style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: "18px", lineHeight: 1, padding: "0 4px" }}
-              >
-                ×
-              </button>
-            </div>
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.8, margin: 0, whiteSpace: "pre-wrap" }}>
-              {casePrompt}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </main>
   );
 }
@@ -980,4 +1104,3 @@ export default function InterviewPage() {
     </Suspense>
   );
 }
-
