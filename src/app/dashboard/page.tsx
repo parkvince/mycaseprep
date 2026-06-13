@@ -89,8 +89,6 @@ export default function DashboardPage() {
       const caseData = await res.json();
 
       // Increment usage counter as soon as case is generated
-      await fetch("/api/usage/increment", { method: "POST" });
-
       sessionStorage.setItem("caseData", JSON.stringify({
         firm: selectedFirm,
         type: selectedType,
@@ -360,40 +358,23 @@ export default function DashboardPage() {
           <p style={sectionLabel}>Mode</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
             {[
-              { value: "text", label: "Text", desc: "Type your answers" },
-              { value: "voice", label: "Voice", desc: "Speak your answers aloud" },
-              { value: "live", label: "Live Interview", desc: "Video call with AI interviewer" },
-            ].map((m) => (
-              <div
-                key={m.value}
-                style={{
-                  ...optionCard(selectedMode === m.value),
-                  ...(m.value === "live" ? {
-                    borderColor: selectedMode === "live" ? "#111111" : "var(--border)",
-                    background: selectedMode === "live" ? "#111111" : "var(--bg-card)",
-                    color: selectedMode === "live" ? "#ffffff" : "var(--text-primary)",
-                  } : {})
-                }}
-                onClick={() => setSelectedMode(m.value as Mode | "live")}
-              >
-                <div style={{
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  marginBottom: "3px",
-                  color: selectedMode === m.value && m.value === "live" ? "#ffffff" : "inherit",
-                }}>
-                  {m.label}
+                { value: "text", label: "Text", desc: "Type your answers" },
+                { value: "voice", label: "Voice", desc: "Speak your answers aloud" },
+                { value: "live", label: "Live Interview", desc: "Video call with AI interviewer" },
+              ].map((m) => (
+                <div
+                  key={m.value}
+                  style={optionCard(selectedMode === m.value)}
+                  onClick={() => setSelectedMode(m.value as Mode | "live")}
+                >
+                  <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "3px" }}>
+                    {m.label}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
+                    {m.desc}
+                  </div>
                 </div>
-                <div style={{
-                  fontSize: "12px",
-                  color: selectedMode === m.value && m.value === "live"
-                    ? "rgba(255,255,255,0.6)"
-                    : "var(--text-secondary)",
-                }}>
-                  {m.desc}
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </motion.div>
 
@@ -473,7 +454,3 @@ export default function DashboardPage() {
     </main>
   );
 } 
-
-
-
-//
