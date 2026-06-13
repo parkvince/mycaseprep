@@ -10,25 +10,12 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const {
-      type,
-      firm,
-      difficulty,
-      caseTitle,
-      duration,
-      hintsUsed,
-      overallScore,
-      transcript,
-      guidedScore,
-    } = body;
+    const { type, firm, difficulty, caseTitle, duration, hintsUsed, overallScore, transcript, guidedScore } = body;
 
     const user = await prisma.user.upsert({
       where: { clerkId: userId },
       update: {},
-      create: {
-        clerkId: userId,
-        email: "",
-      },
+      create: { clerkId: userId, email: "" },
     });
 
     const session = await prisma.session.create({
@@ -45,6 +32,22 @@ export async function POST(req: NextRequest) {
         guidedScore: guidedScore ?? null,
       },
     });
+
+    // Only increment usage for AI cases (not guided)
+    if (type === "ai") {
+      const now = new Date();
+      const usageRecord = await prisma.usage.findUnique({ where: { userId: user.id } });
+      if (!usageRecord) {
+        await prisma.usage.create({ data: { userId: user.id, casesUsed: 1, windowStart: now } });
+      } else {
+        const windowEnd = new Date(usageRecord.windowStart.getTime() + 12 * 60 * 60 * 1000);
+        if (now > windowEnd) {
+          await prisma.usage.update({ where: { userId: user.id }, data: { casesUsed: 1, windowStart: now } });
+        } else {
+          await prisma.usage.update({ where: { userId: user.id }, data: { casesUsed: { increment: 1 } } });
+        }
+      }
+    }
 
     return NextResponse.json({ success: true, sessionId: session.id });
   } catch (error) {
