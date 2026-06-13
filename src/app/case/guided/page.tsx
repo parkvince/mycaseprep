@@ -143,7 +143,7 @@ function GuidedCaseInner() {
   // INTRO
   if (stage === "intro") {
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
@@ -153,7 +153,7 @@ function GuidedCaseInner() {
           </button>
         </nav>
 
-        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px", boxSizing: "border-box" as const, width: "100%" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{
               display: "inline-block",
@@ -244,7 +244,7 @@ function GuidedCaseInner() {
     const progressPct = Math.min((questionCount / totalQuestions) * 100, 95);
 
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
@@ -329,7 +329,9 @@ function GuidedCaseInner() {
                   fontFamily: "'Courier New', Courier, monospace",
                   whiteSpace: "pre" as const,
                   overflowX: "auto" as const,
+                  maxWidth: "100%",
                   margin: 0,
+                  boxSizing: "border-box" as const,
                 }}>
                   {currentQuestion.exhibit.data}
                 </pre>
@@ -440,11 +442,11 @@ function GuidedCaseInner() {
   // FINAL RECOMMENDATION
   if (stage === "final") {
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
         </nav>
-        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px", boxSizing: "border-box" as const, width: "100%" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px" }}>
               Final Recommendation
@@ -492,7 +494,7 @@ function GuidedCaseInner() {
     const scoreLabel = getScoreLabel(score);
 
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
