@@ -149,6 +149,7 @@ function InterviewInner() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userVideoEnabled, setUserVideoEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -257,7 +258,7 @@ function InterviewInner() {
           ?? voices.find(v => v.lang.startsWith("en"));
       }
       if (preferred) utterance.voice = preferred;
-      utterance.rate = INTERVIEWER.gender === "female" ? 0.94 : 0.92;
+      utterance.rate = INTERVIEWER.gender === "female" ? 1.15 : 1.1;
       utterance.pitch = INTERVIEWER.gender === "female" ? 1.05 : 0.95;
       setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
@@ -941,7 +942,7 @@ function InterviewInner() {
 
             <div style={{ flex: 1 }} />
 
-            <button onClick={handleEndSession} style={ctrlBtn(false, true)}>
+            <button onClick={() => setShowEndConfirm(true)} style={ctrlBtn(false, true)}>
               <EndCallIcon />
               <span style={ctrlLabel}>End</span>
             </button>
@@ -1093,6 +1094,97 @@ function InterviewInner() {
           )}
         </AnimatePresence>
       </div>
+      {/* End session confirmation */}
+<AnimatePresence>
+  {showEndConfirm && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.7)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 500,
+      }}
+      onClick={() => setShowEndConfirm(false)}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 8 }}
+        transition={{ duration: 0.15 }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "#1e1e1e",
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: "14px",
+          padding: "28px 32px",
+          width: "340px",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
+        }}
+      >
+        <h3 style={{
+          fontSize: "17px",
+          fontWeight: 600,
+          margin: "0 0 8px",
+          color: "#ffffff",
+          fontFamily: "Inter, sans-serif",
+        }}>
+          End interview?
+        </h3>
+        <p style={{
+          fontSize: "13px",
+          color: "rgba(255,255,255,0.45)",
+          lineHeight: 1.6,
+          margin: "0 0 24px",
+          fontFamily: "Inter, sans-serif",
+        }}>
+          You'll be taken to your scorecard. This can't be undone.
+        </p>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={() => setShowEndConfirm(false)}
+            style={{
+              flex: 1,
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              color: "rgba(255,255,255,0.7)",
+              cursor: "pointer",
+              fontSize: "13px",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 500,
+            }}
+          >
+            Keep going
+          </button>
+          <button
+            onClick={() => { setShowEndConfirm(false); handleEndSession(); }}
+            style={{
+              flex: 1,
+              padding: "10px",
+              borderRadius: "8px",
+              border: "none",
+              background: "#dc2626",
+              color: "#ffffff",
+              cursor: "pointer",
+              fontSize: "13px",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 600,
+            }}
+          >
+            End interview
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </main>
   );
 }
