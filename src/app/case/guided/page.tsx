@@ -38,11 +38,7 @@ function GuidedCaseInner() {
 
   const totalQuestions = currentCase.questions.length;
   const firmConfig = FIRM_CONFIGS[currentCase.firm as FirmKey];
-
-  const getCurrentQuestion = (): BranchQuestion | undefined =>
-    currentCase.questions.find(q => q.id === currentQuestionId);
-
-  const currentQuestion = getCurrentQuestion();
+  const currentQuestion = currentCase.questions.find(q => q.id === currentQuestionId);
   const selectedOption = currentQuestion?.options.find(o => o.id === selectedOptionId);
 
   const handleStart = () => {
@@ -116,13 +112,6 @@ function GuidedCaseInner() {
     return "var(--danger)";
   };
 
-  // viewport-based centering — immune to body width expansion
-  const mainStyle: React.CSSProperties = {
-    minHeight: "100vh",
-    background: "var(--bg)",
-    color: "var(--text-primary)",
-  };
-
   const navStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "space-between",
@@ -136,20 +125,9 @@ function GuidedCaseInner() {
     zIndex: 100,
   };
 
-  // KEY FIX: uses 50vw (viewport) not margin:auto (body width) for centering
-  const centeredSection = (maxW = 720): React.CSSProperties => ({
-    width: "100%",
-    boxSizing: "border-box" as const,
-    paddingTop: "60px",
-    paddingBottom: "60px",
-    paddingLeft: `max(48px, calc(50vw - ${maxW / 2}px))`,
-    paddingRight: `max(48px, calc(50vw - ${maxW / 2}px))`,
-  });
-
-  // INTRO
   if (stage === "intro") {
     return (
-      <main style={mainStyle}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
@@ -159,7 +137,7 @@ function GuidedCaseInner() {
           </button>
         </nav>
 
-        <div style={centeredSection(720)}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{
               display: "inline-block", padding: "4px 12px", border: "1px solid var(--border)",
@@ -195,25 +173,26 @@ function GuidedCaseInner() {
               display: "flex", gap: "16px", padding: "20px 24px", background: "var(--bg-card)",
               borderRadius: "8px", border: "1px solid var(--border)", marginBottom: "32px",
             }}>
-              {[
-                { label: "Format", value: "Branching Path" },
-                { label: "Duration", value: `${currentCase.estimatedMinutes} min` },
-                { label: "Difficulty", value: currentCase.difficulty },
-              ].map((item, i, arr) => (
-                <div key={item.label} style={{ display: "flex", flex: 1, alignItems: "center", gap: "16px" }}>
-                  <div style={{ flex: 1, textAlign: "center" }}>
-                    <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>{item.label}</div>
-                    <div style={{ fontSize: "14px", fontWeight: 600, textTransform: "capitalize" as const }}>{item.value}</div>
-                  </div>
-                  {i < arr.length - 1 && <div style={{ width: "1px", height: "32px", background: "var(--border)" }} />}
-                </div>
-              ))}
+              <div style={{ textAlign: "center", flex: 1 }}>
+                <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>Format</div>
+                <div style={{ fontSize: "14px", fontWeight: 600 }}>Branching Path</div>
+              </div>
+              <div style={{ width: "1px", background: "var(--border)" }} />
+              <div style={{ textAlign: "center", flex: 1 }}>
+                <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>Duration</div>
+                <div style={{ fontSize: "14px", fontWeight: 600 }}>{currentCase.estimatedMinutes} min</div>
+              </div>
+              <div style={{ width: "1px", background: "var(--border)" }} />
+              <div style={{ textAlign: "center", flex: 1 }}>
+                <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>Difficulty</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, textTransform: "capitalize" as const }}>{currentCase.difficulty}</div>
+              </div>
             </div>
 
             <div style={{
               padding: "16px 20px", background: "var(--bg-card)", borderRadius: "8px",
-              border: "1px solid var(--border)", marginBottom: "32px", fontSize: "13px",
-              color: "var(--text-secondary)", lineHeight: 1.6,
+              border: "1px solid var(--border)", marginBottom: "32px",
+              fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.6,
             }}>
               Each answer routes you down a different path. Your score reflects every decision you make. Read carefully — the right answer is not always the most obvious one.
             </div>
@@ -227,12 +206,11 @@ function GuidedCaseInner() {
     );
   }
 
-  // QUESTION
   if (stage === "question" && currentQuestion) {
     const progressPct = Math.min((questionCount / totalQuestions) * 100, 95);
 
     return (
-      <main style={mainStyle}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
@@ -241,7 +219,7 @@ function GuidedCaseInner() {
           </div>
         </nav>
 
-        <div style={{ height: "3px", background: "var(--border)", width: "100%" }}>
+        <div style={{ height: "3px", background: "var(--border)" }}>
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progressPct}%` }}
@@ -250,7 +228,7 @@ function GuidedCaseInner() {
           />
         </div>
 
-        <div style={{ ...centeredSection(800), paddingTop: "48px", paddingBottom: "48px" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px" }}>
           <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "8px" }}>
               {currentQuestion.stage}
@@ -270,11 +248,11 @@ function GuidedCaseInner() {
             )}
 
             {currentQuestion.exhibit && (
-              <div className="card" style={{ padding: "24px", marginBottom: "28px", overflow: "hidden" }}>
+              <div className="card" style={{ padding: "24px", marginBottom: "28px" }}>
                 <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "14px" }}>
                   Exhibit: {currentQuestion.exhibit.title}
                 </div>
-                <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+                <div style={{ overflowX: "auto" }}>
                   <pre style={{
                     fontSize: "12px", lineHeight: 1.6, color: "var(--text-primary)",
                     fontFamily: "'Courier New', Courier, monospace",
@@ -347,14 +325,13 @@ function GuidedCaseInner() {
     );
   }
 
-  // FINAL
   if (stage === "final") {
     return (
-      <main style={mainStyle}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
         </nav>
-        <div style={centeredSection(720)}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px" }}>
               Final Recommendation
@@ -370,8 +347,7 @@ function GuidedCaseInner() {
                 width: "100%", minHeight: "180px", background: "var(--bg-card)",
                 border: "1px solid var(--border)", borderRadius: "10px", padding: "18px",
                 color: "var(--text-primary)", fontSize: "15px", fontFamily: "Inter, sans-serif",
-                resize: "vertical" as const, outline: "none", lineHeight: 1.7,
-                marginBottom: "24px", boxSizing: "border-box" as const,
+                resize: "vertical" as const, outline: "none", lineHeight: 1.7, marginBottom: "24px",
               }}
             />
             <button
@@ -388,13 +364,12 @@ function GuidedCaseInner() {
     );
   }
 
-  // COMPLETE
   if (stage === "complete") {
     const scoreColor = getScoreColor(score);
     const scoreLabel = getScoreLabel(score);
 
     return (
-      <main style={mainStyle}>
+      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
@@ -406,7 +381,7 @@ function GuidedCaseInner() {
           </div>
         </nav>
 
-        <div style={centeredSection(720)}>
+        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
               <div style={{ fontSize: "80px", fontWeight: 700, color: scoreColor, fontFamily: "Cormorant, serif", lineHeight: 1 }}>
