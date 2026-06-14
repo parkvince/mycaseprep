@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GUIDED_CASES, BranchQuestion } from "@/lib/guidedCases";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
@@ -23,6 +23,10 @@ function GuidedCaseInner() {
   const [pathTaken, setPathTaken] = useState<{ questionId: string; optionId: string; scoreImpact: number }[]>([]);
   const [finalAnswer, setFinalAnswer] = useState("");
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [stage]);
 
   if (!currentCase) {
     return (
@@ -127,6 +131,15 @@ function GuidedCaseInner() {
     return "var(--danger)";
   };
 
+  const mainStyle: React.CSSProperties = {
+    minHeight: "100vh",
+    background: "var(--bg)",
+    color: "var(--text-primary)",
+    overflowX: "hidden",
+    maxWidth: "100vw",
+    width: "100%",
+  };
+
   const navStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "space-between",
@@ -140,10 +153,18 @@ function GuidedCaseInner() {
     zIndex: 100,
   };
 
+  const contentStyle: React.CSSProperties = {
+    maxWidth: "720px",
+    margin: "0 auto",
+    padding: "60px 48px",
+    boxSizing: "border-box" as const,
+    width: "100%",
+  };
+
   // INTRO
   if (stage === "intro") {
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
+      <main style={mainStyle}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
@@ -153,7 +174,7 @@ function GuidedCaseInner() {
           </button>
         </nav>
 
-        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px", boxSizing: "border-box" as const, width: "100%" }}>
+        <div style={contentStyle}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{
               display: "inline-block",
@@ -244,24 +265,19 @@ function GuidedCaseInner() {
     const progressPct = Math.min((questionCount / totalQuestions) * 100, 95);
 
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
+      <main style={mainStyle}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
               Question {questionCount + 1}
             </span>
-            <div style={{
-              fontSize: "13px",
-              fontWeight: 600,
-              color: getScoreColor(score),
-            }}>
+            <div style={{ fontSize: "13px", fontWeight: 600, color: getScoreColor(score) }}>
               Score: {score}
             </div>
           </div>
         </nav>
 
-        {/* Progress bar */}
         <div style={{ height: "3px", background: "var(--border)", width: "100%" }}>
           <motion.div
             initial={{ width: 0 }}
@@ -271,7 +287,7 @@ function GuidedCaseInner() {
           />
         </div>
 
-        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px" }}>
+        <div style={{ ...contentStyle, maxWidth: "800px", padding: "48px 48px" }}>
           <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
 
             <div style={{
@@ -311,7 +327,7 @@ function GuidedCaseInner() {
             )}
 
             {currentQuestion.exhibit && (
-              <div className="card" style={{ padding: "24px", marginBottom: "28px" }}>
+              <div className="card" style={{ padding: "24px", marginBottom: "28px", overflow: "hidden" }}>
                 <div style={{
                   fontSize: "11px",
                   fontWeight: 600,
@@ -322,49 +338,38 @@ function GuidedCaseInner() {
                 }}>
                   Exhibit: {currentQuestion.exhibit.title}
                 </div>
-                <pre style={{
-                  fontSize: "12px",
-                  lineHeight: 1.6,
-                  color: "var(--text-primary)",
-                  fontFamily: "'Courier New', Courier, monospace",
-                  whiteSpace: "pre" as const,
-                  overflowX: "auto" as const,
-                  maxWidth: "100%",
-                  margin: 0,
-                  boxSizing: "border-box" as const,
-                }}>
-                  {currentQuestion.exhibit.data}
-                </pre>
+                <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+                  <pre style={{
+                    fontSize: "12px",
+                    lineHeight: 1.6,
+                    color: "var(--text-primary)",
+                    fontFamily: "'Courier New', Courier, monospace",
+                    whiteSpace: "pre" as const,
+                    margin: 0,
+                    display: "inline-block",
+                    minWidth: "100%",
+                  }}>
+                    {currentQuestion.exhibit.data}
+                  </pre>
+                </div>
               </div>
             )}
 
             <div style={{ display: "flex", flexDirection: "column" as const, gap: "10px", marginBottom: "28px" }}>
               {currentQuestion.options.map((option) => {
                 const isSelected = selectedOptionId === option.id;
-
                 let borderColor = "var(--border)";
                 let background = "var(--bg-card)";
-
                 if (isSelected && !showFeedback) {
                   borderColor = "#111111";
                   background = "var(--bg-elevated)";
                 }
-
                 if (showFeedback && isSelected) {
-                  if (option.scoreImpact > 10) {
-                    borderColor = "var(--success)";
-                    background = "rgba(34,197,94,0.04)";
-                  } else if (option.scoreImpact > 0) {
-                    borderColor = "var(--warning)";
-                    background = "rgba(234,179,8,0.04)";
-                  } else if (option.scoreImpact < 0) {
-                    borderColor = "var(--danger)";
-                    background = "rgba(220,38,38,0.04)";
-                  } else {
-                    borderColor = "var(--border)";
-                  }
+                  if (option.scoreImpact > 10) { borderColor = "var(--success)"; background = "rgba(34,197,94,0.04)"; }
+                  else if (option.scoreImpact > 0) { borderColor = "var(--warning)"; background = "rgba(234,179,8,0.04)"; }
+                  else if (option.scoreImpact < 0) { borderColor = "var(--danger)"; background = "rgba(220,38,38,0.04)"; }
+                  else { borderColor = "var(--border)"; }
                 }
-
                 return (
                   <div
                     key={option.id}
@@ -391,7 +396,6 @@ function GuidedCaseInner() {
                       }} />
                       <p style={{ fontSize: "15px", lineHeight: 1.65 }}>{option.text}</p>
                     </div>
-
                     <AnimatePresence>
                       {showFeedback && isSelected && (
                         <motion.div
@@ -442,11 +446,11 @@ function GuidedCaseInner() {
   // FINAL RECOMMENDATION
   if (stage === "final") {
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
+      <main style={mainStyle}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
         </nav>
-        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px", boxSizing: "border-box" as const, width: "100%" }}>
+        <div style={contentStyle}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px" }}>
               Final Recommendation
@@ -472,6 +476,7 @@ function GuidedCaseInner() {
                 outline: "none",
                 lineHeight: 1.7,
                 marginBottom: "24px",
+                boxSizing: "border-box" as const,
               }}
             />
             <button
@@ -494,7 +499,7 @@ function GuidedCaseInner() {
     const scoreLabel = getScoreLabel(score);
 
     return (
-      <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)", overflowX: "hidden" }}>
+      <main style={mainStyle}>
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
             MyCasePrep
@@ -506,9 +511,8 @@ function GuidedCaseInner() {
           </div>
         </nav>
 
-        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={contentStyle}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
               <div style={{ fontSize: "80px", fontWeight: 700, color: scoreColor, fontFamily: "Cormorant, serif", lineHeight: 1 }}>
                 {score}
@@ -585,5 +589,4 @@ export default function GuidedCasePage() {
       <GuidedCaseInner />
     </Suspense>
   );
-  //
 }
