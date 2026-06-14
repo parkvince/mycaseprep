@@ -228,7 +228,7 @@ function GuidedCaseInner() {
           />
         </div>
 
-        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px", contain: "layout" as any }}>
           <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "8px" }}>
               {currentQuestion.stage}
