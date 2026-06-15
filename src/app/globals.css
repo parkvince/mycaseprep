@@ -103,3 +103,8 @@ html,
 body {
   overflow-x: hidden;
 }
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
