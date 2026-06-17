@@ -139,17 +139,19 @@ function GuidedCaseInner() {
 
         <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
-            <div style={{
-              display: "inline-block", padding: "4px 12px", border: "1px solid var(--border)",
-              borderRadius: "20px", fontSize: "12px", color: "var(--text-secondary)", marginBottom: "24px",
-              fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" as const,
-            }}>
-              {firmConfig.name} · Guided Case · {currentCase.difficulty}
-            </div>
+            <div style={{ textAlign: "center" as const }}>
+  <div style={{
+    display: "inline-block", padding: "4px 12px", border: "1px solid var(--border)",
+    borderRadius: "20px", fontSize: "12px", color: "var(--text-secondary)", marginBottom: "24px",
+    fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" as const,
+  }}>
+    {firmConfig.name} · Guided Case · {currentCase.difficulty}
+  </div>
 
-            <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 400, marginBottom: "16px", letterSpacing: "-0.01em" }}>
-              {currentCase.title}
-            </h1>
+  <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 400, marginBottom: "16px", letterSpacing: "-0.01em" }}>
+    {currentCase.title}
+  </h1>
+</div>
 
             <p style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "40px" }}>
               {currentCase.overview}
@@ -333,9 +335,9 @@ function GuidedCaseInner() {
         </nav>
         <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
-            <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px" }}>
-              Final Recommendation
-            </h2>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px", textAlign: "center" as const }}>
+  Final Recommendation
+</h2>
             <p style={{ color: "var(--text-secondary)", marginBottom: "32px", fontSize: "15px", lineHeight: 1.7 }}>
               {currentCase.finalRecommendationPrompt}
             </p>
