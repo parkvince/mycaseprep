@@ -162,7 +162,7 @@ function GuidedCaseInner() {
               <p style={{ fontSize: "15px", lineHeight: 1.75 }}>{currentCase.clientBackground}</p>
             </div>
 
-            <div className="card" style={{ padding: "28px", marginBottom: "40px", borderLeft: "3px solid #111111" }}>
+            <div className="card" style={{ padding: "28px", marginBottom: "40px" }}>
               <h3 style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "12px", fontFamily: "Inter, sans-serif" }}>
                 Your Role
               </h3>
