@@ -138,7 +138,7 @@ function GuidedCaseInner() {
         </nav>
 
         <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <div style={{
               display: "inline-block", padding: "4px 12px", border: "1px solid var(--border)",
               borderRadius: "20px", fontSize: "12px", color: "var(--text-secondary)", marginBottom: "24px",
@@ -228,8 +228,8 @@ function GuidedCaseInner() {
           />
         </div>
 
-        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px", contain: "layout" as any }}>
-          <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 48px" }}>
+          <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "var(--text-secondary)", marginBottom: "8px" }}>
               {currentQuestion.stage}
             </div>
@@ -331,8 +331,8 @@ function GuidedCaseInner() {
         <nav style={navStyle}>
           <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
         </nav>
-        <div style={{ width: "480px", padding: "60px 48px", boxSizing: "content-box" as const, border: "5px solid red" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+        <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px" }}>
               Final Recommendation
             </h2>
@@ -348,6 +348,7 @@ function GuidedCaseInner() {
                 border: "1px solid var(--border)", borderRadius: "10px", padding: "18px",
                 color: "var(--text-primary)", fontSize: "15px", fontFamily: "Inter, sans-serif",
                 resize: "vertical" as const, outline: "none", lineHeight: 1.7, marginBottom: "24px",
+                boxSizing: "border-box" as const,
               }}
             />
             <button
@@ -381,8 +382,8 @@ function GuidedCaseInner() {
           </div>
         </nav>
 
-        <div style={{ width: "480px", padding: "60px 48px", boxSizing: "content-box" as const, border: "5px solid red" }}>
-         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
+        <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
               <div style={{ fontSize: "80px", fontWeight: 700, color: scoreColor, fontFamily: "Cormorant, serif", lineHeight: 1 }}>
                 {score}
