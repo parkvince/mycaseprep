@@ -137,7 +137,7 @@ function GuidedCaseInner() {
           </button>
         </nav>
 
-        <div style={{ maxWidth: "720px", margin: "0 auto", padding: "60px 48px" }}>
+        <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <div style={{
               display: "inline-block", padding: "4px 12px", border: "1px solid var(--border)",
