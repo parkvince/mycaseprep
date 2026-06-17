@@ -382,7 +382,7 @@ function GuidedCaseInner() {
         </nav>
 
         <div style={{ width: "480px", padding: "60px 48px", boxSizing: "content-box" as const, border: "5px solid red" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
               <div style={{ fontSize: "80px", fontWeight: 700, color: scoreColor, fontFamily: "Cormorant, serif", lineHeight: 1 }}>
                 {score}
