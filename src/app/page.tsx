@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useUser, UserButton } from "@clerk/nextjs";
+import { useSession, signOut } from "next-auth/react";
 
 const firms = [
   "McKinsey", "Bain", "BCG",
@@ -47,7 +47,8 @@ const features = [
 
 export default function LandingPage() {
   const router = useRouter();
-  const { user, isSignedIn } = useUser();
+  const { data: session } = useSession();
+  const isSignedIn = !!session?.user;
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
@@ -81,7 +82,7 @@ export default function LandingPage() {
           {isSignedIn ? (
             <>
               <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
-                {user.firstName ?? user.emailAddresses[0].emailAddress}
+                {session.user.name ?? session.user.email}
               </span>
               <button
                 className="btn-primary"
@@ -90,21 +91,27 @@ export default function LandingPage() {
               >
                 Start a Case
               </button>
-              <UserButton />
+              <button
+                className="btn-secondary"
+                style={{ padding: "7px 16px" }}
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                Sign out
+              </button>
             </>
           ) : (
             <>
               <button
                 className="btn-secondary"
                 style={{ padding: "7px 16px" }}
-                onClick={() => router.push("/auth/sign-in")}
+                onClick={() => router.push("/auth")}
               >
                 Sign in
               </button>
               <button
                 className="btn-primary"
                 style={{ padding: "7px 16px" }}
-                onClick={() => router.push("/auth/sign-up")}
+                onClick={() => router.push("/auth")}
               >
                 Get started
               </button>
@@ -166,14 +173,14 @@ export default function LandingPage() {
               <>
                 <button
                   className="btn-primary"
-                  style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
+                  style={{ fontSize: "15px", padding: "11px 28px" }}
                   onClick={() => router.push("/dashboard")}
                 >
                   Cases →
                 </button>
                 <button
                   className="btn-primary"
-                  style={{ fontSize: "15px", padding: "11px 28px", background: "#111111", color: "#ffffff", border: "1px solid #111111" }}
+                  style={{ fontSize: "15px", padding: "11px 28px" }}
                   onClick={() => router.push("/library")}
                 >
                   Guided Cases →
@@ -183,7 +190,7 @@ export default function LandingPage() {
               <button
                 className="btn-primary"
                 style={{ fontSize: "15px", padding: "11px 28px" }}
-                onClick={() => router.push("/auth/sign-up")}
+                onClick={() => router.push("/auth")}
               >
                 Get started free
               </button>
@@ -317,7 +324,7 @@ export default function LandingPage() {
         <button
           className="btn-primary"
           style={{ fontSize: "15px", padding: "11px 28px" }}
-          onClick={() => router.push(isSignedIn ? "/dashboard" : "/auth/sign-up")}
+          onClick={() => router.push(isSignedIn ? "/dashboard" : "/auth")}
         >
           {isSignedIn ? "Go to cases →" : "Get started free"}
         </button>

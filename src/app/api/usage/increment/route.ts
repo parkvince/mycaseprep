@@ -1,53 +1,37 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function POST() {
   try {
-    const { userId } = await auth();
-    if (!userId) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.upsert({
-      where: { clerkId: userId },
-      update: {},
-      create: {
-        clerkId: userId,
-        email: "",
-      },
-      include: { usage: true },
-    });
-
+    const userId = session.user.id;
     const now = new Date();
 
-    if (!user.usage) {
-      await prisma.usage.create({
-        data: {
-          userId: user.id,
-          casesUsed: 1,
-          windowStart: now,
-        },
+    const usageRecord = await prisma.dailyUsage.findUnique({ where: { userId } });
+
+    if (!usageRecord) {
+      await prisma.dailyUsage.create({
+        data: { userId, casesUsed: 1, windowStart: now },
       });
     } else {
-      const windowStart = new Date(user.usage.windowStart);
-      const windowEnd = new Date(windowStart.getTime() + 12 * 60 * 60 * 1000);
+      const windowEnd = new Date(usageRecord.windowStart.getTime() + 12 * 60 * 60 * 1000);
       const windowExpired = now > windowEnd;
 
       if (windowExpired) {
-        await prisma.usage.update({
-          where: { userId: user.id },
-          data: {
-            casesUsed: 1,
-            windowStart: now,
-          },
+        await prisma.dailyUsage.update({
+          where: { userId },
+          data: { casesUsed: 1, windowStart: now },
         });
       } else {
-        await prisma.usage.update({
-          where: { userId: user.id },
-          data: {
-            casesUsed: { increment: 1 },
-          },
+        await prisma.dailyUsage.update({
+          where: { userId },
+          data: { casesUsed: { increment: 1 } },
         });
       }
     }

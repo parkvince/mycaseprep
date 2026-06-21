@@ -2,41 +2,51 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Updated schema with URL
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String    @id @default(cuid())
-  clerkId   String    @unique
-  email     String
-  createdAt DateTime  @default(now())
-  sessions  Session[]
-  usage     Usage?
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  createdAt     DateTime      @default(now())
+  caseSessions  CaseSession[]
+  dailyUsage    DailyUsage[]
 }
 
-model Usage {
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model CaseSession {
   id           String   @id @default(cuid())
-  userId       String   @unique
+  userId       String
   user         User     @relation(fields: [userId], references: [id])
-  casesUsed    Int      @default(0)
-  windowStart  DateTime @default(now())
+  type         String
+  firm         String
+  difficulty   String
+  caseTitle    String
+  duration     Int
+  hintsUsed    Int      @default(0)
+  overallScore Int?
+  transcript   Json?
+  guidedScore  Int?
+  completedAt  DateTime @default(now())
 }
 
-model Session {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id])
-  type           String
-  firm           String
-  difficulty     String
-  caseTitle      String
-  duration       Int
-  hintsUsed      Int      @default(0)
-  overallScore   Int?
-  transcript     Json?
-  guidedScore    Int?
-  completedAt    DateTime @default(now())
+model DailyUsage {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  casesUsed   Int      @default(0)
+  windowStart DateTime @default(now())
+  @@unique([userId])
 }

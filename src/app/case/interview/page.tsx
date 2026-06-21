@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
@@ -124,7 +124,7 @@ function getHint(hintsUsed: number, caseContext: string, casePrompt: string): st
 
 function InterviewInner() {
   const router = useRouter();
-  const { user } = useUser();
+  const { data: session } = useSession();
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
@@ -861,10 +861,9 @@ function InterviewInner() {
                   width: "100%", height: "100%", display: "flex", flexDirection: "column",
                   alignItems: "center", justifyContent: "center", gap: "12px",
                 }}>
-                  {/* Clerk profile picture or initials fallback */}
-                  {user?.imageUrl ? (
+                  {session?.user?.image ? (
                     <div style={{ width: "72px", height: "72px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.1)" }}>
-                      <img src={user.imageUrl} alt="You" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <img src={session.user.image} alt="You" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </div>
                   ) : (
                     <div style={{
@@ -873,7 +872,7 @@ function InterviewInner() {
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: "24px", fontWeight: 700, color: "rgba(255,255,255,0.4)",
                     }}>
-                      {user?.firstName?.charAt(0) ?? "Y"}
+                      {session?.user?.name?.charAt(0) ?? "Y"}
                     </div>
                   )}
                   {isVideoOff && (
@@ -888,7 +887,7 @@ function InterviewInner() {
                 display: "flex", alignItems: "center", gap: "6px",
               }}>
                 <p style={{ fontSize: "12px", fontWeight: 600, margin: 0 }}>
-                  {user?.firstName ?? "You"}
+                  {session?.user?.name ?? "You"}      
                 </p>
                 {isMuted && <span style={{ fontSize: "10px", color: "#ef4444" }}>Muted</span>}
                 {userSpeaking && !isMuted && (
@@ -983,7 +982,7 @@ function InterviewInner() {
                 {transcript.map((msg, i) => (
                   <div key={i} style={{ display: "flex", flexDirection: "column", gap: "3px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
                     <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      {msg.role === "user" ? (user?.firstName ?? "You") : INTERVIEWER.name}
+                      {msg.role === "user" ? (session?.user?.name ?? "You") : INTERVIEWER.name}
                     </span>
                     <div style={{
                       maxWidth: "90%",

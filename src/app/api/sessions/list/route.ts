@@ -1,25 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const session = await getServerSession(authOptions);
 
-    if (!userId) {
+    if (!session?.user?.id) {
       return NextResponse.json({ sessions: [] });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-    });
-
-    if (!user) {
-      return NextResponse.json({ sessions: [] });
-    }
-
-    const sessions = await prisma.session.findMany({
-      where: { userId: user.id },
+    const sessions = await prisma.caseSession.findMany({
+      where: { userId: session.user.id },
       orderBy: { completedAt: "desc" },
       take: 50,
     });
