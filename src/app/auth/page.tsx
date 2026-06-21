@@ -4,18 +4,36 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+function validatePassword(password: string): string | null {
+  if (password.length < 8) return "Password must be at least 8 characters.";
+  if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter.";
+  if (!/[a-z]/.test(password)) return "Password must contain at least one lowercase letter.";
+  if (!/[0-9]/.test(password)) return "Password must contain at least one number.";
+  if (!/[^A-Za-z0-9]/.test(password)) return "Password must contain at least one special character (!@#$% etc).";
+  return null;
+}
+
 export default function AuthPage() {
   const router = useRouter();
   const [tab, setTab] = useState<"signin" | "signup">("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     setError("");
     if (!email || !password) { setError("Please fill in all fields."); return; }
+
+    if (tab === "signup") {
+      if (!name) { setError("Please enter your name."); return; }
+      const pwError = validatePassword(password);
+      if (pwError) { setError(pwError); return; }
+      if (password !== confirmPassword) { setError("Passwords do not match."); return; }
+    }
+
     setLoading(true);
     try {
       if (tab === "signup") {
@@ -43,6 +61,23 @@ export default function AuthPage() {
       setLoading(false);
     }
   };
+
+  const getPasswordStrength = (pw: string) => {
+    if (!pw) return null;
+    const checks = [
+      pw.length >= 8,
+      /[A-Z]/.test(pw),
+      /[a-z]/.test(pw),
+      /[0-9]/.test(pw),
+      /[^A-Za-z0-9]/.test(pw),
+    ];
+    const passed = checks.filter(Boolean).length;
+    if (passed <= 2) return { label: "Weak", color: "var(--danger)", width: "33%" };
+    if (passed <= 4) return { label: "Medium", color: "var(--warning)", width: "66%" };
+    return { label: "Strong", color: "var(--success)", width: "100%" };
+  };
+
+  const strength = tab === "signup" ? getPasswordStrength(password) : null;
 
   return (
     <div style={{
@@ -83,7 +118,7 @@ export default function AuthPage() {
           {(["signin", "signup"] as const).map((t) => (
             <button
               key={t}
-              onClick={() => { setTab(t); setError(""); }}
+              onClick={() => { setTab(t); setError(""); setPassword(""); setConfirmPassword(""); }}
               style={{
                 flex: 1,
                 padding: "16px",
@@ -120,6 +155,7 @@ export default function AuthPage() {
                 />
               </div>
             )}
+
             <div>
               <label style={labelStyle}>Email</label>
               <input
@@ -132,6 +168,7 @@ export default function AuthPage() {
                 onBlur={e => (e.currentTarget.style.borderColor = "var(--border)")}
               />
             </div>
+
             <div>
               <label style={labelStyle}>Password</label>
               <input
@@ -140,11 +177,74 @@ export default function AuthPage() {
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 style={inputStyle}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
                 onFocus={e => (e.currentTarget.style.borderColor = "#111")}
                 onBlur={e => (e.currentTarget.style.borderColor = "var(--border)")}
               />
+              {strength && (
+                <div style={{ marginTop: "8px" }}>
+                  <div style={{ height: "3px", background: "var(--border)", borderRadius: "2px", overflow: "hidden" }}>
+                    <div style={{
+                      height: "100%",
+                      width: strength.width,
+                      background: strength.color,
+                      borderRadius: "2px",
+                      transition: "width 0.3s, background 0.3s",
+                    }} />
+                  </div>
+                  <p style={{ fontSize: "11px", color: strength.color, marginTop: "4px", fontWeight: 500 }}>
+                    {strength.label} password
+                  </p>
+                </div>
+              )}
+              {tab === "signup" && (
+                <div style={{ marginTop: "8px", display: "flex", flexDirection: "column", gap: "3px" }}>
+                  {[
+                    { label: "At least 8 characters", ok: password.length >= 8 },
+                    { label: "Uppercase letter", ok: /[A-Z]/.test(password) },
+                    { label: "Lowercase letter", ok: /[a-z]/.test(password) },
+                    { label: "Number", ok: /[0-9]/.test(password) },
+                    { label: "Special character", ok: /[^A-Za-z0-9]/.test(password) },
+                  ].map(({ label, ok }) => (
+                    <div key={label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ fontSize: "11px", color: ok ? "var(--success)" : "var(--text-secondary)" }}>
+                        {ok ? "✓" : "○"}
+                      </span>
+                      <span style={{ fontSize: "11px", color: ok ? "var(--success)" : "var(--text-secondary)" }}>
+                        {label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {tab === "signup" && (
+              <div>
+                <label style={labelStyle}>Confirm password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  style={{
+                    ...inputStyle,
+                    borderColor: confirmPassword && confirmPassword !== password ? "var(--danger)" : "var(--border)",
+                  }}
+                  onFocus={e => (e.currentTarget.style.borderColor = "#111")}
+                  onBlur={e => (e.currentTarget.style.borderColor = confirmPassword && confirmPassword !== password ? "var(--danger)" : "var(--border)")}
+                />
+                {confirmPassword && confirmPassword !== password && (
+                  <p style={{ fontSize: "11px", color: "var(--danger)", marginTop: "4px" }}>
+                    Passwords do not match.
+                  </p>
+                )}
+                {confirmPassword && confirmPassword === password && (
+                  <p style={{ fontSize: "11px", color: "var(--success)", marginTop: "4px" }}>
+                    Passwords match.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {error && (
