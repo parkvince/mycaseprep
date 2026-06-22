@@ -199,7 +199,7 @@ function FeedbackInner() {
                 color: "var(--text-secondary)",
                 marginBottom: "8px",
               }}>
-                Case Feedback — {firmConfig.name}
+                Case Feedback · {firmConfig.name}
               </div>
               <h1 style={{ fontSize: "clamp(24px, 3vw, 36px)", marginBottom: "8px" }}>
                 Your Scorecard
@@ -322,7 +322,6 @@ function FeedbackInner() {
 
             <div className="card" style={{
               padding: "28px",
-              borderLeft: `3px solid ${firmConfig.color}`,
             }}>
               <h3 style={{
                 fontSize: "13px",
