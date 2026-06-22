@@ -35,7 +35,11 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account, profile }) {
-      if (user) token.id = user.id;
+      if (user) {
+        token.id = user.id;
+        token.image = user.image;
+        token.name = user.name;
+      }
       if (account?.provider === "google" && profile?.email) {
         const dbUser = await prisma.user.upsert({
           where: { email: profile.email },
@@ -50,11 +54,25 @@ export const authOptions: NextAuthOptions = {
           },
         });
         token.id = dbUser.id;
+        token.image = dbUser.image;
+        token.name = dbUser.name;
+      }
+      // Always refresh from DB so profile changes show immediately
+      if (token.id) {
+        const dbUser = await prisma.user.findUnique({ where: { id: token.id as string } });
+        if (dbUser) {
+          token.image = dbUser.image;
+          token.name = dbUser.name;
+        }
       }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) session.user.id = token.id as string;
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.image = token.image as string | null;
+        session.user.name = token.name as string | null;
+      }
       return session;
     },
   },
