@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { formatDuration, formatScoreColor } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
 
 interface SessionRecord {
   id: string;
@@ -56,33 +57,7 @@ export default function HistoryPage() {
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-      <nav style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "0 48px",
-        height: "60px",
-        borderBottom: "1px solid var(--border)",
-        position: "sticky",
-        top: 0,
-        background: "rgba(255,255,255,0.98)",
-        zIndex: 100,
-      }}>
-        <span
-          style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, color: "#111111", cursor: "pointer" }}
-          onClick={() => router.push("/")}
-        >
-          MyCasePrep
-        </span>
-        <div style={{ display: "flex", gap: "12px" }}>
-          <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>
-            AI Cases
-          </button>
-          <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>
-            Guided Cases
-          </button>
-        </div>
-      </nav>
+     <Navbar />
 
       <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "60px 48px" }}>
         <motion.div
