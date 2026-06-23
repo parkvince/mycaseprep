@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const firms = [
   "McKinsey", "Bain", "BCG",
@@ -81,40 +81,15 @@ export default function LandingPage() {
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           {isSignedIn ? (
             <>
-              <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
-                {session.user.name ?? session.user.email}
-              </span>
-              <button
-                className="btn-primary"
-                style={{ padding: "7px 16px" }}
-                onClick={() => router.push("/dashboard")}
-              >
-                Start a Case
-              </button>
-              <button
-                className="btn-secondary"
-                style={{ padding: "7px 16px" }}
-                onClick={() => signOut({ callbackUrl: "/" })}
-              >
-                Sign out
-              </button>
+              <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/history")}>History</button>
+              <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>Library</button>
+              <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>Start a Case</button>
+              <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/settings")}>Settings</button>
             </>
           ) : (
             <>
-              <button
-                className="btn-secondary"
-                style={{ padding: "7px 16px" }}
-                onClick={() => router.push("/auth")}
-              >
-                Sign in
-              </button>
-              <button
-                className="btn-primary"
-                style={{ padding: "7px 16px" }}
-                onClick={() => router.push("/auth")}
-              >
-                Get started
-              </button>
+              <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/auth")}>Sign in</button>
+              <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/auth")}>Get started</button>
             </>
           )}
         </div>
