@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CaseType, Difficulty, FirmKey } from "@/types";
 import { getCaseTypeLabel, getDifficultyColor } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
 import { GUIDED_CASES } from "@/lib/guidedCases";
 
 interface PrebuiltCase {
@@ -881,47 +882,7 @@ export default function LibraryPage() {
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
       {/* Navbar */}
-      <nav style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "0 48px",
-        height: "60px",
-        borderBottom: "1px solid var(--border)",
-        position: "sticky",
-        top: 0,
-        background: "rgba(255,255,255,0.98)",
-        zIndex: 100,
-      }}>
-        <span
-          style={{
-            fontFamily: "Cormorant, serif",
-            fontSize: "22px",
-            fontWeight: 500,
-            color: "#111111",
-            cursor: "pointer",
-          }}
-          onClick={() => router.push("/")}
-        >
-          MyCasePrep
-        </span>
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          <button
-            className="btn-secondary"
-            style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/dashboard")}
-          >
-            Start a Case
-          </button>
-          <button
-            className="btn-secondary"
-            style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/settings")}
-          >
-            Settings
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "60px 48px" }}>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
