@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GUIDED_CASES, BranchQuestion } from "@/lib/guidedCases";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey } from "@/types";
+import Navbar from "@/components/Navbar";
 
 function GuidedCaseInner() {
   const router = useRouter();
@@ -128,14 +129,7 @@ function GuidedCaseInner() {
   if (stage === "intro") {
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-        <nav style={navStyle}>
-          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
-            MyCasePrep
-          </span>
-          <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>
-            Back to Library
-          </button>
-        </nav>
+        <Navbar />
 
         <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
@@ -213,13 +207,7 @@ function GuidedCaseInner() {
 
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-        <nav style={navStyle}>
-          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>Question {questionCount + 1}</span>
-            <div style={{ fontSize: "13px", fontWeight: 600, color: getScoreColor(score) }}>Score: {score}</div>
-          </div>
-        </nav>
+        <Navbar />
 
         <div style={{ height: "3px", background: "var(--border)" }}>
           <motion.div
@@ -330,9 +318,7 @@ function GuidedCaseInner() {
   if (stage === "final") {
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-        <nav style={navStyle}>
-          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500 }}>MyCasePrep</span>
-        </nav>
+        <Navbar />
         <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 400, marginBottom: "16px", textAlign: "center" as const }}>
@@ -373,16 +359,7 @@ function GuidedCaseInner() {
 
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-        <nav style={navStyle}>
-          <span style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, cursor: "pointer" }} onClick={() => router.push("/")}>
-            MyCasePrep
-          </span>
-          <div style={{ display: "flex", gap: "12px" }}>
-            <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>Library</button>
-            <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/history")}>History</button>
-            <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/dashboard")}>Practice More</button>
-          </div>
-        </nav>
+        <Navbar />
 
         <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "60px 48px" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: "100%" }}>
