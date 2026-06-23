@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { CaseType, Difficulty, FirmKey, Mode } from "@/types";
+import Navbar from "@/components/Navbar";
 
 const caseTypes: { label: string; value: CaseType }[] = [
   { label: "Market Sizing", value: "market_sizing" },
@@ -138,48 +139,7 @@ export default function DashboardPage() {
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
       {/* Navbar */}
-      <nav style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "0 48px",
-        height: "60px",
-        borderBottom: "1px solid var(--border)",
-        position: "sticky",
-        top: 0,
-        background: "rgba(255,255,255,0.98)",
-        zIndex: 100,
-      }}>
-        <span
-          suppressHydrationWarning
-          style={{
-            fontFamily: "Cormorant, serif",
-            fontSize: "22px",
-            fontWeight: 500,
-            color: "#111111",
-            cursor: "pointer",
-          }}
-          onClick={() => router.push("/")}
-        >
-          MyCasePrep
-        </span>
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          <button
-            className="btn-secondary"
-            style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/library")}
-          >
-            Case Library
-          </button>
-          <button
-            className="btn-secondary"
-            style={{ padding: "7px 16px" }}
-            onClick={() => router.push("/history")}
-          >
-            History
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "60px 48px" }}>
 
