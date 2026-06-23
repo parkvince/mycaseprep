@@ -135,9 +135,9 @@ export default function Navbar({ variant = "default" }: NavbarProps) {
       </span>
 
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-        <NavButton icon={<SettingsIcon />} label="Settings" onClick={() => router.push("/settings")} />
         <NavButton icon={<LibraryIcon />} label="Library" onClick={() => router.push("/library")} />
         <NavButton icon={<HistoryIcon />} label="History" onClick={() => router.push("/history")} />
+        <NavButton icon={<SettingsIcon />} label="Settings" onClick={() => router.push("/settings")} />
         {variant === "settings" ? (
           <NavButton icon={<SignOutIcon />} label="Sign out" onClick={() => signOut({ callbackUrl: "/" })} />
         ) : (
