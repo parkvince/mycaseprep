@@ -58,6 +58,16 @@ export default function DashboardPage() {
     checkUsage();
   }, []);
 
+  useEffect(() => {
+  const stored = localStorage.getItem("mycaseprep_settings");
+  if (stored) {
+    const s = JSON.parse(stored);
+    if (s.targetFirm) setSelectedFirm(s.targetFirm);
+    if (s.defaultDifficulty) setSelectedDifficulty(s.defaultDifficulty);
+    if (s.defaultPersonality) setPersonality(s.defaultPersonality);
+  }
+}, []);
+
   const formatResetsAt = (resetsAt: string) => {
     const diff = new Date(resetsAt).getTime() - Date.now();
     const hours = Math.floor(diff / (1000 * 60 * 60));
