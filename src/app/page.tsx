@@ -47,8 +47,9 @@ const features = [
 
 export default function LandingPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const isSignedIn = !!session?.user;
+  const loading = status === "loading";
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
@@ -79,7 +80,7 @@ export default function LandingPage() {
           MyCasePrep
         </span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          {isSignedIn ? (
+          {loading ? null : isSignedIn ? (
             <>
               <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/history")}>History</button>
               <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>Library</button>
@@ -91,7 +92,7 @@ export default function LandingPage() {
               <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/auth")}>Sign in</button>
               <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/auth")}>Get started</button>
             </>
-          )}
+          ) : null}
         </div>
       </nav>
 
