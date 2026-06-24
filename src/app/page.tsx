@@ -80,7 +80,7 @@ export default function LandingPage() {
           MyCasePrep
         </span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          {loading ? null : isSignedIn ? (
+          {!loading && (isSignedIn ? (
             <>
               <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/history")}>History</button>
               <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/library")}>Library</button>
@@ -92,7 +92,7 @@ export default function LandingPage() {
               <button className="btn-secondary" style={{ padding: "7px 16px" }} onClick={() => router.push("/auth")}>Sign in</button>
               <button className="btn-primary" style={{ padding: "7px 16px" }} onClick={() => router.push("/auth")}>Get started</button>
             </>
-          ) : null}
+          ))}
         </div>
       </nav>
 
