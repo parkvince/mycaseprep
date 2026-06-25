@@ -85,7 +85,84 @@ function FeedbackInner() {
   }, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed, caseTitle, duration]);
 
   const firmConfig = FIRM_CONFIGS[firm];
-  const isMckinsey = firm === "mckinsey";
+
+  const firmBreakdownItems =
+    firm === "mckinsey" ? [
+      { label: "Problem Structuring", key: "structure", weight: 28 },
+      { label: "Quantitative Reasoning", key: "quantitative", weight: 22 },
+      { label: "Business Judgment", key: "businessJudgment", weight: 18 },
+      { label: "Communication", key: "communication", weight: 17 },
+      { label: "Hypothesis Management", key: "hypothesisManagement", weight: 10 },
+      { label: "Synthesis", key: "synthesis", weight: 5 },
+    ] : firm === "bcg" ? [
+      { label: "Case Leadership & Drive", key: "candidateLed", weight: 23 },
+      { label: "Problem Structuring", key: "structure", weight: 20 },
+      { label: "Analytical & Quant Skills", key: "quantitative", weight: 22 },
+      { label: "Creativity & Original Thinking", key: "creativity", weight: 18 },
+      { label: "Communication Style", key: "communication", weight: 17 },
+    ] : firm === "bain" ? [
+      { label: "Answer First & Hypothesis", key: "answerFirst", weight: 22 },
+      { label: "Structured Thinking", key: "structure", weight: 18 },
+      { label: "Quantitative & Financial", key: "quantitative", weight: 18 },
+      { label: "Communication & Composure", key: "communication", weight: 22 },
+      { label: "Cultural Fit (Bainie Factor)", key: "culturalFit", weight: 15 },
+      { label: "Synthesis & Recommendation", key: "synthesis", weight: 5 },
+    ] : firm === "ey" ? [
+      { label: "Problem Solving & Structure", key: "problemSolving", weight: 25 },
+      { label: "Numerical & Financial Skills", key: "quantitative", weight: 28 },
+      { label: "Strategic & Investment Judgment", key: "strategicJudgment", weight: 22 },
+      { label: "Communication & Client Readiness", key: "communication", weight: 15 },
+      { label: "Recommendation Commitment", key: "recommendation", weight: 10 },
+    ] : firm === "deloitte" ? [
+      { label: "Structured Thinking", key: "structure", weight: 22 },
+      { label: "Analytical Ability", key: "analytical", weight: 20 },
+      { label: "Business Acumen", key: "businessAcumen", weight: 22 },
+      { label: "Communication Skills", key: "communication", weight: 20 },
+      { label: "Coachability & Demeanor", key: "coachability", weight: 16 },
+    ] : firm === "kpmg" ? [
+      { label: "Structured Thinking", key: "structure", weight: 22 },
+      { label: "Analytical Ability", key: "analytical", weight: 18 },
+      { label: "Business & Operational Judgment", key: "operationalJudgment", weight: 22 },
+      { label: "Communication & Client Readiness", key: "communication", weight: 18 },
+      { label: "Values Alignment & Professional Mindset", key: "valuesAlignment", weight: 20 },
+    ] : firm === "pwc" ? [
+      { label: "Structured Reasoning & Hypothesis", key: "structure", weight: 22 },
+      { label: "Quantitative & Financial Logic", key: "quantitative", weight: 20 },
+      { label: "Strategic & Commercial Judgment", key: "strategicJudgment", weight: 23 },
+      { label: "Communication & Delivery", key: "communication", weight: 18 },
+      { label: "Behavioral Fit & Genuine Motivation", key: "behavioralFit", weight: 17 },
+    ] : firm === "rolandberger" ? [
+      { label: "Structure & Case Design", key: "structure", weight: 25 },
+      { label: "Analytical Execution & Drive", key: "execution", weight: 22 },
+      { label: "Synthesis & Recommendation", key: "synthesis", weight: 20 },
+      { label: "Entrepreneurial Mindset", key: "entrepreneurialMindset", weight: 18 },
+      { label: "Collaboration & Group Case", key: "collaboration", weight: 15 },
+    ] : firm === "accenture" ? [
+      { label: "Structured Thinking & MECE", key: "structuredThinking", weight: 20 },
+      { label: "Problem Solving & Drive", key: "problemSolving", weight: 20 },
+      { label: "Business Judgment & Digital", key: "businessJudgment", weight: 20 },
+      { label: "Quantitative Ability", key: "quantitative", weight: 15 },
+      { label: "Communication & Executive Presence", key: "communicationPresence", weight: 15 },
+      { label: "Collaboration & Group Case", key: "collaboration", weight: 10 },
+    ] : [];
+
+  const hasFirmRubric = firmBreakdownItems.length > 0;
+
+  const scoreLabel5 = (s: number) => {
+    if (s >= 5) return "Exceptional";
+    if (s >= 4) return "Very Good";
+    if (s >= 3) return "Good";
+    if (s >= 2) return "Adequate";
+    return "Insufficient";
+  };
+
+  const scoreColor5 = (s: number) => {
+    if (s >= 4.5) return "var(--success)";
+    if (s >= 3.5) return "#84cc16";
+    if (s >= 2.5) return "var(--warning)";
+    if (s >= 1.5) return "#f97316";
+    return "var(--danger)";
+  };
 
   const offerColor = (decision: string) => {
     if (decision === "strong_offer" || decision === "offer") return "var(--success)";
@@ -167,40 +244,6 @@ function FeedbackInner() {
 
   const scoreColor = formatScoreColor(evaluation.overallScore);
 
-  // McKinsey uses 1-5 scale per dimension, others use 0-100
-  const mckinseyBreakdownItems = [
-    { label: "Problem Structuring", key: "structure", weight: 28 },
-    { label: "Quantitative Reasoning", key: "quantitative", weight: 22 },
-    { label: "Business Judgment", key: "businessJudgment", weight: 18 },
-    { label: "Communication", key: "communication", weight: 17 },
-    { label: "Hypothesis Management", key: "hypothesisManagement", weight: 10 },
-    { label: "Synthesis", key: "synthesis", weight: 5 },
-  ] as const;
-
-  const standardBreakdownItems = [
-    { label: "Structure", key: "structure" },
-    { label: "Problem Solving", key: "problemSolving" },
-    { label: "Quantitative", key: "quantitative" },
-    { label: "Communication", key: "communication" },
-    { label: "Creativity", key: "creativity" },
-  ] as const;
-
-  const scoreLabel5 = (s: number) => {
-    if (s >= 5) return "Exceptional";
-    if (s >= 4) return "Very Good";
-    if (s >= 3) return "Good";
-    if (s >= 2) return "Adequate";
-    return "Insufficient";
-  };
-
-  const scoreColor5 = (s: number) => {
-    if (s >= 4.5) return "var(--success)";
-    if (s >= 3.5) return "#84cc16";
-    if (s >= 2.5) return "var(--warning)";
-    if (s >= 1.5) return "#f97316";
-    return "var(--danger)";
-  };
-
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
       <Navbar />
@@ -271,7 +314,7 @@ function FeedbackInner() {
                     {evaluation.offerDecision.label}
                   </div>
                   <div style={{ fontSize: "10px", color: "var(--text-secondary)", marginTop: "2px" }}>
-                    McKinsey score: {evaluation.offerDecision.weightedScore}/100
+                    {firmConfig.name} score: {evaluation.offerDecision.weightedScore}/100
                   </div>
                 </div>
               )}
@@ -366,7 +409,7 @@ function FeedbackInner() {
                   textTransform: "uppercase", color: "var(--text-secondary)",
                   marginBottom: "12px", fontFamily: "DM Sans, sans-serif",
                 }}>
-                  McKinsey Offer Decision
+                  {firmConfig.name} Offer Decision
                 </h3>
                 <div style={{
                   fontSize: "18px", fontWeight: 700, marginBottom: "10px",
@@ -383,8 +426,6 @@ function FeedbackInner() {
                   fontSize: "13px", color: "var(--text-secondary)",
                 }}>
                   Weighted score: <strong style={{ color: "var(--text-primary)" }}>{evaluation.offerDecision.weightedScore}/100</strong>
-                  <span style={{ margin: "0 8px" }}>·</span>
-                  Offer threshold: <strong style={{ color: "var(--text-primary)" }}>72/100</strong>
                 </div>
               </div>
             )}
@@ -399,8 +440,8 @@ function FeedbackInner() {
             className="card"
             style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "28px" }}
           >
-            {isMckinsey ? (
-              mckinseyBreakdownItems.map((item) => {
+            {hasFirmRubric ? (
+              firmBreakdownItems.map((item) => {
                 const score = (evaluation.breakdown as any)[item.key] ?? 1;
                 const color = scoreColor5(score);
                 const pct = ((score - 1) / 4) * 100;
@@ -426,29 +467,38 @@ function FeedbackInner() {
                         style={{ height: "100%", background: color, borderRadius: "3px" }}
                       />
                     </div>
-                    {evaluation.dimensionFeedback?.[item.key] && (
+                    {(evaluation as any).dimensionFeedback?.[item.key] && (
                       <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "8px", lineHeight: 1.6 }}>
-                        {evaluation.dimensionFeedback[item.key]}
+                        {(evaluation as any).dimensionFeedback[item.key]}
                       </p>
                     )}
                   </div>
                 );
               })
             ) : (
-              standardBreakdownItems.map((item) => {
-                const score = evaluation.breakdown[item.key as keyof typeof evaluation.breakdown] ?? 50;
-                const color = formatScoreColor(score as number);
-                const weight = firmConfig.evaluationWeights[item.key as keyof typeof firmConfig.evaluationWeights];
+              // Standard 0-100 breakdown for firms without rubrics
+              [
+                { label: "Structure", key: "structure" },
+                { label: "Problem Solving", key: "problemSolving" },
+                { label: "Quantitative", key: "quantitative" },
+                { label: "Communication", key: "communication" },
+                { label: "Creativity", key: "creativity" },
+              ].map((item) => {
+                const score = (evaluation.breakdown as any)[item.key] ?? 50;
+                const color = formatScoreColor(score);
+                const weight = (firmConfig.evaluationWeights as any)?.[item.key];
                 return (
                   <div key={item.key}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
                       <div>
                         <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
-                        <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
-                          {weight}% weight
-                        </span>
+                        {weight && (
+                          <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
+                            {weight}% weight
+                          </span>
+                        )}
                       </div>
-                      <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score as number}</span>
+                      <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score}</span>
                     </div>
                     <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
                       <motion.div
