@@ -54,7 +54,15 @@ export interface Evaluation {
   topCandidateResponse: string;
   firmSpecificNote: string;
   percentileEstimate: number;
+  offerDecision?: {
+  decision: string;
+  label: string;
+  description: string;
+  weightedScore: number;
+};
+dimensionFeedback?: Record<string, string>;
 }
+
 
 export interface CaseSession {
   id: string;
@@ -75,3 +83,4 @@ export interface FirmConfig {
   feedbackTone: string;
   color: string;
 }
+

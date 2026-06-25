@@ -85,6 +85,27 @@ function FeedbackInner() {
   }, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed, caseTitle, duration]);
 
   const firmConfig = FIRM_CONFIGS[firm];
+  const isMckinsey = firm === "mckinsey";
+
+  const offerColor = (decision: string) => {
+    if (decision === "strong_offer" || decision === "offer") return "var(--success)";
+    if (decision === "borderline") return "var(--warning)";
+    return "var(--danger)";
+  };
+
+  const offerBg = (decision: string) => {
+    if (decision === "strong_offer") return "rgba(34,197,94,0.1)";
+    if (decision === "offer") return "rgba(34,197,94,0.07)";
+    if (decision === "borderline") return "rgba(234,179,8,0.1)";
+    return "rgba(220,38,38,0.08)";
+  };
+
+  const offerBorder = (decision: string) => {
+    if (decision === "strong_offer") return "rgba(34,197,94,0.4)";
+    if (decision === "offer") return "rgba(34,197,94,0.3)";
+    if (decision === "borderline") return "rgba(234,179,8,0.35)";
+    return "rgba(220,38,38,0.25)";
+  };
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
     padding: "10px 20px",
@@ -146,13 +167,39 @@ function FeedbackInner() {
 
   const scoreColor = formatScoreColor(evaluation.overallScore);
 
-  const breakdownItems = [
+  // McKinsey uses 1-5 scale per dimension, others use 0-100
+  const mckinseyBreakdownItems = [
+    { label: "Problem Structuring", key: "structure", weight: 28 },
+    { label: "Quantitative Reasoning", key: "quantitative", weight: 22 },
+    { label: "Business Judgment", key: "businessJudgment", weight: 18 },
+    { label: "Communication", key: "communication", weight: 17 },
+    { label: "Hypothesis Management", key: "hypothesisManagement", weight: 10 },
+    { label: "Synthesis", key: "synthesis", weight: 5 },
+  ] as const;
+
+  const standardBreakdownItems = [
     { label: "Structure", key: "structure" },
     { label: "Problem Solving", key: "problemSolving" },
     { label: "Quantitative", key: "quantitative" },
     { label: "Communication", key: "communication" },
     { label: "Creativity", key: "creativity" },
   ] as const;
+
+  const scoreLabel5 = (s: number) => {
+    if (s >= 5) return "Exceptional";
+    if (s >= 4) return "Very Good";
+    if (s >= 3) return "Good";
+    if (s >= 2) return "Adequate";
+    return "Insufficient";
+  };
+
+  const scoreColor5 = (s: number) => {
+    if (s >= 4.5) return "var(--success)";
+    if (s >= 3.5) return "#84cc16";
+    if (s >= 2.5) return "var(--warning)";
+    if (s >= 1.5) return "#f97316";
+    return "var(--danger)";
+  };
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
@@ -190,6 +237,7 @@ function FeedbackInner() {
               borderRadius: "12px",
               border: `2px solid ${scoreColor}`,
               background: "var(--bg-card)",
+              minWidth: "160px",
             }}>
               <div style={{
                 fontSize: "52px",
@@ -206,6 +254,27 @@ function FeedbackInner() {
               <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>
                 Top {100 - evaluation.percentileEstimate}%
               </div>
+
+              {evaluation.offerDecision && (
+                <div style={{
+                  marginTop: "12px",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  background: offerBg(evaluation.offerDecision.decision),
+                  border: `1px solid ${offerBorder(evaluation.offerDecision.decision)}`,
+                }}>
+                  <div style={{
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    color: offerColor(evaluation.offerDecision.decision),
+                  }}>
+                    {evaluation.offerDecision.label}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "var(--text-secondary)", marginTop: "2px" }}>
+                    McKinsey score: {evaluation.offerDecision.weightedScore}/100
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
@@ -239,13 +308,9 @@ function FeedbackInner() {
           >
             <div className="card" style={{ padding: "28px" }}>
               <h3 style={{
-                fontSize: "13px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "var(--success)",
-                marginBottom: "16px",
-                fontFamily: "DM Sans, sans-serif",
+                fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
+                textTransform: "uppercase", color: "var(--success)",
+                marginBottom: "16px", fontFamily: "DM Sans, sans-serif",
               }}>
                 What Went Well
               </h3>
@@ -253,12 +318,8 @@ function FeedbackInner() {
                 {evaluation.whatWentWell.map((item, i) => (
                   <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
                     <div style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      background: "var(--success)",
-                      marginTop: "8px",
-                      flexShrink: 0,
+                      width: "6px", height: "6px", borderRadius: "50%",
+                      background: "var(--success)", marginTop: "8px", flexShrink: 0,
                     }} />
                     <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{item}</p>
                   </div>
@@ -268,13 +329,9 @@ function FeedbackInner() {
 
             <div className="card" style={{ padding: "28px" }}>
               <h3 style={{
-                fontSize: "13px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "var(--warning)",
-                marginBottom: "16px",
-                fontFamily: "DM Sans, sans-serif",
+                fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
+                textTransform: "uppercase", color: "var(--warning)",
+                marginBottom: "16px", fontFamily: "DM Sans, sans-serif",
               }}>
                 Areas to Improve
               </h3>
@@ -282,12 +339,8 @@ function FeedbackInner() {
                 {evaluation.areasToImprove.map((item, i) => (
                   <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
                     <div style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      background: "var(--warning)",
-                      marginTop: "8px",
-                      flexShrink: 0,
+                      width: "6px", height: "6px", borderRadius: "50%",
+                      background: "var(--warning)", marginTop: "8px", flexShrink: 0,
                     }} />
                     <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{item}</p>
                   </div>
@@ -295,22 +348,46 @@ function FeedbackInner() {
               </div>
             </div>
 
-            <div className="card" style={{
-              padding: "28px",
-            }}>
+            <div className="card" style={{ padding: "28px" }}>
               <h3 style={{
-                fontSize: "13px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "var(--text-secondary)",
-                marginBottom: "12px",
-                fontFamily: "DM Sans, sans-serif",
+                fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
+                textTransform: "uppercase", color: "var(--text-secondary)",
+                marginBottom: "12px", fontFamily: "DM Sans, sans-serif",
               }}>
                 {firmConfig.name} Note
               </h3>
               <p style={{ fontSize: "15px", lineHeight: 1.7 }}>{evaluation.firmSpecificNote}</p>
             </div>
+
+            {evaluation.offerDecision && (
+              <div className="card" style={{ padding: "28px" }}>
+                <h3 style={{
+                  fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
+                  textTransform: "uppercase", color: "var(--text-secondary)",
+                  marginBottom: "12px", fontFamily: "DM Sans, sans-serif",
+                }}>
+                  McKinsey Offer Decision
+                </h3>
+                <div style={{
+                  fontSize: "18px", fontWeight: 700, marginBottom: "10px",
+                  color: offerColor(evaluation.offerDecision.decision),
+                }}>
+                  {evaluation.offerDecision.label}
+                </div>
+                <p style={{ fontSize: "14px", lineHeight: 1.75, color: "var(--text-secondary)" }}>
+                  {evaluation.offerDecision.description}
+                </p>
+                <div style={{
+                  marginTop: "16px", padding: "12px 16px",
+                  background: "var(--bg-elevated)", borderRadius: "8px",
+                  fontSize: "13px", color: "var(--text-secondary)",
+                }}>
+                  Weighted score: <strong style={{ color: "var(--text-primary)" }}>{evaluation.offerDecision.weightedScore}/100</strong>
+                  <span style={{ margin: "0 8px" }}>·</span>
+                  Offer threshold: <strong style={{ color: "var(--text-primary)" }}>72/100</strong>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -320,34 +397,71 @@ function FeedbackInner() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="card"
-            style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px" }}
+            style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "28px" }}
           >
-            {breakdownItems.map((item) => {
-              const score = evaluation.breakdown[item.key];
-              const color = formatScoreColor(score);
-              const weight = firmConfig.evaluationWeights[item.key];
-              return (
-                <div key={item.key}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                    <div>
-                      <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
-                      <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
-                        {weight}% weight
-                      </span>
+            {isMckinsey ? (
+              mckinseyBreakdownItems.map((item) => {
+                const score = (evaluation.breakdown as any)[item.key] ?? 1;
+                const color = scoreColor5(score);
+                const pct = ((score - 1) / 4) * 100;
+                return (
+                  <div key={item.key}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                      <div>
+                        <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
+                        <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
+                          {item.weight}% weight
+                        </span>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score}/5</span>
+                        <span style={{ marginLeft: "8px", fontSize: "12px", color }}>{scoreLabel5(score)}</span>
+                      </div>
                     </div>
-                    <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score}</span>
+                    <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 0.8, delay: 0.1 }}
+                        style={{ height: "100%", background: color, borderRadius: "3px" }}
+                      />
+                    </div>
+                    {evaluation.dimensionFeedback?.[item.key] && (
+                      <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "8px", lineHeight: 1.6 }}>
+                        {evaluation.dimensionFeedback[item.key]}
+                      </p>
+                    )}
                   </div>
-                  <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${score}%` }}
-                      transition={{ duration: 0.8, delay: 0.2 }}
-                      style={{ height: "100%", background: color, borderRadius: "3px" }}
-                    />
+                );
+              })
+            ) : (
+              standardBreakdownItems.map((item) => {
+                const score = evaluation.breakdown[item.key as keyof typeof evaluation.breakdown] ?? 50;
+                const color = formatScoreColor(score as number);
+                const weight = firmConfig.evaluationWeights[item.key as keyof typeof firmConfig.evaluationWeights];
+                return (
+                  <div key={item.key}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <div>
+                        <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
+                        <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
+                          {weight}% weight
+                        </span>
+                      </div>
+                      <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score as number}</span>
+                    </div>
+                    <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${score}%` }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        style={{ height: "100%", background: color, borderRadius: "3px" }}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </motion.div>
         )}
 
@@ -360,13 +474,9 @@ function FeedbackInner() {
             style={{ padding: "32px" }}
           >
             <h3 style={{
-              fontSize: "13px",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--accent)",
-              marginBottom: "20px",
-              fontFamily: "DM Sans, sans-serif",
+              fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
+              textTransform: "uppercase", color: "var(--accent)",
+              marginBottom: "20px", fontFamily: "DM Sans, sans-serif",
             }}>
               What a Top 1% Candidate Would Say
             </h3>
@@ -384,68 +494,43 @@ function FeedbackInner() {
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
           >
             <div style={{
-              padding: "14px 18px",
-              background: "var(--bg-card)",
-              border: "1px solid var(--border)",
-              borderRadius: "8px",
-              fontSize: "13px",
-              color: "var(--text-secondary)",
+              padding: "14px 18px", background: "var(--bg-card)",
+              border: "1px solid var(--border)", borderRadius: "8px",
+              fontSize: "13px", color: "var(--text-secondary)",
             }}>
               {transcript.length} messages · {formatDuration(duration)} session
             </div>
 
             {transcript.map((msg, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "6px",
-                  alignItems: msg.role === "user" ? "flex-end" : "flex-start",
-                }}
-              >
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}>
+              <div key={i} style={{
+                display: "flex", flexDirection: "column", gap: "6px",
+                alignItems: msg.role === "user" ? "flex-end" : "flex-start",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   {msg.role === "assistant" && (
                     <div style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "50%",
+                      width: "24px", height: "24px", borderRadius: "50%",
                       background: firmConfig.color,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "10px",
-                      fontWeight: 700,
-                      color: "white",
-                      flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "10px", fontWeight: 700, color: "white", flexShrink: 0,
                     }}>
                       {firmConfig.name.charAt(0)}
                     </div>
                   )}
                   <span style={{
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    color: "var(--text-secondary)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
+                    fontSize: "11px", fontWeight: 600, color: "var(--text-secondary)",
+                    textTransform: "uppercase", letterSpacing: "0.05em",
                   }}>
                     {msg.role === "user" ? "You" : firmConfig.name}
                   </span>
                 </div>
 
                 <div style={{
-                  maxWidth: "720px",
-                  padding: "16px 20px",
+                  maxWidth: "720px", padding: "16px 20px",
                   borderRadius: msg.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
                   background: msg.role === "user" ? "#111111" : "var(--bg-card)",
                   border: msg.role === "assistant" ? "1px solid var(--border)" : "none",
-                  fontSize: "15px",
-                  lineHeight: 1.7,
-                  whiteSpace: "pre-wrap",
+                  fontSize: "15px", lineHeight: 1.7, whiteSpace: "pre-wrap",
                   color: msg.role === "user" ? "#ffffff" : "var(--text-primary)",
                 }}>
                   {msg.content}
@@ -457,7 +542,7 @@ function FeedbackInner() {
 
         <div style={{ marginTop: "48px", display: "flex", gap: "12px" }}>
           <button
-            className="btn-primary glow"
+            className="btn-primary"
             style={{ flex: 1, padding: "16px", fontSize: "15px" }}
             onClick={() => router.push("/dashboard")}
           >
@@ -483,4 +568,3 @@ export default function FeedbackPage() {
     </Suspense>
   );
 }
-//
