@@ -144,8 +144,8 @@ export default function LandingPage() {
           }}>
             Practice with a realistic interviewer simulation. Firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
           </p>
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-            {isSignedIn ? (
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", minHeight: "46px", alignItems: "center" }}>
+            {!loading && (isSignedIn ? (
               <>
                 <button
                   className="btn-primary"
@@ -170,7 +170,7 @@ export default function LandingPage() {
               >
                 Get started free
               </button>
-            )}
+            ))}
           </div>
         </motion.div>
       </section>
