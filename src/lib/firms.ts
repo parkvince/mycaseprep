@@ -127,7 +127,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
     feedbackTone: `Accenture Strategy cases almost always have a technology or digital transformation dimension. Candidates should be fluent in concepts like AI/ML applications, cloud strategy, data monetization, and platform business models. Pure strategy thinking without technology integration is insufficient. Accenture also values scalability — recommendations must work at enterprise scale. The interview style is more conversational than MBB and interviewers are often more generous with hints.`,
     color: "#A100FF",
   },
-  oliver_wyman: {
+  "oliver-wyman": {
     name: "Oliver Wyman",
     style: "Interviewer-led with deep industry specialization. Oliver Wyman cases are often highly technical and sector-specific.",
     tone: "Precise, quantitative, and industry-expert. Oliver Wyman expects candidates to demonstrate deep sector knowledge alongside analytical rigor.",
@@ -141,7 +141,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
     feedbackTone: `Oliver Wyman is known for exceptionally technical cases, particularly in financial services, insurance, and risk. Candidates are expected to perform sophisticated quantitative analysis and demonstrate genuine industry knowledge. Surface-level frameworks are insufficient — Oliver Wyman interviewers will probe until they find the limits of your knowledge. The bar for quantitative accuracy is the highest of any firm on this list. Cases often involve actuarial concepts, risk modeling, or financial market dynamics.`,
     color: "#E4002B",
   },
-  at_kearney: {
+  "kearney": {
     name: "Kearney",
     style: "Candidate-led with an operations and procurement focus. Kearney cases frequently involve supply chain, manufacturing, or cost reduction.",
     tone: "Pragmatic, direct, and action-oriented. Kearney wants implementable solutions, not theoretical frameworks.",
@@ -169,7 +169,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
     feedbackTone: `L.E.K. is heavily oriented toward private equity due diligence and transaction advisory. Cases move fast and expect candidates to handle complex financial analysis under time pressure. Every assumption must be stated explicitly, every number must be derived logically, and every recommendation must have a clear financial basis. L.E.K. interviewers are among the most technically demanding — vague qualitative answers are not acceptable. Creativity is the lowest-weighted dimension here; rigor is everything.`,
     color: "#1D3557",
   },
-  monitor_deloitte: {
+  "monitor-deloitte": {
     name: "Monitor Deloitte",
     style: "Candidate-led with a growth strategy and customer focus. Monitor Deloitte cases often involve demand-side analysis and market strategy.",
     tone: "Thoughtful, customer-centric, and growth-oriented. Values deep understanding of customer behavior, competitive dynamics, and market positioning.",
@@ -183,7 +183,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
     feedbackTone: `Monitor Deloitte (the strategy practice of Deloitte) has its roots in Michael Porter's competitive strategy framework. Cases frequently involve market strategy, brand positioning, and customer segmentation. Candidates are expected to demonstrate genuine insight into customer behavior and competitive dynamics — not just financial analysis. Monitor Deloitte rewards candidates who can articulate a differentiated strategic position and back it up with market evidence.`,
     color: "#86BC25",
   },
-  ibm_consulting: {
+  "ibm": {
     name: "IBM Consulting",
     style: "Structured and technology-integrated. IBM cases almost always involve AI, data, or enterprise technology strategy.",
     tone: "Systematic, tech-forward, and enterprise-scale. IBM rewards candidates who understand AI/ML applications and large-scale digital transformation.",
@@ -197,7 +197,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
     feedbackTone: `IBM Consulting sits at the intersection of strategy and technology. Cases virtually always have an AI, cloud, or enterprise software dimension. Candidates are expected to understand how technology enables or constrains strategic choices — purely business-side thinking is insufficient. IBM rewards candidates who can translate technical capabilities into business value and who understand implementation complexity at enterprise scale. Familiarity with IBM's own product portfolio (watsonx, Red Hat, etc.) is a differentiator.`,
     color: "#0530AD",
   },
-  strategy_and: {
+  "capital-one": {
     name: "Strategy& (PwC)",
     style: "Candidate-led with a distinctive thinking focus. Strategy& cases emphasize strategic identity and capability-driven strategy.",
     tone: "Bold, conceptual, and identity-driven. Strategy& rewards candidates who challenge conventional wisdom and build strategies around distinctive capabilities.",
