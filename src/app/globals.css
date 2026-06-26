@@ -108,3 +108,115 @@ pre {
   max-width: 100%;
   overflow-x: auto;
 }
+
+/* ============================================================
+   Homepage — pastel design tokens
+   ============================================================ */
+:root {
+  --hp-radius: 1.25rem;
+  --hp-bg: oklch(0.985 0.012 95);
+  --hp-card: oklch(1 0 0);
+  --hp-foreground: oklch(0.22 0.04 280);
+  --hp-soft-foreground: oklch(0.4 0.04 280);
+  --hp-primary: oklch(0.62 0.16 285);
+  --hp-primary-hover: oklch(0.56 0.18 285);
+  --hp-primary-foreground: oklch(0.99 0.005 95);
+  --hp-primary-soft: oklch(0.92 0.05 285);
+  --hp-lavender: oklch(0.86 0.08 295);
+  --hp-peach: oklch(0.88 0.08 35);
+  --hp-mint: oklch(0.89 0.07 165);
+  --hp-sky: oklch(0.9 0.06 230);
+  --hp-butter: oklch(0.93 0.08 90);
+  --hp-rose: oklch(0.88 0.07 10);
+  --hp-border: oklch(0.92 0.015 285);
+  --hp-border-strong: oklch(0.82 0.03 285);
+  --hp-shadow-card: 0 2px 4px oklch(0.4 0.05 280 / 4%), 0 24px 48px -16px oklch(0.4 0.05 280 / 12%);
+  --hp-shadow-pop: 0 4px 0 oklch(0.4 0.05 280 / 12%);
+}
+
+@keyframes hp-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes hp-blob {
+  0%, 100% { border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%; }
+  33% { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
+  66% { border-radius: 50% 50% 30% 70% / 40% 60% 40% 60%; }
+}
+
+.hp-surface-card {
+  background-color: var(--hp-card);
+  border: 1px solid var(--hp-border);
+  border-radius: calc(var(--hp-radius) + 12px);
+  box-shadow: var(--hp-shadow-card);
+}
+.hp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: var(--hp-primary-soft);
+  color: var(--hp-foreground);
+  border: 1px solid color-mix(in oklab, var(--hp-primary) 25%, transparent);
+}
+.hp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: var(--hp-primary);
+  color: var(--hp-primary-foreground);
+  box-shadow: 0 3px 0 oklch(0.4 0.16 285);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.hp-btn-primary:hover {
+  background-color: var(--hp-primary-hover);
+  box-shadow: 0 2px 0 oklch(0.4 0.16 285);
+  transform: translateY(1px);
+}
+.hp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: var(--hp-card);
+  color: var(--hp-foreground);
+  border: 1px solid var(--hp-border-strong);
+  box-shadow: 0 3px 0 oklch(0.82 0.03 285);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.hp-btn-secondary:hover {
+  box-shadow: 0 2px 0 oklch(0.82 0.03 285);
+  transform: translateY(1px);
+}
+.hp-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--hp-foreground);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.hp-btn-ghost:hover {
+  background-color: var(--hp-primary-soft);
+}
+.hp-btn-sm  { height: 2.25rem; padding: 0 1rem; font-size: 0.875rem; }
+.hp-btn-md  { height: 2.75rem; padding: 0 1.25rem; font-size: 0.875rem; }
+.hp-btn-lg  { height: 3.5rem; padding: 0 1.75rem; font-size: 1rem; }
