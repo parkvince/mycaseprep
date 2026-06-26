@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Clock, History, Settings, HelpCircle, MessageSquare, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, History, Settings, HelpCircle, MessageSquare } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Sparkle, Star } from "@/components/ui/doodle";
 
@@ -41,7 +41,18 @@ const FEATURES = [
   },
 ];
 
-function ProfileDropdown({ user, onClose }: { user: { name?: string | null; email?: string | null; image?: string | null }; onClose: () => void }) {
+function smoothScrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
+}
+
+function ProfileDropdown({
+  user,
+  onClose,
+}: {
+  user: { name?: string | null; email?: string | null; image?: string | null };
+  onClose: () => void;
+}) {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -53,7 +64,12 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
-  const menuItem = (icon: React.ReactNode, label: string, onClick: () => void, danger?: boolean) => (
+  const menuItem = (
+    icon: React.ReactNode,
+    label: string,
+    onClick: () => void,
+    danger?: boolean
+  ) => (
     <button
       onClick={onClick}
       style={{
@@ -73,10 +89,12 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
         textAlign: "left",
         transition: "background 0.1s",
       }}
-      onMouseEnter={e => (e.currentTarget.style.background = "var(--hp-primary-soft)")}
-      onMouseLeave={e => (e.currentTarget.style.background = "none")}
+      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hp-primary-soft)")}
+      onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
     >
-      <span style={{ color: danger ? "#dc2626" : "var(--hp-soft-foreground)", flexShrink: 0 }}>{icon}</span>
+      <span style={{ color: danger ? "#dc2626" : "var(--hp-soft-foreground)", flexShrink: 0 }}>
+        {icon}
+      </span>
       {label}
     </button>
   );
@@ -103,40 +121,72 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
           }}
         >
           {/* Profile header */}
-          <div style={{
-            padding: "1rem 1rem 0.75rem",
-            borderBottom: "1px solid var(--hp-border)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-          }}>
+          <div
+            style={{
+              padding: "1rem 1rem 0.75rem",
+              borderBottom: "1px solid var(--hp-border)",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+            }}
+          >
             {user.image ? (
               <img
                 src={user.image}
                 alt={user.name ?? "Profile"}
-                style={{ width: "40px", height: "40px", borderRadius: "9999px", objectFit: "cover", flexShrink: 0 }}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "9999px",
+                  objectFit: "cover",
+                  flexShrink: 0,
+                }}
               />
             ) : (
-              <div style={{
-                width: "40px", height: "40px", borderRadius: "9999px",
-                background: "var(--hp-primary)", color: "white",
-                display: "grid", placeItems: "center",
-                fontSize: "1rem", fontWeight: 700, flexShrink: 0,
-              }}>
+              <div
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "9999px",
+                  background: "var(--hp-primary)",
+                  color: "white",
+                  display: "grid",
+                  placeItems: "center",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}
+              >
                 {(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}
               </div>
             )}
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              <div
+                style={{
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  color: "var(--hp-foreground)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {user.name ?? "User"}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              <div
+                style={{
+                  fontSize: "0.75rem",
+                  color: "var(--hp-soft-foreground)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {user.email}
               </div>
             </div>
           </div>
 
-          {/* Menu items */}
           <div style={{ padding: "0.5rem" }}>
             {menuItem(<History size={16} />, "History", () => { router.push("/history"); onClose(); })}
             {menuItem(<Settings size={16} />, "Settings", () => { router.push("/settings"); onClose(); })}
@@ -173,85 +223,162 @@ export default function LandingPage() {
   const cta = user ? "/dashboard" : "/auth";
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const navLinkStyle: React.CSSProperties = {
+  // Scroll-based nav background — fades in over first 80px of scroll
+  const { scrollY } = useScroll();
+  const navBg = useTransform(scrollY, [0, 80], ["rgba(255,255,255,0)", "rgba(255,255,255,0.88)"]);
+  const navBlur = useTransform(scrollY, [0, 80], ["blur(0px)", "blur(14px)"]);
+  const navBorder = useTransform(scrollY, [0, 80], ["rgba(0,0,0,0)", "rgba(0,0,0,0.08)"]);
+
+  const BTN_H = "38px";
+
+  const textLinkStyle: React.CSSProperties = {
     background: "none",
     border: "none",
-    fontSize: "0.9rem",
+    fontSize: "0.875rem",
     fontWeight: 500,
     color: "var(--hp-soft-foreground)",
     cursor: "pointer",
-    padding: "0.4rem 0.75rem",
-    borderRadius: "6px",
+    padding: "0 0.5rem",
     fontFamily: "inherit",
     textDecoration: "none",
-    display: "inline-block",
-    transition: "color 0.15s, background 0.15s",
+    display: "inline-flex",
+    alignItems: "center",
+    height: BTN_H,
+    transition: "color 0.15s",
+    lineHeight: 1,
   };
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
-      background: "var(--hp-bg)",
-      backgroundImage: [
-        "radial-gradient(at 8% 12%, var(--hp-lavender) 0px, transparent 45%)",
-        "radial-gradient(at 92% 10%, var(--hp-peach) 0px, transparent 45%)",
-        "radial-gradient(at 85% 92%, var(--hp-mint) 0px, transparent 50%)",
-        "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
-      ].join(", "),
-      backgroundAttachment: "fixed",
-    }}>
-
+    <div
+      style={{
+        minHeight: "100vh",
+        fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
+        background: "var(--hp-bg)",
+        backgroundImage: [
+          "radial-gradient(at 8% 12%, var(--hp-lavender) 0px, transparent 45%)",
+          "radial-gradient(at 92% 10%, var(--hp-peach) 0px, transparent 45%)",
+          "radial-gradient(at 85% 92%, var(--hp-mint) 0px, transparent 50%)",
+          "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
+        ].join(", "),
+        backgroundAttachment: "fixed",
+      }}
+    >
       {/* Nav */}
-      <header style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "1rem 2.5rem",
-        boxSizing: "border-box",
-      }}>
-        {/* Left: logo + nav links */}
-        <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
-          <span
-            onClick={() => router.push("/")}
-            style={{ fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer" }}
+      <motion.header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0.875rem 2.5rem",
+          boxSizing: "border-box",
+          backgroundColor: navBg,
+          backdropFilter: navBlur,
+          borderBottom: "1px solid",
+          borderColor: navBorder,
+          transition: "border-color 0.3s",
+        }}
+      >
+        {/* Left: logo */}
+        <span
+          onClick={() => { smoothScrollTo("hero"); }}
+          style={{
+            fontWeight: 700,
+            fontSize: "1.15rem",
+            letterSpacing: "-0.02em",
+            color: "var(--hp-foreground)",
+            cursor: "pointer",
+          }}
+        >
+          mycaseprep
+        </span>
+
+        {/* Right: all buttons */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+
+          {/* Home link */}
+          <button
+            onClick={() => smoothScrollTo("hero")}
+            style={textLinkStyle}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--hp-foreground)")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--hp-soft-foreground)")}
           >
-            mycaseprep
-          </span>
+            Home
+          </button>
 
-          <nav style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-            <button
-              onClick={() => router.push("/")}
-              style={navLinkStyle}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "var(--hp-foreground)"; (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.05)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "var(--hp-soft-foreground)"; (e.currentTarget as HTMLElement).style.background = "none"; }}
-            >
-              Home
-            </button>
-            <a
-              href="#features"
-              style={navLinkStyle}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "var(--hp-foreground)"; (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.05)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "var(--hp-soft-foreground)"; (e.currentTarget as HTMLElement).style.background = "none"; }}
-            >
-              Features
-            </a>
-          </nav>
-        </div>
+          {/* Features link */}
+          <button
+            onClick={() => smoothScrollTo("features")}
+            style={{ ...textLinkStyle, marginRight: "0.5rem" }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--hp-foreground)")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--hp-soft-foreground)")}
+          >
+            Features
+          </button>
 
-        {/* Right: same layout before + after login */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+          {/* Library — white outlined pill */}
+          <button
+            onClick={() => router.push(user ? "/library" : "/auth")}
+            style={{
+              height: BTN_H,
+              padding: "0 1.1rem",
+              borderRadius: "9999px",
+              border: "1px solid var(--hp-border-strong)",
+              background: "rgba(255,255,255,0.75)",
+              color: "var(--hp-foreground)",
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              backdropFilter: "blur(8px)",
+              whiteSpace: "nowrap",
+              display: "inline-flex",
+              alignItems: "center",
+              lineHeight: 1,
+            }}
+          >
+            Library
+          </button>
+
+          {/* Primary CTA — purple pill */}
+          <button
+            onClick={() => router.push(cta)}
+            style={{
+              height: BTN_H,
+              padding: "0 1.25rem",
+              borderRadius: "9999px",
+              border: "none",
+              background: "var(--hp-primary)",
+              color: "var(--hp-primary-foreground)",
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              whiteSpace: "nowrap",
+              lineHeight: 1,
+              boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
+              transition: "opacity 0.15s",
+            }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "0.88")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "1")}
+          >
+            {user ? "Start practicing" : "Get started"}
+            <ArrowRight size={15} />
+          </button>
+
+          {/* Logged out: Sign in | Logged in: avatar */}
           {!loading && (
-            <>
-              {/* Library button — white outlined, same size always */}
+            !user ? (
               <button
-                onClick={() => router.push(user ? "/library" : "/auth")}
+                onClick={() => router.push("/auth")}
                 style={{
-                  height: "38px",
+                  height: BTN_H,
                   padding: "0 1.1rem",
                   borderRadius: "9999px",
                   border: "1px solid var(--hp-border-strong)",
@@ -262,91 +389,52 @@ export default function LandingPage() {
                   cursor: "pointer",
                   fontFamily: "inherit",
                   backdropFilter: "blur(8px)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Library
-              </button>
-
-              {/* Primary CTA — purple, same size always */}
-              <button
-                className="hp-btn-primary"
-                onClick={() => router.push(cta)}
-                style={{
-                  height: "38px",
-                  padding: "0 1.25rem",
-                  borderRadius: "9999px",
-                  fontSize: "0.875rem",
-                  fontWeight: 600,
-                  fontFamily: "inherit",
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "0.4rem",
-                  whiteSpace: "nowrap",
+                  lineHeight: 1,
                 }}
               >
-                {user ? "Start practicing" : "Get started"}
-                <ArrowRight size={15} />
+                Sign in
               </button>
-
-              {/* Logged out: Sign in instead of avatar */}
-              {!user ? (
+            ) : (
+              <div style={{ position: "relative" }}>
                 <button
-                  onClick={() => router.push("/auth")}
+                  onClick={() => setProfileOpen((o) => !o)}
                   style={{
-                    height: "38px",
-                    padding: "0 1.1rem",
+                    width: BTN_H,
+                    height: BTN_H,
                     borderRadius: "9999px",
-                    border: "1px solid var(--hp-border-strong)",
-                    background: "rgba(255,255,255,0.75)",
-                    color: "var(--hp-foreground)",
-                    fontSize: "0.875rem",
-                    fontWeight: 600,
+                    border: "2px solid var(--hp-primary)",
+                    padding: 0,
                     cursor: "pointer",
-                    fontFamily: "inherit",
-                    backdropFilter: "blur(8px)",
+                    background: "var(--hp-primary)",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  Sign in
-                </button>
-              ) : (
-                /* Profile picture */
-                <div style={{ position: "relative" }}>
-                  <button
-                    onClick={() => setProfileOpen(o => !o)}
-                    style={{
-                      width: "38px",
-                      height: "38px",
-                      borderRadius: "9999px",
-                      border: "2px solid var(--hp-primary)",
-                      padding: 0,
-                      cursor: "pointer",
-                      background: "var(--hp-primary)",
-                      overflow: "hidden",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {user.image ? (
-                      <img
-                        src={user.image}
-                        alt={user.name ?? "Profile"}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                      />
-                    ) : (
-                      <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: "inherit" }}>
-                        {(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </button>
-                  {profileOpen && (
-                    <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />
+                  {user.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name ?? "Profile"}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
+                  ) : (
+                    <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: "inherit" }}>
+                      {(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}
+                    </span>
                   )}
-                </div>
-              )}
-            </>
+                </button>
+                {profileOpen && (
+                  <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />
+                )}
+              </div>
+            )
           )}
         </div>
-      </header>
+      </motion.header>
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
         <style>{`
@@ -377,7 +465,7 @@ export default function LandingPage() {
         `}</style>
 
         {/* Hero */}
-        <section className="hp-hero-grid">
+        <section id="hero" className="hp-hero-grid">
           <div style={{ position: "relative", zIndex: 10 }}>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -389,14 +477,16 @@ export default function LandingPage() {
               <span style={{ textTransform: "uppercase", letterSpacing: "0.05em" }}>Beta</span>
             </motion.div>
 
-            <h1 style={{
-              marginTop: "1.25rem",
-              fontSize: "clamp(2.75rem, 6vw, 5.5rem)",
-              lineHeight: 1.05,
-              letterSpacing: "-0.02em",
-              fontWeight: 700,
-              color: "var(--hp-foreground)",
-            }}>
+            <h1
+              style={{
+                marginTop: "1.25rem",
+                fontSize: "clamp(2.75rem, 6vw, 5.5rem)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.02em",
+                fontWeight: 700,
+                color: "var(--hp-foreground)",
+              }}
+            >
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -435,7 +525,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              style={{ marginTop: "2rem", display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center" }}
+              style={{ marginTop: "2rem" }}
             >
               <button
                 className="hp-btn-primary hp-btn-lg"
