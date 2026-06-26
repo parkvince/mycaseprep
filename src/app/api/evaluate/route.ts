@@ -32,15 +32,12 @@ const FIRM_RUBRICS: Record<string, { dimensions: { key: string; weight: number }
   "roland-berger": ROLAND_BERGER_RUBRIC,
   accenture: ACCENTURE_RUBRIC,
   "oliver-wyman": OLIVER_WYMAN_RUBRIC,
-  "oliver-wyman": OLIVER_WYMAN_RUBRIC,
   kearney: KEARNEY_RUBRIC,
   lek: LEK_RUBRIC,
-  "monitor-deloitte": MONITOR_DELOITTE_RUBRIC,
   "monitor-deloitte": MONITOR_DELOITTE_RUBRIC,
   ibm: IBM_RUBRIC,
   "ibm-consulting": IBM_RUBRIC,
   huron: HURON_RUBRIC,
-  capitalone: CAPITAL_ONE_RUBRIC,
   "capital-one": CAPITAL_ONE_RUBRIC,
 };
 
