@@ -58,12 +58,25 @@ export default function SettingsPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 500000) {
-      setProfileError("Image must be under 500KB.");
-      return;
-    }
+
     const reader = new FileReader();
-    reader.onload = () => setProfileImage(reader.result as string);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX = 128;
+        let w = img.width;
+        let h = img.height;
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        const resized = canvas.toDataURL("image/jpeg", 0.7);
+        setProfileImage(resized);
+      };
+      img.src = event.target!.result as string;
+    };
     reader.readAsDataURL(file);
   };
 
