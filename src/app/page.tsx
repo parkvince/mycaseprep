@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { motion, useScroll, useSpring } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Reveal, Stagger, StaggerChild } from "@/components/ui/reveal";
-import { Sparkle, Arrow, Star } from "@/components/ui/doodle";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles, Clock, BookOpen, Play, Settings } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
+import { Sparkle, Star } from "@/components/ui/doodle";
 
 const FEATURES = [
   {
@@ -40,15 +41,73 @@ const FEATURES = [
   },
 ];
 
+function NavIconBtn({
+  icon,
+  label,
+  onClick,
+  primary,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  primary?: boolean;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div style={{ position: "relative" }}>
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          width: "36px",
+          height: "36px",
+          borderRadius: "8px",
+          border: primary ? "none" : "1px solid var(--hp-border)",
+          background: primary ? "var(--hp-primary)" : "transparent",
+          color: primary ? "var(--hp-primary-foreground)" : "var(--hp-soft-foreground)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          transition: "all 0.15s",
+          ...(hovered && !primary ? { background: "var(--hp-primary-soft)", color: "var(--hp-foreground)" } : {}),
+        }}
+      >
+        {icon}
+      </button>
+      {hovered && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 8px)",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "var(--hp-foreground)",
+            color: "white",
+            fontSize: "11px",
+            fontWeight: 500,
+            padding: "4px 8px",
+            borderRadius: "5px",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+            zIndex: 200,
+            fontFamily: "inherit",
+          }}
+        >
+          {label}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const user = session?.user;
   const cta = user ? "/dashboard" : "/auth";
-
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 25, mass: 0.3 });
 
   return (
     <div
@@ -65,75 +124,94 @@ export default function LandingPage() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Scroll progress bar */}
-      <motion.div
+      {/* Nav — full width */}
+      <header
         style={{
-          scaleX: progress,
-          position: "fixed",
+          position: "sticky",
           top: 0,
-          left: 0,
-          right: 0,
-          height: "4px",
-          background: "var(--hp-primary)",
-          transformOrigin: "left",
-          zIndex: 60,
+          zIndex: 50,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: "1px solid var(--hp-border)",
+          background: "white",
+          padding: "0.875rem 2rem",
+          boxSizing: "border-box",
         }}
-      />
+      >
+        <div
+          onClick={() => router.push("/")}
+          style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}
+        >
+          <div
+            style={{
+              width: "2.25rem",
+              height: "2.25rem",
+              display: "grid",
+              placeItems: "center",
+              borderRadius: "0.75rem",
+              background: "var(--hp-primary)",
+              color: "var(--hp-primary-foreground)",
+            }}
+          >
+            <Sparkles size={20} />
+          </div>
+          <span
+            style={{
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              letterSpacing: "-0.02em",
+              color: "var(--hp-foreground)",
+            }}
+          >
+            mycaseprep
+          </span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          {!loading && (
+            user ? (
+              <>
+                <NavIconBtn icon={<Clock size={17} />} label="History" onClick={() => router.push("/history")} />
+                <NavIconBtn icon={<BookOpen size={17} />} label="Library" onClick={() => router.push("/library")} />
+                <NavIconBtn icon={<Play size={17} />} label="Start a Case" onClick={() => router.push("/dashboard")} primary />
+                <NavIconBtn icon={<Settings size={17} />} label="Settings" onClick={() => router.push("/settings")} />
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => router.push("/auth")}
+                  style={{
+                    height: "36px",
+                    padding: "0 1rem",
+                    borderRadius: "9999px",
+                    border: "1px solid var(--hp-border-strong)",
+                    background: "white",
+                    color: "var(--hp-foreground)",
+                    fontSize: "0.875rem",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  Sign in
+                </button>
+                <button
+                  className="hp-btn-primary hp-btn-sm"
+                  onClick={() => router.push("/auth")}
+                  style={{ fontFamily: "inherit" }}
+                >
+                  Get started
+                </button>
+              </>
+            )
+          )}
+        </div>
+      </header>
 
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
 
-        {/* Nav */}
-        <header
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 50,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderBottom: "1px solid var(--hp-border)",
-            background: "oklch(1 0 0 / 80%)",
-            backdropFilter: "blur(12px)",
-            padding: "1rem 2rem",
-          }}
-        >
-          <div
-            onClick={() => router.push("/")}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}
-          >
-            <motion.div
-              animate={{ rotate: [0, -8, 8, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                width: "2.25rem",
-                height: "2.25rem",
-                display: "grid",
-                placeItems: "center",
-                borderRadius: "0.75rem",
-                background: "var(--hp-primary)",
-                color: "var(--hp-primary-foreground)",
-              }}
-            >
-              <Sparkles size={20} />
-            </motion.div>
-            <span style={{ fontWeight: 600, fontSize: "1.2rem", letterSpacing: "-0.025em", color: "var(--hp-foreground)" }}>
-              mycaseprep
-            </span>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            {!loading && !user && (
-              <button className="hp-btn-ghost hp-btn-sm" onClick={() => router.push("/auth")}>
-                Log in
-              </button>
-            )}
-            <button className="hp-btn-primary hp-btn-sm" onClick={() => router.push(cta)}>
-              {user ? "Open dashboard" : "Get started"}
-            </button>
-          </div>
-        </header>
-
-        {/* Hero */}
         <style>{`
           .hp-hero-grid {
             display: grid;
@@ -148,10 +226,21 @@ export default function LandingPage() {
               padding-bottom: 7rem;
             }
           }
+          .hp-features-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+          }
+          @media (max-width: 900px) {
+            .hp-features-grid { grid-template-columns: repeat(2, 1fr); }
+          }
+          @media (max-width: 580px) {
+            .hp-features-grid { grid-template-columns: 1fr; }
+          }
         `}</style>
 
+        {/* Hero */}
         <section className="hp-hero-grid">
-          {/* Left: copy */}
           <div style={{ position: "relative", zIndex: 10 }}>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -169,6 +258,7 @@ export default function LandingPage() {
                 fontSize: "clamp(2.75rem, 6vw, 5.5rem)",
                 lineHeight: 1.05,
                 letterSpacing: "-0.02em",
+                fontWeight: 700,
                 color: "var(--hp-foreground)",
               }}
             >
@@ -184,7 +274,7 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                style={{ display: "block", fontStyle: "italic", color: "var(--hp-primary)" }}
+                style={{ display: "block", color: "var(--hp-primary)" }}
               >
                 case interview.
               </motion.span>
@@ -200,6 +290,7 @@ export default function LandingPage() {
                 fontSize: "1.05rem",
                 color: "var(--hp-soft-foreground)",
                 lineHeight: 1.65,
+                fontWeight: 400,
               }}
             >
               Practice with a realistic interviewer simulation. Firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
@@ -214,7 +305,7 @@ export default function LandingPage() {
               <button
                 className="hp-btn-primary hp-btn-lg"
                 onClick={() => router.push(cta)}
-                style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
+                style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "inherit" }}
               >
                 {user ? "Open dashboard" : "Start practicing"}
                 <ArrowRight size={18} />
@@ -222,25 +313,14 @@ export default function LandingPage() {
               <a
                 href="#features"
                 className="hp-btn-secondary hp-btn-lg"
-                style={{ textDecoration: "none" }}
+                style={{ textDecoration: "none", fontFamily: "inherit" }}
               >
                 See features
               </a>
             </motion.div>
-
-            <div style={{ position: "absolute", left: "-1rem", bottom: "-2rem" }}>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                style={{ color: "var(--hp-primary)", opacity: 0.5 }}
-              >
-                <Arrow style={{ transform: "rotate(10deg)" }} />
-              </motion.div>
-            </div>
           </div>
 
-          {/* Right: illustration */}
+          {/* Hero illustration */}
           <div style={{ position: "relative" }}>
             <motion.div
               aria-hidden
@@ -303,90 +383,81 @@ export default function LandingPage() {
                 style={{
                   fontSize: "clamp(1.75rem, 4vw, 3rem)",
                   letterSpacing: "-0.02em",
+                  fontWeight: 700,
                   color: "var(--hp-foreground)",
                 }}
               >
                 Built for{" "}
-                <span style={{ fontStyle: "italic", color: "var(--hp-primary)" }}>serious prep.</span>
+                <span style={{ color: "var(--hp-primary)" }}>serious prep.</span>
               </h2>
             </div>
           </Reveal>
 
-          <div
-            style={{
-              marginTop: "3.5rem",
-              display: "grid",
-              gap: "1.5rem",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            }}
-          >
-            <Stagger>
-              {FEATURES.map((f, i) => (
-                <StaggerChild key={f.title}>
+          <div className="hp-features-grid" style={{ marginTop: "3.5rem" }}>
+            {FEATURES.map((f, i) => (
+              <Reveal key={f.title} delay={i * 0.07}>
+                <div
+                  className="hp-surface-card"
+                  style={{ position: "relative", padding: "1.75rem", height: "100%", boxSizing: "border-box" }}
+                >
                   <div
-                    className="hp-surface-card"
-                    style={{ position: "relative", height: "100%", padding: "1.75rem" }}
+                    style={{
+                      position: "absolute",
+                      top: "-1rem",
+                      right: "-1rem",
+                      width: "2.5rem",
+                      height: "2.5rem",
+                      display: "grid",
+                      placeItems: "center",
+                      borderRadius: "9999px",
+                      background: "var(--hp-primary)",
+                      color: "var(--hp-primary-foreground)",
+                      fontWeight: 700,
+                      fontSize: "0.875rem",
+                      boxShadow: "var(--hp-shadow-pop)",
+                      fontFamily: "inherit",
+                    }}
                   >
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "-1.5rem",
-                        right: "-1rem",
-                        width: "3rem",
-                        height: "3rem",
-                        display: "grid",
-                        placeItems: "center",
-                        borderRadius: "0.75rem",
-                        background: "var(--hp-primary)",
-                        color: "var(--hp-primary-foreground)",
-                        fontWeight: 600,
-                        fontSize: "1.1rem",
-                        boxShadow: "var(--hp-shadow-pop)",
-                      }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                    <motion.img
-                      src={f.img}
-                      alt=""
-                      width={180}
-                      height={180}
-                      loading="lazy"
-                      style={{
-                        display: "block",
-                        margin: "0 auto",
-                        width: "11rem",
-                        height: "11rem",
-                        objectFit: "contain",
-                      }}
-                      animate={{ y: [0, -8, 0] }}
-                      transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <h3
-                      style={{
-                        marginTop: "1rem",
-                        fontSize: "1.35rem",
-                        fontWeight: 600,
-                        letterSpacing: "-0.01em",
-                        color: "var(--hp-foreground)",
-                      }}
-                    >
-                      {f.title}
-                    </h3>
-                    <p
-                      style={{
-                        marginTop: "0.5rem",
-                        fontSize: "0.875rem",
-                        color: "var(--hp-soft-foreground)",
-                        lineHeight: 1.65,
-                      }}
-                    >
-                      {f.copy}
-                    </p>
+                    {String(i + 1).padStart(2, "0")}
                   </div>
-                </StaggerChild>
-              ))}
-            </Stagger>
+                  <motion.img
+                    src={f.img}
+                    alt=""
+                    loading="lazy"
+                    style={{
+                      display: "block",
+                      margin: "0 auto",
+                      width: "10rem",
+                      height: "10rem",
+                      objectFit: "contain",
+                    }}
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <h3
+                    style={{
+                      marginTop: "1rem",
+                      fontSize: "1.15rem",
+                      fontWeight: 700,
+                      letterSpacing: "-0.01em",
+                      color: "var(--hp-foreground)",
+                    }}
+                  >
+                    {f.title}
+                  </h3>
+                  <p
+                    style={{
+                      marginTop: "0.5rem",
+                      fontSize: "0.875rem",
+                      color: "var(--hp-soft-foreground)",
+                      lineHeight: 1.65,
+                    }}
+                  >
+                    {f.copy}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </section>
 
@@ -409,19 +480,19 @@ export default function LandingPage() {
                   left: "-2rem",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "oklch(0.99 0.005 95 / 25%)",
+                  color: "oklch(0.99 0.005 95 / 20%)",
                 }}
                 animate={{ y: ["-50%", "calc(-50% - 10px)", "-50%"] }}
                 transition={{ duration: 5, repeat: Infinity }}
               >
-                <Star style={{ width: "4rem", height: "4rem" }} />
+                <Star style={{ width: "5rem", height: "5rem" }} />
               </motion.div>
               <motion.div
                 style={{
                   position: "absolute",
                   right: "-1rem",
                   top: "2rem",
-                  color: "oklch(0.99 0.005 95 / 25%)",
+                  color: "oklch(0.99 0.005 95 / 20%)",
                 }}
                 animate={{ rotate: [0, 12, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
@@ -433,6 +504,7 @@ export default function LandingPage() {
                 style={{
                   fontSize: "clamp(1.75rem, 4vw, 3rem)",
                   letterSpacing: "-0.02em",
+                  fontWeight: 700,
                   color: "var(--hp-primary-foreground)",
                   position: "relative",
                   zIndex: 1,
@@ -457,7 +529,7 @@ export default function LandingPage() {
                 <button
                   className="hp-btn-secondary hp-btn-lg"
                   onClick={() => router.push(cta)}
-                  style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "inherit" }}
                 >
                   {user ? "Open dashboard" : "Start practicing"}
                   <ArrowRight size={18} />
@@ -477,7 +549,7 @@ export default function LandingPage() {
             color: "var(--hp-soft-foreground)",
           }}
         >
-          made with care · mycaseprep · {new Date().getFullYear()}
+          made by vince park · mycaseprep · {new Date().getFullYear()}
         </footer>
 
       </div>
