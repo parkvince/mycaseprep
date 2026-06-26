@@ -111,7 +111,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Streaming Platform Subscriber Growth",
     type: "profitability",
     difficulty: "intermediate",
-    firm: "oliver_wyman",
+    firm: "oliver-wyman",
     estimatedMinutes: 25,
   },
   {
@@ -143,7 +143,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Retail Bank Branch Profitability",
     type: "profitability",
     difficulty: "intermediate",
-    firm: "oliver_wyman",
+    firm: "oliver-wyman",
     estimatedMinutes: 25,
   },
   {
@@ -151,7 +151,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Semiconductor Manufacturer Capacity Expansion",
     type: "operations",
     difficulty: "advanced",
-    firm: "at_kearney",
+    firm: "kearney",
     estimatedMinutes: 35,
   },
   {
@@ -199,7 +199,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Merger of Two Regional Airlines",
     type: "merger_acquisition",
     difficulty: "advanced",
-    firm: "monitor_deloitte",
+    firm: "monitor-deloitte",
     estimatedMinutes: 35,
   },
   {
@@ -215,7 +215,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Hedge Fund Market Entry into Retail Investing",
     type: "market_entry",
     difficulty: "advanced",
-    firm: "oliver_wyman",
+    firm: "oliver-wyman",
     estimatedMinutes: 30,
   },
   {
@@ -247,7 +247,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Telecom Company 5G Infrastructure Rollout",
     type: "operations",
     difficulty: "advanced",
-    firm: "ibm_consulting",
+    firm: "ibm",
     estimatedMinutes: 35,
   },
   {
@@ -263,7 +263,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Fast Fashion Brand Sustainability Strategy",
     type: "market_entry",
     difficulty: "intermediate",
-    firm: "strategy_and",
+    firm: "capital-one",
     estimatedMinutes: 25,
   },
   {
@@ -295,7 +295,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Global Logistics Company Last-Mile Optimization",
     type: "operations",
     difficulty: "advanced",
-    firm: "at_kearney",
+    firm: "kearney",
     estimatedMinutes: 30,
   },
   {
@@ -367,7 +367,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Defense Contractor Diversification into Commercial Markets",
     type: "market_entry",
     difficulty: "advanced",
-    firm: "strategy_and",
+    firm: "capital-one",
     estimatedMinutes: 35,
   },
   {
@@ -431,7 +431,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Global Shipping Company Port Optimization",
     type: "operations",
     difficulty: "advanced",
-    firm: "at_kearney",
+    firm: "kearney",
     estimatedMinutes: 35,
   },
   {
@@ -479,7 +479,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Warehouse Automation for a Retail Giant",
     type: "operations",
     difficulty: "intermediate",
-    firm: "ibm_consulting",
+    firm: "ibm",
     estimatedMinutes: 30,
   },
   {
@@ -495,7 +495,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Theme Park Chain Acquisition",
     type: "merger_acquisition",
     difficulty: "intermediate",
-    firm: "monitor_deloitte",
+    firm: "monitor-deloitte",
     estimatedMinutes: 30,
   },
   {
@@ -535,7 +535,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Retail Bank Merger Integration",
     type: "merger_acquisition",
     difficulty: "advanced",
-    firm: "oliver_wyman",
+    firm: "oliver-wyman",
     estimatedMinutes: 35,
   },
   {
@@ -575,7 +575,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Solar Energy Company Acquisition",
     type: "merger_acquisition",
     difficulty: "advanced",
-    firm: "strategy_and",
+    firm: "capital-one",
     estimatedMinutes: 35,
   },
   {
@@ -631,7 +631,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Data Center Energy Efficiency Optimization",
     type: "operations",
     difficulty: "advanced",
-    firm: "ibm_consulting",
+    firm: "ibm",
     estimatedMinutes: 30,
   },
   {
@@ -639,7 +639,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Insurance Acquisition of a Health Tech Startup",
     type: "merger_acquisition",
     difficulty: "advanced",
-    firm: "oliver_wyman",
+    firm: "oliver-wyman",
     estimatedMinutes: 35,
   },
   {
@@ -671,7 +671,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Automotive Parts Manufacturer Lean Transformation",
     type: "operations",
     difficulty: "advanced",
-    firm: "at_kearney",
+    firm: "kearney",
     estimatedMinutes: 35,
   },
   {
@@ -679,7 +679,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Merger of Two Mid-Size Law Firms",
     type: "merger_acquisition",
     difficulty: "intermediate",
-    firm: "monitor_deloitte",
+    firm: "monitor-deloitte",
     estimatedMinutes: 25,
   },
   {
@@ -751,7 +751,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Acquisition of a Niche Luxury Watchmaker",
     type: "merger_acquisition",
     difficulty: "advanced",
-    firm: "strategy_and",
+    firm: "capital-one",
     estimatedMinutes: 35,
   },
   {
@@ -783,7 +783,7 @@ const PREBUILT_CASES: PrebuiltCase[] = [
     title: "Global Retailer Inventory Management Overhaul",
     type: "operations",
     difficulty: "advanced",
-    firm: "at_kearney",
+    firm: "kearney",
     estimatedMinutes: 35,
   },
   {
