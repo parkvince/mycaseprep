@@ -8,12 +8,12 @@ export type FirmKey =
   | "pwc"
   | "rolandberger"
   | "accenture"
-  | "oliver_wyman"
-  | "at_kearney"
+  | "oliver-wyman"
+  | "kearney"
   | "lek"
-  | "monitor_deloitte"
-  | "ibm_consulting"
-  | "strategy_and"
+  | "monitor-deloitte"
+  | "ibm"
+  | "capital-one"
   | "huron";
 
 export type CaseType =
