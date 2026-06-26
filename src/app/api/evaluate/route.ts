@@ -471,3 +471,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(getDefaultEvaluation("mckinsey" as FirmKey), { status: 200 });
   }
 }
+
