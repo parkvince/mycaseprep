@@ -7,9 +7,9 @@ import { useSession } from "next-auth/react";
 const firms = [
   "McKinsey", "Bain", "BCG",
   "EY-Parthenon", "Deloitte", "KPMG",
-  "PwC Strategy&", "Roland Berger", "Accenture",
-  "Oliver Wyman", "Kearney", "L.E.K.",
-  "Monitor Deloitte", "IBM Consulting", "Huron",
+  "Roland Berger", "Accenture", "Oliver Wyman",
+  "Kearney", "L.E.K.", "Monitor Deloitte",
+  "IBM Consulting", "Capital One", "Huron",
 ];
 
 const features = [
