@@ -11,9 +11,43 @@ import { KPMG_RUBRIC, calculateKpmgOffer } from "@/lib/firmRubrics/kpmg";
 import { PWC_RUBRIC, calculatePwcOffer } from "@/lib/firmRubrics/pwc";
 import { ROLAND_BERGER_RUBRIC, calculateRolandBergerOffer } from "@/lib/firmRubrics/rolandBerger";
 import { ACCENTURE_RUBRIC, calculateAccentureOffer } from "@/lib/firmRubrics/accenture";
+import { OLIVER_WYMAN_RUBRIC, calculateOliverWymanOffer } from "@/lib/firmRubrics/oliverWyman";
+import { KEARNEY_RUBRIC, calculateKearneyOffer } from "@/lib/firmRubrics/kearney";
+import { LEK_RUBRIC, calculateLekOffer } from "@/lib/firmRubrics/lek";
+import { MONITOR_DELOITTE_RUBRIC, calculateMonitorDeloitteOffer } from "@/lib/firmRubrics/monitorDeloitte";
+import { IBM_RUBRIC, calculateIbmOffer } from "@/lib/firmRubrics/ibm";
+import { HURON_RUBRIC, calculateHuronOffer } from "@/lib/firmRubrics/huron";
+import { CAPITAL_ONE_RUBRIC, calculateCapitalOneOffer } from "@/lib/firmRubrics/capitalOne";
+
+const FIRM_RUBRICS: Record<string, { dimensions: { key: string; weight: number }[] }> = {
+  mckinsey: MCKINSEY_RUBRIC,
+  bcg: BCG_RUBRIC,
+  bain: BAIN_RUBRIC,
+  ey: EY_PARTHENON_RUBRIC,
+  "ey-parthenon": EY_PARTHENON_RUBRIC,
+  deloitte: DELOITTE_RUBRIC,
+  kpmg: KPMG_RUBRIC,
+  pwc: PWC_RUBRIC,
+  rolandberger: ROLAND_BERGER_RUBRIC,
+  "roland-berger": ROLAND_BERGER_RUBRIC,
+  accenture: ACCENTURE_RUBRIC,
+  oliverwyman: OLIVER_WYMAN_RUBRIC,
+  "oliver-wyman": OLIVER_WYMAN_RUBRIC,
+  kearney: KEARNEY_RUBRIC,
+  lek: LEK_RUBRIC,
+  monitordeloitte: MONITOR_DELOITTE_RUBRIC,
+  "monitor-deloitte": MONITOR_DELOITTE_RUBRIC,
+  ibm: IBM_RUBRIC,
+  "ibm-consulting": IBM_RUBRIC,
+  huron: HURON_RUBRIC,
+  capitalone: CAPITAL_ONE_RUBRIC,
+  "capital-one": CAPITAL_ONE_RUBRIC,
+};
 
 function buildFirmRubricContext(firm: FirmKey): string {
-  if (firm === "mckinsey") {
+  const f = firm as string;
+
+  if (f === "mckinsey") {
     const dims = MCKINSEY_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -31,7 +65,7 @@ Return scores for these EXACT keys: structure, quantitative, businessJudgment, c
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "bcg") {
+  if (f === "bcg") {
     const dims = BCG_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -49,7 +83,7 @@ Return scores for these EXACT keys: candidateLed, structure, quantitative, creat
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "bain") {
+  if (f === "bain") {
     const dims = BAIN_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -66,7 +100,7 @@ Return scores for these EXACT keys: answerFirst, structure, quantitative, commun
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "ey") {
+  if (f === "ey" || f === "ey-parthenon") {
     const dims = EY_PARTHENON_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -83,7 +117,7 @@ Return scores for these EXACT keys: problemSolving, quantitative, strategicJudgm
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "deloitte") {
+  if (f === "deloitte") {
     const dims = DELOITTE_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -100,7 +134,7 @@ Return scores for these EXACT keys: structure, analytical, businessAcumen, commu
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "kpmg") {
+  if (f === "kpmg") {
     const dims = KPMG_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -117,7 +151,7 @@ Return scores for these EXACT keys: structure, analytical, operationalJudgment, 
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "pwc") {
+  if (f === "pwc") {
     const dims = PWC_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -134,7 +168,7 @@ Return scores for these EXACT keys: structure, quantitative, strategicJudgment, 
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "rolandberger") {
+  if (f === "rolandberger" || f === "roland-berger") {
     const dims = ROLAND_BERGER_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -145,14 +179,14 @@ ROLAND BERGER-SPECIFIC RULES:
 2. EXECUTION is critical: being passive is as costly as being structurally wrong. Did the candidate drive the analysis?
 3. Roland Berger's synthesis format: root cause → recommendation → quantified impact. No number = incomplete.
 4. Entrepreneurial presence: did the candidate spot opportunities, take initiative, and deliver pragmatic solutions?
-5. Cases skew toward European industrial, automotive, and manufacturing contexts. Industry awareness is a plus.
+5. Cases skew toward European industrial, automotive, and manufacturing contexts.
 6. Collaboration scores group case behavior — did they lead when needed and credit others?
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, execution, synthesis, entrepreneurialMindset, collaboration
 Each score must be an INTEGER between 1 and 5.`;
   }
 
-  if (firm === "accenture") {
+  if (f === "accenture") {
     const dims = ACCENTURE_RUBRIC.dimensions.map(d =>
       `${d.label} (weight: ${d.weight}%):\n` +
       Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
@@ -170,108 +204,191 @@ Return scores for these EXACT keys: structuredThinking, problemSolving, business
 Each score must be an INTEGER between 1 and 5.`;
   }
 
+  if (f === "oliver-wyman") {
+    const dims = OLIVER_WYMAN_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using Oliver Wyman's rubric.
+OW RULES:
+1. Fully candidate-led. Did they drive the case independently?
+2. Financial services sector knowledge is explicit — score harshly if banking/insurance fluency is missing.
+3. Written case synthesis is evaluated — can they build a recommendation from financial data?
+4. Three values: Courage, Curiosity, Passion — evident in how they engage intellectually.
+5. 1-3% offer rate — do not inflate scores.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: structure, financialServicesKnowledge, quantitative, communication, writtenCase
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
+  if (f === "kearney") {
+    const dims = KEARNEY_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using Kearney's rubric.
+KEARNEY RULES:
+1. HYBRID format — must handle both interviewer-guided AND candidate-led segments.
+2. Operational excellence is Kearney's signature. Did the recommendation include an execution pathway? If not, operationalExcellence cannot exceed 2.
+3. Supply chain and operations vocabulary matters.
+4. Practical implementation over pure strategy — every recommendation needs a HOW.
+5. 2% offer rate — rigorous standard.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: structure, operationalExcellence, quantitative, collaboration, communication
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
+  if (f === "lek") {
+    const dims = LEK_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using L.E.K. Consulting's rubric.
+LEK RULES:
+1. Candidate-led. Evidence over opinion — every claim must be backed by data or stated assumptions.
+2. Quantitative rigor is the highest-weighted dimension. Market sizing and PE math must be precise.
+3. Written case synthesis — can they build a recommendation-first narrative from financial exhibits?
+4. Life sciences and PE due diligence sector knowledge is a plus.
+5. 2-3% offer rate — do not inflate.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: structure, quantitative, evidenceReasoning, writtenCase, communication
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
+  if (f === "monitor-deloitte") {
+    const dims = MONITOR_DELOITTE_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using Monitor Deloitte's rubric.
+MONITOR RULES:
+1. TREAT AS BCG/BAIN PREP — not standard Deloitte. Candidate-led pure strategy.
+2. CEO-level point of view required — NOT balanced pros and cons. If the candidate explored all options equally without committing, strategicStructure cannot exceed 2.
+3. Hold position under pushback — test composure under pressure.
+4. 3-4% offer rate — MBB-adjacent rigor.
+5. Do not apply standard Big 4 scoring leniency.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: strategicStructure, strategyDepth, quantitative, communication, writtenCase
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
+  if (f === "ibm" || f === "ibm-consulting") {
+    const dims = IBM_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using IBM Consulting's rubric.
+IBM RULES:
+1. Every case has a TECHNOLOGY LAYER — cloud, AI, ERP, digital transformation. Missing this = below 3 on technologyBusinessJudgment.
+2. Business-first technology thinking: start with the business problem, bring tech in as the solution.
+3. Quantify technology ROI — cloud migration savings, AI cost curve, ERP implementation payback.
+4. Three IBM divisions: iX (design/experience), Strategy & Transformation (finance/ops), Technology Consulting (delivery).
+5. More accessible than Tier 2 strategy firms — but still rigorous.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: structure, technologyBusinessJudgment, quantitative, communication, collaboration
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
+  if (f === "huron") {
+    const dims = HURON_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using Huron Consulting's rubric.
+HURON RULES:
+1. INTERVIEWER-LED format — candidate responds to directed prompts, does not drive independently.
+2. Healthcare and education industry knowledge is explicitly scored. Missing sector fluency = below 3 on industryKnowledge.
+3. Key healthcare concepts: operating margin, payer mix, contract labor, length of stay, revenue cycle.
+4. Key education concepts: enrollment, net tuition revenue, administrative cost drivers.
+5. Impact orientation: recommendations must be specific and actionable for a hospital CEO or university president.
+6. More accessible than MBB — score appropriately, do not apply MBB-level strictness.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: analyticalThinking, industryKnowledge, quantitative, communication, impactOrientation
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
+  if (f === "capital-one") {
+    const dims = CAPITAL_ONE_RUBRIC.dimensions.map(d =>
+      `${d.label} (weight: ${d.weight}%):\n` +
+      Object.entries(d.scoringCriteria).map(([k, v]) => `  Score ${k}: ${v}`).join("\n")
+    ).join("\n\n");
+    return `You are evaluating using Capital One's rubric.
+CAPITAL ONE RULES:
+1. INTERVIEWER-LED format — directed prompts, not candidate-led frameworks. Issue trees have limited value here.
+2. QUANTITATIVE SKILLS are the most heavily weighted dimension. Equation translation is the key test — not just arithmetic.
+3. Financial product knowledge: credit card economics (interchange, interest income, charge-off), loan math (default rates, LTV, net interest margin).
+4. Calculator is allowed — precision of equation setup matters more than mental math speed.
+5. ARES values scored through behavioral questions: Excellence, Do the Right Thing, Respect for Individuals, Succeed Together.
+6. Post-Discover acquisition (May 2025): credit card economics appear more frequently in cases.
+SCORING DIMENSIONS:\n${dims}
+Return scores for these EXACT keys: logicalStructure, quantitative, businessJudgment, communication, valuesAlignment
+Each score must be an INTEGER between 1 and 5.`;
+  }
+
   return "";
 }
 
 function getFirmJsonSpec(firm: FirmKey): string {
-  if (firm === "mckinsey") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structure": <1-5>, "quantitative": <1-5>, "businessJudgment": <1-5>, "communication": <1-5>, "hypothesisManagement": <1-5>, "synthesis": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "structure": <string>, "quantitative": <string>, "businessJudgment": <string>, "communication": <string>, "hypothesisManagement": <string>, "synthesis": <string> }
-}`;
-  if (firm === "bcg") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "candidateLed": <1-5>, "structure": <1-5>, "quantitative": <1-5>, "creativity": <1-5>, "communication": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "candidateLed": <string>, "structure": <string>, "quantitative": <string>, "creativity": <string>, "communication": <string> }
-}`;
-  if (firm === "bain") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "answerFirst": <1-5>, "structure": <1-5>, "quantitative": <1-5>, "communication": <1-5>, "culturalFit": <1-5>, "synthesis": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "answerFirst": <string>, "structure": <string>, "quantitative": <string>, "communication": <string>, "culturalFit": <string>, "synthesis": <string> }
-}`;
-  if (firm === "ey") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "problemSolving": <1-5>, "quantitative": <1-5>, "strategicJudgment": <1-5>, "communication": <1-5>, "recommendation": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "problemSolving": <string>, "quantitative": <string>, "strategicJudgment": <string>, "communication": <string>, "recommendation": <string> }
-}`;
-  if (firm === "deloitte") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structure": <1-5>, "analytical": <1-5>, "businessAcumen": <1-5>, "communication": <1-5>, "coachability": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "structure": <string>, "analytical": <string>, "businessAcumen": <string>, "communication": <string>, "coachability": <string> }
-}`;
-  if (firm === "kpmg") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structure": <1-5>, "analytical": <1-5>, "operationalJudgment": <1-5>, "communication": <1-5>, "valuesAlignment": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "structure": <string>, "analytical": <string>, "operationalJudgment": <string>, "communication": <string>, "valuesAlignment": <string> }
-}`;
-  if (firm === "pwc") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structure": <1-5>, "quantitative": <1-5>, "strategicJudgment": <1-5>, "communication": <1-5>, "behavioralFit": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "structure": <string>, "quantitative": <string>, "strategicJudgment": <string>, "communication": <string>, "behavioralFit": <string> }
-}`;
-  if (firm === "rolandberger") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structure": <1-5>, "execution": <1-5>, "synthesis": <1-5>, "entrepreneurialMindset": <1-5>, "collaboration": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "structure": <string>, "execution": <string>, "synthesis": <string>, "entrepreneurialMindset": <string>, "collaboration": <string> }
-}`;
-  if (firm === "accenture") return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structuredThinking": <1-5>, "problemSolving": <1-5>, "businessJudgment": <1-5>, "quantitative": <1-5>, "communicationPresence": <1-5>, "collaboration": <1-5> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>,
-  "dimensionFeedback": { "structuredThinking": <string>, "problemSolving": <string>, "businessJudgment": <string>, "quantitative": <string>, "communicationPresence": <string>, "collaboration": <string> }
-}`;
-  return `{
-  "overallScore": <number 0-100>,
-  "breakdown": { "structure": <number 0-100>, "problemSolving": <number 0-100>, "quantitative": <number 0-100>, "communication": <number 0-100>, "creativity": <number 0-100> },
-  "whatWentWell": [<string>], "areasToImprove": [<string>],
-  "topCandidateResponse": <string>, "firmSpecificNote": <string>, "percentileEstimate": <number 0-100>
-}`;
+  const f = firm as string;
+
+  if (f === "mckinsey") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"quantitative":<1-5>,"businessJudgment":<1-5>,"communication":<1-5>,"hypothesisManagement":<1-5>,"synthesis":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"quantitative":<string>,"businessJudgment":<string>,"communication":<string>,"hypothesisManagement":<string>,"synthesis":<string>}}`;
+
+  if (f === "bcg") return `{"overallScore":<0-100>,"breakdown":{"candidateLed":<1-5>,"structure":<1-5>,"quantitative":<1-5>,"creativity":<1-5>,"communication":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"candidateLed":<string>,"structure":<string>,"quantitative":<string>,"creativity":<string>,"communication":<string>}}`;
+
+  if (f === "bain") return `{"overallScore":<0-100>,"breakdown":{"answerFirst":<1-5>,"structure":<1-5>,"quantitative":<1-5>,"communication":<1-5>,"culturalFit":<1-5>,"synthesis":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"answerFirst":<string>,"structure":<string>,"quantitative":<string>,"communication":<string>,"culturalFit":<string>,"synthesis":<string>}}`;
+
+  if (f === "ey" || f === "ey-parthenon") return `{"overallScore":<0-100>,"breakdown":{"problemSolving":<1-5>,"quantitative":<1-5>,"strategicJudgment":<1-5>,"communication":<1-5>,"recommendation":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"problemSolving":<string>,"quantitative":<string>,"strategicJudgment":<string>,"communication":<string>,"recommendation":<string>}}`;
+
+  if (f === "deloitte") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"analytical":<1-5>,"businessAcumen":<1-5>,"communication":<1-5>,"coachability":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"analytical":<string>,"businessAcumen":<string>,"communication":<string>,"coachability":<string>}}`;
+
+  if (f === "kpmg") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"analytical":<1-5>,"operationalJudgment":<1-5>,"communication":<1-5>,"valuesAlignment":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"analytical":<string>,"operationalJudgment":<string>,"communication":<string>,"valuesAlignment":<string>}}`;
+
+  if (f === "pwc") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"quantitative":<1-5>,"strategicJudgment":<1-5>,"communication":<1-5>,"behavioralFit":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"quantitative":<string>,"strategicJudgment":<string>,"communication":<string>,"behavioralFit":<string>}}`;
+
+  if (f === "rolandberger" || f === "roland-berger") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"execution":<1-5>,"synthesis":<1-5>,"entrepreneurialMindset":<1-5>,"collaboration":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"execution":<string>,"synthesis":<string>,"entrepreneurialMindset":<string>,"collaboration":<string>}}`;
+
+  if (f === "accenture") return `{"overallScore":<0-100>,"breakdown":{"structuredThinking":<1-5>,"problemSolving":<1-5>,"businessJudgment":<1-5>,"quantitative":<1-5>,"communicationPresence":<1-5>,"collaboration":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structuredThinking":<string>,"problemSolving":<string>,"businessJudgment":<string>,"quantitative":<string>,"communicationPresence":<string>,"collaboration":<string>}}`;
+
+  if (f === "oliver-wyman") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"financialServicesKnowledge":<1-5>,"quantitative":<1-5>,"communication":<1-5>,"writtenCase":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"financialServicesKnowledge":<string>,"quantitative":<string>,"communication":<string>,"writtenCase":<string>}}`;
+
+  if (f === "kearney") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"operationalExcellence":<1-5>,"quantitative":<1-5>,"collaboration":<1-5>,"communication":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"operationalExcellence":<string>,"quantitative":<string>,"collaboration":<string>,"communication":<string>}}`;
+
+  if (f === "lek") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"quantitative":<1-5>,"evidenceReasoning":<1-5>,"writtenCase":<1-5>,"communication":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"quantitative":<string>,"evidenceReasoning":<string>,"writtenCase":<string>,"communication":<string>}}`;
+
+  if (f === "monitor-deloitte") return `{"overallScore":<0-100>,"breakdown":{"strategicStructure":<1-5>,"strategyDepth":<1-5>,"quantitative":<1-5>,"communication":<1-5>,"writtenCase":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"strategicStructure":<string>,"strategyDepth":<string>,"quantitative":<string>,"communication":<string>,"writtenCase":<string>}}`;
+
+  if (f === "ibm" || f === "ibm-consulting") return `{"overallScore":<0-100>,"breakdown":{"structure":<1-5>,"technologyBusinessJudgment":<1-5>,"quantitative":<1-5>,"communication":<1-5>,"collaboration":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"structure":<string>,"technologyBusinessJudgment":<string>,"quantitative":<string>,"communication":<string>,"collaboration":<string>}}`;
+
+  if (f === "huron") return `{"overallScore":<0-100>,"breakdown":{"analyticalThinking":<1-5>,"industryKnowledge":<1-5>,"quantitative":<1-5>,"communication":<1-5>,"impactOrientation":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"analyticalThinking":<string>,"industryKnowledge":<string>,"quantitative":<string>,"communication":<string>,"impactOrientation":<string>}}`;
+
+  if (f === "capital-one") return `{"overallScore":<0-100>,"breakdown":{"logicalStructure":<1-5>,"quantitative":<1-5>,"businessJudgment":<1-5>,"communication":<1-5>,"valuesAlignment":<1-5>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>,"dimensionFeedback":{"logicalStructure":<string>,"quantitative":<string>,"businessJudgment":<string>,"communication":<string>,"valuesAlignment":<string>}}`;
+
+  return `{"overallScore":<0-100>,"breakdown":{"structure":<0-100>,"problemSolving":<0-100>,"quantitative":<0-100>,"communication":<0-100>,"creativity":<0-100>},"whatWentWell":[<string>],"areasToImprove":[<string>],"topCandidateResponse":<string>,"firmSpecificNote":<string>,"percentileEstimate":<0-100>}`;
 }
 
-const FIRM_RUBRICS: Record<string, { dimensions: { key: string; weight: number }[] }> = {
-  mckinsey: MCKINSEY_RUBRIC,
-  bcg: BCG_RUBRIC,
-  bain: BAIN_RUBRIC,
-  "ey-parthenon": EY_PARTHENON_RUBRIC,
-  deloitte: DELOITTE_RUBRIC,
-  kpmg: KPMG_RUBRIC,
-  pwc: PWC_RUBRIC,
-  "roland-berger": ROLAND_BERGER_RUBRIC,
-  accenture: ACCENTURE_RUBRIC,
-};
-
 function calculateOfferDecision(firm: FirmKey, breakdown: Record<string, number>) {
-  if (firm === "mckinsey") return calculateMckinseyOffer(breakdown);
-  if (firm === "bcg") return calculateBcgOffer(breakdown);
-  if (firm === "bain") return calculateBainOffer(breakdown);
-  if (firm === "ey") return calculateEyParthenonOffer(breakdown);
-  if (firm === "deloitte") return calculateDeloitteOffer(breakdown);
-  if (firm === "kpmg") return calculateKpmgOffer(breakdown);
-  if (firm === "pwc") return calculatePwcOffer(breakdown);
-  if (firm === "rolandberger") return calculateRolandBergerOffer(breakdown);
-  if (firm === "accenture") return calculateAccentureOffer(breakdown);
+  const f = firm as string;
+  if (f === "mckinsey") return calculateMckinseyOffer(breakdown);
+  if (f === "bcg") return calculateBcgOffer(breakdown);
+  if (f === "bain") return calculateBainOffer(breakdown);
+  if (f === "ey" || f === "ey-parthenon") return calculateEyParthenonOffer(breakdown);
+  if (f === "deloitte") return calculateDeloitteOffer(breakdown);
+  if (f === "kpmg") return calculateKpmgOffer(breakdown);
+  if (f === "pwc") return calculatePwcOffer(breakdown);
+  if (f === "rolandberger" || f === "roland-berger") return calculateRolandBergerOffer(breakdown);
+  if (f === "accenture") return calculateAccentureOffer(breakdown);
+  if (f === "oliver-wyman") return calculateOliverWymanOffer(breakdown);
+  if (f === "kearney") return calculateKearneyOffer(breakdown);
+  if (f === "lek") return calculateLekOffer(breakdown);
+  if (f === "monitor-deloitte") return calculateMonitorDeloitteOffer(breakdown);
+  if (f === "ibm" || f === "ibm-consulting") return calculateIbmOffer(breakdown);
+  if (f === "huron") return calculateHuronOffer(breakdown);
+  if (f === "capital-one") return calculateCapitalOneOffer(breakdown);
   return null;
 }
 
 function recalcWeightedScore(firm: FirmKey, breakdown: Record<string, number>): number {
-  const rubric = FIRM_RUBRICS[firm];
+  const rubric = FIRM_RUBRICS[firm as string];
   if (!rubric) return 50;
   let weighted = 0;
   for (const d of rubric.dimensions) {
@@ -283,10 +400,8 @@ function recalcWeightedScore(firm: FirmKey, breakdown: Record<string, number>): 
 }
 
 function getDefaultBreakdown(firm: FirmKey) {
-  const rubric = FIRM_RUBRICS[firm];
-  if (rubric) {
-    return Object.fromEntries(rubric.dimensions.map(d => [d.key, 1]));
-  }
+  const rubric = FIRM_RUBRICS[firm as string];
+  if (rubric) return Object.fromEntries(rubric.dimensions.map(d => [d.key, 1]));
   return { structure: 50, problemSolving: 50, quantitative: 50, communication: 50, creativity: 50 };
 }
 
@@ -315,7 +430,7 @@ export async function POST(req: NextRequest) {
 
     const firmContext = buildFirmRubricContext(firm as FirmKey);
     const jsonSpec = getFirmJsonSpec(firm as FirmKey);
-    const hasFirmRubric = !!FIRM_RUBRICS[firm];
+    const hasFirmRubric = !!FIRM_RUBRICS[firm as string];
 
     const fullPrompt = firmContext
       ? `${firmContext}\n\n${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}`
@@ -336,14 +451,12 @@ export async function POST(req: NextRequest) {
       evaluation = getDefaultEvaluation(firm as FirmKey);
     }
 
-    // Calculate offer decision and recalculate weighted score for firms with rubrics
     if (hasFirmRubric && evaluation.breakdown) {
       const offerResult = calculateOfferDecision(firm as FirmKey, evaluation.breakdown);
       if (offerResult) evaluation.offerDecision = offerResult;
       evaluation.overallScore = recalcWeightedScore(firm as FirmKey, evaluation.breakdown);
     }
 
-    // Safety defaults
     evaluation.whatWentWell = evaluation.whatWentWell ?? [];
     evaluation.areasToImprove = evaluation.areasToImprove ?? [];
     evaluation.breakdown = evaluation.breakdown ?? getDefaultBreakdown(firm as FirmKey);
