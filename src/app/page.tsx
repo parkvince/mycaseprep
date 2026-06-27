@@ -22,85 +22,6 @@ function smoothScrollTo(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ── Legal Modal ── */
-function LegalModal({ section, onClose }: { section: "privacy" | "terms"; onClose: () => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    function h(e: KeyboardEvent) { if (e.key === "Escape") onClose(); }
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [onClose]);
-
-  const privacy = section === "privacy";
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}
-    >
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 24, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 24, scale: 0.97 }}
-        transition={{ duration: 0.2 }}
-        onClick={e => e.stopPropagation()}
-        style={{ background: "white", borderRadius: "16px", maxWidth: "640px", width: "100%", maxHeight: "80vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.25)" }}
-      >
-        <div style={{ padding: "1.5rem 1.75rem", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--hp-soft-foreground)", marginBottom: "2px" }}>Legal</div>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--hp-foreground)", margin: 0 }}>
-              {privacy ? "Privacy Policy" : "Terms & Conditions"}
-            </h2>
-          </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "1.4rem", lineHeight: 1, padding: "0.25rem" }}>✕</button>
-        </div>
-        <div style={{ overflowY: "auto", padding: "1.5rem 1.75rem", fontSize: "0.875rem", lineHeight: 1.75, color: "var(--hp-foreground)" }}>
-          {privacy ? (
-            <>
-              <p style={{ color: "var(--hp-soft-foreground)", marginBottom: "1.25rem" }}>Last updated: June 26, 2026</p>
-              <p>MyCasePrep ("we," "us," or "our") is a web-based application. This Privacy Policy describes how MyCasePrep handles information when you use the platform.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>1. Data We Collect</h3>
-              <ul style={{ paddingLeft: "1.25rem" }}>
-                <li><strong>Account Information:</strong> When you sign up, we collect your name and email address to create your account.</li>
-                <li><strong>Google OAuth:</strong> If you sign in with Google, we receive your name, email, and profile photo from Google. We never see your Google password.</li>
-                <li><strong>Session Data:</strong> Your case interview transcripts, scores, and performance history are stored in our database to power your history and tracking features.</li>
-                <li><strong>Usage Data:</strong> Basic analytics such as pages visited and features used, used solely to improve the product.</li>
-              </ul>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>2. Data Sharing & Security</h3>
-              <p>We do not sell, rent, or share your personal data with third parties for marketing purposes. Your interview transcripts are used only to generate your scorecard and are never shared publicly. We use industry-standard encryption in transit (HTTPS) and at rest.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>3. AI Processing</h3>
-              <p>Your interview responses are sent to Anthropic's Claude API to generate feedback and scoring. Anthropic's data handling is governed by their own privacy policy. We do not use your transcripts to train AI models.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>4. Data Deletion</h3>
-              <p>You may request deletion of your account and all associated data at any time by contacting us at the email below.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>5. Contact</h3>
-              <p>For privacy-related questions: <a href="mailto:seho.vince@gmail.com" style={{ color: "var(--hp-primary)" }}>seho.vince@gmail.com</a></p>
-            </>
-          ) : (
-            <>
-              <p style={{ color: "var(--hp-soft-foreground)", marginBottom: "1.25rem" }}>Last updated: June 26, 2026</p>
-              <p>By creating an account or using MyCasePrep ("the App"), you agree to be bound by these Terms and Conditions.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>1. Use of the Service</h3>
-              <p>MyCasePrep is a case interview practice platform. You agree to use the App only for lawful purposes and in a manner consistent with its intended use. You must not attempt to reverse engineer, scrape, or abuse the platform.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>2. AI-Generated Content</h3>
-              <p>Feedback and scores generated by the App are produced by an AI model and are intended for educational and practice purposes only. They do not constitute professional career advice. Results may vary and are not a guarantee of performance in real interviews.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>3. Account Responsibility</h3>
-              <p>You are responsible for maintaining the security of your account credentials. MyCasePrep reserves the right to suspend or terminate accounts that violate these terms.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>4. Disclaimers & Limitation of Liability</h3>
-              <p style={{ textTransform: "uppercase", fontSize: "0.8rem", letterSpacing: "0.01em" }}>THE APP IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. IN NO EVENT SHALL MYCASEPREP BE LIABLE FOR ANY INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS OR DATA.</p>
-              <h3 style={{ marginTop: "1.25rem", fontWeight: 700 }}>5. Contact</h3>
-              <p>For questions about these Terms: <a href="mailto:seho.vince@gmail.com" style={{ color: "var(--hp-primary)" }}>seho.vince@gmail.com</a></p>
-            </>
-          )}
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/* ── Profile Dropdown ── */
 function ProfileDropdown({ user, onClose }: { user: { name?: string | null; email?: string | null; image?: string | null }; onClose: () => void }) {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
@@ -158,7 +79,6 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
   );
 }
 
-/* ── Main Page ── */
 export default function LandingPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -166,12 +86,13 @@ export default function LandingPage() {
   const user = session?.user;
   const cta = user ? "/dashboard" : "/auth";
   const [profileOpen, setProfileOpen] = useState(false);
-  const [legal, setLegal] = useState<"privacy" | "terms" | null>(null);
+  const [legalTab, setLegalTab] = useState<"privacy" | "terms">("privacy");
 
+  // Nav fades in between 0 and 180px scroll — soft lavender tint instead of white
   const { scrollY } = useScroll();
-  const navBg   = useTransform(scrollY, [0, 80], ["rgba(255,255,255,0)", "rgba(255,255,255,0.92)"]);
-  const navBlur = useTransform(scrollY, [0, 80], ["blur(0px)", "blur(14px)"]);
-  const navBorderOpacity = useTransform(scrollY, [0, 80], [0, 1]);
+  const navBg          = useTransform(scrollY, [0, 180], ["oklch(0.97 0.03 290 / 0)", "oklch(0.97 0.03 290 / 0.92)"]);
+  const navBlur        = useTransform(scrollY, [0, 180], ["blur(0px)", "blur(16px)"]);
+  const navBorderOpacity = useTransform(scrollY, [0, 180], [0, 1]);
 
   const BTN_H = "38px";
 
@@ -180,14 +101,13 @@ export default function LandingPage() {
     fontSize: "0.875rem", fontWeight: 500,
     color: "var(--hp-soft-foreground)", cursor: "pointer",
     padding: "0 0.5rem", fontFamily: "inherit",
-    textDecoration: "none", display: "inline-flex",
-    alignItems: "center", height: BTN_H, lineHeight: "1",
+    display: "inline-flex", alignItems: "center",
+    height: BTN_H, lineHeight: "1",
     transition: "color 0.15s",
   };
 
   const pillWhite: React.CSSProperties = {
-    height: BTN_H, padding: "0 1.1rem",
-    borderRadius: "9999px",
+    height: BTN_H, padding: "0 1.1rem", borderRadius: "9999px",
     border: "1px solid var(--hp-border-strong)",
     background: "rgba(255,255,255,0.78)",
     color: "var(--hp-foreground)",
@@ -200,9 +120,8 @@ export default function LandingPage() {
   };
 
   const pillPurple: React.CSSProperties = {
-    height: BTN_H, padding: "0 1.25rem",
-    borderRadius: "9999px", border: "none",
-    background: "var(--hp-primary)",
+    height: BTN_H, padding: "0 1.25rem", borderRadius: "9999px",
+    border: "none", background: "var(--hp-primary)",
     color: "var(--hp-primary-foreground)",
     fontSize: "0.875rem", fontWeight: 600,
     cursor: "pointer", fontFamily: "inherit",
@@ -226,7 +145,7 @@ export default function LandingPage() {
       backgroundAttachment: "fixed",
     }}>
 
-      {/* ── Nav ── */}
+      {/* ── Nav (fixed) ── */}
       <motion.header style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -234,22 +153,19 @@ export default function LandingPage() {
         backgroundColor: navBg,
         backdropFilter: navBlur,
       }}>
-        {/* border as a separate element so we can animate its opacity */}
         <motion.div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "var(--hp-border)", opacity: navBorderOpacity }} />
 
         {/* Logo */}
         <span
-          onClick={() => smoothScrollTo("hero")}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           style={{ fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0 }}
         >
           mycaseprep
         </span>
 
-        {/* Right-side buttons */}
+        {/* Right buttons */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-
-          {/* Text links */}
-          <button style={textLink} onClick={() => smoothScrollTo("hero")}
+          <button style={textLink} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
           >Home</button>
@@ -259,18 +175,16 @@ export default function LandingPage() {
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
           >Features</button>
 
-          <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => setLegal("privacy")}
+          <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => smoothScrollTo("legal")}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
           >Privacy</button>
 
-          {/* Library */}
           <button style={pillWhite} onClick={() => router.push(user ? "/library" : "/auth")}
             onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.96)")}
             onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}
           >Library</button>
 
-          {/* Primary CTA */}
           <button style={pillPurple} onClick={() => router.push(cta)}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
@@ -279,29 +193,26 @@ export default function LandingPage() {
             <ArrowRight size={15} />
           </button>
 
-          {/* Sign in / Avatar */}
-          {!loading && (
-            !user ? (
-              <button style={pillWhite} onClick={() => router.push("/auth")}
-                onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.96)")}
-                onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}
-              >Sign in</button>
-            ) : (
-              <div style={{ position: "relative" }}>
-                <button onClick={() => setProfileOpen(o => !o)} style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {user.image
-                    ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: "inherit" }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
-                  }
-                </button>
-                {profileOpen && <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />}
-              </div>
-            )
-          )}
+          {!loading && (!user ? (
+            <button style={pillWhite} onClick={() => router.push("/auth")}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.96)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}
+            >Sign in</button>
+          ) : (
+            <div style={{ position: "relative" }}>
+              <button onClick={() => setProfileOpen(o => !o)} style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {user.image
+                  ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: "inherit" }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
+                }
+              </button>
+              {profileOpen && <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />}
+            </div>
+          ))}
         </div>
       </motion.header>
 
-      {/* push content below fixed nav */}
+      {/* push below fixed nav */}
       <div style={{ paddingTop: "60px" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <style>{`
@@ -310,39 +221,30 @@ export default function LandingPage() {
             .hp-features-grid { display: grid; gap: 2rem; grid-template-columns: repeat(3, 1fr); }
             @media (max-width: 900px) { .hp-features-grid { grid-template-columns: repeat(2, 1fr); } }
             @media (max-width: 580px) { .hp-features-grid { grid-template-columns: 1fr; } }
+            .hp-legal-grid { display: grid; gap: 2rem; grid-template-columns: 1fr 1fr; }
+            @media (max-width: 700px) { .hp-legal-grid { grid-template-columns: 1fr; } }
           `}</style>
 
           {/* ── Hero ── */}
-          <section id="hero" className="hp-hero-grid">
+          <section className="hp-hero-grid">
             <div style={{ position: "relative", zIndex: 10 }}>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="hp-chip">
                 <Sparkle style={{ width: "0.75rem", height: "0.75rem", color: "var(--hp-primary)" }} />
                 <span style={{ textTransform: "uppercase", letterSpacing: "0.05em" }}>Beta</span>
               </motion.div>
-
               <h1 style={{ marginTop: "1.25rem", fontSize: "clamp(2.75rem, 6vw, 5.5rem)", lineHeight: 1.05, letterSpacing: "-0.02em", fontWeight: 700, color: "var(--hp-foreground)" }}>
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ display: "block" }}>
-                  Ace your consulting
-                </motion.span>
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ display: "block", color: "var(--hp-primary)" }}>
-                  case interview.
-                </motion.span>
+                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ display: "block" }}>Ace your consulting</motion.span>
+                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ display: "block", color: "var(--hp-primary)" }}>case interview.</motion.span>
               </h1>
-
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                style={{ marginTop: "1.5rem", maxWidth: "28rem", fontSize: "1.05rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, fontWeight: 400 }}
-              >
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ marginTop: "1.5rem", maxWidth: "28rem", fontSize: "1.05rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, fontWeight: 400 }}>
                 Practice with a realistic interviewer simulation. Firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
               </motion.p>
-
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ marginTop: "2rem" }}>
                 <button className="hp-btn-primary hp-btn-lg" onClick={() => router.push(cta)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "inherit" }}>
-                  {user ? "Open dashboard" : "Get started free"}
-                  <ArrowRight size={18} />
+                  {user ? "Open dashboard" : "Get started free"}<ArrowRight size={18} />
                 </button>
               </motion.div>
             </div>
-
             <div style={{ position: "relative" }}>
               <motion.div aria-hidden style={{ position: "absolute", inset: "2.5rem", zIndex: 0, background: "var(--hp-lavender)", opacity: 0.65 }}
                 animate={{ borderRadius: ["60% 40% 50% 50% / 50% 60% 40% 50%", "40% 60% 60% 40% / 60% 30% 70% 40%", "60% 40% 50% 50% / 50% 60% 40% 50%"] }}
@@ -365,15 +267,13 @@ export default function LandingPage() {
             <Reveal>
               <div style={{ maxWidth: "40rem", margin: "0 auto", textAlign: "center" }}>
                 <div className="hp-chip" style={{ display: "inline-flex", marginBottom: "1rem" }}>
-                  <Sparkle style={{ width: "0.75rem", height: "0.75rem", color: "var(--hp-primary)" }} />
-                  Features
+                  <Sparkle style={{ width: "0.75rem", height: "0.75rem", color: "var(--hp-primary)" }} />Features
                 </div>
                 <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 700, color: "var(--hp-foreground)" }}>
                   Built for <span style={{ color: "var(--hp-primary)" }}>serious prep.</span>
                 </h2>
               </div>
             </Reveal>
-
             <div className="hp-features-grid" style={{ marginTop: "3.5rem" }}>
               {FEATURES.map((f, i) => (
                 <Reveal key={f.title} delay={i * 0.07}>
@@ -392,7 +292,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* ── Final CTA ── */}
+          {/* ── CTA ── */}
           <section style={{ padding: "0 2.5rem 4rem" }}>
             <Reveal>
               <div style={{ position: "relative", overflow: "hidden", borderRadius: "1.5rem", background: "var(--hp-primary)", padding: "4rem 2rem", textAlign: "center" }}>
@@ -410,8 +310,7 @@ export default function LandingPage() {
                 </p>
                 <div style={{ marginTop: "1.75rem", position: "relative", zIndex: 1 }}>
                   <button className="hp-btn-secondary hp-btn-lg" onClick={() => router.push(cta)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "inherit" }}>
-                    {user ? "Open dashboard" : "Start practicing free"}
-                    <ArrowRight size={18} />
+                    {user ? "Open dashboard" : "Start practicing free"}<ArrowRight size={18} />
                   </button>
                 </div>
               </div>
@@ -419,98 +318,102 @@ export default function LandingPage() {
           </section>
         </div>
 
-        {/* ── Footer ── */}
-        <footer style={{ background: "oklch(0.16 0.02 280)", color: "oklch(0.75 0.02 280)" }}>
-          <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "3.5rem 2.5rem 2rem" }}>
-            {/* Top row */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "2rem", paddingBottom: "2.5rem", borderBottom: "1px solid oklch(0.25 0.02 280)" }}>
-              {/* Brand */}
-              <div>
-                <div style={{ fontSize: "1.3rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em" }}>
-                  mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span>
+        {/* ── Legal section (full width dark) ── */}
+        <section id="legal" style={{ background: "oklch(0.16 0.02 280)", padding: "5rem 0 0" }}>
+          <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 2.5rem" }}>
+            <Reveal>
+              <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+                <div className="hp-chip" style={{ display: "inline-flex", marginBottom: "1rem", background: "oklch(0.22 0.03 280)", border: "1px solid oklch(0.3 0.03 280)", color: "oklch(0.82 0.04 285)" }}>
+                  Legal
                 </div>
-                <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "oklch(0.55 0.02 280)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                  © {new Date().getFullYear()} MyCasePrep. All rights reserved.
-                </div>
+                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)", letterSpacing: "-0.02em", fontWeight: 700, color: "white" }}>
+                  Your data, your trust.
+                </h2>
+                <p style={{ marginTop: "0.75rem", color: "oklch(0.62 0.02 280)", fontSize: "1rem", maxWidth: "30rem", margin: "0.75rem auto 0" }}>
+                  We keep things simple and transparent. Here&apos;s exactly how MyCasePrep handles your information.
+                </p>
               </div>
+            </Reveal>
 
-              {/* Nav links */}
-              <div style={{ display: "flex", gap: "2.5rem", flexWrap: "wrap" }}>
-                <div>
-                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(0.55 0.02 280)", marginBottom: "0.75rem" }}>Product</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    {[
-                      { label: "Features", action: () => smoothScrollTo("features") },
-                      { label: "Library", action: () => router.push("/library") },
-                      { label: "Start a Case", action: () => router.push(cta) },
-                    ].map(l => (
-                      <button key={l.label} onClick={l.action}
-                        style={{ background: "none", border: "none", color: "oklch(0.72 0.02 280)", fontSize: "0.875rem", cursor: "pointer", fontFamily: "inherit", textAlign: "left", padding: 0, transition: "color 0.15s" }}
-                        onMouseEnter={e => (e.currentTarget.style.color = "white")}
-                        onMouseLeave={e => (e.currentTarget.style.color = "oklch(0.72 0.02 280)")}
-                      >{l.label}</button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(0.55 0.02 280)", marginBottom: "0.75rem" }}>Legal</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    {[
-                      { label: "Privacy Policy", action: () => setLegal("privacy") },
-                      { label: "Terms & Conditions", action: () => setLegal("terms") },
-                    ].map(l => (
-                      <button key={l.label} onClick={l.action}
-                        style={{ background: "none", border: "none", color: "oklch(0.72 0.02 280)", fontSize: "0.875rem", cursor: "pointer", fontFamily: "inherit", textAlign: "left", padding: 0, transition: "color 0.15s" }}
-                        onMouseEnter={e => (e.currentTarget.style.color = "white")}
-                        onMouseLeave={e => (e.currentTarget.style.color = "oklch(0.72 0.02 280)")}
-                      >{l.label}</button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            {/* Tab switcher */}
+            <div style={{ display: "flex", gap: "0.5rem", marginBottom: "2rem", justifyContent: "center" }}>
+              {(["privacy", "terms"] as const).map(tab => (
+                <button key={tab} onClick={() => setLegalTab(tab)} style={{
+                  padding: "0.5rem 1.25rem", borderRadius: "9999px", border: "1px solid",
+                  borderColor: legalTab === tab ? "var(--hp-primary)" : "oklch(0.3 0.02 280)",
+                  background: legalTab === tab ? "var(--hp-primary)" : "transparent",
+                  color: legalTab === tab ? "white" : "oklch(0.65 0.02 280)",
+                  fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                  transition: "all 0.2s",
+                }}>
+                  {tab === "privacy" ? "Privacy Policy" : "Terms & Conditions"}
+                </button>
+              ))}
             </div>
 
-            {/* Bottom row */}
-            <div style={{ paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-              <div style={{ fontSize: "0.75rem", color: "oklch(0.45 0.02 280)" }}>
-                Built for serious candidates · Free to use · No credit card required
+            {/* Content cards */}
+            <Reveal>
+              <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+                {legalTab === "privacy" ? (
+                  <div style={{ display: "grid", gap: "1rem" }}>
+                    {[
+                      { title: "1. Data We Collect", body: "When you sign up, we collect your name and email to create your account. If you sign in with Google, we receive your name, email, and profile photo from Google — we never see your Google password. Your case interview transcripts, scores, and performance history are stored to power your history and tracking features. We also collect basic usage analytics to improve the product." },
+                      { title: "2. Data Sharing & Security", body: "We do not sell, rent, or share your personal data with third parties for marketing purposes. Your interview transcripts are used only to generate your scorecard and are never shared publicly. We use industry-standard encryption in transit (HTTPS) and at rest." },
+                      { title: "3. AI Processing", body: "Your interview responses are sent to Anthropic's Claude API to generate feedback and scoring. Anthropic's data handling is governed by their own privacy policy. We do not use your transcripts to train AI models." },
+                      { title: "4. Data Deletion", body: "You may request deletion of your account and all associated data at any time by contacting us at seho.vince@gmail.com." },
+                    ].map(card => (
+                      <div key={card.title} style={{ background: "oklch(0.2 0.02 280)", borderRadius: "12px", padding: "1.25rem 1.5rem", border: "1px solid oklch(0.26 0.02 280)" }}>
+                        <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "white", marginBottom: "0.5rem" }}>{card.title}</div>
+                        <p style={{ fontSize: "0.875rem", color: "oklch(0.68 0.02 280)", lineHeight: 1.7, margin: 0 }}>{card.body}</p>
+                      </div>
+                    ))}
+                    <p style={{ fontSize: "0.75rem", color: "oklch(0.45 0.02 280)", textAlign: "center", marginTop: "0.5rem" }}>Last updated: June 26, 2026</p>
+                  </div>
+                ) : (
+                  <div style={{ display: "grid", gap: "1rem" }}>
+                    {[
+                      { title: "1. Use of the Service", body: "MyCasePrep is a case interview practice platform. You agree to use the App only for lawful purposes and in a manner consistent with its intended use. You must not attempt to reverse engineer, scrape, or abuse the platform." },
+                      { title: "2. AI-Generated Content", body: "Feedback and scores generated by the App are produced by an AI model and are intended for educational and practice purposes only. They do not constitute professional career advice. Results may vary and are not a guarantee of performance in real interviews." },
+                      { title: "3. Account Responsibility", body: "You are responsible for maintaining the security of your account credentials. MyCasePrep reserves the right to suspend or terminate accounts that violate these terms." },
+                      { title: "4. Disclaimers & Limitation of Liability", body: 'THE APP IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. IN NO EVENT SHALL MYCASEPREP BE LIABLE FOR ANY INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS OR DATA.' },
+                    ].map(card => (
+                      <div key={card.title} style={{ background: "oklch(0.2 0.02 280)", borderRadius: "12px", padding: "1.25rem 1.5rem", border: "1px solid oklch(0.26 0.02 280)" }}>
+                        <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "white", marginBottom: "0.5rem" }}>{card.title}</div>
+                        <p style={{ fontSize: "0.875rem", color: "oklch(0.68 0.02 280)", lineHeight: 1.7, margin: 0 }}>{card.body}</p>
+                      </div>
+                    ))}
+                    <p style={{ fontSize: "0.75rem", color: "oklch(0.45 0.02 280)", textAlign: "center", marginTop: "0.5rem" }}>Last updated: June 26, 2026</p>
+                  </div>
+                )}
               </div>
-              {/* Icon buttons */}
+            </Reveal>
+
+            {/* Footer bottom bar */}
+            <div style={{ marginTop: "4rem", borderTop: "1px solid oklch(0.24 0.02 280)", padding: "2rem 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em" }}>
+                  mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span>
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "oklch(0.45 0.02 280)", marginTop: "0.25rem" }}>
+                  © {new Date().getFullYear()} MyCasePrep · Free to use · No credit card required
+                </div>
+              </div>
               <div style={{ display: "flex", gap: "0.75rem" }}>
                 {[
-                  { icon: <Mail size={18} />, href: "mailto:seho.vince@gmail.com", title: "Email" },
-                  { icon: <HelpCircle size={18} />, href: "#", title: "Help", onClick: (e: React.MouseEvent) => { e.preventDefault(); } },
-                ].map((btn) => (
-                  <a
-                    key={btn.title}
-                    href={btn.href}
-                    title={btn.title}
-                    onClick={btn.onClick}
-                    style={{
-                      width: "36px", height: "36px",
-                      borderRadius: "9999px",
-                      border: "1px solid oklch(0.28 0.02 280)",
-                      color: "oklch(0.65 0.02 280)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      textDecoration: "none",
-                      transition: "border-color 0.15s, color 0.15s",
-                    }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.55 0.02 280)"; (e.currentTarget as HTMLElement).style.color = "white"; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.28 0.02 280)"; (e.currentTarget as HTMLElement).style.color = "oklch(0.65 0.02 280)"; }}
-                  >
-                    {btn.icon}
-                  </a>
+                  { icon: <Mail size={18} />, href: "mailto:seho.vince@gmail.com", title: "Email us" },
+                  { icon: <HelpCircle size={18} />, href: "#", title: "Help" },
+                ].map(btn => (
+                  <a key={btn.title} href={btn.href} title={btn.title}
+                    style={{ width: "36px", height: "36px", borderRadius: "9999px", border: "1px solid oklch(0.28 0.02 280)", color: "oklch(0.62 0.02 280)", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", transition: "border-color 0.15s, color 0.15s" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--hp-primary)"; (e.currentTarget as HTMLElement).style.color = "white"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.28 0.02 280)"; (e.currentTarget as HTMLElement).style.color = "oklch(0.62 0.02 280)"; }}
+                  >{btn.icon}</a>
                 ))}
               </div>
             </div>
           </div>
-        </footer>
+        </section>
       </div>
-
-      {/* ── Legal Modal ── */}
-      <AnimatePresence>
-        {legal && <LegalModal section={legal} onClose={() => setLegal(null)} />}
-      </AnimatePresence>
     </div>
   );
 }
