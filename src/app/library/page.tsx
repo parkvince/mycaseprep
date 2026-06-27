@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CaseType, Difficulty } from "@/types";
 import { getCaseTypeLabel } from "@/lib/utils";
 import { GUIDED_CASES } from "@/lib/guidedCases";
-import { ArrowLeft, Clock, ChevronRight } from "lucide-react";
+import { ArrowLeft, Clock, ChevronRight, CheckCircle2, Circle } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -36,10 +36,35 @@ function difficultyBadge(d: Difficulty): React.CSSProperties {
   return { ...base, background: "#fef2f2", color: "#b91c1c", border: "1px solid #fecaca" };
 }
 
+function scoreColor(score: number): string {
+  if (score >= 75) return "#15803d";
+  if (score >= 50) return "#b45309";
+  return "#b91c1c";
+}
+
 export default function LibraryPage() {
   const router = useRouter();
   const [typeFilter, setTypeFilter] = useState<CaseType | "all">("all");
   const [diffFilter, setDiffFilter] = useState<Difficulty | "all">("all");
+  const [sessionMap, setSessionMap] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    fetch("/api/sessions/list")
+      .then(r => r.json())
+      .then(({ sessions }) => {
+        // Build a map of caseTitle -> best overallScore
+        const map: Record<string, number> = {};
+        for (const s of sessions ?? []) {
+          if (s.caseTitle && s.overallScore != null) {
+            if (map[s.caseTitle] == null || s.overallScore > map[s.caseTitle]) {
+              map[s.caseTitle] = s.overallScore;
+            }
+          }
+        }
+        setSessionMap(map);
+      })
+      .catch(() => {});
+  }, []);
 
   const filtered = GUIDED_CASES.filter(c => {
     if (typeFilter !== "all" && c.type !== typeFilter) return false;
@@ -61,6 +86,13 @@ export default function LibraryPage() {
     <div style={{
       minHeight: "100vh", fontFamily: FONT,
       background: "var(--hp-bg)",
+      backgroundImage: [
+        "radial-gradient(at 8% 12%, var(--hp-lavender) 0px, transparent 45%)",
+        "radial-gradient(at 92% 10%, var(--hp-peach) 0px, transparent 45%)",
+        "radial-gradient(at 85% 92%, var(--hp-mint) 0px, transparent 50%)",
+        "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
+      ].join(", "),
+      backgroundAttachment: "fixed",
     }}>
 
       {/* Nav */}
@@ -134,51 +166,69 @@ export default function LibraryPage() {
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "0.875rem" }}>
-            {filtered.map((c, i) => (
-              <motion.div
-                key={c.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: Math.min(i * 0.03, 0.35) }}
-                onClick={() => router.push(`/case/guided?id=${c.id}`)}
-                style={{
-                  background: "white",
-                  borderRadius: "14px",
-                  border: "1px solid var(--hp-border)",
-                  padding: "1.25rem 1.4rem",
-                  cursor: "pointer",
-                  transition: "border-color 0.15s, box-shadow 0.15s",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.6rem",
-                }}
-                whileHover={{ boxShadow: "0 4px 16px oklch(0.4 0.05 280 / 10%)" }}
-                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = "var(--hp-primary)"}
-                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = "var(--hp-border)"}
-              >
-                {/* Top row */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--hp-soft-foreground)" }}>
-                    {getCaseTypeLabel(c.type)}
-                  </span>
-                  <span style={difficultyBadge(c.difficulty)}>{c.difficulty}</span>
-                </div>
+            {filtered.map((c, i) => {
+              const bestScore = sessionMap[c.title];
+              const completed = bestScore != null;
 
-                {/* Title */}
-                <h3 style={{ fontSize: "0.925rem", fontWeight: 600, color: "var(--hp-foreground)", lineHeight: 1.45, fontFamily: FONT, margin: 0 }}>
-                  {c.title}
-                </h3>
-
-                {/* Bottom row */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "0.25rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
-                    <Clock size={12} />
-                    {c.estimatedMinutes} min
+              return (
+                <motion.div
+                  key={c.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(i * 0.03, 0.35) }}
+                  onClick={() => router.push(`/case/guided?id=${c.id}`)}
+                  style={{
+                    background: "white",
+                    borderRadius: "14px",
+                    border: `1px solid ${completed ? "oklch(0.88 0.06 285)" : "var(--hp-border)"}`,
+                    padding: "1.25rem 1.4rem",
+                    cursor: "pointer",
+                    transition: "border-color 0.15s, box-shadow 0.15s",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.6rem",
+                  }}
+                  whileHover={{ boxShadow: "0 4px 16px oklch(0.4 0.05 280 / 10%)" }}
+                  onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = "var(--hp-primary)"}
+                  onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = completed ? "oklch(0.88 0.06 285)" : "var(--hp-border)"}
+                >
+                  {/* Top row */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--hp-soft-foreground)" }}>
+                      {getCaseTypeLabel(c.type)}
+                    </span>
+                    <span style={difficultyBadge(c.difficulty)}>{c.difficulty}</span>
                   </div>
-                  <ChevronRight size={15} style={{ color: "var(--hp-primary)" }} />
-                </div>
-              </motion.div>
-            ))}
+
+                  {/* Title */}
+                  <h3 style={{ fontSize: "0.925rem", fontWeight: 600, color: "var(--hp-foreground)", lineHeight: 1.45, fontFamily: FONT, margin: 0 }}>
+                    {c.title}
+                  </h3>
+
+                  {/* Bottom row */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "0.1rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.75rem", color: "var(--hp-soft-foreground)" }}>
+                        <Clock size={11} />
+                        {c.estimatedMinutes} min
+                      </div>
+                      {completed ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.75rem", color: scoreColor(bestScore), fontWeight: 600 }}>
+                          <CheckCircle2 size={12} />
+                          score {bestScore}
+                        </div>
+                      ) : (
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.75rem", color: "var(--hp-soft-foreground)" }}>
+                          <Circle size={12} />
+                          not started
+                        </div>
+                      )}
+                    </div>
+                    <ChevronRight size={15} style={{ color: "var(--hp-primary)", flexShrink: 0 }} />
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>
