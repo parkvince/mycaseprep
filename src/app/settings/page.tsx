@@ -1,32 +1,137 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { FIRM_CONFIGS } from "@/lib/prompts/firms";
-import { FirmKey, Difficulty } from "@/types";
-import Navbar from "@/components/Navbar";
+import { motion } from "framer-motion";
+import { ArrowLeft, Camera, LogOut, User, Briefcase, Sliders, Mic } from "lucide-react";
+
+const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
+
+const FIRMS = [
+  "McKinsey & Company", "Bain & Company", "Boston Consulting Group",
+  "EY-Parthenon", "Deloitte", "KPMG", "PwC Strategy&",
+  "Roland Berger", "Accenture", "Oliver Wyman", "Kearney",
+  "L.E.K. Consulting", "Monitor Deloitte", "IBM Consulting",
+  "Capital One", "Huron Consulting",
+];
+
+const ROLES = [
+  "Business Analyst", "Summer Analyst", "Associate",
+  "Consultant", "Senior Consultant", "MBA Associate",
+];
+
+const TIMELINES = [
+  "Less than 1 month", "1–3 months", "3–6 months", "6+ months",
+];
+
+const DIFFICULTIES = [
+  { value: "beginner", label: "Beginner", desc: "Clear structure, straightforward data" },
+  { value: "intermediate", label: "Intermediate", desc: "Ambiguous prompts, complex analysis" },
+  { value: "advanced", label: "Advanced", desc: "Partner-level rigor, high ambiguity" },
+];
+
+const STYLES = [
+  { value: "strict", label: "Strict", desc: "Senior partner. High bar, minimal hand-holding." },
+  { value: "friendly", label: "Friendly", desc: "Friendly associate. Rigorous but encouraging." },
+];
+
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--hp-soft-foreground)", marginBottom: "0.5rem", fontFamily: FONT, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+      {children}
+    </div>
+  );
+}
+
+function StyledSelect({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) {
+  return (
+    <select
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      style={{
+        width: "100%", padding: "0.65rem 1rem", borderRadius: "10px",
+        border: "1px solid var(--hp-border)", background: "var(--hp-bg)",
+        color: "var(--hp-foreground)", fontSize: "0.9rem", fontFamily: FONT,
+        fontWeight: 500, cursor: "pointer", outline: "none", appearance: "none",
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23777' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+        backgroundRepeat: "no-repeat", backgroundPosition: "right 1rem center", paddingRight: "2.5rem",
+      }}
+    >
+      {options.map(o => <option key={o} value={o}>{o}</option>)}
+    </select>
+  );
+}
+
+function ToggleGroup({ options, value, onChange }: { options: { value: string; label: string; desc: string }[]; value: string; onChange: (v: string) => void }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      {options.map(o => (
+        <button
+          key={o.value}
+          onClick={() => onChange(o.value)}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            padding: "0.85rem 1.1rem", borderRadius: "10px",
+            border: `1.5px solid ${value === o.value ? "var(--hp-primary)" : "var(--hp-border)"}`,
+            background: value === o.value ? "var(--hp-primary-soft)" : "var(--hp-bg)",
+            cursor: "pointer", fontFamily: FONT, transition: "all 0.15s",
+            textAlign: "left", width: "100%",
+          }}
+        >
+          <div>
+            <div style={{ fontWeight: 600, fontSize: "0.9rem", color: value === o.value ? "var(--hp-primary)" : "var(--hp-foreground)" }}>{o.label}</div>
+            <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>{o.desc}</div>
+          </div>
+          <div style={{
+            width: "18px", height: "18px", borderRadius: "50%",
+            border: `2px solid ${value === o.value ? "var(--hp-primary)" : "var(--hp-border)"}`,
+            background: value === o.value ? "var(--hp-primary)" : "transparent",
+            flexShrink: 0, display: "grid", placeItems: "center",
+          }}>
+            {value === o.value && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "white" }} />}
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function CardSection({ icon, title, delay, children }: { icon: React.ReactNode; title: string; delay: number; children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
+      style={{ background: "white", borderRadius: "20px", border: "1px solid var(--hp-border)", boxShadow: "var(--hp-shadow-card)", overflow: "hidden" }}
+    >
+      <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--hp-border)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "var(--hp-primary-soft)", color: "var(--hp-primary)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+          {icon}
+        </div>
+        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--hp-foreground)", fontFamily: FONT }}>{title}</span>
+      </div>
+      <div style={{ padding: "1.75rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function SettingsPage() {
   const router = useRouter();
   const { data: session, update } = useSession();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const user = session?.user;
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const [targetFirm, setTargetFirm] = useState<FirmKey>("mckinsey");
-  const [targetRole, setTargetRole] = useState("Consultant");
-  const [defaultDifficulty, setDefaultDifficulty] = useState<Difficulty>("intermediate");
-  const [defaultPersonality, setDefaultPersonality] = useState<"strict" | "friendly">("strict");
-  const [interviewTimeline, setInterviewTimeline] = useState("3-6 months");
+  const [profileImage, setProfileImage] = useState<string>("");
+  const [displayName, setDisplayName] = useState("");
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const [profileName, setProfileName] = useState("");
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [profileSaving, setProfileSaving] = useState(false);
-  const [profileSaved, setProfileSaved] = useState(false);
-  const [profileError, setProfileError] = useState("");
-
-  const firmEntries = Object.entries(FIRM_CONFIGS) as [FirmKey, typeof FIRM_CONFIGS[FirmKey]][];
+  const [targetFirm, setTargetFirm] = useState("McKinsey & Company");
+  const [targetRole, setTargetRole] = useState("Business Analyst");
+  const [timeline, setTimeline] = useState("1–3 months");
+  const [difficulty, setDifficulty] = useState("intermediate");
+  const [interviewerStyle, setInterviewerStyle] = useState("strict");
 
   useEffect(() => {
     const stored = localStorage.getItem("mycaseprep_settings");
@@ -34,310 +139,214 @@ export default function SettingsPage() {
       const s = JSON.parse(stored);
       if (s.targetFirm) setTargetFirm(s.targetFirm);
       if (s.targetRole) setTargetRole(s.targetRole);
-      if (s.defaultDifficulty) setDefaultDifficulty(s.defaultDifficulty);
-      if (s.defaultPersonality) setDefaultPersonality(s.defaultPersonality);
-      if (s.interviewTimeline) setInterviewTimeline(s.interviewTimeline);
+      if (s.timeline) setTimeline(s.timeline);
+      if (s.difficulty) setDifficulty(s.difficulty);
+      if (s.interviewerStyle) setInterviewerStyle(s.interviewerStyle);
     }
-  }, []);
-
-  useEffect(() => {
-    if (session?.user) {
-      setProfileName(session.user.name ?? "");
-      setProfileImage(session.user.image ?? null);
-    }
-  }, [session]);
-
-  const handleSave = () => {
-    localStorage.setItem("mycaseprep_settings", JSON.stringify({
-      targetFirm, targetRole, defaultDifficulty, defaultPersonality, interviewTimeline,
-    }));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
+    if (user?.image) setProfileImage(user.image);
+    // displayName = user.name (NOT email)
+    if (user?.name) setDisplayName(user.name);
+  }, [user]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = event => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const MAX = 128;
-        let w = img.width;
-        let h = img.height;
+        let w = img.width, h = img.height;
         if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
         else { w = Math.round(w * MAX / h); h = MAX; }
-        canvas.width = w;
-        canvas.height = h;
+        canvas.width = w; canvas.height = h;
         canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
-        const resized = canvas.toDataURL("image/jpeg", 0.7);
-        setProfileImage(resized);
+        setProfileImage(canvas.toDataURL("image/jpeg", 0.7));
       };
       img.src = event.target!.result as string;
     };
     reader.readAsDataURL(file);
   };
 
-  const handleProfileSave = async () => {
-    setProfileError("");
-    setProfileSaving(true);
+  const handleSave = async () => {
+    setSaving(true);
+    localStorage.setItem("mycaseprep_settings", JSON.stringify({ targetFirm, targetRole, timeline, difficulty, interviewerStyle }));
     try {
-      const res = await fetch("/api/user/update", {
+      await fetch("/api/user/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: profileName, image: profileImage }),
+        body: JSON.stringify({ name: displayName, image: profileImage }),
       });
-      const data = await res.json();
-      if (!res.ok) { setProfileError(data.error); return; }
-      await update({ name: data.name, image: data.image });
-      setProfileSaved(true);
-      setTimeout(() => setProfileSaved(false), 2000);
-    } catch {
-      setProfileError("Something went wrong.");
-    } finally {
-      setProfileSaving(false);
-    }
+      await update({ name: displayName, image: profileImage });
+    } catch {}
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
-
-  const roles = ["Business Analyst", "Summer Analyst", "Associate", "Consultant", "Senior Consultant", "MBA Associate"];
-  const timelines = ["Less than 1 month", "1-3 months", "3-6 months", "6+ months"];
-  const difficulties: { label: string; value: Difficulty; desc: string }[] = [
-    { label: "Beginner", value: "beginner", desc: "Clear structure, straightforward data" },
-    { label: "Intermediate", value: "intermediate", desc: "Ambiguous prompts, complex analysis" },
-    { label: "Advanced", value: "advanced", desc: "Partner-level rigor, high ambiguity" },
-  ];
-
-  const sectionLabel: React.CSSProperties = {
-    fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em",
-    textTransform: "uppercase", color: "var(--text-secondary)",
-    marginBottom: "16px", fontFamily: "Inter, sans-serif",
-  };
-
-  const optionCard = (selected: boolean): React.CSSProperties => ({
-    padding: "12px 16px", borderRadius: "8px",
-    border: `1px solid ${selected ? "#111111" : "var(--border)"}`,
-    background: selected ? "var(--bg-elevated)" : "var(--bg-card)",
-    cursor: "pointer", transition: "all 0.15s",
-  });
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-      <Navbar variant="settings" />
+    <div style={{
+      minHeight: "100vh", fontFamily: FONT,
+      background: "var(--hp-bg)",
+      backgroundImage: [
+        "radial-gradient(at 8% 12%, var(--hp-lavender) 0px, transparent 45%)",
+        "radial-gradient(at 92% 10%, var(--hp-peach) 0px, transparent 45%)",
+        "radial-gradient(at 85% 92%, var(--hp-mint) 0px, transparent 50%)",
+        "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
+      ].join(", "),
+      backgroundAttachment: "fixed",
+    }}>
 
-      <div style={{ maxWidth: "860px", margin: "0 auto", padding: "60px 48px" }}>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-
-          <h1 style={{ fontSize: "clamp(26px, 3vw, 38px)", fontWeight: 400, marginBottom: "8px", letterSpacing: "-0.01em" }}>
-            Settings
-          </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "15px", marginBottom: "56px" }}>
-            Customize your profile and practice preferences.
-          </p>
-
-          {/* Profile Section */}
-          <div style={{ marginBottom: "48px" }}>
-            <p style={sectionLabel}>Profile</p>
-            <div className="card" style={{ padding: "28px" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "28px", flexWrap: "wrap" as const }}>
-                
-                {/* Avatar */}
-                <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: "10px" }}>
-                  <div style={{
-                    width: "80px", height: "80px", borderRadius: "50%",
-                    overflow: "hidden", border: "2px solid var(--border)",
-                    background: "var(--bg-elevated)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "28px", fontWeight: 700, color: "var(--text-secondary)",
-                    flexShrink: 0,
-                  }}>
-                    {profileImage ? (
-                      <img src={profileImage} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    ) : (
-                      profileName?.charAt(0)?.toUpperCase() ?? "?"
-                    )}
-                  </div>
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="btn-secondary"
-                    style={{ padding: "5px 12px", fontSize: "12px" }}
-                  >
-                    Change photo
-                  </button>
-                  {profileImage && (
-                    <button
-                      onClick={() => setProfileImage(null)}
-                      style={{
-                        background: "none", border: "none", fontSize: "12px",
-                        color: "var(--danger)", cursor: "pointer", padding: 0,
-                      }}
-                    >
-                      Remove
-                    </button>
-                  )}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={handleImageUpload}
-                  />
-                </div>
-
-                {/* Name + Email */}
-                <div style={{ flex: 1, minWidth: "200px" }}>
-                  <div style={{ marginBottom: "16px" }}>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 500, color: "var(--text-secondary)", marginBottom: "6px" }}>
-                      Display name
-                    </label>
-                    <input
-                      type="text"
-                      value={profileName}
-                      onChange={e => setProfileName(e.target.value)}
-                      placeholder="Your name"
-                      style={{
-                        width: "100%", padding: "10px 14px",
-                        border: "1px solid var(--border)", borderRadius: "8px",
-                        fontSize: "14px", fontFamily: "Inter, sans-serif",
-                        color: "var(--text-primary)", background: "var(--bg-card)",
-                        outline: "none", boxSizing: "border-box" as const,
-                      }}
-                      onFocus={e => (e.currentTarget.style.borderColor = "#111")}
-                      onBlur={e => (e.currentTarget.style.borderColor = "var(--border)")}
-                    />
-                  </div>
-                  <div style={{ marginBottom: "20px" }}>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: 500, color: "var(--text-secondary)", marginBottom: "6px" }}>
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={session?.user?.email ?? ""}
-                      disabled
-                      style={{
-                        width: "100%", padding: "10px 14px",
-                        border: "1px solid var(--border)", borderRadius: "8px",
-                        fontSize: "14px", fontFamily: "Inter, sans-serif",
-                        color: "var(--text-secondary)", background: "var(--bg-elevated)",
-                        outline: "none", boxSizing: "border-box" as const,
-                        cursor: "not-allowed",
-                      }}
-                    />
-                    <p style={{ fontSize: "11px", color: "var(--text-secondary)", marginTop: "4px" }}>
-                      Email cannot be changed.
-                    </p>
-                  </div>
-
-                  {profileError && (
-                    <p style={{ fontSize: "13px", color: "var(--danger)", marginBottom: "12px" }}>{profileError}</p>
-                  )}
-
-                  <button
-                    className="btn-primary"
-                    style={{ padding: "10px 24px", fontSize: "14px", opacity: profileSaving ? 0.7 : 1 }}
-                    onClick={handleProfileSave}
-                    disabled={profileSaving}
-                  >
-                    {profileSaved ? "Saved!" : profileSaving ? "Saving..." : "Save profile"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ borderTop: "1px solid var(--border)", marginBottom: "40px" }} />
-
-          <div style={{ marginBottom: "40px" }}>
-            <p style={sectionLabel}>Target Firm</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
-              {firmEntries.map(([key, config]) => (
-                <div key={key} style={optionCard(targetFirm === key)} onClick={() => setTargetFirm(key)}>
-                  <div style={{ fontSize: "13px", fontWeight: 600 }}>{config.name}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "40px" }}>
-            <p style={sectionLabel}>Target Role</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
-              {roles.map((role) => (
-                <div key={role} style={optionCard(targetRole === role)} onClick={() => setTargetRole(role)}>
-                  <div style={{ fontSize: "13px", fontWeight: 600 }}>{role}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "40px" }}>
-            <p style={sectionLabel}>Interview Timeline</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
-              {timelines.map((t) => (
-                <div key={t} style={optionCard(interviewTimeline === t)} onClick={() => setInterviewTimeline(t)}>
-                  <div style={{ fontSize: "13px", fontWeight: 600 }}>{t}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "40px" }}>
-            <p style={sectionLabel}>Default Difficulty</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
-              {difficulties.map((d) => (
-                <div key={d.value} style={optionCard(defaultDifficulty === d.value)} onClick={() => setDefaultDifficulty(d.value)}>
-                  <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "3px" }}>{d.label}</div>
-                  <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>{d.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "48px" }}>
-            <p style={sectionLabel}>Default Interviewer Style</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px" }}>
-              {(["strict", "friendly"] as const).map((p) => (
-                <div key={p} style={optionCard(defaultPersonality === p)} onClick={() => setDefaultPersonality(p)}>
-                  <div style={{ fontSize: "13px", fontWeight: 600, textTransform: "capitalize", marginBottom: "3px" }}>{p}</div>
-                  <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
-                    {p === "strict" ? "Senior partner. High bar, minimal hand-holding." : "Friendly associate. Rigorous but encouraging."}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ borderTop: "1px solid var(--border)", marginBottom: "40px" }} />
-
-          <div style={{ marginBottom: "48px" }}>
-            <p style={sectionLabel}>Account</p>
-            <div className="card" style={{ padding: "24px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <p style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>Sign out</p>
-                  <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>Sign out of your MyCasePrep account.</p>
-                </div>
-                <button
-                  className="btn-secondary"
-                  style={{ padding: "7px 16px" }}
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                >
-                  Sign out
-                </button>
-              </div>
-            </div>
-          </div>
-
+      <header style={{
+        position: "sticky", top: 0, zIndex: 50,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0.875rem 2.5rem",
+        background: "oklch(0.97 0.03 290 / 0.88)",
+        backdropFilter: "blur(16px)",
+        borderBottom: "1px solid var(--hp-border)",
+        boxSizing: "border-box",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <button
-            className="btn-primary"
-            style={{ width: "100%", padding: "14px", fontSize: "15px" }}
-            onClick={handleSave}
+            onClick={() => router.back()}
+            style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "0.875rem", fontFamily: FONT, fontWeight: 500, padding: "0.3rem 0.5rem", borderRadius: "6px", transition: "color 0.15s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
           >
-            {saved ? "Saved!" : "Save Settings"}
+            <ArrowLeft size={16} /> Back
           </button>
+          <span style={{ width: "1px", height: "18px", background: "var(--hp-border)", display: "block" }} />
+          <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--hp-foreground)", fontFamily: FONT }}>Settings</span>
+        </div>
 
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          style={{
+            height: "36px", padding: "0 1.25rem", borderRadius: "9999px", border: "none",
+            background: saved ? "#16a34a" : "var(--hp-primary)",
+            color: "white", fontSize: "0.875rem", fontWeight: 600,
+            cursor: saving ? "default" : "pointer", fontFamily: FONT,
+            display: "inline-flex", alignItems: "center", gap: "0.4rem",
+            boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
+            transition: "background 0.2s, opacity 0.15s",
+            opacity: saving ? 0.7 : 1,
+          }}
+        >
+          {saved ? "Saved ✓" : saving ? "Saving..." : "Save changes"}
+        </button>
+      </header>
+
+      <div style={{ maxWidth: "680px", margin: "0 auto", padding: "2.5rem 2rem 5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+
+        <CardSection icon={<User size={16} />} title="Profile" delay={0}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <div style={{ position: "relative", flexShrink: 0 }}>
+              <div style={{ width: "72px", height: "72px", borderRadius: "9999px", overflow: "hidden", border: "3px solid var(--hp-primary)", background: "var(--hp-primary-soft)" }}>
+                {profileImage
+                  ? <img src={profileImage} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <div style={{ width: "100%", height: "100%", display: "grid", placeItems: "center", fontWeight: 700, fontSize: "1.5rem", color: "var(--hp-primary)" }}>
+                      {(user?.name || user?.email || "?").charAt(0).toUpperCase()}
+                    </div>
+                }
+              </div>
+              <button
+                onClick={() => fileRef.current?.click()}
+                style={{ position: "absolute", bottom: 0, right: 0, width: "24px", height: "24px", borderRadius: "9999px", background: "var(--hp-primary)", color: "white", border: "2px solid white", cursor: "pointer", display: "grid", placeItems: "center" }}
+              >
+                <Camera size={11} />
+              </button>
+              <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageUpload} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 600, fontSize: "0.95rem", color: "var(--hp-foreground)" }}>{user?.name || "Your name"}</div>
+              <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>{user?.email}</div>
+              <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <button onClick={() => fileRef.current?.click()} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.8rem", color: "var(--hp-primary)", fontWeight: 600, fontFamily: FONT, padding: 0 }}>
+                  Change photo
+                </button>
+                {profileImage && <>
+                  <span style={{ color: "var(--hp-border)" }}>·</span>
+                  <button onClick={() => setProfileImage("")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", fontFamily: FONT, padding: 0 }}>Remove</button>
+                </>}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <Label>Display name</Label>
+            <input
+              value={displayName}
+              onChange={e => setDisplayName(e.target.value)}
+              placeholder="Your name"
+              style={{ width: "100%", padding: "0.65rem 1rem", borderRadius: "10px", border: "1px solid var(--hp-border)", background: "var(--hp-bg)", color: "var(--hp-foreground)", fontSize: "0.9rem", fontFamily: FONT, fontWeight: 500, outline: "none", boxSizing: "border-box", transition: "border-color 0.15s" }}
+              onFocus={e => (e.currentTarget.style.borderColor = "var(--hp-primary)")}
+              onBlur={e => (e.currentTarget.style.borderColor = "var(--hp-border)")}
+            />
+          </div>
+
+          <div>
+            <Label>Email</Label>
+            <input
+              value={user?.email ?? ""}
+              disabled
+              style={{ width: "100%", padding: "0.65rem 1rem", borderRadius: "10px", border: "1px solid var(--hp-border)", background: "var(--hp-bg)", color: "var(--hp-soft-foreground)", fontSize: "0.9rem", fontFamily: FONT, fontWeight: 500, outline: "none", boxSizing: "border-box", cursor: "not-allowed", opacity: 0.7 }}
+            />
+            <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "4px" }}>Email cannot be changed</div>
+          </div>
+        </CardSection>
+
+        <CardSection icon={<Briefcase size={16} />} title="Practice preferences" delay={0.07}>
+          <div>
+            <Label>Firm to prep for</Label>
+            <StyledSelect value={targetFirm} onChange={setTargetFirm} options={FIRMS} />
+          </div>
+          <div>
+            <Label>Your role</Label>
+            <StyledSelect value={targetRole} onChange={setTargetRole} options={ROLES} />
+          </div>
+          <div>
+            <Label>How soon is your interview</Label>
+            <StyledSelect value={timeline} onChange={setTimeline} options={TIMELINES} />
+          </div>
+        </CardSection>
+
+        <CardSection icon={<Sliders size={16} />} title="Default difficulty" delay={0.12}>
+          <ToggleGroup options={DIFFICULTIES} value={difficulty} onChange={setDifficulty} />
+        </CardSection>
+
+        <CardSection icon={<Mic size={16} />} title="Default interviewer style" delay={0.17}>
+          <ToggleGroup options={STYLES} value={interviewerStyle} onChange={setInterviewerStyle} />
+        </CardSection>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}
+          style={{ background: "white", borderRadius: "20px", border: "1px solid var(--hp-border)", boxShadow: "var(--hp-shadow-card)", overflow: "hidden" }}
+        >
+          <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--hp-border)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "#fef2f2", color: "#dc2626", display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <LogOut size={16} />
+            </div>
+            <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--hp-foreground)", fontFamily: FONT }}>Account</span>
+          </div>
+          <div style={{ padding: "1.75rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)" }}>Sign out</div>
+              <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>Sign out of your MyCasePrep account</div>
+            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              style={{ height: "36px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid #fecaca", background: "#fef2f2", color: "#dc2626", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: "0.4rem", transition: "background 0.15s" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#fee2e2")}
+              onMouseLeave={e => (e.currentTarget.style.background = "#fef2f2")}
+            >
+              <LogOut size={14} /> Sign out
+            </button>
+          </div>
         </motion.div>
+
       </div>
-    </main>
+    </div>
   );
 }

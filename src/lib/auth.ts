@@ -64,19 +64,19 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string | null;
-        // Fetch image fresh from DB on each session — never from cookie
-        if (token.id) {
-          const dbUser = await prisma.user.findUnique({
-            where: { id: token.id as string },
-            select: { image: true },
-          });
-          session.user.image = dbUser?.image ?? null;
-        }
-      }
-      return session;
-    },
+  if (session.user && token.id) {
+    session.user.id = token.id as string;
+    const dbUser = await prisma.user.findUnique({
+      where: { id: token.id as string },
+      select: { name: true, email: true, image: true },
+    });
+    if (dbUser) {
+      session.user.name = dbUser.name;
+      session.user.email = dbUser.email;
+      session.user.image = dbUser.image ?? null;
+    }
+  }
+  return session;
+},
   },
 };
