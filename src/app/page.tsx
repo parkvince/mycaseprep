@@ -16,7 +16,6 @@ const FEATURES = [
   { img: "/homepage/blob-yellow.png", title: "Performance Tracking", copy: "Every session is saved. Track your score over time and see where you keep losing points." },
 ];
 
-// Simple geometric decorative shapes — no sparkles, no stars
 function Diamond({ style }: { style?: React.CSSProperties }) {
   return (
     <svg viewBox="0 0 24 24" style={{ width: "1.25rem", height: "1.25rem", ...style }} fill="currentColor">
@@ -47,7 +46,6 @@ function smoothScrollTo(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ── Terms Modal ── */
 function TermsModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     function h(e: KeyboardEvent) { if (e.key === "Escape") onClose(); }
@@ -72,7 +70,7 @@ function TermsModal({ onClose }: { onClose: () => void }) {
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 24, scale: 0.97 }} transition={{ duration: 0.2 }}
         onClick={e => e.stopPropagation()}
-        style={{ background: "white", borderRadius: "18px", maxWidth: "580px", width: "100%", maxHeight: "82vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.2)", fontFamily: "'DM Sans', ui-sans-serif, system-ui, sans-serif" }}
+        style={{ background: "white", borderRadius: "18px", maxWidth: "580px", width: "100%", maxHeight: "82vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.2)" }}
       >
         <div style={{ padding: "1.5rem 1.75rem", borderBottom: "1px solid var(--hp-border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
@@ -95,7 +93,6 @@ function TermsModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-/* ── Profile Dropdown ── */
 function ProfileDropdown({ user, onClose }: { user: { name?: string | null; email?: string | null; image?: string | null }; onClose: () => void }) {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
@@ -153,7 +150,6 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
   );
 }
 
-/* ── Main ── */
 export default function LandingPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -164,12 +160,12 @@ export default function LandingPage() {
   const [showTerms, setShowTerms] = useState(false);
 
   const { scrollY } = useScroll();
-  const navBg           = useTransform(scrollY, [0, 180], ["oklch(0.97 0.03 290 / 0)", "oklch(0.97 0.03 290 / 0.92)"]);
-  const navBlur         = useTransform(scrollY, [0, 180], ["blur(0px)", "blur(16px)"]);
+  const navBg            = useTransform(scrollY, [0, 180], ["oklch(0.97 0.03 290 / 0)", "oklch(0.97 0.03 290 / 0.92)"]);
+  const navBlur          = useTransform(scrollY, [0, 180], ["blur(0px)", "blur(16px)"]);
   const navBorderOpacity = useTransform(scrollY, [0, 180], [0, 1]);
 
   const BTN_H = "38px";
-  const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
+  const FONT  = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
   const textLink: React.CSSProperties = {
     background: "none", border: "none", fontSize: "0.875rem", fontWeight: 500,
@@ -183,8 +179,8 @@ export default function LandingPage() {
     border: "1px solid var(--hp-border-strong)", background: "rgba(255,255,255,0.78)",
     color: "var(--hp-foreground)", fontSize: "0.875rem", fontWeight: 600,
     cursor: "pointer", fontFamily: FONT, backdropFilter: "blur(8px)",
-    display: "inline-flex", alignItems: "center", lineHeight: "1", whiteSpace: "nowrap",
-    transition: "background 0.15s",
+    display: "inline-flex", alignItems: "center", lineHeight: "1",
+    whiteSpace: "nowrap", transition: "background 0.15s",
   };
 
   const pillPurple: React.CSSProperties = {
@@ -209,7 +205,7 @@ export default function LandingPage() {
       backgroundAttachment: "fixed",
     }}>
 
-      {/* ── Nav ── */}
+      {/* Nav */}
       <motion.header style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -243,13 +239,14 @@ export default function LandingPage() {
           <button style={pillPurple} onClick={() => router.push(cta)}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
-            {user ? "Start practicing" : "Get started"}<ArrowRight size={15} />
+            {user ? "Start Practicing" : "Get Started"}
+            <ArrowRight size={15} />
           </button>
 
           {!loading && (!user ? (
             <button style={pillWhite} onClick={() => router.push("/auth")}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.96)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}>Sign in</button>
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}>Sign In</button>
           ) : (
             <div style={{ position: "relative" }}>
               <button onClick={() => setProfileOpen(o => !o)} style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -274,18 +271,24 @@ export default function LandingPage() {
             @media (max-width: 580px) { .hp-features-grid { grid-template-columns: 1fr; } }
           `}</style>
 
-          {/* ── Hero ── */}
+          {/* Hero */}
           <section className="hp-hero-grid">
             <div style={{ position: "relative", zIndex: 10 }}>
-              {/* chip — dot instead of sparkle */}
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="hp-chip">
                 <Dot style={{ color: "var(--hp-primary)" }} />
                 <span style={{ textTransform: "uppercase", letterSpacing: "0.08em", fontSize: "0.7rem" }}>Beta</span>
               </motion.div>
 
-              <h1 style={{ marginTop: "1.25rem", fontSize: "clamp(2.75rem, 6vw, 5.5rem)", lineHeight: 1.05, letterSpacing: "-0.025em", fontWeight: 800, color: "var(--hp-foreground)" }}>
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ display: "block" }}>Ace your consulting</motion.span>
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ display: "block", color: "var(--hp-primary)" }}>case interview.</motion.span>
+              <h1 style={{ marginTop: "1.25rem", fontSize: "clamp(2.75rem, 6vw, 5.5rem)", lineHeight: 1.05, letterSpacing: "-0.025em", fontWeight: 800, color: "var(--hp-foreground)", fontFamily: FONT }}>
+                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ display: "block" }}>
+                  Ace Your
+                </motion.span>
+                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }} style={{ display: "block" }}>
+                  Consulting Case
+                </motion.span>
+                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ display: "block", color: "var(--hp-primary)" }}>
+                  Interview
+                </motion.span>
               </h1>
 
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
@@ -295,7 +298,8 @@ export default function LandingPage() {
 
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ marginTop: "2rem" }}>
                 <button className="hp-btn-primary hp-btn-lg" onClick={() => router.push(cta)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: FONT, fontWeight: 600 }}>
-                  {user ? "Open dashboard" : "Get started free"}<ArrowRight size={18} />
+                  {user ? "Open Dashboard" : "Get Started Free"}
+                  <ArrowRight size={18} />
                 </button>
               </motion.div>
             </div>
@@ -308,7 +312,6 @@ export default function LandingPage() {
               <motion.img src="/homepage/hero-3d.png" alt="" style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "32rem", margin: "0 auto", display: "block" }}
                 animate={{ y: [0, -14, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
-              {/* diamond instead of star */}
               <motion.div style={{ position: "absolute", right: "1rem", top: "1.5rem", zIndex: 2, color: "var(--hp-primary)" }}
                 animate={{ rotate: [0, 45, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}>
                 <Diamond style={{ width: "1.5rem", height: "1.5rem", opacity: 0.7 }} />
@@ -320,7 +323,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* ── Features ── */}
+          {/* Features */}
           <section id="features" style={{ padding: "5rem 2.5rem" }}>
             <Reveal>
               <div style={{ maxWidth: "40rem", margin: "0 auto", textAlign: "center" }}>
@@ -328,8 +331,8 @@ export default function LandingPage() {
                   <Dot style={{ color: "var(--hp-primary)" }} />
                   <span style={{ fontSize: "0.75rem", fontWeight: 600 }}>Features</span>
                 </div>
-                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 800, color: "var(--hp-foreground)" }}>
-                  Built for <span style={{ color: "var(--hp-primary)" }}>serious prep.</span>
+                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 800, color: "var(--hp-foreground)", fontFamily: FONT }}>
+                  Built for <span style={{ color: "var(--hp-primary)" }}>Serious Prep.</span>
                 </h2>
               </div>
             </Reveal>
@@ -344,7 +347,7 @@ export default function LandingPage() {
                     <motion.img src={f.img} alt="" loading="lazy" style={{ display: "block", margin: "0 auto", width: "10rem", height: "10rem", objectFit: "contain" }}
                       animate={{ y: [0, -8, 0] }} transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut" }}
                     />
-                    <h3 style={{ marginTop: "1rem", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "-0.01em", color: "var(--hp-foreground)" }}>{f.title}</h3>
+                    <h3 style={{ marginTop: "1rem", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "-0.01em", color: "var(--hp-foreground)", fontFamily: FONT }}>{f.title}</h3>
                     <p style={{ marginTop: "0.5rem", fontSize: "0.875rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65 }}>{f.copy}</p>
                   </div>
                 </Reveal>
@@ -352,11 +355,10 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* ── CTA ── */}
+          {/* CTA */}
           <section style={{ padding: "0 2.5rem 4rem" }}>
             <Reveal>
               <div style={{ position: "relative", overflow: "hidden", borderRadius: "1.5rem", background: "var(--hp-primary)", padding: "4rem 2rem", textAlign: "center" }}>
-                {/* diamond decorative instead of star */}
                 <motion.div style={{ position: "absolute", left: "2rem", top: "50%", transform: "translateY(-50%)", color: "oklch(0.99 0.005 95 / 20%)" }}
                   animate={{ rotate: [0, 45, 0] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}>
                   <Diamond style={{ width: "4rem", height: "4rem" }} />
@@ -365,23 +367,23 @@ export default function LandingPage() {
                   animate={{ rotate: [0, 90, 0] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}>
                   <Diamond style={{ width: "2.5rem", height: "2.5rem" }} />
                 </motion.div>
-
-                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 800, color: "var(--hp-primary-foreground)", position: "relative", zIndex: 1 }}>
-                  Ready to ace your next case?
+                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 800, color: "var(--hp-primary-foreground)", position: "relative", zIndex: 1, fontFamily: FONT }}>
+                  Ready to Ace Your Next Case?
                 </h2>
                 <p style={{ margin: "0.75rem auto 0", maxWidth: "28rem", color: "oklch(0.99 0.005 95 / 80%)", fontSize: "1rem", lineHeight: 1.6, position: "relative", zIndex: 1 }}>
                   Pick a firm. Pick a case. Start talking. I&apos;ll do the interviewing.
                 </p>
                 <div style={{ marginTop: "1.75rem", position: "relative", zIndex: 1 }}>
                   <button className="hp-btn-secondary hp-btn-lg" onClick={() => router.push(cta)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: FONT, fontWeight: 600 }}>
-                    {user ? "Open dashboard" : "Start practicing free"}<ArrowRight size={18} />
+                    {user ? "Open Dashboard" : "Start Practicing Free"}
+                    <ArrowRight size={18} />
                   </button>
                 </div>
               </div>
             </Reveal>
           </section>
 
-          {/* ── Privacy ── */}
+          {/* Privacy */}
           <section id="privacy" style={{ padding: "5rem 2.5rem 6rem" }}>
             <Reveal>
               <div style={{ maxWidth: "40rem", margin: "0 auto", textAlign: "center", marginBottom: "3rem" }}>
@@ -389,8 +391,8 @@ export default function LandingPage() {
                   <Dot style={{ color: "var(--hp-primary)" }} />
                   <span style={{ fontSize: "0.75rem", fontWeight: 600 }}>Privacy</span>
                 </div>
-                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 800, color: "var(--hp-foreground)" }}>
-                  Your data, your <span style={{ color: "var(--hp-primary)" }}>trust.</span>
+                <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", fontWeight: 800, color: "var(--hp-foreground)", fontFamily: FONT }}>
+                  Your Data, Your <span style={{ color: "var(--hp-primary)" }}>Trust.</span>
                 </h2>
                 <p style={{ marginTop: "0.75rem", fontSize: "1rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65 }}>
                   Simple and transparent. Here&apos;s exactly how MyCasePrep handles your information.
@@ -411,7 +413,7 @@ export default function LandingPage() {
                       <Cross style={{ width: "1rem", height: "1rem", color: "var(--hp-foreground)", opacity: 0.5 }} />
                     </div>
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: "1rem", color: "var(--hp-foreground)", marginBottom: "0.4rem" }}>{card.title}</div>
+                      <div style={{ fontWeight: 700, fontSize: "1rem", color: "var(--hp-foreground)", marginBottom: "0.4rem", fontFamily: FONT }}>{card.title}</div>
                       <p style={{ fontSize: "0.875rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7, margin: 0 }}>{card.body}</p>
                     </div>
                   </div>
@@ -422,7 +424,8 @@ export default function LandingPage() {
             <Reveal>
               <div style={{ maxWidth: "860px", margin: "1.5rem auto 0", textAlign: "center" }}>
                 <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)" }}>
-                  Questions? <a href="mailto:seho.vince@gmail.com" style={{ color: "var(--hp-primary)", fontWeight: 600, textDecoration: "none" }}>Email me</a>
+                  Questions?{" "}
+                  <a href="mailto:seho.vince@gmail.com" style={{ color: "var(--hp-primary)", fontWeight: 600, textDecoration: "none" }}>Email me</a>
                   {" "}· Last updated June 26, 2026
                 </p>
               </div>
@@ -430,12 +433,12 @@ export default function LandingPage() {
           </section>
         </div>
 
-        {/* ── Dark Footer ── */}
+        {/* Dark Footer */}
         <footer style={{ background: "oklch(0.16 0.02 280)", color: "oklch(0.75 0.02 280)", fontFamily: FONT }}>
           <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "3.5rem 2.5rem 2rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "2rem", paddingBottom: "2.5rem", borderBottom: "1px solid oklch(0.25 0.02 280)" }}>
               <div>
-                <div style={{ fontSize: "1.3rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em" }}>
+                <div style={{ fontSize: "1.3rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em", fontFamily: FONT }}>
                   mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span>
                 </div>
                 <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "oklch(0.55 0.02 280)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
