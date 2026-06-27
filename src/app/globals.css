@@ -39,11 +39,9 @@ h1, h2, h3 {
 ::-webkit-scrollbar {
   width: 4px;
 }
-
 ::-webkit-scrollbar-track {
   background: var(--bg);
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 2px;
@@ -73,7 +71,6 @@ h1, h2, h3 {
   cursor: pointer;
   transition: background 0.15s;
 }
-
 .btn-primary:hover {
   background: var(--accent-hover);
 }
@@ -90,7 +87,6 @@ h1, h2, h3 {
   cursor: pointer;
   transition: all 0.15s;
 }
-
 .btn-secondary:hover {
   border-color: var(--text-primary);
 }
@@ -99,8 +95,7 @@ h1, h2, h3 {
   box-shadow: none;
 }
 
-html,
-body {
+html, body {
   overflow-x: hidden;
 }
 
@@ -149,6 +144,7 @@ pre {
   border: 1px solid var(--hp-border);
   border-radius: calc(var(--hp-radius) + 12px);
   box-shadow: var(--hp-shadow-card);
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
 }
 .hp-chip {
   display: inline-flex;
@@ -157,7 +153,8 @@ pre {
   padding: 0.3rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   background-color: var(--hp-primary-soft);
   color: var(--hp-foreground);
   border: 1px solid color-mix(in oklab, var(--hp-primary) 25%, transparent);
@@ -168,7 +165,8 @@ pre {
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   border-radius: 9999px;
   background-color: var(--hp-primary);
   color: var(--hp-primary-foreground);
@@ -188,7 +186,8 @@ pre {
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   border-radius: 9999px;
   background-color: var(--hp-card);
   color: var(--hp-foreground);
@@ -207,6 +206,7 @@ pre {
   justify-content: center;
   gap: 0.5rem;
   font-weight: 500;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   border-radius: 9999px;
   background: transparent;
   color: var(--hp-foreground);
