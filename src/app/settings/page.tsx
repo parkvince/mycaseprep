@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Camera, LogOut, User, Briefcase, Sliders, Mic } from "lucide-react";
+import { LogOut, User, Briefcase, Sliders, Mic } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -144,7 +145,6 @@ export default function SettingsPage() {
       if (s.interviewerStyle) setInterviewerStyle(s.interviewerStyle);
     }
     if (user?.image) setProfileImage(user.image);
-    // displayName = user.name (NOT email)
     if (user?.name) setDisplayName(user.name);
   }, [user]);
 
@@ -197,50 +197,21 @@ export default function SettingsPage() {
       ].join(", "),
       backgroundAttachment: "fixed",
     }}>
-
-      <header style={{
-        position: "sticky", top: 0, zIndex: 50,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0.875rem 2.5rem",
-        background: "oklch(0.97 0.03 290 / 0.88)",
-        backdropFilter: "blur(16px)",
-        borderBottom: "1px solid var(--hp-border)",
-        boxSizing: "border-box",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <button
-            onClick={() => router.back()}
-            style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "0.875rem", fontFamily: FONT, fontWeight: 500, padding: "0.3rem 0.5rem", borderRadius: "6px", transition: "color 0.15s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
-          >
-            <ArrowLeft size={16} /> Back
-          </button>
-          <span style={{ width: "1px", height: "18px", background: "var(--hp-border)", display: "block" }} />
-          <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--hp-foreground)", fontFamily: FONT }}>Settings</span>
-        </div>
-
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          style={{
-            height: "36px", padding: "0 1.25rem", borderRadius: "9999px", border: "none",
-            background: saved ? "#16a34a" : "var(--hp-primary)",
-            color: "white", fontSize: "0.875rem", fontWeight: 600,
-            cursor: saving ? "default" : "pointer", fontFamily: FONT,
-            display: "inline-flex", alignItems: "center", gap: "0.4rem",
-            boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
-            transition: "background 0.2s, opacity 0.15s",
-            opacity: saving ? 0.7 : 1,
-          }}
-        >
-          {saved ? "Saved ✓" : saving ? "Saving..." : "Save changes"}
-        </button>
-      </header>
+      <Navbar />
 
       <div style={{ maxWidth: "680px", margin: "0 auto", padding: "2.5rem 2rem 5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
 
-        <CardSection icon={<User size={16} />} title="Profile" delay={0}>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: "0.5rem" }}>
+          <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: "var(--hp-foreground)", margin: 0 }}>
+            Settings
+          </h1>
+          <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "var(--hp-soft-foreground)" }}>
+            Manage your profile and practice preferences
+          </p>
+        </motion.div>
+
+        {/* Profile */}
+        <CardSection icon={<User size={16} />} title="Profile" delay={0.04}>
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
             <div style={{ position: "relative", flexShrink: 0 }}>
               <div style={{ width: "72px", height: "72px", borderRadius: "9999px", overflow: "hidden", border: "3px solid var(--hp-primary)", background: "var(--hp-primary-soft)" }}>
@@ -253,9 +224,9 @@ export default function SettingsPage() {
               </div>
               <button
                 onClick={() => fileRef.current?.click()}
-                style={{ position: "absolute", bottom: 0, right: 0, width: "24px", height: "24px", borderRadius: "9999px", background: "var(--hp-primary)", color: "white", border: "2px solid white", cursor: "pointer", display: "grid", placeItems: "center" }}
+                style={{ position: "absolute", bottom: 0, right: 0, width: "24px", height: "24px", borderRadius: "9999px", background: "var(--hp-primary)", color: "white", border: "2px solid white", cursor: "pointer", display: "grid", placeItems: "center", fontSize: "0.65rem" }}
               >
-                <Camera size={11} />
+                +
               </button>
               <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageUpload} />
             </div>
@@ -297,7 +268,8 @@ export default function SettingsPage() {
           </div>
         </CardSection>
 
-        <CardSection icon={<Briefcase size={16} />} title="Practice preferences" delay={0.07}>
+        {/* Practice preferences */}
+        <CardSection icon={<Briefcase size={16} />} title="Practice preferences" delay={0.08}>
           <div>
             <Label>Firm to prep for</Label>
             <StyledSelect value={targetFirm} onChange={setTargetFirm} options={FIRMS} />
@@ -312,16 +284,19 @@ export default function SettingsPage() {
           </div>
         </CardSection>
 
+        {/* Difficulty */}
         <CardSection icon={<Sliders size={16} />} title="Default difficulty" delay={0.12}>
           <ToggleGroup options={DIFFICULTIES} value={difficulty} onChange={setDifficulty} />
         </CardSection>
 
-        <CardSection icon={<Mic size={16} />} title="Default interviewer style" delay={0.17}>
+        {/* Interviewer style */}
+        <CardSection icon={<Mic size={16} />} title="Default interviewer style" delay={0.16}>
           <ToggleGroup options={STYLES} value={interviewerStyle} onChange={setInterviewerStyle} />
         </CardSection>
 
+        {/* Account */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           style={{ background: "white", borderRadius: "20px", border: "1px solid var(--hp-border)", boxShadow: "var(--hp-shadow-card)", overflow: "hidden" }}
         >
           <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--hp-border)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
@@ -344,6 +319,26 @@ export default function SettingsPage() {
               <LogOut size={14} /> Sign out
             </button>
           </div>
+        </motion.div>
+
+        {/* Save button */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            style={{
+              width: "100%", height: "52px", borderRadius: "12px", border: "none",
+              background: saved ? "#16a34a" : "var(--hp-primary)",
+              color: "white", fontSize: "1rem", fontWeight: 700,
+              cursor: saving ? "default" : "pointer", fontFamily: FONT,
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 3px 0 oklch(0.4 0.16 285)",
+              transition: "background 0.2s, opacity 0.15s",
+              opacity: saving ? 0.7 : 1,
+            }}
+          >
+            {saved ? "Saved ✓" : saving ? "Saving..." : "Save changes"}
+          </button>
         </motion.div>
 
       </div>

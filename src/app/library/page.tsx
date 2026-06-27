@@ -7,6 +7,7 @@ import { CaseType, Difficulty } from "@/types";
 import { getCaseTypeLabel } from "@/lib/utils";
 import { GUIDED_CASES } from "@/lib/guidedCases";
 import { ArrowLeft, Clock, ChevronRight, CheckCircle2, Circle } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -107,27 +108,7 @@ export default function LibraryPage() {
     }}>
 
       {/* Nav */}
-      <header style={{
-        position: "sticky", top: 0, zIndex: 50,
-        display: "flex", alignItems: "center",
-        padding: "0.875rem 2.5rem",
-        background: "oklch(0.97 0.03 290 / 0.92)",
-        backdropFilter: "blur(16px)",
-        borderBottom: "1px solid var(--hp-border)",
-        boxSizing: "border-box",
-        gap: "1rem",
-      }}>
-        <button
-          onClick={() => router.back()}
-          style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "0.875rem", fontFamily: FONT, fontWeight: 500, padding: "0.3rem 0.5rem", borderRadius: "6px", transition: "color 0.15s" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
-        <span style={{ width: "1px", height: "18px", background: "var(--hp-border)", display: "block" }} />
-        <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--hp-foreground)" }}>Case library</span>
-      </header>
+      <Navbar />
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
 
