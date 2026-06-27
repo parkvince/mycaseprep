@@ -63,10 +63,56 @@ function typeLabel(t: string): string {
   return map[t] ?? t;
 }
 
+const FIRMS = [
+  { label: "All firms", value: "all" },
+  { label: "McKinsey", value: "mckinsey" },
+  { label: "Bain", value: "bain" },
+  { label: "BCG", value: "bcg" },
+  { label: "EY-Parthenon", value: "ey" },
+  { label: "Deloitte", value: "deloitte" },
+  { label: "KPMG", value: "kpmg" },
+  { label: "PwC", value: "pwc" },
+  { label: "Roland Berger", value: "rolandberger" },
+  { label: "Accenture", value: "accenture" },
+  { label: "Oliver Wyman", value: "oliver-wyman" },
+  { label: "Kearney", value: "kearney" },
+  { label: "L.E.K.", value: "lek" },
+  { label: "Monitor Deloitte", value: "monitor-deloitte" },
+  { label: "IBM", value: "ibm" },
+  { label: "Capital One", value: "capital-one" },
+  { label: "Huron", value: "huron" },
+];
+
+const TYPES = [
+  { label: "All types", value: "all" },
+  { label: "Profitability", value: "profitability" },
+  { label: "Market sizing", value: "market_sizing" },
+  { label: "Market entry", value: "market_entry" },
+  { label: "M&A", value: "merger_acquisition" },
+  { label: "Operations", value: "operations" },
+];
+
+const SESSION_KINDS = [
+  { label: "All", value: "all" },
+  { label: "Guided", value: "guided" },
+  { label: "AI", value: "ai" },
+];
+
+const DIFFICULTIES = [
+  { label: "All", value: "all" },
+  { label: "Beginner", value: "beginner" },
+  { label: "Intermediate", value: "intermediate" },
+  { label: "Advanced", value: "advanced" },
+];
+
 export default function HistoryPage() {
   const router = useRouter();
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [firmFilter, setFirmFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [kindFilter, setKindFilter] = useState("all");
+  const [diffFilter, setDiffFilter] = useState("all");
 
   useEffect(() => {
     fetch("/api/sessions/list")
@@ -76,18 +122,40 @@ export default function HistoryPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const filtered = sessions.filter(s => {
+    if (firmFilter !== "all" && s.firm !== firmFilter) return false;
+    if (typeFilter !== "all" && s.type !== typeFilter) return false;
+    if (diffFilter !== "all" && s.difficulty !== diffFilter) return false;
+    if (kindFilter === "guided" && s.type !== "guided") return false;
+    if (kindFilter === "ai" && s.type === "guided") return false;
+    return true;
+  });
+
+  // Stats from all sessions (not filtered)
   const scored = sessions.filter(s => s.overallScore != null || s.guidedScore != null);
   const avgScore = scored.length > 0
     ? Math.round(scored.reduce((acc, s) => acc + (s.overallScore ?? s.guidedScore ?? 0), 0) / scored.length)
     : null;
-
   const firmCounts = sessions.reduce((acc, s) => {
     acc[s.firm] = (acc[s.firm] ?? 0) + 1;
     return acc;
   }, {} as Record<string, number>);
   const topFirm = Object.entries(firmCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
-
   const totalMinutes = Math.round(sessions.reduce((acc, s) => acc + (s.duration ?? 0), 0) / 60);
+
+  // Only show firms that actually appear in sessions
+  const activeFirms = FIRMS.filter(f => f.value === "all" || sessions.some(s => s.firm === f.value));
+
+  const filterPill = (active: boolean): React.CSSProperties => ({
+    padding: "0.3rem 0.8rem",
+    borderRadius: "9999px",
+    border: `1.5px solid ${active ? "var(--hp-primary)" : "var(--hp-border)"}`,
+    background: active ? "var(--hp-primary)" : "white",
+    color: active ? "white" : "var(--hp-soft-foreground)",
+    fontSize: "0.78rem", fontWeight: 600,
+    cursor: "pointer", fontFamily: FONT, transition: "all 0.15s",
+    whiteSpace: "nowrap" as const,
+  });
 
   return (
     <div style={{
@@ -159,8 +227,59 @@ export default function HistoryPage() {
           </motion.div>
         )}
 
-        {/* Content */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        {/* Filters */}
+        {sessions.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
+            style={{ background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)", padding: "1.1rem 1.4rem", marginBottom: "1.25rem", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
+
+            <div>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "0.5rem" }}>Session type</div>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {SESSION_KINDS.map(k => (
+                  <button key={k.value} style={filterPill(kindFilter === k.value)} onClick={() => setKindFilter(k.value)}>
+                    {k.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "0.5rem" }}>Firm</div>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {activeFirms.map(f => (
+                  <button key={f.value} style={filterPill(firmFilter === f.value)} onClick={() => setFirmFilter(f.value)}>
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "0.5rem" }}>Case type</div>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {TYPES.map(t => (
+                  <button key={t.value} style={filterPill(typeFilter === t.value)} onClick={() => setTypeFilter(t.value)}>
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "0.5rem" }}>Difficulty</div>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {DIFFICULTIES.map(d => (
+                  <button key={d.value} style={filterPill(diffFilter === d.value)} onClick={() => setDiffFilter(d.value)}>
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Sessions list */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
           {loading ? (
             <div style={{ textAlign: "center", padding: "5rem", color: "var(--hp-soft-foreground)", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>
               Loading sessions...
@@ -185,9 +304,13 @@ export default function HistoryPage() {
                 </button>
               </div>
             </div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "3rem", color: "var(--hp-soft-foreground)", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>
+              No sessions match your filters
+            </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              {sessions.map((s, i) => {
+              {filtered.map((s, i) => {
                 const score = s.overallScore ?? s.guidedScore;
                 return (
                   <motion.div
@@ -196,13 +319,9 @@ export default function HistoryPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: Math.min(i * 0.025, 0.3) }}
                     style={{
-                      background: "white",
-                      borderRadius: "14px",
-                      border: "1px solid var(--hp-border)",
-                      padding: "1.1rem 1.4rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1rem",
+                      background: "white", borderRadius: "14px",
+                      border: "1px solid var(--hp-border)", padding: "1.1rem 1.4rem",
+                      display: "flex", alignItems: "center", gap: "1rem",
                       transition: "border-color 0.15s, box-shadow 0.15s",
                     }}
                     onMouseEnter={e => {
@@ -225,7 +344,7 @@ export default function HistoryPage() {
                       </span>
                     </div>
 
-                    {/* Main info */}
+                    {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                         {s.caseTitle}
@@ -234,16 +353,24 @@ export default function HistoryPage() {
                         <span style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", fontWeight: 500 }}>
                           {firmLabel(s.firm)}
                         </span>
-                        <span style={{ color: "var(--hp-border)", fontSize: "0.75rem" }}>·</span>
+                        <span style={{ color: "var(--hp-border)" }}>·</span>
                         <span style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)" }}>
                           {typeLabel(s.type)}
                         </span>
-                        <span style={{ color: "var(--hp-border)", fontSize: "0.75rem" }}>·</span>
+                        <span style={{ color: "var(--hp-border)" }}>·</span>
                         <span style={difficultyBadge(s.difficulty)}>{s.difficulty}</span>
+                        {s.type === "guided" && (
+                          <>
+                            <span style={{ color: "var(--hp-border)" }}>·</span>
+                            <span style={{ fontSize: "0.7rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "9999px", background: "var(--hp-primary-soft)", color: "var(--hp-primary)", border: "1px solid color-mix(in oklab, var(--hp-primary) 20%, transparent)" }}>
+                              guided
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
 
-                    {/* Right side */}
+                    {/* Right */}
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem", flexShrink: 0 }}>
                       <span style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
                         {new Date(s.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
