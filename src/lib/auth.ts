@@ -39,32 +39,35 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (account?.provider === "google" && profile?.email) {
-        // Check if user already has a custom image (base64 set via settings)
+        // Find existing user first
         const existing = await prisma.user.findUnique({
           where: { email: profile.email },
-          select: { image: true },
+          select: { id: true, image: true },
         });
 
-        const hasCustomImage = existing?.image?.startsWith("data:");
-
-        const dbUser = await prisma.user.upsert({
-          where: { email: profile.email },
-          update: {
-            name: (profile as any).name,
-            // only overwrite image if they haven't set a custom one
-            ...(!hasCustomImage && { image: (profile as any).picture }),
-          },
-          create: {
-            email: profile.email,
-            name: (profile as any).name,
-            image: (profile as any).picture,
-          },
-        });
-        token.id = dbUser.id;
-        token.name = dbUser.name;
+        if (existing) {
+          // User already exists — update name only, NEVER touch image
+          const dbUser = await prisma.user.update({
+            where: { id: existing.id },
+            data: { name: (profile as any).name },
+          });
+          token.id = dbUser.id;
+          token.name = dbUser.name;
+        } else {
+          // Brand new user — create with Google's picture
+          const dbUser = await prisma.user.create({
+            data: {
+              email: profile.email,
+              name: (profile as any).name,
+              image: (profile as any).picture,
+            },
+          });
+          token.id = dbUser.id;
+          token.name = dbUser.name;
+        }
       }
 
-      // Refresh name from DB on every jwt call — never store image in JWT
+      // Refresh name from DB on every jwt call
       if (token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
@@ -79,7 +82,6 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user && token.id) {
         session.user.id = token.id as string;
-        // Always pull fresh from DB so image/name/email are never stale
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
           select: { name: true, email: true, image: true },
