@@ -359,14 +359,6 @@ export default function HistoryPage() {
                         </span>
                         <span style={{ color: "var(--hp-border)" }}>·</span>
                         <span style={difficultyBadge(s.difficulty)}>{s.difficulty}</span>
-                        {s.type === "guided" && (
-                          <>
-                            <span style={{ color: "var(--hp-border)" }}>·</span>
-                            <span style={{ fontSize: "0.7rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "9999px", background: "var(--hp-primary-soft)", color: "var(--hp-primary)", border: "1px solid color-mix(in oklab, var(--hp-primary) 20%, transparent)" }}>
-                              guided
-                            </span>
-                          </>
-                        )}
                       </div>
                     </div>
 

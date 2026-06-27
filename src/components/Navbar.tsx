@@ -1,149 +1,168 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, History, Settings, HelpCircle, MessageSquare } from "lucide-react";
 
-const SettingsIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-  </svg>
-);
+const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
-const LibraryIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-  </svg>
-);
+function ProfileDropdown({ user, onClose }: { user: { name?: string | null; email?: string | null; image?: string | null }; onClose: () => void }) {
+  const router = useRouter();
+  const ref = useRef<HTMLDivElement>(null);
 
-const HistoryIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12 6 12 12 16 14" />
-  </svg>
-);
+  useEffect(() => {
+    function h(e: MouseEvent) { if (ref.current && !ref.current.contains(e.target as Node)) onClose(); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [onClose]);
 
-const StartIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="5 3 19 12 5 21 5 3" />
-  </svg>
-);
-
-const SignOutIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-    <polyline points="16 17 21 12 16 7" />
-    <line x1="21" y1="12" x2="9" y2="12" />
-  </svg>
-);
-
-interface NavButtonProps {
-  icon: React.ReactNode;
-  label: string;
-  onClick: () => void;
-  primary?: boolean;
-}
-
-function NavButton({ icon, label, onClick, primary }: NavButtonProps) {
-  const [hovered, setHovered] = useState(false);
+  const item = (icon: React.ReactNode, label: string, onClick: () => void, danger?: boolean) => (
+    <button onClick={onClick}
+      style={{ width: "100%", display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.6rem 1rem", background: "none", border: "none", borderRadius: "8px", cursor: "pointer", fontFamily: FONT, fontSize: "0.875rem", fontWeight: 500, color: danger ? "#dc2626" : "var(--hp-foreground)", textAlign: "left", transition: "background 0.1s" }}
+      onMouseEnter={e => (e.currentTarget.style.background = "var(--hp-primary-soft)")}
+      onMouseLeave={e => (e.currentTarget.style.background = "none")}
+    >
+      <span style={{ color: danger ? "#dc2626" : "var(--hp-soft-foreground)", flexShrink: 0 }}>{icon}</span>
+      {label}
+    </button>
+  );
 
   return (
-    <div style={{ position: "relative" }}>
-      <button
-        onClick={onClick}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          width: "36px",
-          height: "36px",
-          borderRadius: "8px",
-          border: primary ? "none" : "1px solid var(--border)",
-          background: primary ? "#111111" : "transparent",
-          color: primary ? "#ffffff" : "var(--text-secondary)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          transition: "all 0.15s",
-          ...(hovered && !primary ? { background: "var(--bg-card)", color: "var(--text-primary)" } : {}),
-        }}
-      >
-        {icon}
-      </button>
-      {hovered && (
-        <div style={{
-          position: "absolute",
-          top: "calc(100% + 8px)",
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "#111111",
-          color: "#ffffff",
-          fontSize: "11px",
-          fontWeight: 500,
-          padding: "4px 8px",
-          borderRadius: "5px",
-          whiteSpace: "nowrap",
-          pointerEvents: "none",
-          zIndex: 200,
-          fontFamily: "Inter, sans-serif",
-        }}>
-          {label}
-          <div style={{
-            position: "absolute",
-            top: "-4px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "8px",
-            height: "8px",
-            background: "#111111",
-            clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-          }} />
-        </div>
-      )}
+    <div ref={ref} style={{ position: "relative" }}>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, y: 8, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 8, scale: 0.96 }}
+          transition={{ duration: 0.15 }}
+          style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, width: "240px", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)", boxShadow: "0 8px 32px oklch(0.4 0.05 280 / 14%)", overflow: "hidden", zIndex: 300 }}
+        >
+          <div style={{ padding: "1rem 1rem 0.75rem", borderBottom: "1px solid var(--hp-border)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            {user.image
+              ? <img src={user.image} alt="" style={{ width: 40, height: 40, borderRadius: "9999px", objectFit: "cover", flexShrink: 0 }} />
+              : <div style={{ width: 40, height: 40, borderRadius: "9999px", background: "var(--hp-primary)", color: "white", display: "grid", placeItems: "center", fontWeight: 700, flexShrink: 0, fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</div>
+            }
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.name ?? "User"}</div>
+              <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.email}</div>
+            </div>
+          </div>
+          <div style={{ padding: "0.5rem" }}>
+            {item(<History size={16} />, "History", () => { router.push("/history"); onClose(); })}
+            {item(<Settings size={16} />, "Settings", () => { router.push("/settings"); onClose(); })}
+          </div>
+          <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
+            {item(<HelpCircle size={16} />, "Help", () => {})}
+            {item(<MessageSquare size={16} />, "Send feedback", () => {})}
+          </div>
+          <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
+            {item(
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>,
+              "Sign out", () => { signOut({ callbackUrl: "/" }); onClose(); }, true
+            )}
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
 
-interface NavbarProps {
-  variant?: "default" | "settings";
-}
-
-export default function Navbar({ variant = "default" }: NavbarProps) {
+export default function Navbar() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const loading = status === "loading";
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const { scrollY } = useScroll();
+  const navBg = useTransform(scrollY, [0, 180], ["oklch(0.97 0.03 290 / 0)", "oklch(0.97 0.03 290 / 0.92)"]);
+  const navBlur = useTransform(scrollY, [0, 180], ["blur(0px)", "blur(16px)"]);
+  const navBorderOpacity = useTransform(scrollY, [0, 180], [0, 1]);
+
+  const BTN_H = "38px";
+
+  const textLink: React.CSSProperties = {
+    background: "none", border: "none",
+    fontSize: "0.875rem", fontWeight: 500,
+    color: "var(--hp-soft-foreground)", cursor: "pointer",
+    padding: "0 0.5rem", fontFamily: FONT,
+    display: "inline-flex", alignItems: "center",
+    height: BTN_H, lineHeight: "1", transition: "color 0.15s",
+  };
 
   return (
-    <nav style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "0 48px",
-      height: "60px",
-      borderBottom: "1px solid var(--border)",
-      position: "sticky",
-      top: 0,
-      background: "rgba(255,255,255,0.98)",
-      backdropFilter: "blur(8px)",
-      zIndex: 100,
-    }}>
+    <motion.header
+      style={{
+        position: "sticky", top: 0, zIndex: 50,
+        width: "100%", display: "flex", alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0.875rem 2.5rem",
+        backgroundColor: navBg,
+        backdropFilter: navBlur,
+        boxSizing: "border-box",
+        fontFamily: FONT,
+      }}
+    >
+      <motion.div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "var(--hp-border)", opacity: navBorderOpacity }} />
+
+      {/* Logo */}
       <span
-        style={{ fontFamily: "Cormorant, serif", fontSize: "22px", fontWeight: 500, color: "#111111", cursor: "pointer" }}
         onClick={() => router.push("/")}
+        style={{ fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}
       >
-        MyCasePrep
+        mycaseprep
       </span>
 
-      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-        <NavButton icon={<LibraryIcon />} label="Library" onClick={() => router.push("/library")} />
-        <NavButton icon={<HistoryIcon />} label="History" onClick={() => router.push("/history")} />
-        {variant === "settings" ? (
-          <NavButton icon={<SignOutIcon />} label="Sign out" onClick={() => signOut({ callbackUrl: "/" })} />
-        ) : (
-          <NavButton icon={<StartIcon />} label="Start a Case" onClick={() => router.push("/dashboard")} primary />
+      {/* Right */}
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <button style={textLink} onClick={() => router.push("/")}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
+          Home
+        </button>
+
+        <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => router.push("/library")}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
+          Library
+        </button>
+
+        <button
+          onClick={() => router.push("/dashboard")}
+          style={{
+            height: BTN_H, padding: "0 1.25rem",
+            borderRadius: "9999px", border: "none",
+            background: "var(--hp-primary)", color: "var(--hp-primary-foreground)",
+            fontSize: "0.875rem", fontWeight: 600,
+            cursor: "pointer", fontFamily: FONT,
+            display: "inline-flex", alignItems: "center", gap: "0.4rem",
+            boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
+            transition: "opacity 0.15s",
+          }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
+          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+        >
+          Start practicing
+          <ArrowRight size={15} />
+        </button>
+
+        {!loading && user && (
+          <div style={{ position: "relative" }}>
+            <button
+              onClick={() => setProfileOpen(o => !o)}
+              style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              {user.image
+                ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
+              }
+            </button>
+            {profileOpen && <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />}
+          </div>
         )}
-        <NavButton icon={<SettingsIcon />} label="Settings" onClick={() => router.push("/settings")} />
       </div>
-    </nav>
+    </motion.header>
   );
 }
