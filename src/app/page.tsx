@@ -169,7 +169,7 @@ export default function LandingPage() {
   const navBorderOpacity = useTransform(scrollY, [0, 180], [0, 1]);
 
   const BTN_H = "38px";
-  const FONT  = "'DM Sans', ui-sans-serif, system-ui, sans-serif";
+  const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
   const textLink: React.CSSProperties = {
     background: "none", border: "none", fontSize: "0.875rem", fontWeight: 500,
