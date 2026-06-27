@@ -93,76 +93,78 @@ export default function Navbar() {
   };
 
   return (
-    <motion.header
-      style={{
-        position: "sticky", top: 0, zIndex: 50,
-        width: "100%", display: "flex", alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0.875rem 2.5rem",
-        backgroundColor: navBg,
-        backdropFilter: navBlur,
-        boxSizing: "border-box",
-        fontFamily: FONT,
-      }}
-    >
-      <motion.div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "var(--hp-border)", opacity: navBorderOpacity }} />
-
-      {/* Logo */}
-      <span
-        onClick={() => router.push("/")}
-        style={{ fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}
+    <>
+      <motion.header
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0.875rem 2.5rem",
+          backgroundColor: navBg,
+          backdropFilter: navBlur,
+          boxSizing: "border-box",
+          fontFamily: FONT,
+        }}
       >
-        mycaseprep
-      </span>
+        <motion.div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "var(--hp-border)", opacity: navBorderOpacity }} />
 
-      {/* Right */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <button style={textLink} onClick={() => router.push("/")}
-          onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
-          Home
-        </button>
-
-        <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => router.push("/library")}
-          onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
-          Library
-        </button>
-
-        <button
-          onClick={() => router.push("/dashboard")}
-          style={{
-            height: BTN_H, padding: "0 1.25rem",
-            borderRadius: "9999px", border: "none",
-            background: "var(--hp-primary)", color: "var(--hp-primary-foreground)",
-            fontSize: "0.875rem", fontWeight: 600,
-            cursor: "pointer", fontFamily: FONT,
-            display: "inline-flex", alignItems: "center", gap: "0.4rem",
-            boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
-            transition: "opacity 0.15s",
-          }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
-          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+        <span
+          onClick={() => router.push("/")}
+          style={{ fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}
         >
-          Start practicing
-          <ArrowRight size={15} />
-        </button>
+          mycaseprep
+        </span>
 
-        {!loading && user && (
-          <div style={{ position: "relative" }}>
-            <button
-              onClick={() => setProfileOpen(o => !o)}
-              style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
-            >
-              {user.image
-                ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
-              }
-            </button>
-            {profileOpen && <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />}
-          </div>
-        )}
-      </div>
-    </motion.header>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <button style={textLink} onClick={() => router.push("/")}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
+            Home
+          </button>
+
+          <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => router.push("/library")}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
+            Library
+          </button>
+
+          <button
+            onClick={() => router.push("/dashboard")}
+            style={{
+              height: BTN_H, padding: "0 1.25rem",
+              borderRadius: "9999px", border: "none",
+              background: "var(--hp-primary)", color: "var(--hp-primary-foreground)",
+              fontSize: "0.875rem", fontWeight: 600,
+              cursor: "pointer", fontFamily: FONT,
+              display: "inline-flex", alignItems: "center", gap: "0.4rem",
+              boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
+              transition: "opacity 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+          >
+            Start practicing
+            <ArrowRight size={15} />
+          </button>
+
+          {!loading && user && (
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={() => setProfileOpen(o => !o)}
+                style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
+              >
+                {user.image
+                  ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
+                }
+              </button>
+              {profileOpen && <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />}
+            </div>
+          )}
+        </div>
+      </motion.header>
+
+      {/* Spacer so content isn't hidden behind fixed nav */}
+      <div style={{ height: "64px" }} />
+    </>
   );
 }
