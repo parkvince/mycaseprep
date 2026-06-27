@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { formatDuration, formatScoreColor } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
+import { formatDuration } from "@/lib/utils";
+import { ArrowLeft, Clock, BarChart2, Briefcase } from "lucide-react";
+
+const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
 interface SessionRecord {
   id: string;
@@ -19,92 +21,137 @@ interface SessionRecord {
   completedAt: string;
 }
 
+function scoreColor(score: number): string {
+  if (score >= 75) return "#15803d";
+  if (score >= 50) return "#b45309";
+  return "#b91c1c";
+}
+
+function scoreBg(score: number): string {
+  if (score >= 75) return "#f0fdf4";
+  if (score >= 50) return "#fffbeb";
+  return "#fef2f2";
+}
+
+function difficultyBadge(d: string): React.CSSProperties {
+  const base: React.CSSProperties = {
+    fontSize: "0.7rem", fontWeight: 600, padding: "0.2rem 0.6rem",
+    borderRadius: "9999px", textTransform: "capitalize", fontFamily: FONT,
+  };
+  if (d === "beginner") return { ...base, background: "#f0fdf4", color: "#15803d", border: "1px solid #bbf7d0" };
+  if (d === "intermediate") return { ...base, background: "#fffbeb", color: "#b45309", border: "1px solid #fde68a" };
+  return { ...base, background: "#fef2f2", color: "#b91c1c", border: "1px solid #fecaca" };
+}
+
+function firmLabel(f: string): string {
+  const map: Record<string, string> = {
+    mckinsey: "McKinsey", bain: "Bain", bcg: "BCG", ey: "EY-Parthenon",
+    deloitte: "Deloitte", kpmg: "KPMG", pwc: "PwC", rolandberger: "Roland Berger",
+    accenture: "Accenture", "oliver-wyman": "Oliver Wyman", kearney: "Kearney",
+    lek: "L.E.K.", "monitor-deloitte": "Monitor Deloitte", ibm: "IBM",
+    "capital-one": "Capital One", huron: "Huron",
+  };
+  return map[f] ?? f.charAt(0).toUpperCase() + f.slice(1);
+}
+
+function typeLabel(t: string): string {
+  const map: Record<string, string> = {
+    profitability: "Profitability", market_sizing: "Market sizing",
+    market_entry: "Market entry", merger_acquisition: "M&A",
+    operations: "Operations", ai: "AI case", guided: "Guided",
+  };
+  return map[t] ?? t;
+}
+
 export default function HistoryPage() {
   const router = useRouter();
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        const res = await fetch("/api/sessions/list");
-        const data = await res.json();
-        setSessions(data.sessions ?? []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSessions();
+    fetch("/api/sessions/list")
+      .then(r => r.json())
+      .then(d => setSessions(d.sessions ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  const avgScore = sessions.length > 0
-    ? Math.round(
-        sessions
-          .filter(s => s.overallScore !== null || s.guidedScore !== null)
-          .reduce((acc, s) => acc + (s.overallScore ?? s.guidedScore ?? 0), 0) /
-        sessions.filter(s => s.overallScore !== null || s.guidedScore !== null).length
-      )
+  const scored = sessions.filter(s => s.overallScore != null || s.guidedScore != null);
+  const avgScore = scored.length > 0
+    ? Math.round(scored.reduce((acc, s) => acc + (s.overallScore ?? s.guidedScore ?? 0), 0) / scored.length)
     : null;
 
   const firmCounts = sessions.reduce((acc, s) => {
     acc[s.firm] = (acc[s.firm] ?? 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-
   const topFirm = Object.entries(firmCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
 
-  return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-     <Navbar />
+  const totalMinutes = Math.round(sessions.reduce((acc, s) => acc + (s.duration ?? 0), 0) / 60);
 
-      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "60px 48px" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: "48px" }}
+  return (
+    <div style={{
+      minHeight: "100vh", fontFamily: FONT,
+      background: "var(--hp-bg)",
+      backgroundImage: [
+        "radial-gradient(at 8% 12%, var(--hp-lavender) 0px, transparent 45%)",
+        "radial-gradient(at 92% 10%, var(--hp-peach) 0px, transparent 45%)",
+        "radial-gradient(at 85% 92%, var(--hp-mint) 0px, transparent 50%)",
+        "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
+      ].join(", "),
+      backgroundAttachment: "fixed",
+    }}>
+
+      {/* Nav */}
+      <header style={{
+        position: "sticky", top: 0, zIndex: 50,
+        display: "flex", alignItems: "center",
+        padding: "0.875rem 2.5rem",
+        background: "oklch(0.97 0.03 290 / 0.92)",
+        backdropFilter: "blur(16px)",
+        borderBottom: "1px solid var(--hp-border)",
+        boxSizing: "border-box", gap: "1rem",
+      }}>
+        <button
+          onClick={() => router.back()}
+          style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "0.875rem", fontFamily: FONT, fontWeight: 500, padding: "0.3rem 0.5rem", borderRadius: "6px", transition: "color 0.15s" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
         >
-          <h1 style={{
-            fontSize: "clamp(26px, 3vw, 38px)",
-            fontWeight: 400,
-            marginBottom: "8px",
-            letterSpacing: "-0.01em",
-          }}>
-            Session History
+          <ArrowLeft size={16} /> Back
+        </button>
+        <span style={{ width: "1px", height: "18px", background: "var(--hp-border)", display: "block" }} />
+        <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--hp-foreground)" }}>History</span>
+      </header>
+
+      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
+
+        {/* Title */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: "2rem" }}>
+          <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: "var(--hp-foreground)", margin: 0 }}>
+            Session history
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
-            All your past practice sessions.
+          <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "var(--hp-soft-foreground)" }}>
+            All your past practice sessions
           </p>
         </motion.div>
 
-        {/* Stats row */}
+        {/* Stats */}
         {sessions.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "16px",
-              marginBottom: "40px",
-            }}
-          >
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.875rem", marginBottom: "1.5rem" }}>
             {[
-              { label: "Total Sessions", value: sessions.length },
-              { label: "Average Score", value: avgScore ?? "—" },
-              { label: "Most Practiced", value: topFirm ? topFirm.charAt(0).toUpperCase() + topFirm.slice(1) : "—" },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="card"
-                style={{ padding: "24px 28px" }}
-              >
-                <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: "8px" }}>
+              { icon: <BarChart2 size={16} />, label: "Total sessions", value: sessions.length },
+              { icon: <BarChart2 size={16} />, label: "Average score", value: avgScore != null ? avgScore : "—" },
+              { icon: <Briefcase size={16} />, label: "Most practiced", value: topFirm ? firmLabel(topFirm) : "—" },
+              { icon: <Clock size={16} />, label: "Total time", value: totalMinutes > 0 ? `${totalMinutes} min` : "—" },
+            ].map(stat => (
+              <div key={stat.label} style={{ background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)", padding: "1.1rem 1.25rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--hp-soft-foreground)" }}>
+                  <span style={{ color: "var(--hp-primary)" }}>{stat.icon}</span>
                   {stat.label}
                 </div>
-                <div style={{ fontSize: "28px", fontWeight: 700, fontFamily: "Cormorant, serif" }}>
+                <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--hp-foreground)", letterSpacing: "-0.02em", lineHeight: 1 }}>
                   {stat.value}
                 </div>
               </div>
@@ -112,130 +159,107 @@ export default function HistoryPage() {
           </motion.div>
         )}
 
-        {/* Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
+        {/* Content */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           {loading ? (
-            <div style={{ textAlign: "center", padding: "80px 0", color: "var(--text-secondary)" }}>
+            <div style={{ textAlign: "center", padding: "5rem", color: "var(--hp-soft-foreground)", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>
               Loading sessions...
             </div>
           ) : sessions.length === 0 ? (
-            <div style={{
-              textAlign: "center",
-              padding: "80px 0",
-              border: "1px dashed var(--border)",
-              borderRadius: "12px",
-            }}>
-              <p style={{ color: "var(--text-secondary)", fontSize: "15px", marginBottom: "16px" }}>
+            <div style={{ textAlign: "center", padding: "5rem", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>
+              <p style={{ color: "var(--hp-soft-foreground)", fontSize: "0.95rem", marginBottom: "1.25rem" }}>
                 No sessions yet. Complete a case to see your history here.
               </p>
-              <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-                <button className="btn-primary" style={{ padding: "9px 20px" }} onClick={() => router.push("/dashboard")}>
-                  Start AI Case
+              <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  style={{ height: "38px", padding: "0 1.25rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
+                >
+                  Start a case
                 </button>
-                <button className="btn-secondary" style={{ padding: "9px 20px" }} onClick={() => router.push("/library")}>
-                  Browse Guided Cases
+                <button
+                  onClick={() => router.push("/library")}
+                  style={{ height: "38px", padding: "0 1.25rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
+                >
+                  Browse library
                 </button>
               </div>
             </div>
           ) : (
-            <div className="card" style={{ overflow: "hidden" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                    {["Case", "Type", "Firm", "Difficulty", "Score", "Duration", "Date"].map((h) => (
-                      <th
-                        key={h}
-                        style={{
-                          padding: "14px 20px",
-                          textAlign: "left",
-                          fontSize: "11px",
-                          fontWeight: 700,
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                          color: "var(--text-secondary)",
-                          fontFamily: "DM Sans, sans-serif",
-                        }}
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sessions.map((session, i) => {
-                    const score = session.overallScore ?? session.guidedScore;
-                    const scoreColor = score !== null ? formatScoreColor(score) : "var(--text-secondary)";
-                    return (
-                      <tr
-                        key={session.id}
-                        style={{
-                          borderBottom: i < sessions.length - 1 ? "1px solid var(--border)" : "none",
-                          transition: "background 0.15s",
-                        }}
-                        onMouseEnter={e => (e.currentTarget.style.background = "var(--bg-elevated)")}
-                        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                      >
-                        <td style={{ padding: "16px 20px", fontSize: "14px", fontWeight: 500, maxWidth: "200px" }}>
-                          <span style={{
-                            display: "block",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}>
-                            {session.caseTitle}
-                          </span>
-                        </td>
-                        <td style={{ padding: "16px 20px" }}>
-                          <span style={{
-                            fontSize: "11px",
-                            fontWeight: 600,
-                            padding: "3px 10px",
-                            borderRadius: "20px",
-                            border: "1px solid var(--border)",
-                            color: "var(--text-secondary)",
-                            textTransform: "capitalize",
-                          }}>
-                            {session.type}
-                          </span>
-                        </td>
-                        <td style={{ padding: "16px 20px", fontSize: "14px", textTransform: "capitalize" }}>
-                          {session.firm}
-                        </td>
-                        <td style={{ padding: "16px 20px", fontSize: "14px", textTransform: "capitalize" }}>
-                          {session.difficulty}
-                        </td>
-                        <td style={{ padding: "16px 20px" }}>
-                          {score !== null ? (
-                            <span style={{ fontSize: "15px", fontWeight: 700, color: scoreColor }}>
-                              {score}
-                            </span>
-                          ) : (
-                            <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>—</span>
-                          )}
-                        </td>
-                        <td style={{ padding: "16px 20px", fontSize: "14px", color: "var(--text-secondary)" }}>
-                          {formatDuration(session.duration)}
-                        </td>
-                        <td style={{ padding: "16px 20px", fontSize: "13px", color: "var(--text-secondary)" }}>
-                          {new Date(session.completedAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              {sessions.map((s, i) => {
+                const score = s.overallScore ?? s.guidedScore;
+                return (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: Math.min(i * 0.025, 0.3) }}
+                    style={{
+                      background: "white",
+                      borderRadius: "14px",
+                      border: "1px solid var(--hp-border)",
+                      padding: "1.1rem 1.4rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1rem",
+                      transition: "border-color 0.15s, box-shadow 0.15s",
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLDivElement).style.borderColor = "var(--hp-primary)";
+                      (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 16px oklch(0.4 0.05 280 / 8%)";
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLDivElement).style.borderColor = "var(--hp-border)";
+                      (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+                    }}
+                  >
+                    {/* Score badge */}
+                    <div style={{
+                      width: "48px", height: "48px", borderRadius: "12px", flexShrink: 0,
+                      background: score != null ? scoreBg(score) : "var(--hp-primary-soft)",
+                      display: "grid", placeItems: "center",
+                    }}>
+                      <span style={{ fontSize: "1rem", fontWeight: 800, color: score != null ? scoreColor(score) : "var(--hp-primary)", lineHeight: 1 }}>
+                        {score != null ? score : "—"}
+                      </span>
+                    </div>
+
+                    {/* Main info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        {s.caseTitle}
+                      </div>
+                      <div style={{ marginTop: "0.25rem", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                        <span style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", fontWeight: 500 }}>
+                          {firmLabel(s.firm)}
+                        </span>
+                        <span style={{ color: "var(--hp-border)", fontSize: "0.75rem" }}>·</span>
+                        <span style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)" }}>
+                          {typeLabel(s.type)}
+                        </span>
+                        <span style={{ color: "var(--hp-border)", fontSize: "0.75rem" }}>·</span>
+                        <span style={difficultyBadge(s.difficulty)}>{s.difficulty}</span>
+                      </div>
+                    </div>
+
+                    {/* Right side */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem", flexShrink: 0 }}>
+                      <span style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
+                        {new Date(s.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.75rem", color: "var(--hp-soft-foreground)" }}>
+                        <Clock size={11} />
+                        {formatDuration(s.duration)}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </motion.div>
       </div>
-    </main>
+    </div>
   );
 }
