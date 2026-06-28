@@ -228,13 +228,16 @@ export default function LandingPage() {
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>Features</button>
 
-          <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => smoothScrollTo("privacy")}
+          <button style={textLink} onClick={() => smoothScrollTo("privacy")}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>Privacy</button>
 
-          <button style={pillWhite} onClick={() => router.push(user ? "/library" : "/auth")}
-            onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.96)")}
-            onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}>Library</button>
+          <button
+            onClick={() => router.push(user ? "/library" : "/auth")}
+            style={textLink}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
+          >Library</button>
 
           <button style={pillPurple} onClick={() => router.push(cta)}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
