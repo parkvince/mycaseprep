@@ -7,11 +7,56 @@ import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
+import { ArrowRight, Clock } from "lucide-react";
+
+const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
+
+const FIRM_SHORT: Record<string, string> = {
+  mckinsey: "McKinsey", bain: "Bain", bcg: "BCG", ey: "EY-Parthenon",
+  deloitte: "Deloitte", kpmg: "KPMG", pwc: "PwC", rolandberger: "Roland Berger",
+  accenture: "Accenture", "oliver-wyman": "Oliver Wyman", kearney: "Kearney",
+  lek: "L.E.K.", "monitor-deloitte": "Monitor Deloitte", ibm: "IBM",
+  "capital-one": "Capital One", huron: "Huron",
+};
 
 interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: string | Date;
+}
+
+function scoreColor5(s: number) {
+  if (s >= 4.5) return "#15803d";
+  if (s >= 3.5) return "#65a30d";
+  if (s >= 2.5) return "#d97706";
+  if (s >= 1.5) return "#ea580c";
+  return "#dc2626";
+}
+
+function scoreLabel5(s: number) {
+  if (s >= 5) return "Exceptional";
+  if (s >= 4) return "Very good";
+  if (s >= 3) return "Good";
+  if (s >= 2) return "Adequate";
+  return "Insufficient";
+}
+
+function offerColor(d: string) {
+  if (d === "strong_offer" || d === "offer") return "#15803d";
+  if (d === "borderline") return "#d97706";
+  return "#dc2626";
+}
+
+function offerBg(d: string) {
+  if (d === "strong_offer" || d === "offer") return "#f0fdf4";
+  if (d === "borderline") return "#fffbeb";
+  return "#fef2f2";
+}
+
+function offerBorder(d: string) {
+  if (d === "strong_offer" || d === "offer") return "#bbf7d0";
+  if (d === "borderline") return "#fde68a";
+  return "#fecaca";
 }
 
 function FeedbackInner() {
@@ -25,7 +70,6 @@ function FeedbackInner() {
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [transcript, setTranscript] = useState<Message[]>([]);
-
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal" | "transcript">("overview");
@@ -60,20 +104,10 @@ function FeedbackInner() {
         });
         const data = await res.json();
         setEvaluation(data);
-
         await fetch("/api/sessions/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "ai",
-            firm,
-            difficulty,
-            caseTitle,
-            duration,
-            hintsUsed,
-            overallScore: data.overallScore,
-            transcript: t,
-          }),
+          body: JSON.stringify({ type: "ai", firm, difficulty, caseTitle, duration, hintsUsed, overallScore: data.overallScore, transcript: t }),
         });
       } catch (err) {
         console.error(err);
@@ -88,387 +122,252 @@ function FeedbackInner() {
 
   const firmBreakdownItems =
     firm === "mckinsey" ? [
-      { label: "Problem Structuring", key: "structure", weight: 28 },
-      { label: "Quantitative Reasoning", key: "quantitative", weight: 22 },
-      { label: "Business Judgment", key: "businessJudgment", weight: 18 },
+      { label: "Problem structuring", key: "structure", weight: 28 },
+      { label: "Quantitative reasoning", key: "quantitative", weight: 22 },
+      { label: "Business judgment", key: "businessJudgment", weight: 18 },
       { label: "Communication", key: "communication", weight: 17 },
-      { label: "Hypothesis Management", key: "hypothesisManagement", weight: 10 },
+      { label: "Hypothesis management", key: "hypothesisManagement", weight: 10 },
       { label: "Synthesis", key: "synthesis", weight: 5 },
     ] : firm === "bcg" ? [
-      { label: "Case Leadership & Drive", key: "candidateLed", weight: 23 },
-      { label: "Problem Structuring", key: "structure", weight: 20 },
-      { label: "Analytical & Quant Skills", key: "quantitative", weight: 22 },
-      { label: "Creativity & Original Thinking", key: "creativity", weight: 18 },
-      { label: "Communication Style", key: "communication", weight: 17 },
+      { label: "Case leadership & drive", key: "candidateLed", weight: 23 },
+      { label: "Problem structuring", key: "structure", weight: 20 },
+      { label: "Analytical & quant skills", key: "quantitative", weight: 22 },
+      { label: "Creativity & original thinking", key: "creativity", weight: 18 },
+      { label: "Communication style", key: "communication", weight: 17 },
     ] : firm === "bain" ? [
-      { label: "Answer First & Hypothesis", key: "answerFirst", weight: 22 },
-      { label: "Structured Thinking", key: "structure", weight: 18 },
-      { label: "Quantitative & Financial", key: "quantitative", weight: 18 },
-      { label: "Communication & Composure", key: "communication", weight: 22 },
-      { label: "Cultural Fit (Bainie Factor)", key: "culturalFit", weight: 15 },
-      { label: "Synthesis & Recommendation", key: "synthesis", weight: 5 },
+      { label: "Answer first & hypothesis", key: "answerFirst", weight: 22 },
+      { label: "Structured thinking", key: "structure", weight: 18 },
+      { label: "Quantitative & financial", key: "quantitative", weight: 18 },
+      { label: "Communication & composure", key: "communication", weight: 22 },
+      { label: "Cultural fit", key: "culturalFit", weight: 15 },
+      { label: "Synthesis & recommendation", key: "synthesis", weight: 5 },
     ] : firm === "ey" ? [
-      { label: "Problem Solving & Structure", key: "problemSolving", weight: 25 },
-      { label: "Numerical & Financial Skills", key: "quantitative", weight: 28 },
-      { label: "Strategic & Investment Judgment", key: "strategicJudgment", weight: 22 },
-      { label: "Communication & Client Readiness", key: "communication", weight: 15 },
-      { label: "Recommendation Commitment", key: "recommendation", weight: 10 },
+      { label: "Problem solving & structure", key: "problemSolving", weight: 25 },
+      { label: "Numerical & financial skills", key: "quantitative", weight: 28 },
+      { label: "Strategic & investment judgment", key: "strategicJudgment", weight: 22 },
+      { label: "Communication & client readiness", key: "communication", weight: 15 },
+      { label: "Recommendation commitment", key: "recommendation", weight: 10 },
     ] : firm === "deloitte" ? [
-      { label: "Structured Thinking", key: "structure", weight: 22 },
-      { label: "Analytical Ability", key: "analytical", weight: 20 },
-      { label: "Business Acumen", key: "businessAcumen", weight: 22 },
-      { label: "Communication Skills", key: "communication", weight: 20 },
-      { label: "Coachability & Demeanor", key: "coachability", weight: 16 },
+      { label: "Structured thinking", key: "structure", weight: 22 },
+      { label: "Analytical ability", key: "analytical", weight: 20 },
+      { label: "Business acumen", key: "businessAcumen", weight: 22 },
+      { label: "Communication skills", key: "communication", weight: 20 },
+      { label: "Coachability & demeanor", key: "coachability", weight: 16 },
     ] : firm === "kpmg" ? [
-      { label: "Structured Thinking", key: "structure", weight: 22 },
-      { label: "Analytical Ability", key: "analytical", weight: 18 },
-      { label: "Business & Operational Judgment", key: "operationalJudgment", weight: 22 },
-      { label: "Communication & Client Readiness", key: "communication", weight: 18 },
-      { label: "Values Alignment & Professional Mindset", key: "valuesAlignment", weight: 20 },
+      { label: "Structured thinking", key: "structure", weight: 22 },
+      { label: "Analytical ability", key: "analytical", weight: 18 },
+      { label: "Business & operational judgment", key: "operationalJudgment", weight: 22 },
+      { label: "Communication & client readiness", key: "communication", weight: 18 },
+      { label: "Values alignment & professional mindset", key: "valuesAlignment", weight: 20 },
     ] : firm === "pwc" ? [
-      { label: "Structured Reasoning & Hypothesis", key: "structure", weight: 22 },
-      { label: "Quantitative & Financial Logic", key: "quantitative", weight: 20 },
-      { label: "Strategic & Commercial Judgment", key: "strategicJudgment", weight: 23 },
-      { label: "Communication & Delivery", key: "communication", weight: 18 },
-      { label: "Behavioral Fit & Genuine Motivation", key: "behavioralFit", weight: 17 },
+      { label: "Structured reasoning & hypothesis", key: "structure", weight: 22 },
+      { label: "Quantitative & financial logic", key: "quantitative", weight: 20 },
+      { label: "Strategic & commercial judgment", key: "strategicJudgment", weight: 23 },
+      { label: "Communication & delivery", key: "communication", weight: 18 },
+      { label: "Behavioral fit & genuine motivation", key: "behavioralFit", weight: 17 },
     ] : firm === "rolandberger" ? [
-      { label: "Structure & Case Design", key: "structure", weight: 25 },
-      { label: "Analytical Execution & Drive", key: "execution", weight: 22 },
-      { label: "Synthesis & Recommendation", key: "synthesis", weight: 20 },
-      { label: "Entrepreneurial Mindset", key: "entrepreneurialMindset", weight: 18 },
-      { label: "Collaboration & Group Case", key: "collaboration", weight: 15 },
+      { label: "Structure & case design", key: "structure", weight: 25 },
+      { label: "Analytical execution & drive", key: "execution", weight: 22 },
+      { label: "Synthesis & recommendation", key: "synthesis", weight: 20 },
+      { label: "Entrepreneurial mindset", key: "entrepreneurialMindset", weight: 18 },
+      { label: "Collaboration & group case", key: "collaboration", weight: 15 },
     ] : firm === "accenture" ? [
-      { label: "Structured Thinking & MECE", key: "structuredThinking", weight: 20 },
-      { label: "Problem Solving & Drive", key: "problemSolving", weight: 20 },
-      { label: "Business Judgment & Digital", key: "businessJudgment", weight: 20 },
-      { label: "Quantitative Ability", key: "quantitative", weight: 15 },
-      { label: "Communication & Executive Presence", key: "communicationPresence", weight: 15 },
-      { label: "Collaboration & Group Case", key: "collaboration", weight: 10 },
+      { label: "Structured thinking & MECE", key: "structuredThinking", weight: 20 },
+      { label: "Problem solving & drive", key: "problemSolving", weight: 20 },
+      { label: "Business judgment & digital", key: "businessJudgment", weight: 20 },
+      { label: "Quantitative ability", key: "quantitative", weight: 15 },
+      { label: "Communication & executive presence", key: "communicationPresence", weight: 15 },
+      { label: "Collaboration", key: "collaboration", weight: 10 },
     ] : [];
 
   const hasFirmRubric = firmBreakdownItems.length > 0;
 
-  const scoreLabel5 = (s: number) => {
-    if (s >= 5) return "Exceptional";
-    if (s >= 4) return "Very Good";
-    if (s >= 3) return "Good";
-    if (s >= 2) return "Adequate";
-    return "Insufficient";
+  const card: React.CSSProperties = {
+    background: "white", borderRadius: "14px",
+    border: "1px solid var(--hp-border)", padding: "1.5rem 1.75rem",
   };
 
-  const scoreColor5 = (s: number) => {
-    if (s >= 4.5) return "var(--success)";
-    if (s >= 3.5) return "#84cc16";
-    if (s >= 2.5) return "var(--warning)";
-    if (s >= 1.5) return "#f97316";
-    return "var(--danger)";
+  const sectionLabel: React.CSSProperties = {
+    fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase",
+    letterSpacing: "0.1em", color: "var(--hp-soft-foreground)",
+    marginBottom: "0.875rem", fontFamily: FONT,
   };
 
-  const offerColor = (decision: string) => {
-    if (decision === "strong_offer" || decision === "offer") return "var(--success)";
-    if (decision === "borderline") return "var(--warning)";
-    return "var(--danger)";
-  };
-
-  const offerBg = (decision: string) => {
-    if (decision === "strong_offer") return "rgba(34,197,94,0.1)";
-    if (decision === "offer") return "rgba(34,197,94,0.07)";
-    if (decision === "borderline") return "rgba(234,179,8,0.1)";
-    return "rgba(220,38,38,0.08)";
-  };
-
-  const offerBorder = (decision: string) => {
-    if (decision === "strong_offer") return "rgba(34,197,94,0.4)";
-    if (decision === "offer") return "rgba(34,197,94,0.3)";
-    if (decision === "borderline") return "rgba(234,179,8,0.35)";
-    return "rgba(220,38,38,0.25)";
-  };
-
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: "10px 20px",
-    borderRadius: "8px",
-    border: "none",
-    background: active ? "var(--accent)" : "transparent",
-    color: active ? "white" : "var(--text-secondary)",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontFamily: "DM Sans, sans-serif",
-    fontWeight: 500,
-    transition: "all 0.2s",
-    whiteSpace: "nowrap",
+  const tabBtn = (active: boolean): React.CSSProperties => ({
+    padding: "0.5rem 1rem", borderRadius: "8px", border: "none",
+    background: active ? "var(--hp-primary)" : "transparent",
+    color: active ? "white" : "var(--hp-soft-foreground)",
+    cursor: "pointer", fontSize: "0.82rem", fontFamily: FONT,
+    fontWeight: 600, transition: "all 0.15s", whiteSpace: "nowrap",
   });
 
   if (loading) {
     return (
-      <main style={{
-        minHeight: "100vh",
-        background: "var(--bg)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "24px",
-      }}>
-        <div style={{
-          width: "48px",
-          height: "48px",
-          borderRadius: "50%",
-          border: "2px solid var(--border)",
-          borderTop: "2px solid var(--accent)",
-          animation: "spin 1s linear infinite",
-        }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        <p style={{ color: "var(--text-secondary)", fontSize: "16px" }}>
-          Evaluating your performance...
-        </p>
-        <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
-          Applying {firmConfig.name} grading rubric
-        </p>
-      </main>
+      <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1.25rem", fontFamily: FONT }}>
+        <motion.div
+          animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid var(--hp-border)", borderTop: "2px solid var(--hp-primary)" }}
+        />
+        <p style={{ color: "var(--hp-foreground)", fontSize: "0.95rem", fontWeight: 600 }}>Evaluating your performance...</p>
+        <p style={{ color: "var(--hp-soft-foreground)", fontSize: "0.82rem" }}>Applying {FIRM_SHORT[firm] ?? firmConfig.name} grading rubric</p>
+      </div>
     );
   }
 
   if (!evaluation) {
     return (
-      <main style={{
-        minHeight: "100vh",
-        background: "var(--bg)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
-        <p style={{ color: "var(--text-secondary)" }}>Failed to load evaluation. Please try again.</p>
-      </main>
+      <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT }}>
+        <p style={{ color: "var(--hp-soft-foreground)" }}>Failed to load evaluation. Please try again.</p>
+      </div>
     );
   }
 
-  const scoreColor = formatScoreColor(evaluation.overallScore);
+  const overallColor = formatScoreColor(evaluation.overallScore);
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
+    <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", color: "var(--hp-foreground)", fontFamily: FONT }}>
       <Navbar />
 
-      <div style={{ maxWidth: "860px", margin: "0 auto", padding: "60px 48px" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: "48px" }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div>
-              <div style={{
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "var(--text-secondary)",
-                marginBottom: "8px",
-              }}>
-                Case Feedback · {firmConfig.name}
-              </div>
-              <h1 style={{ fontSize: "clamp(24px, 3vw, 36px)", marginBottom: "8px" }}>
-                Your Scorecard
-              </h1>
-              <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
-                {formatDuration(duration)} · {hintsUsed} hint{hintsUsed !== 1 ? "s" : ""} used · {difficulty} difficulty
-              </p>
-            </div>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
 
-            <div style={{
-              textAlign: "center",
-              padding: "24px 32px",
-              borderRadius: "12px",
-              border: `2px solid ${scoreColor}`,
-              background: "var(--bg-card)",
-              minWidth: "160px",
-            }}>
-              <div style={{
-                fontSize: "52px",
-                fontWeight: 700,
-                color: scoreColor,
-                fontFamily: "Cormorant, serif",
-                lineHeight: 1,
-              }}>
-                {evaluation.overallScore}
-              </div>
-              <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "6px" }}>
-                {formatScore(evaluation.overallScore)}
-              </div>
-              <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>
-                Top {100 - evaluation.percentileEstimate}%
-              </div>
-
-              {evaluation.offerDecision && (
-                <div style={{
-                  marginTop: "12px",
-                  padding: "8px 12px",
-                  borderRadius: "6px",
-                  background: offerBg(evaluation.offerDecision.decision),
-                  border: `1px solid ${offerBorder(evaluation.offerDecision.decision)}`,
-                }}>
-                  <div style={{
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    color: offerColor(evaluation.offerDecision.decision),
-                  }}>
-                    {evaluation.offerDecision.label}
-                  </div>
-                  <div style={{ fontSize: "10px", color: "var(--text-secondary)", marginTop: "2px" }}>
-                    {firmConfig.name} score: {evaluation.offerDecision.weightedScore}/100
-                  </div>
-                </div>
-              )}
-            </div>
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: "2rem" }}>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--hp-soft-foreground)", marginBottom: "0.4rem" }}>
+            Case feedback · {FIRM_SHORT[firm] ?? firmConfig.name}
+          </div>
+          <h1 style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 0.4rem" }}>
+            {caseTitle}
+          </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", color: "var(--hp-soft-foreground)" }}>
+            <Clock size={13} />
+            {formatDuration(duration)}
+            <span>·</span>
+            {hintsUsed} hint{hintsUsed !== 1 ? "s" : ""} used
+            <span>·</span>
+            <span style={{ textTransform: "capitalize" }}>{difficulty}</span>
           </div>
         </motion.div>
 
-        {/* Tabs */}
-        <div style={{
-          display: "flex",
-          gap: "4px",
-          marginBottom: "32px",
-          background: "var(--bg-card)",
-          padding: "4px",
-          borderRadius: "10px",
-          border: "1px solid var(--border)",
-          width: "fit-content",
-          flexWrap: "wrap",
-        }}>
-          <button style={tabStyle(activeTab === "overview")} onClick={() => setActiveTab("overview")}>Overview</button>
-          <button style={tabStyle(activeTab === "breakdown")} onClick={() => setActiveTab("breakdown")}>Score Breakdown</button>
-          <button style={tabStyle(activeTab === "ideal")} onClick={() => setActiveTab("ideal")}>Top 1% Answer</button>
-          {transcript.length > 0 && (
-            <button style={tabStyle(activeTab === "transcript")} onClick={() => setActiveTab("transcript")}>Transcript</button>
+        {/* Score card */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+          style={{ ...card, marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1.5rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "3.5rem", fontWeight: 800, color: overallColor, lineHeight: 1, letterSpacing: "-0.04em" }}>
+                {evaluation.overallScore}
+              </div>
+              <div style={{ fontSize: "0.8rem", color: overallColor, fontWeight: 600, marginTop: "2px" }}>
+                {formatScore(evaluation.overallScore)}
+              </div>
+            </div>
+            <div style={{ width: "1px", height: "56px", background: "var(--hp-border)" }} />
+            <div>
+              <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginBottom: "2px" }}>Percentile</div>
+              <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--hp-foreground)" }}>Top {100 - evaluation.percentileEstimate}%</div>
+            </div>
+          </div>
+
+          {evaluation.offerDecision && (
+            <div style={{ padding: "0.875rem 1.25rem", borderRadius: "12px", background: offerBg(evaluation.offerDecision.decision), border: `1px solid ${offerBorder(evaluation.offerDecision.decision)}`, minWidth: "200px" }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "3px" }}>
+                {FIRM_SHORT[firm] ?? firmConfig.name} decision
+              </div>
+              <div style={{ fontSize: "1rem", fontWeight: 700, color: offerColor(evaluation.offerDecision.decision) }}>
+                {evaluation.offerDecision.label}
+              </div>
+              <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>
+                Weighted score: {evaluation.offerDecision.weightedScore}/100
+              </div>
+            </div>
           )}
-        </div>
+        </motion.div>
 
-        {/* Overview Tab */}
+        {/* Tabs */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
+          style={{ display: "flex", gap: "3px", marginBottom: "1.25rem", background: "white", padding: "4px", borderRadius: "10px", border: "1px solid var(--hp-border)", width: "fit-content", flexWrap: "wrap" }}>
+          <button style={tabBtn(activeTab === "overview")} onClick={() => setActiveTab("overview")}>Overview</button>
+          <button style={tabBtn(activeTab === "breakdown")} onClick={() => setActiveTab("breakdown")}>Score breakdown</button>
+          <button style={tabBtn(activeTab === "ideal")} onClick={() => setActiveTab("ideal")}>Top 1% answer</button>
+          {transcript.length > 0 && (
+            <button style={tabBtn(activeTab === "transcript")} onClick={() => setActiveTab("transcript")}>Transcript</button>
+          )}
+        </motion.div>
+
+        {/* Overview */}
         {activeTab === "overview" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ display: "flex", flexDirection: "column", gap: "24px" }}
-          >
-            <div className="card" style={{ padding: "28px" }}>
-              <h3 style={{
-                fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
-                textTransform: "uppercase", color: "var(--success)",
-                marginBottom: "16px", fontFamily: "DM Sans, sans-serif",
-              }}>
-                What Went Well
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={card}>
+              <div style={{ ...sectionLabel, color: "#15803d" }}>What went well</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 {evaluation.whatWentWell.map((item, i) => (
-                  <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                    <div style={{
-                      width: "6px", height: "6px", borderRadius: "50%",
-                      background: "var(--success)", marginTop: "8px", flexShrink: 0,
-                    }} />
-                    <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{item}</p>
+                  <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                    <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16a34a", marginTop: "8px", flexShrink: 0 }} />
+                    <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>{item}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="card" style={{ padding: "28px" }}>
-              <h3 style={{
-                fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
-                textTransform: "uppercase", color: "var(--warning)",
-                marginBottom: "16px", fontFamily: "DM Sans, sans-serif",
-              }}>
-                Areas to Improve
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={card}>
+              <div style={{ ...sectionLabel, color: "#d97706" }}>Areas to improve</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 {evaluation.areasToImprove.map((item, i) => (
-                  <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                    <div style={{
-                      width: "6px", height: "6px", borderRadius: "50%",
-                      background: "var(--warning)", marginTop: "8px", flexShrink: 0,
-                    }} />
-                    <p style={{ fontSize: "15px", lineHeight: 1.6 }}>{item}</p>
+                  <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                    <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d97706", marginTop: "8px", flexShrink: 0 }} />
+                    <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>{item}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="card" style={{ padding: "28px" }}>
-              <h3 style={{
-                fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
-                textTransform: "uppercase", color: "var(--text-secondary)",
-                marginBottom: "12px", fontFamily: "DM Sans, sans-serif",
-              }}>
-                {firmConfig.name} Note
-              </h3>
-              <p style={{ fontSize: "15px", lineHeight: 1.7 }}>{evaluation.firmSpecificNote}</p>
+            <div style={card}>
+              <div style={sectionLabel}>{FIRM_SHORT[firm] ?? firmConfig.name} note</div>
+              <p style={{ fontSize: "0.9rem", lineHeight: 1.75, margin: 0 }}>{evaluation.firmSpecificNote}</p>
             </div>
 
             {evaluation.offerDecision && (
-              <div className="card" style={{ padding: "28px" }}>
-                <h3 style={{
-                  fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
-                  textTransform: "uppercase", color: "var(--text-secondary)",
-                  marginBottom: "12px", fontFamily: "DM Sans, sans-serif",
-                }}>
-                  {firmConfig.name} Offer Decision
-                </h3>
-                <div style={{
-                  fontSize: "18px", fontWeight: 700, marginBottom: "10px",
-                  color: offerColor(evaluation.offerDecision.decision),
-                }}>
+              <div style={{ ...card, borderLeft: `3px solid ${offerColor(evaluation.offerDecision.decision)}` }}>
+                <div style={sectionLabel}>Offer decision</div>
+                <div style={{ fontSize: "1rem", fontWeight: 700, color: offerColor(evaluation.offerDecision.decision), marginBottom: "0.5rem" }}>
                   {evaluation.offerDecision.label}
                 </div>
-                <p style={{ fontSize: "14px", lineHeight: 1.75, color: "var(--text-secondary)" }}>
+                <p style={{ fontSize: "0.875rem", lineHeight: 1.75, color: "var(--hp-soft-foreground)", margin: 0 }}>
                   {evaluation.offerDecision.description}
                 </p>
-                <div style={{
-                  marginTop: "16px", padding: "12px 16px",
-                  background: "var(--bg-elevated)", borderRadius: "8px",
-                  fontSize: "13px", color: "var(--text-secondary)",
-                }}>
-                  Weighted score: <strong style={{ color: "var(--text-primary)" }}>{evaluation.offerDecision.weightedScore}/100</strong>
-                </div>
               </div>
             )}
           </motion.div>
         )}
 
-        {/* Breakdown Tab */}
+        {/* Breakdown */}
         {activeTab === "breakdown" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card"
-            style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "28px" }}
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            style={{ ...card, display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {hasFirmRubric ? (
-              firmBreakdownItems.map((item) => {
+              firmBreakdownItems.map(item => {
                 const score = (evaluation.breakdown as any)[item.key] ?? 1;
                 const color = scoreColor5(score);
                 const pct = ((score - 1) / 4) * 100;
                 return (
                   <div key={item.key}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "0.5rem" }}>
                       <div>
-                        <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
-                        <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
-                          {item.weight}% weight
-                        </span>
+                        <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--hp-foreground)" }}>{item.label}</span>
+                        <span style={{ marginLeft: "0.6rem", fontSize: "0.72rem", color: "var(--hp-soft-foreground)", fontWeight: 500 }}>{item.weight}% weight</span>
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score}/5</span>
-                        <span style={{ marginLeft: "8px", fontSize: "12px", color }}>{scoreLabel5(score)}</span>
+                        <span style={{ fontSize: "0.9rem", fontWeight: 700, color }}>{score}/5</span>
+                        <span style={{ marginLeft: "0.5rem", fontSize: "0.72rem", color, fontWeight: 600 }}>{scoreLabel5(score)}</span>
                       </div>
                     </div>
-                    <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
+                    <div style={{ height: "5px", background: "var(--hp-border)", borderRadius: "3px", overflow: "hidden" }}>
                       <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${pct}%` }}
-                        transition={{ duration: 0.8, delay: 0.1 }}
+                        initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.7, delay: 0.1 }}
                         style={{ height: "100%", background: color, borderRadius: "3px" }}
                       />
                     </div>
                     {(evaluation as any).dimensionFeedback?.[item.key] && (
-                      <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "8px", lineHeight: 1.6 }}>
+                      <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "0.5rem", lineHeight: 1.65, margin: "0.4rem 0 0" }}>
                         {(evaluation as any).dimensionFeedback[item.key]}
                       </p>
                     )}
@@ -476,35 +375,28 @@ function FeedbackInner() {
                 );
               })
             ) : (
-              // Standard 0-100 breakdown for firms without rubrics
               [
                 { label: "Structure", key: "structure" },
-                { label: "Problem Solving", key: "problemSolving" },
+                { label: "Problem solving", key: "problemSolving" },
                 { label: "Quantitative", key: "quantitative" },
                 { label: "Communication", key: "communication" },
                 { label: "Creativity", key: "creativity" },
-              ].map((item) => {
+              ].map(item => {
                 const score = (evaluation.breakdown as any)[item.key] ?? 50;
                 const color = formatScoreColor(score);
                 const weight = (firmConfig.evaluationWeights as any)?.[item.key];
                 return (
                   <div key={item.key}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
                       <div>
-                        <span style={{ fontSize: "15px", fontWeight: 600 }}>{item.label}</span>
-                        {weight && (
-                          <span style={{ marginLeft: "10px", fontSize: "11px", color: "var(--text-secondary)" }}>
-                            {weight}% weight
-                          </span>
-                        )}
+                        <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>{item.label}</span>
+                        {weight && <span style={{ marginLeft: "0.6rem", fontSize: "0.72rem", color: "var(--hp-soft-foreground)" }}>{weight}% weight</span>}
                       </div>
-                      <span style={{ fontSize: "15px", fontWeight: 700, color }}>{score}</span>
+                      <span style={{ fontSize: "0.9rem", fontWeight: 700, color }}>{score}</span>
                     </div>
-                    <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
+                    <div style={{ height: "5px", background: "var(--hp-border)", borderRadius: "3px", overflow: "hidden" }}>
                       <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${score}%` }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
+                        initial={{ width: 0 }} animate={{ width: `${score}%` }} transition={{ duration: 0.7 }}
                         style={{ height: "100%", background: color, borderRadius: "3px" }}
                       />
                     </div>
@@ -515,73 +407,41 @@ function FeedbackInner() {
           </motion.div>
         )}
 
-        {/* Ideal Answer Tab */}
+        {/* Ideal answer */}
         {activeTab === "ideal" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card"
-            style={{ padding: "32px" }}
-          >
-            <h3 style={{
-              fontSize: "13px", fontWeight: 700, letterSpacing: "0.1em",
-              textTransform: "uppercase", color: "var(--accent)",
-              marginBottom: "20px", fontFamily: "DM Sans, sans-serif",
-            }}>
-              What a Top 1% Candidate Would Say
-            </h3>
-            <p style={{ fontSize: "15px", lineHeight: 1.8 }}>
-              {evaluation.topCandidateResponse}
-            </p>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={card}>
+            <div style={sectionLabel}>What a top 1% candidate would say</div>
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.85, margin: 0 }}>{evaluation.topCandidateResponse}</p>
           </motion.div>
         )}
 
-        {/* Transcript Tab */}
+        {/* Transcript */}
         {activeTab === "transcript" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-          >
-            <div style={{
-              padding: "14px 18px", background: "var(--bg-card)",
-              border: "1px solid var(--border)", borderRadius: "8px",
-              fontSize: "13px", color: "var(--text-secondary)",
-            }}>
-              {transcript.length} messages · {formatDuration(duration)} session
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ padding: "0.75rem 1rem", background: "white", border: "1px solid var(--hp-border)", borderRadius: "10px", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <Clock size={13} />
+              {transcript.length} messages · {formatDuration(duration)}
             </div>
 
             {transcript.map((msg, i) => (
-              <div key={i} style={{
-                display: "flex", flexDirection: "column", gap: "6px",
-                alignItems: msg.role === "user" ? "flex-end" : "flex-start",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div key={i} style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   {msg.role === "assistant" && (
-                    <div style={{
-                      width: "24px", height: "24px", borderRadius: "50%",
-                      background: firmConfig.color,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "10px", fontWeight: 700, color: "white", flexShrink: 0,
-                    }}>
-                      {firmConfig.name.charAt(0)}
+                    <div style={{ width: "22px", height: "22px", borderRadius: "9999px", background: "var(--hp-primary)", display: "grid", placeItems: "center", fontSize: "0.65rem", fontWeight: 700, color: "white", flexShrink: 0 }}>
+                      {(FIRM_SHORT[firm] ?? firmConfig.name).charAt(0)}
                     </div>
                   )}
-                  <span style={{
-                    fontSize: "11px", fontWeight: 600, color: "var(--text-secondary)",
-                    textTransform: "uppercase", letterSpacing: "0.05em",
-                  }}>
-                    {msg.role === "user" ? "You" : firmConfig.name}
+                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--hp-soft-foreground)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    {msg.role === "user" ? "You" : FIRM_SHORT[firm] ?? firmConfig.name}
                   </span>
                 </div>
-
                 <div style={{
-                  maxWidth: "720px", padding: "16px 20px",
-                  borderRadius: msg.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
-                  background: msg.role === "user" ? "#111111" : "var(--bg-card)",
-                  border: msg.role === "assistant" ? "1px solid var(--border)" : "none",
-                  fontSize: "15px", lineHeight: 1.7, whiteSpace: "pre-wrap",
-                  color: msg.role === "user" ? "#ffffff" : "var(--text-primary)",
+                  maxWidth: "680px", padding: "0.875rem 1.1rem",
+                  borderRadius: msg.role === "user" ? "14px 4px 14px 14px" : "4px 14px 14px 14px",
+                  background: msg.role === "user" ? "var(--hp-primary)" : "white",
+                  border: msg.role === "assistant" ? "1px solid var(--hp-border)" : "none",
+                  fontSize: "0.875rem", lineHeight: 1.75, whiteSpace: "pre-wrap",
+                  color: msg.role === "user" ? "white" : "var(--hp-foreground)",
                 }}>
                   {msg.content}
                 </div>
@@ -590,24 +450,23 @@ function FeedbackInner() {
           </motion.div>
         )}
 
-        <div style={{ marginTop: "48px", display: "flex", gap: "12px" }}>
+        {/* Actions */}
+        <div style={{ marginTop: "2rem", display: "flex", gap: "0.75rem" }}>
           <button
-            className="btn-primary"
-            style={{ flex: 1, padding: "16px", fontSize: "15px" }}
             onClick={() => router.push("/dashboard")}
+            style={{ flex: 1, height: "48px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}
           >
-            Practice Another Case →
+            Practice another case <ArrowRight size={16} />
           </button>
           <button
-            className="btn-secondary"
-            style={{ flex: 1, padding: "16px", fontSize: "15px" }}
             onClick={() => router.push("/history")}
+            style={{ flex: 1, height: "48px", borderRadius: "12px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.9rem", fontWeight: 600, fontFamily: FONT, cursor: "pointer" }}
           >
-            View History
+            View history
           </button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 
