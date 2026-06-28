@@ -4,8 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GUIDED_CASES } from "@/lib/guidedCases";
-import { FIRM_CONFIGS } from "@/lib/prompts/firms";
-import { FirmKey } from "@/types";
 import Navbar from "@/components/Navbar";
 import { ArrowRight, Clock, ChevronRight } from "lucide-react";
 
@@ -54,7 +52,6 @@ function GuidedCaseInner() {
   }
 
   const totalQuestions = currentCase.questions.length;
-  const firmConfig = FIRM_CONFIGS[currentCase.firm as FirmKey];
   const currentQuestion = currentCase.questions.find(q => q.id === currentQuestionId);
   const selectedOption = currentQuestion?.options.find(o => o.id === selectedOptionId);
 
@@ -142,9 +139,7 @@ function GuidedCaseInner() {
                   Guided
                 </span>
                 <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--hp-soft-foreground)", textTransform: "capitalize" }}>{currentCase.difficulty}</span>
-                <span style={{ color: "var(--hp-border)" }}>·</span>
-                <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--hp-soft-foreground)" }}>{firmConfig.name}</span>
-              </div>
+                </div>
               <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", fontWeight: 800, letterSpacing: "-0.025em", color: "var(--hp-foreground)", margin: 0, lineHeight: 1.15 }}>
                 {currentCase.title}
               </h1>
@@ -184,7 +179,7 @@ function GuidedCaseInner() {
 
             {/* Note */}
             <div style={{ padding: "0.875rem 1.1rem", borderRadius: "10px", background: "var(--hp-primary-soft)", border: "1px solid color-mix(in oklab, var(--hp-primary) 20%, transparent)", fontSize: "0.82rem", color: "var(--hp-foreground)", lineHeight: 1.65, marginBottom: "1.75rem" }}>
-              Each answer routes you down a different path. Your score reflects every decision you make. Read carefully — the right answer is not always the most obvious one.
+              Each answer routes you down a different path. Your score reflects every decision you make. Read carefully. The right answer is not always the most obvious one.
             </div>
 
             <button
