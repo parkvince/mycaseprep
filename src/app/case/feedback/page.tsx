@@ -326,7 +326,7 @@ function FeedbackInner() {
             </div>
 
             {evaluation.offerDecision && (
-              <div style={{ ...card, borderLeft: `3px solid ${offerColor(evaluation.offerDecision.decision)}` }}>
+              <div style={card}>
                 <div style={sectionLabel}>Offer decision</div>
                 <div style={{ fontSize: "1rem", fontWeight: 700, color: offerColor(evaluation.offerDecision.decision), marginBottom: "0.5rem" }}>
                   {evaluation.offerDecision.label}
