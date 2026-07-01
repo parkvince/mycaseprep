@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GUIDED_CASES } from "@/lib/guidedCases";
 import { ArrowRight, ChevronRight } from "lucide-react";
@@ -39,6 +39,7 @@ function GuidedCaseInner() {
   const [questionCount, setQuestionCount] = useState(0);
   const [finalAnswer, setFinalAnswer] = useState("");
   const [saving, setSaving] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
 
   useEffect(() => { window.scrollTo({ top: 0 }); }, [stage]);
 
@@ -54,7 +55,7 @@ function GuidedCaseInner() {
   const currentQuestion = currentCase.questions.find(q => q.id === currentQuestionId);
   const selectedOption = currentQuestion?.options.find(o => o.id === selectedOptionId);
 
-  const handleStart = () => { setCurrentQuestionId(currentCase.startQuestionId); setStage("question"); };
+  const handleStart = () => { startTimeRef.current = Date.now(); setCurrentQuestionId(currentCase.startQuestionId); setStage("question"); };
   const handleSelectOption = (optionId: string) => { if (!showFeedback) setSelectedOptionId(optionId); };
 
   const handleSubmitAnswer = () => {
@@ -78,13 +79,14 @@ function GuidedCaseInner() {
 
   const handleSubmitFinal = async () => {
     setSaving(true);
+    const duration = startTimeRef.current ? Math.round((Date.now() - startTimeRef.current) / 1000) : 0;
     try {
       await fetch("/api/sessions/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "guided", firm: currentCase.firm, difficulty: currentCase.difficulty,
-          caseTitle: currentCase.title, duration: questionCount * 120,
+          caseTitle: currentCase.title, duration,
           hintsUsed: 0, guidedScore: score,
         }),
       });
