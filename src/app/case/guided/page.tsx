@@ -97,12 +97,14 @@ function GuidedCaseInner() {
   };
 
   // No overflowX on wrap — let the page scroll naturally
-  const wrap: React.CSSProperties = {
-    minHeight: "100vh",
-    fontFamily: FONT,
-    background: "oklch(0.985 0.005 285)",
-    color: "var(--hp-foreground)",
-  };
+const wrap: React.CSSProperties = {
+  minHeight: "100vh",
+  width: "100%",
+  fontFamily: FONT,
+  background: "oklch(0.985 0.005 285)",
+  color: "var(--hp-foreground)",
+  overflowX: "hidden",
+};
 
   const inner: React.CSSProperties = {
     maxWidth: "680px",

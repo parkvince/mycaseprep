@@ -171,23 +171,7 @@ export default function HistoryPage() {
       backgroundAttachment: "fixed",
     }}>
 
-      {/* Floating decorations */}
-<motion.img
-  src="/homepage/new-blob-computer.png"
-  alt=""
-  style={{ position: "fixed", left: "1.5rem", bottom: "8rem", width: "120px", zIndex: 1, pointerEvents: "none", display: "none" }}
-  className="hp-float-decoration"
-  animate={{ y: [0, -12, 0] }}
-  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-/>
-<motion.img
-  src="/homepage/new-blob-music.png"
-  alt=""
-  style={{ position: "fixed", right: "1.5rem", top: "10rem", width: "110px", zIndex: 1, pointerEvents: "none", display: "none" }}
-  className="hp-float-decoration"
-  animate={{ y: [0, 14, 0] }}
-  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-/>
+      
 
       {/* Nav */}
       <Navbar />
