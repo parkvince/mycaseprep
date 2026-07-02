@@ -68,6 +68,7 @@ function FeedbackInner() {
   const [duration, setDuration] = useState(0);
   const [transcriptRaw, setTranscriptRaw] = useState("[]");
   const [caseTitle, setCaseTitle] = useState("Case Interview");
+  const [aiProvider, setAiProvider] = useState<string | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [transcript, setTranscript] = useState<Message[]>([]);
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
@@ -86,6 +87,7 @@ function FeedbackInner() {
       setTranscriptRaw(JSON.stringify(t));
       setTranscript(t);
       setCaseTitle(data.caseTitle ?? "Case Interview");
+      setAiProvider(data.aiProvider ?? null);
     } else {
       setLoading(false);
     }
@@ -100,7 +102,7 @@ function FeedbackInner() {
         const res = await fetch("/api/evaluate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firm, difficulty, hintsUsed, transcript: t }),
+          body: JSON.stringify({ firm, difficulty, hintsUsed, transcript: t, preferredProvider: aiProvider }),
         });
         const data = await res.json();
         setEvaluation(data);
@@ -116,7 +118,7 @@ function FeedbackInner() {
       }
     };
     evaluate();
-  }, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed, caseTitle, duration]);
+  }, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed, caseTitle, duration, aiProvider]);
 
   const firmConfig = FIRM_CONFIGS[firm];
 

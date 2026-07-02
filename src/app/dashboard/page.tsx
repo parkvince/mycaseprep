@@ -144,11 +144,13 @@ export default function DashboardPage() {
         firm: selectedFirm, type: selectedType, difficulty: selectedDifficulty,
         mode: selectedMode, personality,
         title: caseData.title, prompt: caseData.prompt, context: caseData.context ?? "",
+        aiProvider: caseData.provider ?? null,
       }));
       const usageRes = await fetch("/api/usage/check");
       setUsage(await usageRes.json());
       router.push(selectedMode === "live" ? "/case/interview" : "/case/session");
-    } catch {
+    } catch (err) {
+      console.error(err);
       setLoading(false);
     }
   };

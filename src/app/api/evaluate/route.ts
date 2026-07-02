@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { anthropic } from "@/lib/anthropic";
+import { callChatCompletion, extractJson, ProviderName } from "@/lib/ai/providers";
 import { buildEvaluationPrompt } from "@/lib/prompts/interviewer";
 import { FirmKey, Difficulty, Message } from "@/types";
 import { MCKINSEY_RUBRIC, calculateMckinseyOffer } from "@/lib/firmRubrics/mckinsey";
@@ -416,7 +416,7 @@ function getDefaultEvaluation(firm: FirmKey) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { firm, transcript, hintsUsed, difficulty } = await req.json();
+    const { firm, transcript, hintsUsed, difficulty, preferredProvider } = await req.json();
 
     const basePrompt = buildEvaluationPrompt(
       firm as FirmKey,
@@ -433,17 +433,16 @@ export async function POST(req: NextRequest) {
       ? `${firmContext}\n\n${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}`
       : `${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}`;
 
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-5",
-      max_tokens: 2000,
+    const { text, provider } = await callChatCompletion({
       messages: [{ role: "user", content: fullPrompt }],
+      maxTokens: 2000,
+      jsonMode: true,
+      preferredProvider: (preferredProvider as ProviderName) ?? null,
     });
-
-    const text = response.content[0].type === "text" ? response.content[0].text : "{}";
 
     let evaluation: any;
     try {
-      evaluation = JSON.parse(text.replace(/```json|```/g, "").trim());
+      evaluation = extractJson(text);
     } catch {
       evaluation = getDefaultEvaluation(firm as FirmKey);
     }
@@ -461,6 +460,7 @@ export async function POST(req: NextRequest) {
     evaluation.firmSpecificNote = evaluation.firmSpecificNote ?? "";
     evaluation.percentileEstimate = evaluation.percentileEstimate ?? 50;
     evaluation.overallScore = evaluation.overallScore ?? 50;
+    evaluation.provider = provider;
 
     return NextResponse.json(evaluation);
   } catch (error) {
@@ -468,4 +468,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(getDefaultEvaluation("mckinsey" as FirmKey), { status: 200 });
   }
 }
-

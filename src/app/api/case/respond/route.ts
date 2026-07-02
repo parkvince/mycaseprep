@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { anthropic } from "@/lib/anthropic";
+import { callChatCompletion, ProviderName } from "@/lib/ai/providers";
 import { buildInterviewerSystemPrompt } from "@/lib/prompts/interviewer";
 import { FirmKey, Difficulty, Message } from "@/types";
 
@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
       transcript,
       hintsUsed,
       personality,
+      preferredProvider,
     } = await req.json();
 
     const systemPrompt = buildInterviewerSystemPrompt(
@@ -22,22 +23,21 @@ export async function POST(req: NextRequest) {
       personality
     );
 
-    const messages = transcript.map((t: Message) => ({
-      role: t.role as "user" | "assistant",
-      content: t.content,
-    }));
+    const messages = [
+      { role: "system" as const, content: systemPrompt },
+      ...transcript.map((t: Message) => ({
+        role: t.role as "user" | "assistant",
+        content: t.content,
+      })),
+    ];
 
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-5",
-      max_tokens: 300,
-      system: systemPrompt,
+    const { text, provider } = await callChatCompletion({
       messages,
+      maxTokens: 300,
+      preferredProvider: (preferredProvider as ProviderName) ?? null,
     });
 
-    const text =
-      response.content[0].type === "text" ? response.content[0].text : "";
-
-    return NextResponse.json({ response: text });
+    return NextResponse.json({ response: text, provider });
   } catch (error) {
     console.error("Interviewer response error:", error);
     return NextResponse.json(

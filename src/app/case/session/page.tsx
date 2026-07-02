@@ -34,6 +34,7 @@ function SessionInner() {
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [casePrompt, setCasePrompt] = useState("");
   const [caseContext, setCaseContext] = useState("");
+  const [aiProvider, setAiProvider] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [transcript, setTranscript] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -60,6 +61,7 @@ function SessionInner() {
       setCaseTitle(data.title ?? "Case Interview");
       setCasePrompt(data.prompt ?? "");
       setCaseContext(data.context ?? "");
+      setAiProvider(data.aiProvider ?? null);
     }
     setReady(true);
   }, []);
@@ -102,12 +104,14 @@ function SessionInner() {
       const res = await fetch("/api/case/respond", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firm, casePrompt, difficulty, transcript: newTranscript, hintsUsed, personality }),
+        body: JSON.stringify({ firm, casePrompt, difficulty, transcript: newTranscript, hintsUsed, personality, preferredProvider: aiProvider }),
       });
       const data = await res.json();
+      if (data.provider) setAiProvider(data.provider);
       setTranscript(prev => [...prev, { role: "assistant", content: data.response, timestamp: new Date() }]);
     } catch (err) {
       console.error(err);
+      setTranscript(prev => [...prev, { role: "assistant", content: "Sorry — something went wrong generating a reply. Please try sending your response again.", timestamp: new Date() }]);
     } finally {
       setLoading(false);
     }
@@ -116,7 +120,7 @@ function SessionInner() {
   const handleEndSession = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     sessionStorage.setItem("transcriptData", JSON.stringify({
-      firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle,
+      firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider,
     }));
     router.push("/case/feedback");
   };

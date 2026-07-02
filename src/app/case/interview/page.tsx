@@ -64,6 +64,7 @@ function InterviewInner() {
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [casePrompt, setCasePrompt] = useState("");
   const [caseContext, setCaseContext] = useState("");
+  const [aiProvider, setAiProvider] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [transcript, setTranscript] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -103,6 +104,7 @@ function InterviewInner() {
       setCaseTitle(data.title ?? "Case Interview");
       setCasePrompt(data.prompt ?? "");
       setCaseContext(data.context ?? "");
+      setAiProvider(data.aiProvider ?? null);
     }
     setReady(true);
   }, []);
@@ -251,9 +253,10 @@ function InterviewInner() {
       const res = await fetch("/api/case/respond", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firm, casePrompt, difficulty, transcript: newTranscript, hintsUsed, personality }),
+        body: JSON.stringify({ firm, casePrompt, difficulty, transcript: newTranscript, hintsUsed, personality, preferredProvider: aiProvider }),
       });
       const data = await res.json();
+      if (data.provider) setAiProvider(data.provider);
       const aiMessage: Message = { role: "assistant", content: data.response, timestamp: new Date() };
       setTranscript(prev => [...prev, aiMessage]);
       speak(data.response);
@@ -265,7 +268,7 @@ function InterviewInner() {
     synthRef.current?.cancel();
     streamRef.current?.getTracks().forEach(t => t.stop());
     if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
-    sessionStorage.setItem("transcriptData", JSON.stringify({ firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle }));
+    sessionStorage.setItem("transcriptData", JSON.stringify({ firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider }));
     router.push("/case/feedback");
   };
 
