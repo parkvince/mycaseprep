@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { formatDuration } from "@/lib/utils";
 import { ArrowLeft, Clock, BarChart2, Briefcase } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import FloatingBlob from "@/components/FloatingBlob";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -169,9 +170,16 @@ export default function HistoryPage() {
         "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
       ].join(", "),
       backgroundAttachment: "fixed",
+      position: "relative", zIndex: 0,
     }}>
 
-      
+      <FloatingBlob src="/homepage/new2-blob-sleep.png" alt="" size={160} top="4%" left="3%" duration={7} rotate={-5} />
+      <FloatingBlob src="/homepage/new3-blob-meditating.png" alt="" size={170} top="18%" right="4%" duration={6.5} delay={0.6} rotate={5} />
+      <FloatingBlob src="/homepage/new3-blob-planting.png" alt="" size={160} top="34%" left="2%" duration={7.5} delay={1.1} rotate={-6} />
+      <FloatingBlob src="/homepage/new3-blob-watering.png" alt="" size={150} top="50%" right="3%" duration={8} delay={0.3} rotate={4} />
+      <FloatingBlob src="/homepage/new3-blob-fishing.png" alt="" size={170} bottom="32%" left="4%" duration={7} delay={0.8} rotate={-4} />
+      <FloatingBlob src="/homepage/new3-blob-swimming.png" alt="" size={160} bottom="16%" right="2%" duration={6.5} delay={0.2} rotate={6} />
+      <FloatingBlob src="/homepage/new2-blob-teddy.png" alt="" size={150} bottom="2%" left="5%" duration={8} delay={1} rotate={-5} />
 
       {/* Nav */}
       <Navbar />

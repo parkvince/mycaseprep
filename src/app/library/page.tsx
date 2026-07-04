@@ -8,6 +8,7 @@ import { getCaseTypeLabel } from "@/lib/utils";
 import { GUIDED_CASES } from "@/lib/guidedCases";
 import { ArrowLeft, Clock, ChevronRight, CheckCircle2, Circle } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import FloatingBlob from "@/components/FloatingBlob";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -105,7 +106,17 @@ export default function LibraryPage() {
         "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
       ].join(", "),
       backgroundAttachment: "fixed",
+      position: "relative", zIndex: 0,
     }}>
+
+      <FloatingBlob src="/homepage/new2-blob-icecream.png" alt="" size={170} top="4%" left="3%" duration={7} rotate={-5} />
+      <FloatingBlob src="/homepage/new-blob-music.png" alt="" size={150} top="14%" right="4%" duration={6.5} delay={0.7} rotate={5} />
+      <FloatingBlob src="/homepage/new-blob-drinking.png" alt="" size={160} top="26%" left="2%" duration={8} delay={0.3} rotate={-4} />
+      <FloatingBlob src="/homepage/new3-blob-reading.png" alt="" size={180} top="38%" right="2%" duration={7.5} delay={0.9} rotate={6} />
+      <FloatingBlob src="/homepage/new2-blob-sandcastle.png" alt="" size={160} top="50%" left="4%" duration={7} delay={0.4} rotate={-6} />
+      <FloatingBlob src="/homepage/new3-blob-baking.png" alt="" size={150} bottom="28%" right="3%" duration={6.5} delay={1.1} rotate={4} />
+      <FloatingBlob src="/homepage/new3-blob-puzzle.png" alt="" size={170} bottom="14%" left="1%" duration={8} delay={0.5} rotate={-5} />
+      <FloatingBlob src="/homepage/new3-blob-spaghetti.png" alt="" size={160} bottom="2%" right="5%" duration={7} delay={0.2} rotate={5} />
 
       {/* Nav */}
       <Navbar />

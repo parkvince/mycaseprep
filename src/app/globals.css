@@ -113,6 +113,10 @@ pre { max-width: 100%; overflow-x: auto; }
   --hp-shadow-pop: 0 4px 0 oklch(0.4 0.05 280 / 12%);
 }
 
+@media (max-width: 880px) {
+  .floating-blob { display: none; }
+}
+
 @keyframes hp-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }

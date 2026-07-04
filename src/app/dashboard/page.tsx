@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { CaseType, Difficulty, FirmKey, Mode } from "@/types";
 import Navbar from "@/components/Navbar";
+import FloatingBlob from "@/components/FloatingBlob";
 import { ArrowRight } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
@@ -168,7 +169,17 @@ export default function DashboardPage() {
         "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
       ].join(", "),
       backgroundAttachment: "fixed",
+      position: "relative", zIndex: 0,
     }}>
+      <FloatingBlob src="/homepage/new-blob-computer.png" alt="" size={190} top="4%" left="2%" duration={7} rotate={-6} />
+      <FloatingBlob src="/homepage/new-blob-writing.png" alt="" size={160} top="14%" right="4%" duration={7.5} delay={0.3} rotate={6} />
+      <FloatingBlob src="/homepage/new-blob-dancing.png" alt="" size={150} top="26%" left="4%" duration={6.5} delay={0.6} rotate={-5} />
+      <FloatingBlob src="/homepage/new-blob-bubbles.png" alt="" size={170} top="38%" right="1%" duration={8} delay={1} rotate={5} />
+      <FloatingBlob src="/homepage/new-blob-gaming.png" alt="" size={160} top="50%" left="3%" duration={7} delay={0.4} rotate={-4} />
+      <FloatingBlob src="/homepage/new3-blob-thumbsup.png" alt="" size={150} bottom="28%" right="3%" duration={6.5} delay={0.8} rotate={4} />
+      <FloatingBlob src="/homepage/new3-blob-juggling.png" alt="" size={180} bottom="14%" left="1%" duration={8.5} delay={0.2} rotate={-6} />
+      <FloatingBlob src="/homepage/new3-blob-skateboarding.png" alt="" size={160} bottom="2%" right="5%" duration={7} delay={1.2} rotate={5} />
+
       <Navbar />
 
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
