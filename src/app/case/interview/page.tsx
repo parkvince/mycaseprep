@@ -72,13 +72,13 @@ function InterviewInner() {
   const [loading, setLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [userSpeaking, setUserSpeaking] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [showCaseOverlay, setShowCaseOverlay] = useState(false);
-  const [showChat, setShowChat] = useState(true);
+  const [showChat, setShowChat] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [userVideoEnabled, setUserVideoEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -86,6 +86,7 @@ function InterviewInner() {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number>(0);
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const userVideoRef = useRef<HTMLVideoElement>(null);
@@ -93,6 +94,15 @@ function InterviewInner() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioFrameRef = useRef<number | null>(null);
+  const mountedRef = useRef(true);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isMutedRef = useRef(isMuted);
+  const isSpeakingRef = useRef(false);
+  const loadingRef = useRef(false);
+
+  useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
+  useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
+  useEffect(() => { loadingRef.current = loading; }, [loading]);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("caseData");
@@ -119,9 +129,14 @@ function InterviewInner() {
   }, [ready, casePrompt, firm]);
 
   useEffect(() => {
+    mountedRef.current = true;
     synthRef.current = window.speechSynthesis;
     return () => {
+      mountedRef.current = false;
       synthRef.current?.cancel();
+      if (synthRef.current) synthRef.current.onvoiceschanged = null;
+      recognitionRef.current?.stop();
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       streamRef.current?.getTracks().forEach(t => t.stop());
       if (timerRef.current) clearInterval(timerRef.current);
       if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
@@ -149,39 +164,94 @@ function InterviewInner() {
       audioContextRef.current = ctx;
       analyserRef.current = analyser;
       const data = new Uint8Array(analyser.frequencyBinCount);
+      // Simple hysteresis-based voice activity detection: a single noisy frame
+      // (a cough, a chair creak, a mic pop) shouldn't count as "the user is
+      // speaking" — the volume has to stay up for a bit, and has to stay down
+      // for a bit before we call it over. This is what keeps barge-in from
+      // firing on every little sound in the room.
+      const SPEECH_THRESHOLD = 20;
+      const SUSTAIN_MS = 280;
+      const RELEASE_MS = 450;
+      let aboveSince: number | null = null;
+      let belowSince: number | null = null;
+      let currentlySpeaking = false;
       const check = () => {
         analyser.getByteFrequencyData(data);
         const vol = data.reduce((a, b) => a + b, 0) / data.length;
-        setUserSpeaking(vol > 10);
+        const now = performance.now();
+        if (vol > SPEECH_THRESHOLD) {
+          belowSince = null;
+          if (aboveSince == null) aboveSince = now;
+          if (!currentlySpeaking && now - aboveSince >= SUSTAIN_MS) {
+            currentlySpeaking = true;
+            setUserSpeaking(true);
+          }
+        } else {
+          aboveSince = null;
+          if (belowSince == null) belowSince = now;
+          if (currentlySpeaking && now - belowSince >= RELEASE_MS) {
+            currentlySpeaking = false;
+            setUserSpeaking(false);
+          }
+        }
         audioFrameRef.current = requestAnimationFrame(check);
       };
       check();
     } catch (e) { console.error(e); }
   };
 
+  // Barge-in: sustained volume alone only opens a probe — it does NOT cut the
+  // interviewer off by itself. The interviewer only actually gets interrupted once
+  // speech recognition confirms real words were said (see startListening's
+  // `duringAiSpeech` path). If the noise dies down before any words are
+  // recognized, the probe is torn down and the interviewer just continues,
+  // exactly like a false alarm should be handled.
+  useEffect(() => {
+    if (isMuted) return;
+    if (userSpeaking && isSpeaking && !recognitionRef.current) {
+      startListening({ duringAiSpeech: true });
+    } else if (!userSpeaking && isSpeakingRef.current && recognitionRef.current) {
+      stopListening();
+    }
+  }, [userSpeaking, isSpeaking, isMuted]);
+
   const firmConfig = FIRM_CONFIGS[firm];
   const formatTime = (secs: number) => `${Math.floor(secs / 60).toString().padStart(2, "0")}:${(secs % 60).toString().padStart(2, "0")}`;
 
+  const pickVoice = (voices: SpeechSynthesisVoice[]) => {
+    const byName = (names: string[]) => voices.find(v => names.some(n => v.name.includes(n)));
+    // "Online (Natural)" voices are Edge/Chrome's neural TTS voices — free, and far
+    // more human-sounding than the classic offline robotic ones.
+    if (INTERVIEWER.gender === "male") {
+      return byName(["Guy Online (Natural)", "Guy24kOnline", "Ryan Online (Natural)", "Guy", "Daniel", "Google UK English Male", "Alex"])
+        ?? voices.find(v => v.lang.startsWith("en") && /male/i.test(v.name))
+        ?? voices.find(v => v.lang.startsWith("en"));
+    }
+    return byName(["Aria Online (Natural)", "Jenny Online (Natural)", "Emma Online (Natural)", "Samantha", "Victoria", "Google UK English Female"])
+      ?? voices.find(v => v.lang.startsWith("en") && /female/i.test(v.name))
+      ?? voices.find(v => v.lang.startsWith("en"));
+  };
+
   const speak = (text: string) => {
-    if (!synthRef.current) return;
+    if (!synthRef.current || !mountedRef.current) return;
     synthRef.current.cancel();
     const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
     const utterance = new SpeechSynthesisUtterance(clean);
     const trySpeak = () => {
-      const voices = synthRef.current!.getVoices();
-      let preferred;
-      if (INTERVIEWER.gender === "male") {
-        preferred = voices.find(v => v.name.includes("Daniel") || v.name.includes("Alex") || v.name.includes("Google UK English Male")) ?? voices.find(v => v.lang.startsWith("en"));
-      } else {
-        preferred = voices.find(v => v.name.includes("Samantha") || v.name.includes("Victoria") || v.name.includes("Google UK English Female")) ?? voices.find(v => v.lang.startsWith("en"));
-      }
+      if (!mountedRef.current || !synthRef.current) return;
+      const preferred = pickVoice(synthRef.current.getVoices());
       if (preferred) utterance.voice = preferred;
-      utterance.rate = INTERVIEWER.gender === "female" ? 1.15 : 1.1;
-      utterance.pitch = INTERVIEWER.gender === "female" ? 1.05 : 0.95;
+      utterance.rate = 1.03;
+      utterance.pitch = 1.0;
       setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      synthRef.current!.speak(utterance);
+      utterance.onend = () => {
+        if (!mountedRef.current) return;
+        setIsSpeaking(false);
+        // Hand the floor back to the user automatically instead of waiting for a click.
+        if (!isMutedRef.current && !loadingRef.current) startListening();
+      };
+      utterance.onerror = () => { if (mountedRef.current) setIsSpeaking(false); };
+      synthRef.current.speak(utterance);
     };
     const voices = synthRef.current.getVoices();
     if (voices.length > 0) trySpeak();
@@ -192,23 +262,34 @@ function InterviewInner() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true, noiseSuppression: true } });
       streamRef.current = stream;
+      stream.getAudioTracks().forEach(t => { t.enabled = false; }); // start muted
       setUserVideoEnabled(true);
       startAudioMonitor(stream);
     } catch {
       try {
         const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         streamRef.current = audioStream;
+        audioStream.getAudioTracks().forEach(t => { t.enabled = false; });
         startAudioMonitor(audioStream);
       } catch {}
     }
     setSessionStarted(true);
-    timerRef.current = setInterval(() => setElapsedTime(t => t + 1), 1000);
+    startTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      setElapsedTime(Math.floor((Date.now() - startTimeRef.current) / 1000));
+    }, 1000);
     setTimeout(() => speak(transcript[0]?.content ?? ""), 600);
   };
 
   const toggleMute = () => {
-    streamRef.current?.getAudioTracks().forEach(t => { t.enabled = isMuted; });
-    setIsMuted(m => !m);
+    const wasMuted = isMuted;
+    streamRef.current?.getAudioTracks().forEach(t => { t.enabled = wasMuted; });
+    setIsMuted(!wasMuted);
+    if (wasMuted) {
+      if (!isSpeakingRef.current && !loadingRef.current) startListening();
+    } else {
+      stopListening();
+    }
   };
 
   const toggleVideo = () => {
@@ -216,9 +297,24 @@ function InterviewInner() {
     setIsVideoOff(v => !v);
   };
 
-  const startListening = () => {
+  const SILENCE_MS = 1400;
+  const manualStopRef = useRef(false);
+
+  // Continuous, hands-free listening: no click-to-record. While unmuted and it's
+  // the user's turn, the mic stays "open"; after ~1.4s of silence following speech,
+  // whatever was heard is sent automatically, like a real conversation.
+  //
+  // `duringAiSpeech` is the barge-in probe path: it's allowed to start while the
+  // interviewer is still talking, but it does NOT cut them off on its own. Only once
+  // real words come back from recognition do we commit to the interruption — pure
+  // background noise never gets that far, so the interviewer just keeps talking.
+  const startListening = (opts?: { duringAiSpeech?: boolean }) => {
+    const duringAiSpeech = opts?.duringAiSpeech ?? false;
+    if (recognitionRef.current || isMutedRef.current || loadingRef.current) return;
+    if (!duringAiSpeech && isSpeakingRef.current) return;
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) { alert("Please use Chrome for voice input."); return; }
+    if (!SR) return;
+    manualStopRef.current = false;
     const recognition = new SR();
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -229,43 +325,95 @@ function InterviewInner() {
         if (event.results[i].isFinal) final += event.results[i][0].transcript;
         else interim += event.results[i][0].transcript;
       }
+      const heard = (final + interim).trim();
+      // Confirmed real speech during the interviewer's turn — commit to the interruption now.
+      if (isSpeakingRef.current && heard.length >= 2) {
+        synthRef.current?.cancel();
+        isSpeakingRef.current = false;
+        setIsSpeaking(false);
+      }
       setInput(final); setInterimText(interim);
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      if (heard) {
+        silenceTimerRef.current = setTimeout(() => {
+          const toSend = final.trim();
+          if (toSend) { stopListening(); sendMessage(toSend); }
+        }, SILENCE_MS);
+      }
     };
-    recognition.onend = () => { setIsListening(false); setInterimText(""); };
-    recognition.start();
-    recognitionRef.current = recognition;
-    setIsListening(true);
+    recognition.onend = () => {
+      recognitionRef.current = null;
+      setIsListening(false);
+      setInterimText("");
+      const wasManual = manualStopRef.current;
+      manualStopRef.current = false;
+      if (!wasManual && mountedRef.current && !isMutedRef.current && !loadingRef.current && !isSpeakingRef.current) {
+        setTimeout(() => startListening(), 300);
+      }
+    };
+    recognition.onerror = (e: any) => {
+      if (e?.error === "no-speech" || e?.error === "aborted") return;
+      recognitionRef.current = null;
+      setIsListening(false);
+    };
+    try {
+      recognition.start();
+      recognitionRef.current = recognition;
+      setIsListening(true);
+    } catch { recognitionRef.current = null; }
   };
 
-  const stopListening = () => { recognitionRef.current?.stop(); setIsListening(false); setInterimText(""); };
+  const stopListening = () => {
+    manualStopRef.current = true;
+    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
+    recognitionRef.current?.stop();
+    setIsListening(false);
+    setInterimText("");
+  };
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || loading) return;
     synthRef.current?.cancel();
     setIsSpeaking(false);
-    if (isListening) stopListening();
+    stopListening();
     const userMessage: Message = { role: "user", content: content.trim(), timestamp: new Date() };
     const newTranscript = [...transcript, userMessage];
     setTranscript(newTranscript);
     setInput(""); setInterimText("");
     setLoading(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
     try {
       const res = await fetch("/api/case/respond", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firm, casePrompt, difficulty, transcript: newTranscript, hintsUsed, personality, preferredProvider: aiProvider }),
+        signal: controller.signal,
       });
-      const data = await res.json();
+      clearTimeout(timeoutId);
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.response) throw new Error(data?.error ?? "No response from interviewer");
       if (data.provider) setAiProvider(data.provider);
+      if (!mountedRef.current) return;
       const aiMessage: Message = { role: "assistant", content: data.response, timestamp: new Date() };
       setTranscript(prev => [...prev, aiMessage]);
       speak(data.response);
-    } catch (err) { console.error(err); } finally { setLoading(false); }
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.error(err);
+      if (!mountedRef.current) return;
+      const errMessage: Message = { role: "assistant", content: "Sorry — I lost that for a moment. Could you say that again?", timestamp: new Date() };
+      setTranscript(prev => [...prev, errMessage]);
+    } finally {
+      if (mountedRef.current) setLoading(false);
+    }
   };
 
   const handleEndSession = () => {
     if (timerRef.current) clearInterval(timerRef.current);
+    stopListening();
     synthRef.current?.cancel();
+    if (synthRef.current) synthRef.current.onvoiceschanged = null;
     streamRef.current?.getTracks().forEach(t => t.stop());
     if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
     sessionStorage.setItem("transcriptData", JSON.stringify({ firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider }));
@@ -319,7 +467,7 @@ function InterviewInner() {
           )}
 
           <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.25)", textAlign: "center", lineHeight: 1.65, margin: 0 }}>
-            The interviewer speaks first. Respond by voice or text. You can mute at any time.
+            The interviewer speaks first. You'll join muted — unmute to talk naturally, no need to click to record. You can also type instead.
           </p>
 
           <button
@@ -365,7 +513,7 @@ function InterviewInner() {
             border: `1px solid ${isSpeaking ? "rgba(34,197,94,0.3)" : loading ? "rgba(255,255,255,0.08)" : "rgba(124,92,252,0.3)"}`,
             transition: "all 0.3s",
           }}>
-            {loading ? "Thinking..." : isSpeaking ? "Interviewer speaking" : "Your turn"}
+            {loading ? "Thinking..." : isSpeaking ? "Interviewer speaking" : isListening ? "Listening..." : "Your turn"}
           </div>
           <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
             {formatTime(elapsedTime)}
@@ -442,9 +590,14 @@ function InterviewInner() {
                 <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.35)" }}>{FIRM_SHORT[firm] ?? firmConfig.name}</div>
               </div>
 
-              <button onClick={() => { synthRef.current?.cancel(); setIsSpeaking(false); }}
+              <button onClick={() => {
+                synthRef.current?.cancel();
+                isSpeakingRef.current = false;
+                setIsSpeaking(false);
+                if (!isMuted && !loadingRef.current) startListening();
+              }}
                 style={{ position: "absolute", top: "10px", right: "10px", background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "3px 8px", fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: FONT }}>
-                Mute voice
+                Stop talking
               </button>
             </div>
 
@@ -466,6 +619,17 @@ function InterviewInner() {
                   {isVideoOff && <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.2)" }}>Camera off</span>}
                 </div>
               )}
+
+              {/* Live caption — shows what's being heard right now, even if the chat panel is closed */}
+              <AnimatePresence>
+                {isListening && (
+                  <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+                    style={{ position: "absolute", bottom: "44px", left: "10px", right: "10px", background: "rgba(0,0,0,0.65)", borderRadius: "10px", padding: "6px 10px", fontSize: "0.78rem", lineHeight: 1.4, color: "rgba(255,255,255,0.85)" }}>
+                    {interimText || <span style={{ color: "rgba(255,255,255,0.35)" }}>Listening...</span>}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div style={{ position: "absolute", bottom: "10px", left: "10px", background: "rgba(0,0,0,0.6)", borderRadius: "8px", padding: "4px 10px", display: "flex", alignItems: "center", gap: "6px" }}>
                 <span style={{ fontSize: "0.75rem", fontWeight: 600 }}>{session?.user?.name ?? "You"}</span>
                 {isMuted && <span style={{ fontSize: "0.65rem", color: "#ef4444" }}>Muted</span>}
@@ -548,29 +712,26 @@ function InterviewInner() {
 
               {/* Input */}
               <div style={{ padding: "0.625rem 0.75rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexShrink: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.68rem", color: isListening ? "#a78bfa" : "rgba(255,255,255,0.25)", fontWeight: 600 }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: isListening ? "#a78bfa" : isMuted ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.25)", flexShrink: 0 }} />
+                  {isMuted ? "Muted — unmute to talk" : isListening ? "Listening..." : "Type below, or wait for your turn"}
+                </div>
                 <textarea
                   value={input}
                   onChange={e => setInput(e.target.value)}
+                  onFocus={() => { if (isListening) stopListening(); }}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}
                   placeholder={isListening ? "Listening..." : "Type your response..."}
                   style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: `1px solid ${isListening ? "rgba(124,92,252,0.35)" : "rgba(255,255,255,0.07)"}`, borderRadius: "8px", padding: "0.5rem 0.7rem", color: "#fff", fontSize: "0.8rem", fontFamily: FONT, resize: "none", minHeight: "48px", maxHeight: "88px", outline: "none", lineHeight: 1.55, boxSizing: "border-box" }}
                   rows={2}
                 />
-                <div style={{ display: "flex", gap: "5px" }}>
-                  <button
-                    onClick={isListening ? (input.trim() ? () => { stopListening(); sendMessage(input); } : stopListening) : startListening}
-                    style={{ flex: 1, height: "32px", borderRadius: "7px", border: `1px solid ${isListening ? "rgba(124,92,252,0.4)" : "rgba(255,255,255,0.08)"}`, background: isListening ? "rgba(124,92,252,0.15)" : "rgba(255,255,255,0.04)", color: isListening ? "#a78bfa" : "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: "0.75rem", fontFamily: FONT, fontWeight: 600 }}
-                  >
-                    {isListening ? (input.trim() ? "Done" : "Stop") : "Speak"}
-                  </button>
-                  <button
-                    onClick={() => sendMessage(input)}
-                    disabled={loading || !input.trim()}
-                    style={{ flex: 2, height: "32px", borderRadius: "7px", border: "none", background: loading || !input.trim() ? "rgba(255,255,255,0.06)" : "#fff", color: loading || !input.trim() ? "rgba(255,255,255,0.18)" : "#111", cursor: loading || !input.trim() ? "not-allowed" : "pointer", fontSize: "0.75rem", fontFamily: FONT, fontWeight: 700 }}
-                  >
-                    Submit
-                  </button>
-                </div>
+                <button
+                  onClick={() => sendMessage(input)}
+                  disabled={loading || !input.trim()}
+                  style={{ height: "32px", borderRadius: "7px", border: "none", background: loading || !input.trim() ? "rgba(255,255,255,0.06)" : "#fff", color: loading || !input.trim() ? "rgba(255,255,255,0.18)" : "#111", cursor: loading || !input.trim() ? "not-allowed" : "pointer", fontSize: "0.75rem", fontFamily: FONT, fontWeight: 700 }}
+                >
+                  Submit
+                </button>
               </div>
             </motion.div>
           )}

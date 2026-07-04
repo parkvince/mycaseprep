@@ -199,12 +199,12 @@ export default function SettingsPage() {
       backgroundAttachment: "fixed",
       position: "relative", zIndex: 0,
     }}>
-      <FloatingBlob src="/homepage/new2-blob-camera.png" alt="" size={170} top="4%" left="3%" duration={7} rotate={-6} />
-      <FloatingBlob src="/homepage/new2-blob-gardening.png" alt="" size={180} top="18%" right="2%" duration={8} delay={0.5} rotate={5} />
-      <FloatingBlob src="/homepage/new3-blob-drumming.png" alt="" size={150} top="34%" left="4%" duration={6.5} delay={1} rotate={-4} />
-      <FloatingBlob src="/homepage/new3-blob-origami.png" alt="" size={160} top="50%" right="4%" duration={7.5} delay={0.3} rotate={6} />
-      <FloatingBlob src="/homepage/new2-blob-painting.png" alt="" size={170} bottom="32%" left="2%" duration={7} delay={0.8} rotate={-5} />
-      <FloatingBlob src="/homepage/new3-blob-napping.png" alt="" size={150} bottom="16%" right="3%" duration={6.5} delay={0.2} rotate={4} />
+      <FloatingBlob src="/homepage/new2-blob-camera.png" alt="" size={170} top="4%" left="4%" duration={7} rotate={-6} />
+      <FloatingBlob src="/homepage/new2-blob-gardening.png" alt="" size={180} top="16%" right="14%" duration={8} delay={0.5} rotate={5} />
+      <FloatingBlob src="/homepage/new3-blob-drumming.png" alt="" size={150} top="34%" left="13%" duration={6.5} delay={1} rotate={-4} />
+      <FloatingBlob src="/homepage/new3-blob-origami.png" alt="" size={160} top="50%" right="3%" duration={7.5} delay={0.3} rotate={6} />
+      <FloatingBlob src="/homepage/new2-blob-painting.png" alt="" size={170} bottom="32%" left="3%" duration={7} delay={0.8} rotate={-5} />
+      <FloatingBlob src="/homepage/new3-blob-napping.png" alt="" size={150} bottom="15%" right="13%" duration={6.5} delay={0.2} rotate={4} />
       <FloatingBlob src="/homepage/new2-blob-watermelon.png" alt="" size={160} bottom="2%" left="5%" duration={8} delay={1.1} rotate={-6} />
 
       <Navbar />

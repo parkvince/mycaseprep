@@ -107,13 +107,12 @@ export default function AuthPage() {
       position: "relative", zIndex: 0,
     }}>
 
-      <FloatingBlob src="/homepage/new2-blob-paperplane.png" alt="" size={170} top="3%" left="4%" duration={7} rotate={-5} />
-      <FloatingBlob src="/homepage/new2-blob-tricycle.png" alt="" size={190} top="5%" right="5%" duration={6.5} delay={0.6} rotate={5} />
-      <FloatingBlob src="/homepage/new3-blob-birthday.png" alt="" size={160} top="28%" left="5%" duration={7.5} delay={0.2} rotate={-6} />
-      <FloatingBlob src="/homepage/new3-blob-kite.png" alt="" size={180} top="26%" right="4%" duration={8} delay={0.9} rotate={4} />
-      <FloatingBlob src="/homepage/new3-blob-pinwheel.png" alt="" size={160} bottom="28%" left="4%" duration={7} delay={0.4} rotate={-4} />
-      <FloatingBlob src="/homepage/new3-blob-stargazing.png" alt="" size={170} bottom="26%" right="5%" duration={6.5} delay={1.1} rotate={6} />
-      <FloatingBlob src="/homepage/new3-blob-yoga.png" alt="" size={160} bottom="3%" left="6%" duration={8} delay={0.5} rotate={-5} />
+      <FloatingBlob src="/homepage/new2-blob-paperplane.png" alt="" size={170} top="3%" left="12%" duration={7} rotate={-5} />
+      <FloatingBlob src="/homepage/new2-blob-tricycle.png" alt="" size={190} top="4%" right="9%" duration={6.5} delay={0.6} rotate={5} />
+      <FloatingBlob src="/homepage/new3-blob-birthday.png" alt="" size={160} top="26%" left="4%" duration={7.5} delay={0.2} rotate={-6} />
+      <FloatingBlob src="/homepage/new3-blob-kite.png" alt="" size={190} top="32%" right="19%" duration={8} delay={0.9} rotate={4} />
+      <FloatingBlob src="/homepage/new3-blob-pinwheel.png" alt="" size={160} bottom="30%" left="18%" duration={7} delay={0.4} rotate={-4} />
+      <FloatingBlob src="/homepage/new3-blob-stargazing.png" alt="" size={170} bottom="24%" right="4%" duration={6.5} delay={1.1} rotate={6} />
 
       <motion.div
         initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}

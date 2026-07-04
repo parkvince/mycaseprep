@@ -82,6 +82,18 @@ async function callClaude(opts: CallChatCompletionOptions): Promise<string> {
   return response.content[0]?.type === "text" ? response.content[0].text : "";
 }
 
+const PROVIDER_TIMEOUT_MS = 12000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+    promise.then(
+      (v) => { clearTimeout(timer); resolve(v); },
+      (e) => { clearTimeout(timer); reject(e); }
+    );
+  });
+}
+
 async function callProvider(provider: ProviderName, opts: CallChatCompletionOptions): Promise<string> {
   if (provider === "groq") {
     if (!groqClient) throw new Error("GROQ_API_KEY not configured");
@@ -108,7 +120,7 @@ export async function callChatCompletion(opts: CallChatCompletionOptions): Promi
   const errors: string[] = [];
   for (const provider of order) {
     try {
-      const text = await callProvider(provider, opts);
+      const text = await withTimeout(callProvider(provider, opts), PROVIDER_TIMEOUT_MS, provider);
       if (text && text.trim().length > 0) {
         return { text, provider };
       }
