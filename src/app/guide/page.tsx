@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { Fragment, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ChevronDown, RotateCcw } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import FloatingBlob from "@/components/FloatingBlob";
 
 import { MCKINSEY_RUBRIC } from "@/lib/firmRubrics/mckinsey";
 import { BCG_RUBRIC } from "@/lib/firmRubrics/bcg";
@@ -43,14 +45,81 @@ const FIRMS: { label: string; rubric: any }[] = [
   { label: "Capital One", rubric: CAPITAL_ONE_RUBRIC },
 ];
 
-const GENERAL_TIPS = [
-  "Clarify the objective before you structure anything: restate the question in your own words and confirm it.",
-  "Build a MECE, case-specific framework. A textbook framework with no adaptation reads as generic.",
-  "Say your hypothesis out loud early, and update it as new data comes in instead of collecting data aimlessly.",
-  "Narrate your math as you go: interviewers grade the setup and logic, not just the final number.",
-  "Lead with the bottom line, then support it. Don't make the interviewer wait for your conclusion.",
-  "Always close with a clear recommendation, the key risk, and a next step, even if you're unsure, and commit to a view.",
+const FRAMEWORK = [
+  {
+    title: "Clarify",
+    blurb: "Make sure you're solving the right problem before you solve anything.",
+    tips: [
+      "Restate the objective in your own words and confirm it out loud.",
+      "Ask 1-2 sharp clarifying questions, not a long list of them.",
+      "Confirm the timeframe, the client's goal, and how success is measured.",
+    ],
+  },
+  {
+    title: "Structure",
+    blurb: "Build a framework that's actually shaped like this case, not a memorized template.",
+    tips: [
+      "Keep it MECE: no overlaps, no gaps in the buckets you lay out.",
+      "Say your structure out loud before you dive into any single branch.",
+      "Form an early hypothesis about which branch matters most, and start there.",
+    ],
+  },
+  {
+    title: "Analyze",
+    blurb: "This is where most of the real work, and most of the scoring, happens.",
+    tips: [
+      "Narrate your math as you go: state the setup before you calculate.",
+      "Sanity-check results that seem too high, too low, or too convenient.",
+      "Pull business insight out of the numbers, don't just report them.",
+    ],
+  },
+  {
+    title: "Synthesize",
+    blurb: "Land the plane. A great analysis with a weak ending still reads as weak.",
+    tips: [
+      "Lead with the bottom line, then back it up, not the other way around.",
+      "Give a specific recommendation, not a hedge.",
+      "Name the key risk and a sensible next step.",
+    ],
+  },
 ];
+
+const CHECKLIST = [
+  "Clarify the objective before you structure anything.",
+  "Build a MECE, case-specific framework, not a generic template.",
+  "Say your hypothesis out loud, and update it as new data comes in.",
+  "Narrate your math as you go instead of going quiet and calculating.",
+  "Lead with the bottom line, then support it.",
+  "Always close with a recommendation, a risk, and a next step.",
+];
+
+const QUIZ = {
+  prompt: "Your client is a mid-size airline. Revenue has stayed flat, but profit dropped 20% last year. What's your first move?",
+  options: [
+    {
+      text: "Ask whether the drop is driven by costs, revenue mix, or a one-time event, then propose structuring the case around a profit framework.",
+      correct: true,
+      feedback: "Exactly. You confirmed what's actually driving the gap before committing to a structure, instead of guessing.",
+    },
+    {
+      text: "Start estimating the total size of the airline market.",
+      correct: false,
+      feedback: "Not quite. Market sizing doesn't help you here. Profit dropped with flat revenue, meaning the story is almost certainly on the cost or mix side. That's what to clarify first.",
+    },
+    {
+      text: "Recommend across-the-board cost cuts to restore margin.",
+      correct: false,
+      feedback: "Too early. You haven't looked at a single number yet. Jumping to a recommendation before any analysis is one of the fastest ways to lose an interviewer's confidence.",
+    },
+    {
+      text: "Ask how many employees the airline has.",
+      correct: false,
+      feedback: "It's a fair data point eventually, but it doesn't drive your structure. Lead with a question that shapes how you'll break down the problem.",
+    },
+  ],
+};
+
+const OPTION_LETTERS = ["A", "B", "C", "D"];
 
 /** The rubric source data uses em dashes throughout; normalize them for display. */
 function clean(text: string): string {
@@ -69,28 +138,32 @@ function dimensionTips(dim: any): string[] {
   return [];
 }
 
-function CardSection({ title, delay, children }: { title: string; delay: number; children: React.ReactNode }) {
+function Card({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
-      style={{ background: "white", borderRadius: "20px", border: "1px solid var(--hp-border)", boxShadow: "var(--hp-shadow-card)", overflow: "hidden" }}
+      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.22 }}
+      style={{ background: "white", borderRadius: "20px", border: "1px solid var(--hp-border)", boxShadow: "var(--hp-shadow-card)", padding: "1.75rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}
     >
-      <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--hp-border)" }}>
-        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--hp-foreground)", fontFamily: FONT }}>{title}</span>
-      </div>
-      <div style={{ padding: "1.75rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-        {children}
-      </div>
+      {children}
     </motion.div>
   );
 }
 
+const STEP_LABELS = ["Welcome", "The framework", "Quick tips", "Try it yourself", "Your firm's rubric", "You're ready"];
+const TOTAL_STEPS = STEP_LABELS.length;
+
 export default function GuidePage() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const active = FIRMS[activeIndex];
-  const rubric = active.rubric;
+  const [step, setStep] = useState(0);
+  const [openStage, setOpenStage] = useState<number | null>(0);
+  const [checked, setChecked] = useState<Record<number, boolean>>({});
+  const [quizPick, setQuizPick] = useState<number | null>(null);
+  const [firmIndex, setFirmIndex] = useState(0);
+
+  const firm = FIRMS[firmIndex];
+  const rubric = firm.rubric;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dimensions: any[] = rubric.dimensions ?? [];
+  const checkedCount = Object.values(checked).filter(Boolean).length;
 
   const filterPill = (active: boolean): React.CSSProperties => ({
     padding: "0.35rem 0.9rem",
@@ -101,6 +174,10 @@ export default function GuidePage() {
     fontSize: "0.8rem", fontWeight: 600,
     cursor: "pointer", fontFamily: FONT, transition: "all 0.15s",
   });
+
+  const goNext = () => setStep(s => Math.min(s + 1, TOTAL_STEPS - 1));
+  const goBack = () => setStep(s => Math.max(s - 1, 0));
+  const restart = () => { setStep(0); setOpenStage(0); setChecked({}); setQuizPick(null); };
 
   return (
     <div style={{
@@ -113,89 +190,332 @@ export default function GuidePage() {
         "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
       ].join(", "),
       backgroundAttachment: "fixed",
+      position: "relative", zIndex: 0,
     }}>
+      <FloatingBlob src="/homepage/new2-blob-icecream.png" alt="" size={130} top="10%" left="4%" duration={7} rotate={-5} />
+      <FloatingBlob src="/homepage/new3-blob-juggling.png" alt="" size={150} top="30%" right="5%" duration={8} delay={0.5} rotate={5} />
+      <FloatingBlob src="/homepage/new2-blob-tricycle.png" alt="" size={140} bottom="20%" left="5%" duration={7.5} delay={0.3} rotate={-4} />
+      <FloatingBlob src="/homepage/new3-blob-planting.png" alt="" size={130} bottom="6%" right="6%" duration={6.5} delay={0.9} rotate={4} />
+
       <Navbar />
 
-      <div style={{ maxWidth: "880px", margin: "0 auto", padding: "0 2rem 5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+      <div style={{ maxWidth: "720px", margin: "0 auto", padding: "0 2rem 5rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: "0.5rem" }}>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hp-soft-foreground)", marginBottom: "0.5rem" }}>
             MyCasePrep · Sample guide
           </div>
           <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: "var(--hp-foreground)", margin: 0 }}>
             Case interview prep guide
           </h1>
-          <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "var(--hp-soft-foreground)", lineHeight: 1.6, maxWidth: "640px" }}>
-            A quick-reference MVP: general case interview tips, plus the actual scoring rubric (dimensions, weights,
-            and what strong performance looks like) for each firm we grade against.
-          </p>
         </motion.div>
 
-        <CardSection title="General tips" delay={0.04}>
-          <ul style={{ margin: 0, paddingLeft: "1.1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            {GENERAL_TIPS.map((tip, i) => (
-              <li key={i} style={{ fontSize: "0.88rem", color: "var(--hp-foreground)", lineHeight: 1.6 }}>{tip}</li>
+        {/* Step progress */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "0.7rem" }}>
+            {STEP_LABELS.map((label, i) => (
+              <Fragment key={label}>
+                <button
+                  onClick={() => setStep(i)}
+                  title={label}
+                  style={{
+                    width: "30px", height: "30px", borderRadius: "9999px", cursor: "pointer", padding: 0, flexShrink: 0,
+                    display: "grid", placeItems: "center", fontSize: "0.78rem", fontWeight: 700, fontFamily: FONT,
+                    border: `2px solid ${i <= step ? "var(--hp-primary)" : "var(--hp-border)"}`,
+                    background: i <= step ? "var(--hp-primary)" : "white",
+                    color: i <= step ? "white" : "var(--hp-soft-foreground)",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {i < step ? <CheckCircle2 size={15} /> : i + 1}
+                </button>
+                {i < STEP_LABELS.length - 1 && (
+                  <div style={{ flex: 1, height: "2px", margin: "0 2px", background: i < step ? "var(--hp-primary)" : "var(--hp-border)", transition: "background 0.2s" }} />
+                )}
+              </Fragment>
             ))}
-          </ul>
-        </CardSection>
+          </div>
+          <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--hp-soft-foreground)" }}>
+            Step {step + 1} of {TOTAL_STEPS} · {STEP_LABELS[step]}
+          </div>
+        </div>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-          style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-          {FIRMS.map((f, i) => (
-            <button key={f.label} style={filterPill(i === activeIndex)} onClick={() => setActiveIndex(i)}>
-              {f.label}
-            </button>
-          ))}
-        </motion.div>
+        <AnimatePresence mode="wait">
+          <div key={step}>
 
-        <CardSection title={rubric.firmFullName ?? active.label} delay={0.1}>
-          {rubric.format && (
-            <p style={{ fontSize: "0.82rem", color: "var(--hp-soft-foreground)", margin: "-0.75rem 0 0", lineHeight: 1.6 }}>
-              {clean(rubric.format)}
-            </p>
-          )}
-
-          {dimensions.map((dim, i) => {
-            const tips = dimensionTips(dim);
-            return (
-              <div key={dim.key} style={{ borderTop: i === 0 ? "none" : "1px solid var(--hp-border)", paddingTop: i === 0 ? 0 : "1.25rem" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", marginBottom: "0.5rem" }}>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--hp-foreground)" }}>{clean(dim.label)}</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
-                    {dim.dealbreaker && (
-                      <span style={{ fontSize: "0.68rem", fontWeight: 600, padding: "0.2rem 0.6rem", borderRadius: "9999px", fontFamily: FONT, background: "#fef2f2", color: "#b91c1c", border: "1px solid #fecaca" }}>
-                        Dealbreaker
-                      </span>
-                    )}
-                    <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--hp-primary)", background: "var(--hp-primary-soft)", borderRadius: "9999px", padding: "0.2rem 0.6rem" }}>
-                      {dim.weight}%
-                    </span>
+            {/* Step 0: Welcome */}
+            {step === 0 && (
+              <Card>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <img src="/homepage/new3-blob-thumbsup.png" alt="" style={{ width: "84px", height: "auto", flexShrink: 0 }} />
+                  <div>
+                    <h2 style={{ fontSize: "1.15rem", fontWeight: 800, margin: "0 0 0.25rem", color: "var(--hp-foreground)" }}>Let's get you ready</h2>
+                    <p style={{ fontSize: "0.86rem", color: "var(--hp-soft-foreground)", lineHeight: 1.6, margin: 0 }}>
+                      A case interview is a structured conversation where you solve a real business problem out loud.
+                      Most firms run them interviewer-led: they steer, feed you data, and grade how you think.
+                    </p>
                   </div>
                 </div>
-                {tips.length > 0 && (
+                <div style={{ background: "var(--hp-primary-soft)", borderRadius: "14px", padding: "1rem 1.25rem" }}>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--hp-primary)", marginBottom: "0.5rem" }}>
+                    This guide walks through
+                  </div>
                   <ul style={{ margin: 0, paddingLeft: "1.1rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                    {tips.map((t, ti) => (
-                      <li key={ti} style={{ fontSize: "0.82rem", color: "var(--hp-soft-foreground)", lineHeight: 1.55 }}>{t}</li>
+                    {STEP_LABELS.slice(1).map(label => (
+                      <li key={label} style={{ fontSize: "0.85rem", color: "var(--hp-foreground)" }}>{label}</li>
                     ))}
                   </ul>
+                </div>
+              </Card>
+            )}
+
+            {/* Step 1: Framework accordion */}
+            {step === 1 && (
+              <Card>
+                <div>
+                  <h2 style={{ fontSize: "1.1rem", fontWeight: 800, margin: "0 0 0.25rem", color: "var(--hp-foreground)" }}>The four-part framework</h2>
+                  <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", margin: 0 }}>Tap each stage to open it up.</p>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                  {FRAMEWORK.map((stage, i) => {
+                    const isOpen = openStage === i;
+                    return (
+                      <div key={stage.title} style={{ border: `1.5px solid ${isOpen ? "var(--hp-primary)" : "var(--hp-border)"}`, borderRadius: "12px", overflow: "hidden", transition: "border-color 0.15s" }}>
+                        <button
+                          onClick={() => setOpenStage(isOpen ? null : i)}
+                          style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.85rem 1.1rem", background: isOpen ? "var(--hp-primary-soft)" : "white", border: "none", cursor: "pointer", fontFamily: FONT, textAlign: "left" }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                            <span style={{ width: "24px", height: "24px", borderRadius: "9999px", background: isOpen ? "var(--hp-primary)" : "var(--hp-border)", color: isOpen ? "white" : "var(--hp-soft-foreground)", display: "grid", placeItems: "center", fontSize: "0.75rem", fontWeight: 700, flexShrink: 0 }}>
+                              {i + 1}
+                            </span>
+                            <div>
+                              <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--hp-foreground)" }}>{stage.title}</div>
+                              <div style={{ fontSize: "0.76rem", color: "var(--hp-soft-foreground)" }}>{stage.blurb}</div>
+                            </div>
+                          </div>
+                          <motion.span animate={{ rotate: isOpen ? 180 : 0 }} style={{ color: "var(--hp-soft-foreground)", flexShrink: 0 }}>
+                            <ChevronDown size={16} />
+                          </motion.span>
+                        </button>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} style={{ overflow: "hidden" }}>
+                              <ul style={{ margin: 0, padding: "0.9rem 1.1rem 1.1rem 2.6rem", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                                {stage.tips.map((t, ti) => (
+                                  <li key={ti} style={{ fontSize: "0.82rem", color: "var(--hp-foreground)", lineHeight: 1.55 }}>{t}</li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+
+            {/* Step 2: Checklist */}
+            {step === 2 && (
+              <Card>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <h2 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "var(--hp-foreground)" }}>Quick tips</h2>
+                  <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--hp-primary)" }}>{checkedCount}/{CHECKLIST.length} checked</span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {CHECKLIST.map((tip, i) => {
+                    const isChecked = !!checked[i];
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => setChecked(c => ({ ...c, [i]: !c[i] }))}
+                        style={{ display: "flex", alignItems: "flex-start", gap: "0.65rem", padding: "0.75rem 0.9rem", borderRadius: "10px", border: `1.5px solid ${isChecked ? "var(--hp-primary)" : "var(--hp-border)"}`, background: isChecked ? "var(--hp-primary-soft)" : "white", cursor: "pointer", textAlign: "left", fontFamily: FONT, transition: "all 0.15s" }}
+                      >
+                        {isChecked ? <CheckCircle2 size={18} color="var(--hp-primary)" style={{ flexShrink: 0, marginTop: "1px" }} /> : <Circle size={18} color="var(--hp-border-strong)" style={{ flexShrink: 0, marginTop: "1px" }} />}
+                        <span style={{ fontSize: "0.85rem", color: "var(--hp-foreground)", lineHeight: 1.5, textDecoration: isChecked ? "line-through" : "none", opacity: isChecked ? 0.6 : 1 }}>{tip}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+
+            {/* Step 3: Quiz */}
+            {step === 3 && (
+              <Card>
+                <div>
+                  <h2 style={{ fontSize: "1.1rem", fontWeight: 800, margin: "0 0 0.5rem", color: "var(--hp-foreground)" }}>Try it yourself</h2>
+                  <p style={{ fontSize: "0.88rem", color: "var(--hp-foreground)", lineHeight: 1.6, margin: 0, background: "var(--hp-bg)", border: "1px solid var(--hp-border)", borderRadius: "10px", padding: "0.9rem 1.1rem" }}>
+                    {QUIZ.prompt}
+                  </p>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {QUIZ.options.map((opt, i) => {
+                    const picked = quizPick === i;
+                    const showState = quizPick !== null;
+                    const isRight = opt.correct;
+                    const borderColor = showState
+                      ? (isRight ? "#16a34a" : picked ? "#dc2626" : "var(--hp-border)")
+                      : "var(--hp-border)";
+                    const bg = showState
+                      ? (isRight ? "#f0fdf4" : picked ? "#fef2f2" : "white")
+                      : "white";
+                    return (
+                      <div key={i}>
+                        <button
+                          onClick={() => setQuizPick(i)}
+                          disabled={showState}
+                          style={{ width: "100%", display: "flex", alignItems: "center", gap: "0.7rem", textAlign: "left", padding: "0.8rem 1rem", borderRadius: "10px", border: `1.5px solid ${borderColor}`, background: bg, cursor: showState ? "default" : "pointer", fontFamily: FONT, fontSize: "0.85rem", color: "var(--hp-foreground)", lineHeight: 1.5, transition: "border-color 0.15s, background 0.15s" }}
+                        >
+                          <span style={{
+                            width: "24px", height: "24px", borderRadius: "9999px", flexShrink: 0, display: "grid", placeItems: "center",
+                            fontSize: "0.75rem", fontWeight: 700,
+                            background: showState ? (isRight ? "#16a34a" : picked ? "#dc2626" : "var(--hp-border)") : "var(--hp-primary-soft)",
+                            color: showState ? (isRight || picked ? "white" : "var(--hp-soft-foreground)") : "var(--hp-primary)",
+                          }}>
+                            {showState && isRight ? "✓" : showState && picked ? "✕" : OPTION_LETTERS[i]}
+                          </span>
+                          {opt.text}
+                        </button>
+                        {picked && (
+                          <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
+                            style={{ fontSize: "0.8rem", color: isRight ? "#15803d" : "#b91c1c", lineHeight: 1.55, margin: "0.4rem 0 0", padding: "0 0.25rem" }}>
+                            {opt.feedback}
+                          </motion.p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                {quizPick !== null && (
+                  <button onClick={() => setQuizPick(null)} style={{ alignSelf: "flex-start", background: "none", border: "none", color: "var(--hp-primary)", fontWeight: 600, fontSize: "0.8rem", cursor: "pointer", fontFamily: FONT, padding: 0 }}>
+                    Try a different answer
+                  </button>
                 )}
-              </div>
-            );
-          })}
+              </Card>
+            )}
 
-          {rubric.offerDecision?.offerThreshold && (
-            <div style={{ borderTop: "1px solid var(--hp-border)", paddingTop: "1.25rem", fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
-              Offer threshold: weighted score of {rubric.offerDecision.offerThreshold} or higher
-              {rubric.offerDecision.hardFloorDimensions?.length > 0 && (
-                <>, with a hard floor of {rubric.offerDecision.hardFloorScore} on {rubric.offerDecision.hardFloorDimensions.join(", ")}</>
-              )}
-            </div>
+            {/* Step 4: Firm rubric */}
+            {step === 4 && (
+              <Card>
+                <div>
+                  <h2 style={{ fontSize: "1.1rem", fontWeight: 800, margin: "0 0 0.25rem", color: "var(--hp-foreground)" }}>Your firm's rubric</h2>
+                  <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", margin: 0 }}>Every firm weighs these dimensions differently. Pick one to see exactly how they grade.</p>
+                </div>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {FIRMS.map((f, i) => (
+                    <button key={f.label} style={filterPill(i === firmIndex)} onClick={() => setFirmIndex(i)}>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+                  <div>
+                    <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--hp-foreground)" }}>{rubric.firmFullName ?? firm.label}</div>
+                    {rubric.format && <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", margin: "0.2rem 0 0", lineHeight: 1.6 }}>{clean(rubric.format)}</p>}
+                  </div>
+
+                  {dimensions.map((dim, i) => {
+                    const tips = dimensionTips(dim);
+                    return (
+                      <div key={dim.key} style={{ borderTop: i === 0 ? "none" : "1px solid var(--hp-border)", paddingTop: i === 0 ? 0 : "1rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", marginBottom: "0.4rem" }}>
+                          <span style={{ fontSize: "0.87rem", fontWeight: 700, color: "var(--hp-foreground)" }}>{clean(dim.label)}</span>
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
+                            {dim.dealbreaker && (
+                              <span style={{ fontSize: "0.65rem", fontWeight: 600, padding: "0.2rem 0.55rem", borderRadius: "9999px", fontFamily: FONT, background: "#fef2f2", color: "#b91c1c", border: "1px solid #fecaca" }}>
+                                Dealbreaker
+                              </span>
+                            )}
+                            <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--hp-primary)", background: "var(--hp-primary-soft)", borderRadius: "9999px", padding: "0.2rem 0.55rem" }}>
+                              {dim.weight}%
+                            </span>
+                          </div>
+                        </div>
+                        {tips.length > 0 && (
+                          <ul style={{ margin: 0, paddingLeft: "1.1rem", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                            {tips.map((t, ti) => (
+                              <li key={ti} style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", lineHeight: 1.5 }}>{t}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {rubric.offerDecision?.offerThreshold && (
+                    <div style={{ borderTop: "1px solid var(--hp-border)", paddingTop: "1rem", fontSize: "0.76rem", color: "var(--hp-soft-foreground)" }}>
+                      Offer threshold: weighted score of {rubric.offerDecision.offerThreshold} or higher
+                      {rubric.offerDecision.hardFloorDimensions?.length > 0 && (
+                        <>, with a hard floor of {rubric.offerDecision.hardFloorScore} on {rubric.offerDecision.hardFloorDimensions.join(", ")}</>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
+
+            {/* Step 5: Done */}
+            {step === 5 && (
+              <Card>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <img src="/homepage/new3-blob-birthday.png" alt="" style={{ width: "84px", height: "auto", flexShrink: 0 }} />
+                  <div>
+                    <h2 style={{ fontSize: "1.15rem", fontWeight: 800, margin: "0 0 0.25rem", color: "var(--hp-foreground)" }}>You're ready to practice</h2>
+                    <p style={{ fontSize: "0.86rem", color: "var(--hp-soft-foreground)", lineHeight: 1.6, margin: 0 }}>
+                      Clarify, structure, analyze, synthesize. That's it, that's the whole game, over and over.
+                    </p>
+                  </div>
+                </div>
+                <div style={{ background: "var(--hp-primary-soft)", borderRadius: "14px", padding: "1rem 1.25rem" }}>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--hp-primary)", marginBottom: "0.5rem" }}>
+                    Before your next case, remember
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: "1.1rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                    {CHECKLIST.map(tip => (
+                      <li key={tip} style={{ fontSize: "0.85rem", color: "var(--hp-foreground)" }}>{tip}</li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  onClick={restart}
+                  style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", color: "var(--hp-primary)", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", fontFamily: FONT, padding: 0 }}
+                >
+                  <RotateCcw size={15} /> Go through it again
+                </button>
+              </Card>
+            )}
+
+          </div>
+        </AnimatePresence>
+
+        {/* Nav buttons */}
+        <div style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem" }}>
+          <button
+            onClick={goBack}
+            disabled={step === 0}
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "42px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: step === 0 ? "var(--hp-border-strong)" : "var(--hp-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: step === 0 ? "not-allowed" : "pointer", fontFamily: FONT }}
+          >
+            <ArrowLeft size={15} /> Back
+          </button>
+          {step < TOTAL_STEPS - 1 && (
+            <button
+              onClick={goNext}
+              style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "42px", padding: "0 1.25rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", fontFamily: FONT, boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}
+            >
+              {step === 0 ? "Let's go" : "Next"} <ArrowRight size={15} />
+            </button>
           )}
-        </CardSection>
+        </div>
 
-        <p style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", textAlign: "center", margin: "0.5rem 0 0" }}>
-          This is a standalone sample page, not linked from anywhere else in the app.
-        </p>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <span style={{ fontSize: "0.72rem", color: "var(--hp-soft-foreground)", textAlign: "center", background: "white", border: "1px solid var(--hp-border)", borderRadius: "9999px", padding: "0.4rem 0.9rem" }}>
+            Standalone sample page &middot; not linked from anywhere else in the app
+          </span>
+        </div>
       </div>
     </div>
   );
