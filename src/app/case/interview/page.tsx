@@ -499,7 +499,10 @@ function InterviewInner() {
       {/* Top bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 1.25rem", height: "44px", background: "#191919", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span style={{ fontWeight: 700, fontSize: "0.9rem", letterSpacing: "-0.01em", color: "#fff" }}>mycaseprep</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "-0.01em", color: "#fff" }}>
+            <img src="/newlogomcp.png" alt="" style={{ width: "18px", height: "18px", flexShrink: 0 }} />
+            mycaseprep
+          </span>
           <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e", flexShrink: 0 }} />
           <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "280px" }}>
             {caseTitle} · {FIRM_SHORT[firm] ?? firmConfig.name}
