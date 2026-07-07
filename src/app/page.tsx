@@ -215,7 +215,7 @@ export default function LandingPage() {
         <motion.div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "var(--hp-border)", opacity: navBorderOpacity }} />
 
         <span onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}>
+          style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}>
           <img src="/newlogomcp.png" alt="" style={{ width: "26px", height: "26px", flexShrink: 0 }} />
           <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
         </span>
@@ -442,7 +442,7 @@ export default function LandingPage() {
           <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "3.5rem 2.5rem 2rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "2rem", paddingBottom: "2.5rem", borderBottom: "1px solid oklch(0.25 0.02 280)" }}>
               <div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "1.3rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em", fontFamily: FONT }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", fontSize: "1.3rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em", fontFamily: FONT }}>
                   <img src="/newlogomcp.png" alt="" style={{ width: "28px", height: "28px", flexShrink: 0 }} />
                   <span style={{ position: "relative", top: "-1px" }}>mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span></span>
                 </div>

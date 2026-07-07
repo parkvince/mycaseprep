@@ -109,7 +109,7 @@ export default function Navbar() {
 
         <span
           onClick={() => router.push("/")}
-          style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}
+          style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}
         >
           <img src="/newlogomcp.png" alt="" style={{ width: "26px", height: "26px", flexShrink: 0 }} />
           <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>

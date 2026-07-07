@@ -168,7 +168,7 @@ function SessionInner() {
         <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
           <span
             onClick={() => router.push("/")}
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", fontFamily: FONT }}
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", fontFamily: FONT }}
           >
             <img src="/newlogomcp.png" alt="" style={{ width: "20px", height: "20px", flexShrink: 0 }} />
             <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>

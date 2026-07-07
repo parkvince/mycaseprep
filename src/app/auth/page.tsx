@@ -117,7 +117,7 @@ export default function AuthPage() {
       <motion.div
         initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
         onClick={() => router.push("/")}
-        style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", marginBottom: "2rem", cursor: "pointer", fontFamily: FONT }}
+        style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", marginBottom: "2rem", cursor: "pointer", fontFamily: FONT }}
       >
         <img src="/newlogomcp.png" alt="" style={{ width: "28px", height: "28px", flexShrink: 0 }} />
         <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>

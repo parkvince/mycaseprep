@@ -503,7 +503,7 @@ function InterviewInner() {
       {/* Top bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 1.25rem", height: "44px", background: "#191919", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "-0.01em", color: "#fff" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "-0.01em", color: "#fff" }}>
             <img src="/newlogomcp.png" alt="" style={{ width: "18px", height: "18px", flexShrink: 0 }} />
             <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
           </span>
