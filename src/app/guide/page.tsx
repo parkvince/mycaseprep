@@ -243,7 +243,7 @@ export default function GuidePage() {
 
         <AnimatePresence mode="wait">
           <div key={step}>
-
+//
             {/* Step 0: Welcome */}
             {step === 0 && (
               <Card>
