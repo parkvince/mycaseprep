@@ -217,7 +217,7 @@ export default function LandingPage() {
         <span onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontWeight: 700, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", flexShrink: 0, fontFamily: FONT }}>
           <img src="/newlogomcp.png" alt="" style={{ width: "26px", height: "26px", flexShrink: 0 }} />
-          mycaseprep
+          <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
         </span>
 
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -444,7 +444,7 @@ export default function LandingPage() {
               <div>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "1.3rem", fontWeight: 700, color: "white", letterSpacing: "-0.02em", fontFamily: FONT }}>
                   <img src="/newlogomcp.png" alt="" style={{ width: "28px", height: "28px", flexShrink: 0 }} />
-                  mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span>
+                  <span style={{ position: "relative", top: "-1px" }}>mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span></span>
                 </div>
                 <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "oklch(0.55 0.02 280)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
                   © {new Date().getFullYear()} MyCasePrep. All rights reserved.

@@ -8,7 +8,10 @@ import "@fontsource/plus-jakarta-sans/700.css";
 import "@fontsource/plus-jakarta-sans/800.css";
 
 export const metadata: Metadata = {
-  title: "MyCP - AI Case Practice",
+  title: {
+    template: "%s · MyCasePrep",
+    default: "MyCasePrep · AI Case Interview Practice",
+  },
   description: "Practice consulting case interviews with AI. Get firm-specific feedback from McKinsey, Bain, BCG and more.",
 };
 

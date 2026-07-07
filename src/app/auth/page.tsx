@@ -120,7 +120,7 @@ export default function AuthPage() {
         style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", marginBottom: "2rem", cursor: "pointer", fontFamily: FONT }}
       >
         <img src="/newlogomcp.png" alt="" style={{ width: "28px", height: "28px", flexShrink: 0 }} />
-        mycaseprep
+        <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
       </motion.div>
 
       <motion.div

@@ -43,6 +43,10 @@ function SessionInner() {
   const [showHint, setShowHint] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+
+  useEffect(() => {
+    document.title = `${caseTitle} · MyCasePrep`;
+  }, [caseTitle]);
   const [interimText, setInterimText] = useState("");
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -167,7 +171,7 @@ function SessionInner() {
             style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", fontFamily: FONT }}
           >
             <img src="/newlogomcp.png" alt="" style={{ width: "20px", height: "20px", flexShrink: 0 }} />
-            mycaseprep
+            <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
           </span>
           <span style={{ width: "1px", height: "16px", background: "var(--hp-border)", display: "block" }} />
           <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#16a34a", flexShrink: 0 }} />

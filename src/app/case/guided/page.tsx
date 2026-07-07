@@ -43,6 +43,10 @@ function GuidedCaseInner() {
 
   useEffect(() => { window.scrollTo({ top: 0 }); }, [stage]);
 
+  useEffect(() => {
+    document.title = `${currentCase?.title ?? "Guided Case"} · MyCasePrep`;
+  }, [currentCase?.title]);
+
   if (!currentCase) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT }}>

@@ -95,6 +95,10 @@ function FeedbackInner() {
   }, []);
 
   useEffect(() => {
+    document.title = `Feedback: ${caseTitle} · MyCasePrep`;
+  }, [caseTitle]);
+
+  useEffect(() => {
     if (!dataLoaded || transcriptRaw === "[]") return;
     const evaluate = async () => {
       try {
