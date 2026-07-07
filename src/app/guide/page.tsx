@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ChevronDown, RotateCcw } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -413,9 +414,16 @@ export default function GuidePage() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-                  <div>
-                    <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--hp-foreground)" }}>{rubric.firmFullName ?? firm.label}</div>
-                    {rubric.format && <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", margin: "0.2rem 0 0", lineHeight: 1.6 }}>{clean(rubric.format)}</p>}
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.75rem" }}>
+                    <div>
+                      <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--hp-foreground)" }}>{rubric.firmFullName ?? firm.label}</div>
+                      {rubric.format && <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", margin: "0.2rem 0 0", lineHeight: 1.6 }}>{clean(rubric.format)}</p>}
+                    </div>
+                    {firmIndex === 0 && (
+                      <Link href="/guide/mckinsey" style={{ flexShrink: 0, fontSize: "0.78rem", fontWeight: 700, color: "var(--hp-primary)", textDecoration: "none", whiteSpace: "nowrap" }}>
+                        Full deep dive →
+                      </Link>
+                    )}
                   </div>
 
                   {dimensions.map((dim, i) => {
