@@ -16,6 +16,41 @@ const FEATURES = [
   { img: "/homepage/blob-yellow.png", title: "Performance tracking", copy: "Every session is saved. Track your score over time and see where you keep losing points." },
 ];
 
+interface FadeImgProps {
+  src: string;
+  alt: string;
+  style: React.CSSProperties;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  animate: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transition: any;
+  fetchPriority?: "high" | "low" | "auto";
+}
+
+function FadeImg({ src, alt, style, animate, transition, fetchPriority }: FadeImgProps) {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Cached images can finish loading before React attaches the onLoad
+  // listener, so the load event never fires — check .complete on mount too.
+  useEffect(() => {
+    if (imgRef.current?.complete) setLoaded(true);
+  }, []);
+
+  return (
+    <motion.img
+      ref={imgRef}
+      src={src}
+      alt={alt}
+      fetchPriority={fetchPriority}
+      onLoad={() => setLoaded(true)}
+      style={{ ...style, opacity: loaded ? style.opacity ?? 1 : 0, transition: "opacity 0.5s ease-out" }}
+      animate={animate}
+      transition={transition}
+    />
+  );
+}
+
 function Diamond({ style }: { style?: React.CSSProperties }) {
   return (
     <svg viewBox="0 0 24 24" style={{ width: "1.25rem", height: "1.25rem", ...style }} fill="currentColor">
@@ -313,7 +348,8 @@ export default function LandingPage() {
                 animate={{ borderRadius: ["60% 40% 50% 50% / 50% 60% 40% 50%", "40% 60% 60% 40% / 60% 30% 70% 40%", "60% 40% 50% 50% / 50% 60% 40% 50%"] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
               />
-              <motion.img src="/homepage/hero-3d.png" alt="" style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "32rem", margin: "0 auto", display: "block" }}
+              <FadeImg src="/homepage/hero-3d.png" alt="" fetchPriority="high"
+                style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "32rem", margin: "0 auto", display: "block" }}
                 animate={{ y: [0, -14, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
               <motion.div style={{ position: "absolute", right: "1rem", top: "1.5rem", zIndex: 2, color: "var(--hp-primary)" }}
@@ -348,7 +384,8 @@ export default function LandingPage() {
                     <div style={{ position: "absolute", top: "-1rem", right: "-1rem", width: "2.5rem", height: "2.5rem", display: "grid", placeItems: "center", borderRadius: "9999px", background: "var(--hp-primary)", color: "var(--hp-primary-foreground)", fontWeight: 700, fontSize: "0.875rem", boxShadow: "var(--hp-shadow-pop)", fontFamily: FONT }}>
                       {String(i + 1).padStart(2, "0")}
                     </div>
-                    <motion.img src={f.img} alt="" loading="lazy" style={{ display: "block", margin: "0 auto", width: "10rem", height: "10rem", objectFit: "contain" }}
+                    <FadeImg src={f.img} alt=""
+                      style={{ display: "block", margin: "0 auto", width: "10rem", height: "10rem", objectFit: "contain" }}
                       animate={{ y: [0, -8, 0] }} transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut" }}
                     />
                     <h3 style={{ marginTop: "1rem", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "-0.01em", color: "var(--hp-foreground)", fontFamily: FONT }}>{f.title}</h3>
