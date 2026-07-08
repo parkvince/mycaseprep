@@ -27,23 +27,23 @@ import { CAPITAL_ONE_RUBRIC } from "@/lib/firmRubrics/capitalOne";
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const FIRMS: { label: string; rubric: any }[] = [
-  { label: "McKinsey & Company", rubric: MCKINSEY_RUBRIC },
-  { label: "BCG", rubric: BCG_RUBRIC },
-  { label: "Bain & Company", rubric: BAIN_RUBRIC },
-  { label: "EY-Parthenon", rubric: EY_PARTHENON_RUBRIC },
-  { label: "Deloitte", rubric: DELOITTE_RUBRIC },
-  { label: "KPMG", rubric: KPMG_RUBRIC },
-  { label: "PwC Strategy&", rubric: PWC_RUBRIC },
-  { label: "Roland Berger", rubric: ROLAND_BERGER_RUBRIC },
-  { label: "Accenture", rubric: ACCENTURE_RUBRIC },
-  { label: "Oliver Wyman", rubric: OLIVER_WYMAN_RUBRIC },
-  { label: "Kearney", rubric: KEARNEY_RUBRIC },
-  { label: "L.E.K. Consulting", rubric: LEK_RUBRIC },
-  { label: "Monitor Deloitte", rubric: MONITOR_DELOITTE_RUBRIC },
-  { label: "IBM Consulting", rubric: IBM_RUBRIC },
-  { label: "Huron Consulting", rubric: HURON_RUBRIC },
-  { label: "Capital One", rubric: CAPITAL_ONE_RUBRIC },
+const FIRMS: { label: string; slug: string; rubric: any }[] = [
+  { label: "McKinsey & Company", slug: "mckinsey", rubric: MCKINSEY_RUBRIC },
+  { label: "BCG", slug: "bcg", rubric: BCG_RUBRIC },
+  { label: "Bain & Company", slug: "bain", rubric: BAIN_RUBRIC },
+  { label: "EY-Parthenon", slug: "ey-parthenon", rubric: EY_PARTHENON_RUBRIC },
+  { label: "Deloitte", slug: "deloitte", rubric: DELOITTE_RUBRIC },
+  { label: "KPMG", slug: "kpmg", rubric: KPMG_RUBRIC },
+  { label: "PwC Strategy&", slug: "pwc", rubric: PWC_RUBRIC },
+  { label: "Roland Berger", slug: "roland-berger", rubric: ROLAND_BERGER_RUBRIC },
+  { label: "Accenture", slug: "accenture", rubric: ACCENTURE_RUBRIC },
+  { label: "Oliver Wyman", slug: "oliver-wyman", rubric: OLIVER_WYMAN_RUBRIC },
+  { label: "Kearney", slug: "kearney", rubric: KEARNEY_RUBRIC },
+  { label: "L.E.K. Consulting", slug: "lek", rubric: LEK_RUBRIC },
+  { label: "Monitor Deloitte", slug: "monitor-deloitte", rubric: MONITOR_DELOITTE_RUBRIC },
+  { label: "IBM Consulting", slug: "ibm", rubric: IBM_RUBRIC },
+  { label: "Huron Consulting", slug: "huron", rubric: HURON_RUBRIC },
+  { label: "Capital One", slug: "capital-one", rubric: CAPITAL_ONE_RUBRIC },
 ];
 
 const FRAMEWORK = [
@@ -418,11 +418,9 @@ export default function GuidePage() {
                       <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--hp-foreground)" }}>{rubric.firmFullName ?? firm.label}</div>
                       {rubric.format && <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", margin: "0.2rem 0 0", lineHeight: 1.6 }}>{clean(rubric.format)}</p>}
                     </div>
-                    {firmIndex === 0 && (
-                      <Link href="/guide/mckinsey" style={{ flexShrink: 0, fontSize: "0.78rem", fontWeight: 700, color: "var(--hp-primary)", textDecoration: "none", whiteSpace: "nowrap" }}>
-                        Full deep dive →
-                      </Link>
-                    )}
+                    <Link href={`/guide/${firm.slug}`} style={{ flexShrink: 0, fontSize: "0.78rem", fontWeight: 700, color: "var(--hp-primary)", textDecoration: "none", whiteSpace: "nowrap" }}>
+                      Full deep dive →
+                    </Link>
                   </div>
 
                   {dimensions.map((dim, i) => {
