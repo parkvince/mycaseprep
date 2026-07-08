@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ChevronDown, RotateCcw } from "lucide-react";
@@ -160,11 +160,25 @@ export default function GuidePage() {
   const [quizPick, setQuizPick] = useState<number | null>(null);
   const [firmIndex, setFirmIndex] = useState(0);
 
+  // Persist checklist progress across visits — it's your own personal prep tracker.
+  useEffect(() => {
+    const raw = localStorage.getItem("mycaseprep_guide_checklist");
+    if (raw) {
+      try { setChecked(JSON.parse(raw)); } catch {}
+    }
+  }, []);
+  useEffect(() => {
+    if (Object.keys(checked).length > 0) {
+      localStorage.setItem("mycaseprep_guide_checklist", JSON.stringify(checked));
+    }
+  }, [checked]);
+
   const firm = FIRMS[firmIndex];
   const rubric = firm.rubric;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dimensions: any[] = rubric.dimensions ?? [];
   const checkedCount = Object.values(checked).filter(Boolean).length;
+  const allChecked = checkedCount === CHECKLIST.length;
 
   const filterPill = (active: boolean): React.CSSProperties => ({
     padding: "0.35rem 0.9rem",
@@ -338,6 +352,15 @@ export default function GuidePage() {
                     );
                   })}
                 </div>
+                {allChecked && (
+                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+                    style={{ display: "flex", alignItems: "center", gap: "0.6rem", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "10px", padding: "0.75rem 0.9rem" }}>
+                    <CheckCircle2 size={18} color="#15803d" style={{ flexShrink: 0 }} />
+                    <span style={{ fontSize: "0.83rem", color: "#15803d", fontWeight: 600 }}>
+                      All six checked off. This is saved, it'll still be checked next time you're back here.
+                    </span>
+                  </motion.div>
+                )}
               </Card>
             )}
 
@@ -514,12 +537,6 @@ export default function GuidePage() {
               {step === 0 ? "Let's go" : "Next"} <ArrowRight size={15} />
             </button>
           )}
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <span style={{ fontSize: "0.72rem", color: "var(--hp-soft-foreground)", textAlign: "center", background: "white", border: "1px solid var(--hp-border)", borderRadius: "9999px", padding: "0.4rem 0.9rem" }}>
-            Free to browse &middot; no account required
-          </span>
         </div>
       </div>
     </div>

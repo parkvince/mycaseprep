@@ -359,12 +359,6 @@ export default function FirmGuideTemplate({ rubric, calculateOffer, rateThis, bl
             </button>
           )}
         </div>
-
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <span style={{ fontSize: "0.72rem", color: "var(--hp-soft-foreground)", textAlign: "center", background: "white", border: "1px solid var(--hp-border)", borderRadius: "9999px", padding: "0.4rem 0.9rem" }}>
-            Free to browse &middot; no account required
-          </span>
-        </div>
       </div>
     </div>
   );

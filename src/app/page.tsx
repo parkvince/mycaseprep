@@ -529,10 +529,7 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <div style={{ paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-              <div style={{ fontSize: "0.75rem", color: "oklch(0.45 0.02 280)" }}>
-                Built for serious candidates · Free to use · No credit card required
-              </div>
+            <div style={{ paddingTop: "1.5rem", display: "flex", justifyContent: "flex-end", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
               <div style={{ display: "flex", gap: "0.75rem" }}>
                 {[
                   { icon: <Mail size={18} />, href: "mailto:seho.vince@gmail.com", label: "Email" },
