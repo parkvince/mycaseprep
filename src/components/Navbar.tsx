@@ -122,10 +122,16 @@ export default function Navbar() {
             Home
           </button>
 
-          <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => router.push("/library")}
+          <button style={textLink} onClick={() => router.push("/library")}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
             Library
+          </button>
+
+          <button style={{ ...textLink, marginRight: "0.25rem" }} onClick={() => router.push("/guide")}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
+            Guide
           </button>
 
           <button

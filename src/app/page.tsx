@@ -275,6 +275,13 @@ export default function LandingPage() {
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
           >Library</button>
 
+          <button
+            onClick={() => router.push("/guide")}
+            style={textLink}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}
+          >Guide</button>
+
           <button style={pillPurple} onClick={() => router.push(cta)}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
@@ -494,6 +501,7 @@ export default function LandingPage() {
                     {[
                       { label: "Features", action: () => smoothScrollTo("features") },
                       { label: "Library", action: () => router.push("/library") },
+                      { label: "Guide", action: () => router.push("/guide") },
                       { label: "Start a case", action: () => router.push(cta) },
                     ].map(l => (
                       <button key={l.label} onClick={l.action}
