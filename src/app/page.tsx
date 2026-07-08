@@ -344,7 +344,7 @@ export default function LandingPage() {
             </div>
 
             <div style={{ position: "relative" }}>
-              <motion.div aria-hidden style={{ position: "absolute", inset: "2.5rem", zIndex: 0, background: "var(--hp-lavender)", opacity: 0.65 }}
+              <motion.div aria-hidden style={{ position: "absolute", inset: "2.5rem", zIndex: 0, background: "var(--hp-lavender)", opacity: 0.65, borderRadius: "60% 40% 50% 50% / 50% 60% 40% 50%" }}
                 animate={{ borderRadius: ["60% 40% 50% 50% / 50% 60% 40% 50%", "40% 60% 60% 40% / 60% 30% 70% 40%", "60% 40% 50% 50% / 50% 60% 40% 50%"] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
               />
