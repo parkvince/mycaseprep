@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, History, Settings, HelpCircle, MessageSquare, Mail } from "lucide-react";
+import { ArrowRight, History, Settings, HelpCircle, MessageSquare, Mail, Menu, X } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
 const FEATURES = [
@@ -193,6 +193,7 @@ export default function LandingPage() {
   const cta = user ? "/dashboard" : "/auth";
   const [profileOpen, setProfileOpen] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { scrollY } = useScroll();
   const navBg            = useTransform(scrollY, [0, 180], ["oklch(0.97 0.03 290 / 0)", "oklch(0.97 0.03 290 / 0.92)"]);
@@ -255,7 +256,7 @@ export default function LandingPage() {
           <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <div className="hp-nav-links" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <button style={textLink} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>Home</button>
@@ -305,7 +306,55 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
+
+        <button
+          className="hp-nav-hamburger"
+          onClick={() => setMobileMenuOpen(o => !o)}
+          aria-label="Menu"
+          style={{ display: "none", width: "38px", height: "38px", borderRadius: "9999px", border: "1px solid var(--hp-border)", background: "white", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}
+        >
+          {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </motion.header>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.15 }}
+            style={{ position: "fixed", top: "60px", left: 0, right: 0, zIndex: 49, background: "white", borderBottom: "1px solid var(--hp-border)", boxShadow: "0 12px 32px oklch(0.4 0.05 280 / 12%)", padding: "0.75rem 1.25rem 1.25rem", display: "flex", flexDirection: "column", gap: "0.25rem" }}
+          >
+            {[
+              { label: "Home", action: () => window.scrollTo({ top: 0, behavior: "smooth" }) },
+              { label: "Features", action: () => smoothScrollTo("features") },
+              { label: "Privacy", action: () => smoothScrollTo("privacy") },
+              { label: "Library", action: () => router.push(user ? "/library" : "/auth") },
+              { label: "Guide", action: () => router.push("/guide") },
+            ].map(item => (
+              <button
+                key={item.label}
+                onClick={() => { item.action(); setMobileMenuOpen(false); }}
+                style={{ textAlign: "left", background: "none", border: "none", padding: "0.7rem 0.25rem", fontSize: "0.95rem", fontWeight: 500, color: "var(--hp-foreground)", cursor: "pointer", fontFamily: FONT, borderBottom: "1px solid var(--hp-border)" }}
+              >
+                {item.label}
+              </button>
+            ))}
+            <div style={{ display: "flex", gap: "0.6rem", marginTop: "0.75rem" }}>
+              {!loading && !user && (
+                <button
+                  onClick={() => { router.push("/auth"); setMobileMenuOpen(false); }}
+                  style={{ flex: 1, height: "42px", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontWeight: 600, fontFamily: FONT, cursor: "pointer" }}
+                >Sign in</button>
+              )}
+              <button
+                onClick={() => { router.push(cta); setMobileMenuOpen(false); }}
+                style={{ flex: 1, height: "42px", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.4rem" }}
+              >
+                {user ? "Start practicing" : "Get started"} <ArrowRight size={15} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div style={{ paddingTop: "60px" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -315,6 +364,10 @@ export default function LandingPage() {
             .hp-features-grid { display: grid; gap: 2rem; grid-template-columns: repeat(3, 1fr); }
             @media (max-width: 900px) { .hp-features-grid { grid-template-columns: repeat(2, 1fr); } }
             @media (max-width: 580px) { .hp-features-grid { grid-template-columns: 1fr; } }
+            @media (max-width: 860px) {
+              .hp-nav-links { display: none !important; }
+              .hp-nav-hamburger { display: flex !important; }
+            }
           `}</style>
 
           {/* Hero */}

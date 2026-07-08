@@ -89,6 +89,7 @@ function InterviewInner() {
   const startTimeRef = useRef<number>(0);
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const userVideoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -137,7 +138,7 @@ function InterviewInner() {
     synthRef.current = window.speechSynthesis;
     return () => {
       mountedRef.current = false;
-      synthRef.current?.cancel();
+      stopSpeaking();
       if (synthRef.current) synthRef.current.onvoiceschanged = null;
       recognitionRef.current?.stop();
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
@@ -236,10 +237,18 @@ function InterviewInner() {
       ?? voices.find(v => v.lang.startsWith("en"));
   };
 
-  const speak = (text: string) => {
+  const stopSpeaking = () => {
+    synthRef.current?.cancel();
+    if (ttsAudioRef.current) {
+      ttsAudioRef.current.onended = null;
+      ttsAudioRef.current.onerror = null;
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.src = "";
+    }
+  };
+
+  const speakBrowser = (clean: string) => {
     if (!synthRef.current || !mountedRef.current) return;
-    synthRef.current.cancel();
-    const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
     const utterance = new SpeechSynthesisUtterance(clean);
     const trySpeak = () => {
       if (!mountedRef.current || !synthRef.current) return;
@@ -260,6 +269,41 @@ function InterviewInner() {
     const voices = synthRef.current.getVoices();
     if (voices.length > 0) trySpeak();
     else synthRef.current.onvoiceschanged = () => trySpeak();
+  };
+
+  const speak = async (text: string) => {
+    if (!mountedRef.current) return;
+    stopSpeaking();
+    const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
+
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: clean, gender: INTERVIEWER.gender }),
+      });
+      if (!res.ok) throw new Error("tts unavailable");
+      const blob = await res.blob();
+      if (!mountedRef.current) throw new Error("unmounted");
+
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      ttsAudioRef.current = audio;
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        if (!mountedRef.current) return;
+        setIsSpeaking(false);
+        if (!isMutedRef.current && !loadingRef.current) startListening();
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        if (mountedRef.current) setIsSpeaking(false);
+      };
+      await audio.play();
+      setIsSpeaking(true);
+    } catch {
+      if (mountedRef.current) speakBrowser(clean);
+    }
   };
 
   const startSession = async () => {
@@ -332,7 +376,7 @@ function InterviewInner() {
       const heard = (final + interim).trim();
       // Confirmed real speech during the interviewer's turn — commit to the interruption now.
       if (isSpeakingRef.current && heard.length >= 2) {
-        synthRef.current?.cancel();
+        stopSpeaking();
         isSpeakingRef.current = false;
         setIsSpeaking(false);
       }
@@ -377,7 +421,7 @@ function InterviewInner() {
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || loading) return;
-    synthRef.current?.cancel();
+    stopSpeaking();
     setIsSpeaking(false);
     stopListening();
     const userMessage: Message = { role: "user", content: content.trim(), timestamp: new Date() };
@@ -416,7 +460,7 @@ function InterviewInner() {
   const handleEndSession = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     stopListening();
-    synthRef.current?.cancel();
+    stopSpeaking();
     if (synthRef.current) synthRef.current.onvoiceschanged = null;
     streamRef.current?.getTracks().forEach(t => t.stop());
     if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
@@ -598,7 +642,7 @@ function InterviewInner() {
               </div>
 
               <button onClick={() => {
-                synthRef.current?.cancel();
+                stopSpeaking();
                 isSpeakingRef.current = false;
                 setIsSpeaking(false);
                 if (!isMuted && !loadingRef.current) startListening();

@@ -182,6 +182,16 @@ export default function DashboardPage() {
 
       <Navbar />
 
+      <style>{`
+        @media (max-width: 560px) {
+          .hp-dash-grid-3 { grid-template-columns: 1fr !important; }
+          .hp-dash-grid-2 { grid-template-columns: 1fr !important; }
+        }
+        @media (min-width: 561px) and (max-width: 720px) {
+          .hp-dash-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+      `}</style>
+
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: "2rem" }}>
@@ -250,7 +260,7 @@ export default function DashboardPage() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.09 }}
             style={{ background: "white", borderRadius: "16px", border: "1px solid var(--hp-border)", padding: "1.4rem 1.5rem" }}>
             <SectionLabel required filled={!!selectedType}>Case type</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+            <div className="hp-dash-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
               {CASE_TYPES.map(t => (
                 <OptionCard key={t.value} selected={selectedType === t.value} onClick={() => setSelectedType(t.value)}>
                   <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedType === t.value ? "var(--hp-primary)" : "var(--hp-foreground)", textAlign: "center" }}>
@@ -265,7 +275,7 @@ export default function DashboardPage() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
             style={{ background: "white", borderRadius: "16px", border: "1px solid var(--hp-border)", padding: "1.4rem 1.5rem" }}>
             <SectionLabel required filled={!!selectedDifficulty}>Difficulty</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+            <div className="hp-dash-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
               {DIFFICULTIES.map(d => (
                 <OptionCard key={d.value} selected={selectedDifficulty === d.value} onClick={() => setSelectedDifficulty(d.value)}>
                   <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedDifficulty === d.value ? "var(--hp-primary)" : "var(--hp-foreground)", marginBottom: "3px" }}>{d.label}</div>
@@ -279,7 +289,7 @@ export default function DashboardPage() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
             style={{ background: "white", borderRadius: "16px", border: "1px solid var(--hp-border)", padding: "1.4rem 1.5rem" }}>
             <SectionLabel required filled={!!selectedMode}>Mode</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+            <div className="hp-dash-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
               {MODES.map(m => (
                 <OptionCard key={m.value} selected={selectedMode === m.value} onClick={() => setSelectedMode(m.value as Mode | "live")}>
                   <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedMode === m.value ? "var(--hp-primary)" : "var(--hp-foreground)", marginBottom: "3px" }}>{m.label}</div>
@@ -293,7 +303,7 @@ export default function DashboardPage() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
             style={{ background: "white", borderRadius: "16px", border: "1px solid var(--hp-border)", padding: "1.4rem 1.5rem" }}>
             <SectionLabel required filled={!!personality}>Interviewer style</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem" }}>
+            <div className="hp-dash-grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem" }}>
               {STYLES.map(s => (
                 <OptionCard key={s.value} selected={personality === s.value} onClick={() => setPersonality(s.value as "strict" | "friendly")}>
                   <div style={{ fontSize: "0.85rem", fontWeight: 600, color: personality === s.value ? "var(--hp-primary)" : "var(--hp-foreground)", marginBottom: "3px" }}>{s.label}</div>

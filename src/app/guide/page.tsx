@@ -157,6 +157,7 @@ export default function GuidePage() {
   const [step, setStep] = useState(0);
   const [openStage, setOpenStage] = useState<number | null>(0);
   const [checked, setChecked] = useState<Record<number, boolean>>({});
+  const [checklistLoaded, setChecklistLoaded] = useState(false);
   const [quizPick, setQuizPick] = useState<number | null>(null);
   const [firmIndex, setFirmIndex] = useState(0);
 
@@ -166,12 +167,12 @@ export default function GuidePage() {
     if (raw) {
       try { setChecked(JSON.parse(raw)); } catch {}
     }
+    setChecklistLoaded(true);
   }, []);
   useEffect(() => {
-    if (Object.keys(checked).length > 0) {
-      localStorage.setItem("mycaseprep_guide_checklist", JSON.stringify(checked));
-    }
-  }, [checked]);
+    if (!checklistLoaded) return;
+    localStorage.setItem("mycaseprep_guide_checklist", JSON.stringify(checked));
+  }, [checked, checklistLoaded]);
 
   const firm = FIRMS[firmIndex];
   const rubric = firm.rubric;

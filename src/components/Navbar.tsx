@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, History, Settings, HelpCircle, MessageSquare } from "lucide-react";
+import { ArrowRight, History, Settings, HelpCircle, MessageSquare, Menu, X } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -75,6 +75,7 @@ export default function Navbar() {
   const user = session?.user;
   const loading = status === "loading";
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { scrollY } = useScroll();
   const navBg = useTransform(scrollY, [0, 180], ["oklch(0.97 0.03 290 / 0)", "oklch(0.97 0.03 290 / 0.92)"]);
@@ -115,7 +116,7 @@ export default function Navbar() {
           <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <div className="hp-nav-links" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <button style={textLink} onClick={() => router.push("/")}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--hp-foreground)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--hp-soft-foreground)")}>
@@ -168,7 +169,69 @@ export default function Navbar() {
             </div>
           )}
         </div>
+
+        <div className="hp-nav-mobile-controls" style={{ display: "none", alignItems: "center", gap: "0.5rem" }}>
+          {!loading && user && (
+            <button
+              onClick={() => setProfileOpen(o => !o)}
+              style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}
+            >
+              {user.image
+                ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
+              }
+            </button>
+          )}
+          {profileOpen && (
+            <div style={{ position: "absolute", top: "56px", right: "1.25rem" }}>
+              <ProfileDropdown user={user!} onClose={() => setProfileOpen(false)} />
+            </div>
+          )}
+          <button
+            onClick={() => setMobileMenuOpen(o => !o)}
+            aria-label="Menu"
+            style={{ width: "38px", height: "38px", borderRadius: "9999px", border: "1px solid var(--hp-border)", background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+          >
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </motion.header>
+
+      <style>{`
+        @media (max-width: 700px) {
+          .hp-nav-links { display: none !important; }
+          .hp-nav-mobile-controls { display: flex !important; }
+        }
+      `}</style>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.15 }}
+            style={{ position: "fixed", top: "64px", left: 0, right: 0, zIndex: 49, background: "white", borderBottom: "1px solid var(--hp-border)", boxShadow: "0 12px 32px oklch(0.4 0.05 280 / 12%)", padding: "0.75rem 1.25rem 1.25rem", display: "flex", flexDirection: "column", gap: "0.25rem", fontFamily: FONT }}
+          >
+            {[
+              { label: "Home", action: () => router.push("/") },
+              { label: "Library", action: () => router.push("/library") },
+              { label: "Guide", action: () => router.push("/guide") },
+            ].map(item => (
+              <button
+                key={item.label}
+                onClick={() => { item.action(); setMobileMenuOpen(false); }}
+                style={{ textAlign: "left", background: "none", border: "none", padding: "0.7rem 0.25rem", fontSize: "0.95rem", fontWeight: 500, color: "var(--hp-foreground)", cursor: "pointer", fontFamily: FONT, borderBottom: "1px solid var(--hp-border)" }}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button
+              onClick={() => { router.push("/dashboard"); setMobileMenuOpen(false); }}
+              style={{ marginTop: "0.75rem", height: "42px", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.4rem" }}
+            >
+              Start practicing <ArrowRight size={15} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Spacer so content isn't hidden behind fixed nav */}
       <div style={{ height: "64px" }} />

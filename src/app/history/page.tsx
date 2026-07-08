@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { formatDuration } from "@/lib/utils";
-import { ArrowLeft, Clock, BarChart2, Briefcase } from "lucide-react";
+import { ArrowLeft, Clock, BarChart2, Briefcase, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
 
@@ -106,6 +106,104 @@ const DIFFICULTIES = [
   { label: "Intermediate", value: "intermediate" },
   { label: "Advanced", value: "advanced" },
 ];
+
+function ScoreTrend({ sessions }: { sessions: SessionRecord[] }) {
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+
+  const points = sessions
+    .filter(s => s.overallScore != null || s.guidedScore != null)
+    .map(s => ({ date: s.completedAt, score: (s.overallScore ?? s.guidedScore) as number }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  if (points.length < 2) return null;
+
+  const W = 640, H = 160, PAD_X = 14, PAD_Y = 22;
+  const n = points.length;
+  const xFor = (i: number) => PAD_X + (i / (n - 1)) * (W - PAD_X * 2);
+  const yFor = (score: number) => H - PAD_Y - (score / 100) * (H - PAD_Y * 2);
+  const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${xFor(i).toFixed(1)} ${yFor(p.score).toFixed(1)}`).join(" ");
+
+  const first = points[0].score;
+  const last = points[points.length - 1].score;
+  const delta = last - first;
+  const deltaColor = delta > 0 ? "#15803d" : delta < 0 ? "#b91c1c" : "var(--hp-soft-foreground)";
+
+  const handlePointer = (e: React.PointerEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * W;
+    let closest = 0, closestDist = Infinity;
+    points.forEach((_, i) => {
+      const dist = Math.abs(xFor(i) - x);
+      if (dist < closestDist) { closestDist = dist; closest = i; }
+    });
+    setHoverIdx(closest);
+  };
+
+  const hovered = hoverIdx !== null ? points[hoverIdx] : null;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }}
+      style={{ background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)", padding: "1.25rem 1.4rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", marginBottom: "0.75rem", flexWrap: "wrap" }}>
+        <div>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)" }}>
+            Score over time
+          </div>
+          <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>
+            Across your {n} scored sessions
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.9rem", fontWeight: 800, color: deltaColor }}>
+          {delta > 0 ? <TrendingUp size={16} /> : delta < 0 ? <TrendingDown size={16} /> : <Minus size={16} />}
+          {delta > 0 ? `+${delta}` : delta} since your first session
+        </div>
+      </div>
+
+      <div style={{ position: "relative" }}>
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          style={{ width: "100%", height: "auto", display: "block", cursor: "crosshair" }}
+          onPointerMove={handlePointer}
+          onPointerLeave={() => setHoverIdx(null)}
+        >
+          {[0, 50, 100].map(v => (
+            <Fragment key={v}>
+              <line x1={PAD_X} x2={W - PAD_X} y1={yFor(v)} y2={yFor(v)} stroke="var(--hp-border)" strokeWidth={1} />
+              <text x={PAD_X} y={yFor(v) - 4} fontSize="9" fill="var(--hp-soft-foreground)">{v}</text>
+            </Fragment>
+          ))}
+
+          {hoverIdx !== null && (
+            <line x1={xFor(hoverIdx)} x2={xFor(hoverIdx)} y1={PAD_Y} y2={H - PAD_Y} stroke="var(--hp-border-strong)" strokeWidth={1} />
+          )}
+
+          <path d={linePath} fill="none" stroke="var(--hp-primary)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+
+          {points.map((p, i) => (
+            <circle
+              key={i} cx={xFor(i)} cy={yFor(p.score)} r={hoverIdx === i ? 6 : 5}
+              fill="var(--hp-primary)" stroke="white" strokeWidth={2}
+            />
+          ))}
+        </svg>
+
+        {hovered && hoverIdx !== null && (
+          <div style={{
+            position: "absolute",
+            left: `${(xFor(hoverIdx) / W) * 100}%`,
+            top: `${(yFor(hovered.score) / H) * 100}%`,
+            transform: hoverIdx < n / 2 ? "translate(8px, -130%)" : "translate(-108%, -130%)",
+            background: "var(--hp-foreground)", color: "white", borderRadius: "8px",
+            padding: "0.35rem 0.6rem", fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap",
+            pointerEvents: "none", boxShadow: "0 4px 12px oklch(0.4 0.05 280 / 20%)",
+          }}>
+            {new Date(hovered.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })} · {hovered.score}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function HistoryPage() {
   const router = useRouter();
@@ -218,6 +316,9 @@ export default function HistoryPage() {
             ))}
           </motion.div>
         )}
+
+        {/* Progress trend */}
+        <ScoreTrend sessions={sessions} />
 
         {/* Filters */}
         {sessions.length > 0 && (
