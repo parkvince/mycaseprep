@@ -34,38 +34,68 @@ function pcmToWav(pcm: Buffer, sampleRate: number, numChannels = 1, bitsPerSampl
   return Buffer.concat([header, pcm]);
 }
 
+const MAX_ATTEMPTS = 3;
+const REQUEST_TIMEOUT_MS = 12000;
+// Rate limits (429) and transient server errors (5xx) are worth a quick retry —
+// a mid-interview quota blip shouldn't be the reason the voice suddenly changes.
+const RETRYABLE_STATUS = (status: number) => status === 429 || status >= 500;
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export async function synthesizeSpeech(text: string, gender: "male" | "female"): Promise<Buffer | null> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
 
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: { "x-goog-api-key": apiKey, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text }] }],
-          generationConfig: {
-            responseModalities: ["AUDIO"],
-            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_BY_GENDER[gender] } } },
-          },
-        }),
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent`,
+        {
+          method: "POST",
+          headers: { "x-goog-api-key": apiKey, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text }] }],
+            generationConfig: {
+              responseModalities: ["AUDIO"],
+              speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_BY_GENDER[gender] } } },
+            },
+          }),
+          signal: controller.signal,
+        }
+      );
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        if (RETRYABLE_STATUS(res.status) && attempt < MAX_ATTEMPTS) {
+          await sleep(400 * attempt);
+          continue;
+        }
+        return null;
       }
-    );
 
-    if (!res.ok) return null;
-    const json = await res.json();
-    const part = json.candidates?.[0]?.content?.parts?.[0];
-    const base64 = part?.inlineData?.data;
-    const mimeType: string | undefined = part?.inlineData?.mimeType;
-    if (!base64 || !mimeType) return null;
+      const json = await res.json();
+      const part = json.candidates?.[0]?.content?.parts?.[0];
+      const base64 = part?.inlineData?.data;
+      const mimeType: string | undefined = part?.inlineData?.mimeType;
+      if (!base64 || !mimeType) return null;
 
-    const rateMatch = mimeType.match(/rate=(\d+)/);
-    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
-    const pcm = Buffer.from(base64, "base64");
-    return pcmToWav(pcm, sampleRate);
-  } catch {
-    return null;
+      const rateMatch = mimeType.match(/rate=(\d+)/);
+      const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+      const pcm = Buffer.from(base64, "base64");
+      return pcmToWav(pcm, sampleRate);
+    } catch {
+      clearTimeout(timeoutId);
+      // Network blip or timeout — retry the same way as a transient server error.
+      if (attempt < MAX_ATTEMPTS) {
+        await sleep(400 * attempt);
+        continue;
+      }
+      return null;
+    }
   }
+  return null;
 }

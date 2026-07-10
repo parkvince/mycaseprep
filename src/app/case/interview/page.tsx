@@ -101,6 +101,10 @@ function InterviewInner() {
   const isSpeakingRef = useRef(false);
   const loadingRef = useRef(false);
   const userSpeakingRef = useRef(false);
+  // Once the premium voice fails, stick with the browser fallback for the rest of
+  // the session instead of flip-flopping between two very different-sounding
+  // voices turn to turn — consistency matters more than winning back one line.
+  const premiumTtsDeadRef = useRef(false);
 
   useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
@@ -264,12 +268,23 @@ function InterviewInner() {
     stopSpeaking();
     const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
 
+    // Once the premium voice has failed once this session, don't keep paying its
+    // latency/quota cost on every turn — go straight to the (consistent) fallback.
+    if (premiumTtsDeadRef.current) {
+      speakBrowser(clean);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: clean, gender: INTERVIEWER.gender }),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       if (!res.ok) throw new Error("tts unavailable");
       const blob = await res.blob();
       if (!mountedRef.current) throw new Error("unmounted");
@@ -285,11 +300,14 @@ function InterviewInner() {
       };
       audio.onerror = () => {
         URL.revokeObjectURL(url);
-        if (mountedRef.current) setIsSpeaking(false);
+        premiumTtsDeadRef.current = true;
+        if (mountedRef.current) speakBrowser(clean);
       };
       await audio.play();
       setIsSpeaking(true);
     } catch {
+      clearTimeout(timeoutId);
+      premiumTtsDeadRef.current = true;
       if (mountedRef.current) speakBrowser(clean);
     }
   };
