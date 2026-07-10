@@ -7,7 +7,7 @@ import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, Clock, AlertTriangle } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -70,9 +70,13 @@ function FeedbackInner() {
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [aiProvider, setAiProvider] = useState<string | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [noSessionData, setNoSessionData] = useState(false);
   const [transcript, setTranscript] = useState<Message[]>([]);
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [evalFailed, setEvalFailed] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [savingRetry, setSavingRetry] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal" | "transcript">("overview");
 
   useEffect(() => {
@@ -89,6 +93,7 @@ function FeedbackInner() {
       setCaseTitle(data.caseTitle ?? "Case Interview");
       setAiProvider(data.aiProvider ?? null);
     } else {
+      setNoSessionData(true);
       setLoading(false);
     }
     setDataLoaded(true);
@@ -98,31 +103,74 @@ function FeedbackInner() {
     document.title = `Feedback: ${caseTitle} · MyCasePrep`;
   }, [caseTitle]);
 
+  // Retried up to twice with backoff — a save failure here is silent otherwise,
+  // and losing a completed session out of History with no signal to the user
+  // is worse than a couple extra seconds of latency.
+  const saveSession = async (t: Message[], overallScore: number, attempt = 1): Promise<void> => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    try {
+      const res = await fetch("/api/sessions/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "ai", firm, difficulty, caseTitle, duration, hintsUsed, overallScore, transcript: t }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error("save failed");
+      setSaveFailed(false);
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.error(err);
+      if (attempt < 3) {
+        await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+        return saveSession(t, overallScore, attempt + 1);
+      }
+      setSaveFailed(true);
+    }
+  };
+
+  const runEvaluation = async () => {
+    if (transcriptRaw === "[]") return;
+    setLoading(true);
+    setEvalFailed(false);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    try {
+      const t = JSON.parse(transcriptRaw);
+      const res = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firm, difficulty, hintsUsed, transcript: t, preferredProvider: aiProvider }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error("evaluate failed");
+      const data = await res.json();
+      setEvaluation(data);
+      setLoading(false);
+      await saveSession(t, data.overallScore);
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.error(err);
+      setEvalFailed(true);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!dataLoaded || transcriptRaw === "[]") return;
-    const evaluate = async () => {
-      try {
-        const t = JSON.parse(transcriptRaw);
-        const res = await fetch("/api/evaluate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firm, difficulty, hintsUsed, transcript: t, preferredProvider: aiProvider }),
-        });
-        const data = await res.json();
-        setEvaluation(data);
-        await fetch("/api/sessions/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "ai", firm, difficulty, caseTitle, duration, hintsUsed, overallScore: data.overallScore, transcript: t }),
-        });
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    evaluate();
-  }, [dataLoaded, transcriptRaw, firm, difficulty, hintsUsed, caseTitle, duration, aiProvider]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    runEvaluation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataLoaded, transcriptRaw]);
+
+  const retrySave = async () => {
+    if (!evaluation) return;
+    setSavingRetry(true);
+    await saveSession(JSON.parse(transcriptRaw), evaluation.overallScore);
+    setSavingRetry(false);
+  };
 
   const firmConfig = FIRM_CONFIGS[firm];
 
@@ -220,10 +268,36 @@ function FeedbackInner() {
     );
   }
 
-  if (!evaluation) {
+  if (noSessionData) {
     return (
-      <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT }}>
-        <p style={{ color: "var(--hp-soft-foreground)" }}>Failed to load evaluation. Please try again.</p>
+      <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", fontFamily: FONT, padding: "0 1.5rem", textAlign: "center" }}>
+        <p style={{ color: "var(--hp-foreground)", fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>No interview session found</p>
+        <p style={{ color: "var(--hp-soft-foreground)", fontSize: "0.85rem", margin: 0, maxWidth: "360px" }}>
+          This can happen if you refreshed or opened this page directly instead of finishing a case. Start a new one from your dashboard.
+        </p>
+        <button
+          onClick={() => router.push("/dashboard")}
+          style={{ marginTop: "0.5rem", height: "44px", padding: "0 1.5rem", borderRadius: "10px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.85rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer" }}
+        >
+          Go to dashboard
+        </button>
+      </div>
+    );
+  }
+
+  if (evalFailed || !evaluation) {
+    return (
+      <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", fontFamily: FONT, padding: "0 1.5rem", textAlign: "center" }}>
+        <p style={{ color: "var(--hp-foreground)", fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>Couldn&apos;t evaluate this session</p>
+        <p style={{ color: "var(--hp-soft-foreground)", fontSize: "0.85rem", margin: 0, maxWidth: "360px" }}>
+          Your transcript is still intact — this was likely a temporary connection issue.
+        </p>
+        <button
+          onClick={runEvaluation}
+          style={{ marginTop: "0.5rem", height: "44px", padding: "0 1.5rem", borderRadius: "10px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.85rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer" }}
+        >
+          Try again
+        </button>
       </div>
     );
   }
@@ -235,6 +309,23 @@ function FeedbackInner() {
       <Navbar />
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
+
+        {saveFailed && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+            style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "10px", padding: "0.75rem 1rem", marginBottom: "1.25rem" }}>
+            <AlertTriangle size={16} color="#d97706" style={{ flexShrink: 0 }} />
+            <p style={{ flex: 1, fontSize: "0.82rem", color: "#92400e", margin: 0, lineHeight: 1.5 }}>
+              This score wasn&apos;t saved to your history — it won&apos;t show up in your progress trend yet.
+            </p>
+            <button
+              onClick={retrySave}
+              disabled={savingRetry}
+              style={{ flexShrink: 0, height: "30px", padding: "0 0.75rem", borderRadius: "7px", border: "1px solid #fde68a", background: "white", color: "#92400e", fontSize: "0.78rem", fontWeight: 700, fontFamily: FONT, cursor: savingRetry ? "wait" : "pointer" }}
+            >
+              {savingRetry ? "Retrying..." : "Retry"}
+            </button>
+          </motion.div>
+        )}
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: "2rem" }}>
