@@ -13,6 +13,7 @@ const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 interface SessionRecord {
   id: string;
   type: string;
+  caseType: string | null;
   firm: string;
   difficulty: string;
   caseTitle: string;
@@ -60,7 +61,7 @@ function typeLabel(t: string): string {
   const map: Record<string, string> = {
     profitability: "Profitability", market_sizing: "Market sizing",
     market_entry: "Market entry", merger_acquisition: "M&A",
-    operations: "Operations", ai: "AI case", guided: "Guided",
+    operations: "Operations", random: "Random",
   };
   return map[t] ?? t;
 }
@@ -224,7 +225,7 @@ export default function HistoryPage() {
 
   const filtered = sessions.filter(s => {
     if (firmFilter !== "all" && s.firm !== firmFilter) return false;
-    if (typeFilter !== "all" && s.type !== typeFilter) return false;
+    if (typeFilter !== "all" && s.caseType !== typeFilter) return false;
     if (diffFilter !== "all" && s.difficulty !== diffFilter) return false;
     if (kindFilter === "guided" && s.type !== "guided") return false;
     if (kindFilter === "ai" && s.type === "guided") return false;
@@ -448,8 +449,13 @@ export default function HistoryPage() {
                         </span>
                         <span style={{ color: "var(--hp-border)" }}>·</span>
                         <span style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)" }}>
-                          {typeLabel(s.type)}
+                          {s.caseType ? typeLabel(s.caseType) : "General practice"}
                         </span>
+                        {s.type === "guided" && (
+                          <span style={{ fontSize: "0.68rem", fontWeight: 600, padding: "0.15rem 0.55rem", borderRadius: "9999px", background: "var(--hp-primary-soft)", color: "var(--hp-primary)" }}>
+                            Guided
+                          </span>
+                        )}
                         <span style={{ color: "var(--hp-border)" }}>·</span>
                         <span style={difficultyBadge(s.difficulty)}>{s.difficulty}</span>
                       </div>

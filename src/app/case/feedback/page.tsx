@@ -63,6 +63,7 @@ function FeedbackInner() {
   const router = useRouter();
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
+  const [caseType, setCaseType] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [hintsUsed, setHintsUsed] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -84,6 +85,7 @@ function FeedbackInner() {
     if (raw) {
       const data = JSON.parse(raw);
       setFirm(data.firm ?? "mckinsey");
+      setCaseType(data.caseType ?? null);
       setDifficulty(data.difficulty ?? "intermediate");
       setHintsUsed(data.hintsUsed ?? 0);
       setDuration(data.duration ?? 0);
@@ -113,7 +115,7 @@ function FeedbackInner() {
       const res = await fetch("/api/sessions/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "ai", firm, difficulty, caseTitle, duration, hintsUsed, overallScore, transcript: t }),
+        body: JSON.stringify({ type: "ai", caseType, firm, difficulty, caseTitle, duration, hintsUsed, overallScore, transcript: t }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);

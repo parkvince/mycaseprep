@@ -31,6 +31,7 @@ model CaseSession {
   userId       String
   user         User     @relation(fields: [userId], references: [id])
   type         String
+  caseType     String?
   firm         String
   difficulty   String
   caseTitle    String

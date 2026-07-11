@@ -28,6 +28,7 @@ function SessionInner() {
   const router = useRouter();
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
+  const [caseType, setCaseType] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [mode, setMode] = useState<Mode>("text");
   const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
@@ -60,6 +61,7 @@ function SessionInner() {
     if (raw) {
       const data = JSON.parse(raw);
       setFirm(data.firm ?? "mckinsey");
+      setCaseType(data.type ?? null);
       setDifficulty(data.difficulty ?? "intermediate");
       setMode(data.mode ?? "text");
       setPersonality(data.personality ?? "strict");
@@ -131,7 +133,7 @@ function SessionInner() {
   const handleEndSession = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     sessionStorage.setItem("transcriptData", JSON.stringify({
-      firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider,
+      firm, caseType, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider,
     }));
     router.push("/case/feedback");
   };

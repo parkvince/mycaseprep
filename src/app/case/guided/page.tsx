@@ -89,7 +89,7 @@ function GuidedCaseInner() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "guided", firm: currentCase.firm, difficulty: currentCase.difficulty,
+          type: "guided", caseType: currentCase.type, firm: currentCase.firm, difficulty: currentCase.difficulty,
           caseTitle: currentCase.title, duration,
           hintsUsed: 0, guidedScore: score,
         }),

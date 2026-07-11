@@ -59,6 +59,7 @@ function InterviewInner() {
   const { data: session } = useSession();
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
+  const [caseType, setCaseType] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
   const [caseTitle, setCaseTitle] = useState("Case Interview");
@@ -116,6 +117,7 @@ function InterviewInner() {
     if (raw) {
       const data = JSON.parse(raw);
       setFirm(data.firm ?? "mckinsey");
+      setCaseType(data.type ?? null);
       setDifficulty(data.difficulty ?? "intermediate");
       setPersonality(data.personality ?? "strict");
       setCaseTitle(data.title ?? "Case Interview");
@@ -471,7 +473,7 @@ function InterviewInner() {
     if (synthRef.current) synthRef.current.onvoiceschanged = null;
     streamRef.current?.getTracks().forEach(t => t.stop());
     if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
-    sessionStorage.setItem("transcriptData", JSON.stringify({ firm, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider }));
+    sessionStorage.setItem("transcriptData", JSON.stringify({ firm, caseType, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider }));
     router.push("/case/feedback");
   };
 

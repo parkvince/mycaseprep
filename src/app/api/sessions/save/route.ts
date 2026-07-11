@@ -12,12 +12,13 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
     const body = await req.json();
-    const { type, firm, difficulty, caseTitle, duration, hintsUsed, overallScore, transcript, guidedScore } = body;
+    const { type, caseType, firm, difficulty, caseTitle, duration, hintsUsed, overallScore, transcript, guidedScore } = body;
 
     const caseSession = await prisma.caseSession.create({
       data: {
         userId,
         type,
+        caseType: caseType ?? null,
         firm,
         difficulty,
         caseTitle,
