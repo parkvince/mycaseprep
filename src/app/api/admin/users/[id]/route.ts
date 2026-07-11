@@ -3,12 +3,13 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/adminAuth";
 import { isAdminEmail } from "@/lib/admin";
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/admin/users/[id]">) {
   const admin = await requireAdminSession();
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
-    const target = await prisma.user.findUnique({ where: { id: params.id }, select: { email: true } });
+    const { id } = await ctx.params;
+    const target = await prisma.user.findUnique({ where: { id }, select: { email: true } });
     if (!target) return NextResponse.json({ error: "User not found" }, { status: 404 });
     if (isAdminEmail(target.email)) {
       return NextResponse.json({ error: "Can't modify the admin account" }, { status: 400 });
@@ -26,7 +27,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
     }
 
-    const updated = await prisma.user.update({ where: { id: params.id }, data });
+    const updated = await prisma.user.update({ where: { id }, data });
     return NextResponse.json({
       id: updated.id,
       unlimitedCases: updated.unlimitedCases,
@@ -39,21 +40,22 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, ctx: RouteContext<"/api/admin/users/[id]">) {
   const admin = await requireAdminSession();
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
-    const target = await prisma.user.findUnique({ where: { id: params.id }, select: { email: true } });
+    const { id } = await ctx.params;
+    const target = await prisma.user.findUnique({ where: { id }, select: { email: true } });
     if (!target) return NextResponse.json({ error: "User not found" }, { status: 404 });
     if (isAdminEmail(target.email)) {
       return NextResponse.json({ error: "Can't delete the admin account" }, { status: 400 });
     }
 
     await prisma.$transaction([
-      prisma.caseSession.deleteMany({ where: { userId: params.id } }),
-      prisma.dailyUsage.deleteMany({ where: { userId: params.id } }),
-      prisma.user.delete({ where: { id: params.id } }),
+      prisma.caseSession.deleteMany({ where: { userId: id } }),
+      prisma.dailyUsage.deleteMany({ where: { userId: id } }),
+      prisma.user.delete({ where: { id } }),
     ]);
 
     return NextResponse.json({ success: true });
