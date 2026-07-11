@@ -43,6 +43,7 @@ function SessionInner() {
   const [showHint, setShowHint] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+  const [voiceUnsupported, setVoiceUnsupported] = useState(false);
 
   useEffect(() => {
     document.title = `${caseTitle} · MyCasePrep`;
@@ -104,16 +105,22 @@ function SessionInner() {
     setInput("");
     setInterimText("");
     setLoading(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
     try {
       const res = await fetch("/api/case/respond", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firm, casePrompt, difficulty, transcript: newTranscript, hintsUsed, personality, preferredProvider: aiProvider }),
+        signal: controller.signal,
       });
-      const data = await res.json();
+      clearTimeout(timeoutId);
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.response) throw new Error(data?.error ?? "No response from interviewer");
       if (data.provider) setAiProvider(data.provider);
       setTranscript(prev => [...prev, { role: "assistant", content: data.response, timestamp: new Date() }]);
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error(err);
       setTranscript(prev => [...prev, { role: "assistant", content: "Sorry — something went wrong generating a reply. Please try sending your response again.", timestamp: new Date() }]);
     } finally {
@@ -130,8 +137,9 @@ function SessionInner() {
   };
 
   const startRecording = () => {
+    if (recognitionRef.current) return;
     const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognitionAPI) { alert("Voice input requires Chrome."); return; }
+    if (!SpeechRecognitionAPI) { setVoiceUnsupported(true); return; }
     const recognition = new SpeechRecognitionAPI();
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -144,10 +152,17 @@ function SessionInner() {
       }
       setInput(final); setInterimText(interim);
     };
-    recognition.onend = () => setIsRecording(false);
-    recognition.start();
-    recognitionRef.current = recognition;
-    setIsRecording(true);
+    recognition.onend = () => { recognitionRef.current = null; setIsRecording(false); };
+    recognition.onerror = (e: any) => {
+      if (e?.error === "no-speech" || e?.error === "aborted") return;
+      recognitionRef.current = null;
+      setIsRecording(false);
+    };
+    try {
+      recognition.start();
+      recognitionRef.current = recognition;
+      setIsRecording(true);
+    } catch { recognitionRef.current = null; }
   };
 
   const stopRecording = () => { recognitionRef.current?.stop(); setIsRecording(false); setInterimText(""); };
@@ -281,6 +296,13 @@ function SessionInner() {
 
       {/* Input */}
       <div style={{ padding: "1rem 1.75rem 1.25rem", borderTop: "1px solid var(--hp-border)", background: "white", flexShrink: 0 }}>
+
+        {/* Voice unsupported notice */}
+        {mode === "voice" && voiceUnsupported && (
+          <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "10px", fontSize: "0.82rem", color: "#92400e" }}>
+            Voice input isn&apos;t supported in this browser — try Chrome or Edge, or just type your response below.
+          </div>
+        )}
 
         {/* Voice recording indicator */}
         {mode === "voice" && (

@@ -99,6 +99,7 @@ export default function DashboardPage() {
   const [selectedMode, setSelectedMode] = useState<Mode | "live" | null>(null);
   const [personality, setPersonality] = useState<"strict" | "friendly" | null>(null);
   const [loading, setLoading] = useState(false);
+  const [genError, setGenError] = useState(false);
   const [usage, setUsage] = useState<UsageStatus | null>(null);
   const [usageLoading, setUsageLoading] = useState(true);
 
@@ -133,13 +134,18 @@ export default function DashboardPage() {
   const handleStart = async () => {
     if (!usage?.allowed || !allSelected) return;
     setLoading(true);
+    setGenError(false);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
     try {
       const res = await fetch("/api/case/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firm: selectedFirm, type: selectedType, difficulty: selectedDifficulty }),
+        signal: controller.signal,
       });
-      if (!res.ok) { setLoading(false); return; }
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error("case generation failed");
       const caseData = await res.json();
       sessionStorage.setItem("caseData", JSON.stringify({
         firm: selectedFirm, type: selectedType, difficulty: selectedDifficulty,
@@ -147,11 +153,15 @@ export default function DashboardPage() {
         title: caseData.title, prompt: caseData.prompt, context: caseData.context ?? "",
         aiProvider: caseData.provider ?? null,
       }));
-      const usageRes = await fetch("/api/usage/check");
-      setUsage(await usageRes.json());
+      // The case is already generated and saved at this point — refreshing the
+      // displayed usage count is a nice-to-have, not a gate. A blip here must
+      // never strand the user on a case they already paid API cost to generate.
       router.push(selectedMode === "live" ? "/case/interview" : "/case/session");
+      fetch("/api/usage/check").then(r => r.json()).then(setUsage).catch(() => {});
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error(err);
+      setGenError(true);
       setLoading(false);
     }
   };
@@ -332,6 +342,11 @@ export default function DashboardPage() {
               {!allSelected && (
                 <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", textAlign: "center", fontFamily: FONT }}>
                   Still need to select: {missingItems.join(", ")}
+                </div>
+              )}
+              {genError && (
+                <div style={{ fontSize: "0.8rem", color: "#dc2626", textAlign: "center", fontFamily: FONT }}>
+                  Couldn&apos;t generate that case — likely a temporary connection issue. Try again.
                 </div>
               )}
               <button
