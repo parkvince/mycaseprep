@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, History, Settings, HelpCircle, MessageSquare, Menu, X } from "lucide-react";
+import { ArrowRight, History, Settings, HelpCircle, MessageSquare, Menu, X, ShieldCheck } from "lucide-react";
+import { isAdminEmail } from "@/lib/admin";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -52,6 +53,7 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
           <div style={{ padding: "0.5rem" }}>
             {item(<History size={16} />, "History", () => { router.push("/history"); onClose(); })}
             {item(<Settings size={16} />, "Settings", () => { router.push("/settings"); onClose(); })}
+            {isAdminEmail(user.email) && item(<ShieldCheck size={16} />, "Admin", () => { router.push("/admin"); onClose(); })}
           </div>
           <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
             {item(<HelpCircle size={16} />, "Help", () => {})}

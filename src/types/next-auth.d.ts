@@ -16,5 +16,6 @@ declare module "next-auth/jwt" {
     id: string;
     image?: string | null;
     name?: string | null;
+    banned?: boolean;
   }
 }

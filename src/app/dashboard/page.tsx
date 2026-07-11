@@ -48,8 +48,9 @@ const STYLES = [
 
 interface UsageStatus {
   allowed: boolean;
+  unlimited?: boolean;
   casesUsed: number;
-  casesRemaining: number;
+  casesRemaining: number | null;
   resetsAt: string | null;
 }
 
@@ -224,21 +225,23 @@ export default function DashboardPage() {
             }}>
             <div>
               <div style={{ fontSize: "0.875rem", fontWeight: 600, color: blocked ? "#dc2626" : "var(--hp-foreground)", marginBottom: "2px" }}>
-                {blocked ? "AI case limit reached for this window" : `${usage.casesRemaining} AI case${usage.casesRemaining !== 1 ? "s" : ""} remaining this window`}
+                {usage.unlimited ? "Unlimited AI cases" : blocked ? "AI case limit reached for this window" : `${usage.casesRemaining} AI case${usage.casesRemaining !== 1 ? "s" : ""} remaining this window`}
               </div>
               <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
-                {blocked
+                {usage.unlimited
+                  ? "No limit on this account"
+                  : blocked
                   ? usage.resetsAt ? `Resets in ${formatResetsAt(usage.resetsAt)} · try a guided case in the meantime` : "Resets every 12 hours"
-                  : `${usage.casesUsed} of 2 used · resets every 12 hours`}
+                  : `${usage.casesUsed} of ${usage.casesUsed + (usage.casesRemaining ?? 0)} used · resets every 12 hours`}
               </div>
             </div>
-            {blocked ? (
+            {usage.unlimited ? null : blocked ? (
               <button onClick={() => router.push("/library")} style={{ height: "36px", padding: "0 1rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, flexShrink: 0 }}>
                 Browse guided cases
               </button>
             ) : (
               <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
-                {[0, 1].map(i => (
+                {Array.from({ length: usage.casesUsed + (usage.casesRemaining ?? 0) }).map((_, i) => (
                   <div key={i} style={{ width: "10px", height: "10px", borderRadius: "50%", background: i < usage.casesUsed ? "var(--hp-border-strong)" : "var(--hp-primary)", border: `1px solid ${i < usage.casesUsed ? "var(--hp-border-strong)" : "var(--hp-primary)"}` }} />
                 ))}
               </div>

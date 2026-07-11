@@ -8,15 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  name          String?
-  email         String?       @unique
-  emailVerified DateTime?
-  image         String?  @db.Text
-  password      String?
-  createdAt     DateTime      @default(now())
-  caseSessions  CaseSession[]
-  dailyUsage    DailyUsage[]
+  id             String        @id @default(cuid())
+  name           String?
+  email          String?       @unique
+  emailVerified  DateTime?
+  image          String?  @db.Text
+  password       String?
+  createdAt      DateTime      @default(now())
+  unlimitedCases Boolean       @default(false)
+  bonusCases     Int           @default(0)
+  banned         Boolean       @default(false)
+  caseSessions   CaseSession[]
+  dailyUsage     DailyUsage[]
 }
 
 model VerificationToken {

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "banned" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "bonusCases" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "unlimitedCases" BOOLEAN NOT NULL DEFAULT false;

@@ -67,13 +67,16 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      // Refresh name from DB on every jwt call
+      // Refresh name + banned status from DB on every jwt call
       if (token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { name: true },
+          select: { name: true, banned: true },
         });
-        if (dbUser) token.name = dbUser.name;
+        if (dbUser) {
+          token.name = dbUser.name;
+          token.banned = dbUser.banned;
+        }
       }
 
       return token;

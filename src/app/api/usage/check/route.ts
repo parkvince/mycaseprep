@@ -15,13 +15,26 @@ export async function GET() {
 
     const userId = session.user.id;
 
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { unlimitedCases: true, bonusCases: true } });
+    if (user?.unlimitedCases) {
+      return NextResponse.json({
+        allowed: true,
+        unlimited: true,
+        casesUsed: 0,
+        casesRemaining: null,
+        windowStart: null,
+        resetsAt: null,
+      });
+    }
+    const limit = CASE_LIMIT + (user?.bonusCases ?? 0);
+
     const usageRecord = await prisma.dailyUsage.findUnique({ where: { userId } });
 
     if (!usageRecord) {
       return NextResponse.json({
         allowed: true,
         casesUsed: 0,
-        casesRemaining: CASE_LIMIT,
+        casesRemaining: limit,
         windowStart: null,
         resetsAt: null,
       });
@@ -40,19 +53,19 @@ export async function GET() {
       return NextResponse.json({
         allowed: true,
         casesUsed: 0,
-        casesRemaining: CASE_LIMIT,
+        casesRemaining: limit,
         windowStart: now,
         resetsAt: new Date(now.getTime() + WINDOW_HOURS * 60 * 60 * 1000),
       });
     }
 
     const casesUsed = usageRecord.casesUsed;
-    const allowed = casesUsed < CASE_LIMIT;
+    const allowed = casesUsed < limit;
 
     return NextResponse.json({
       allowed,
       casesUsed,
-      casesRemaining: Math.max(0, CASE_LIMIT - casesUsed),
+      casesRemaining: Math.max(0, limit - casesUsed),
       windowStart,
       resetsAt: windowEnd,
     });
