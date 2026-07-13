@@ -262,7 +262,7 @@ function SessionInner() {
           >
             <Lightbulb size={14} style={{ color: "var(--hp-primary)", flexShrink: 0 }} />
             <span style={{ flex: 1, lineHeight: 1.6 }}>
-              {caseContext || "Think about the key drivers of the problem. Structure your answer using a MECE framework before diving into analysis."}
+              {caseContext || "Think about the key drivers of the problem. Break it into buckets that don't overlap and together cover the whole thing, before diving into analysis."}
             </span>
             <button onClick={() => setShowHint(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", display: "flex", alignItems: "center" }}>
               <X size={15} />

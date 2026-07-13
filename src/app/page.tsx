@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, History, Settings, HelpCircle, MessageSquare, Mail, Menu, X } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import Term from "@/components/Term";
 
 const FEATURES = [
   { img: "/homepage/blob-lavender.png", title: "Firm-specific feedback", copy: "Graded the way McKinsey, Bain, and BCG actually evaluate candidates. Each firm has its own rubric." },
@@ -395,13 +396,18 @@ export default function LandingPage() {
 
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
                 style={{ marginTop: "1.5rem", maxWidth: "28rem", fontSize: "1.05rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, fontWeight: 400 }}>
-                Practice with a realistic interviewer simulation. Firm-specific scoring from MBB, Big 4, and 10+ leading consulting firms.
+                Practice with a realistic interviewer simulation. Firm-specific scoring from{" "}
+                <Term define="McKinsey, Bain & Company, and Boston Consulting Group — the three top-tier 'MBB' strategy consulting firms.">MBB</Term>,{" "}
+                <Term define="Deloitte, EY, KPMG, and PwC — the four largest professional services firms, all with growing consulting arms.">Big 4</Term>, and 10+ leading consulting firms.
               </motion.p>
 
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ marginTop: "2rem" }}>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ marginTop: "2rem", display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap" }}>
                 <button className="hp-btn-primary hp-btn-lg" onClick={() => router.push(cta)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: FONT, fontWeight: 600 }}>
                   {user ? "Open dashboard" : "Get started free"}
                   <ArrowRight size={18} />
+                </button>
+                <button onClick={() => router.push("/guide")} style={{ background: "none", border: "none", color: "var(--hp-soft-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, textDecoration: "underline", textUnderlineOffset: "3px" }}>
+                  New to case interviews? Start here
                 </button>
               </motion.div>
             </div>

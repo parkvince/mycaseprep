@@ -31,7 +31,7 @@ function renderContent(text: string): React.ReactNode[] {
 
 function getHint(hintsUsed: number, caseContext: string, casePrompt: string): string {
   const stage = hintsUsed % 3;
-  if (stage === 0) return caseContext || "Start by clarifying the objective and laying out a MECE framework with 2-3 key buckets before diving into analysis.";
+  if (stage === 0) return caseContext || "Start by clarifying the objective, then lay out 2-3 buckets to break the problem into — make sure they don't overlap and together cover the whole thing (that's what \"MECE\" means) before diving into analysis.";
   if (stage === 1) {
     const p = casePrompt.toLowerCase();
     if (p.includes("profit") || p.includes("revenue") || p.includes("cost")) return "Break profitability into Revenue and Costs. For revenue: price x volume. For costs: fixed vs. variable, then by function.";

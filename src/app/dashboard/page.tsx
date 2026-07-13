@@ -7,7 +7,7 @@ import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { CaseType, Difficulty, FirmKey, Mode } from "@/types";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen, X } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -20,25 +20,25 @@ const FIRM_SHORT_NAMES: Record<string, string> = {
   "capital-one": "Capital One", huron: "Huron",
 };
 
-const CASE_TYPES: { label: string; value: CaseType }[] = [
-  { label: "Market sizing", value: "market_sizing" },
-  { label: "Profitability", value: "profitability" },
-  { label: "Market entry", value: "market_entry" },
-  { label: "M&A", value: "merger_acquisition" },
-  { label: "Operations", value: "operations" },
-  { label: "Random", value: "random" },
+const CASE_TYPES: { label: string; value: CaseType; desc: string }[] = [
+  { label: "Market sizing", value: "market_sizing", desc: "Estimate a number — \"how many pianos are tuned in NYC?\"" },
+  { label: "Profitability", value: "profitability", desc: "A company's profit dropped — find out why and fix it" },
+  { label: "Market entry", value: "market_entry", desc: "Should this company enter a new market? Make the call" },
+  { label: "M&A", value: "merger_acquisition", desc: "Should this company buy, or merge with, another one?" },
+  { label: "Operations", value: "operations", desc: "Something in the business is inefficient — improve it" },
+  { label: "Random", value: "random", desc: "Surprise me — good for well-rounded practice" },
 ];
 
-const DIFFICULTIES: { label: string; value: Difficulty; desc: string }[] = [
-  { label: "Beginner", value: "beginner", desc: "Clear structure, straightforward data" },
+const DIFFICULTIES: { label: string; value: Difficulty; desc: string; recommended?: boolean }[] = [
+  { label: "Beginner", value: "beginner", desc: "Clear structure, straightforward data", recommended: true },
   { label: "Intermediate", value: "intermediate", desc: "Ambiguous prompts, complex analysis" },
   { label: "Advanced", value: "advanced", desc: "Partner-level rigor, high ambiguity" },
 ];
 
 const MODES = [
-  { value: "text", label: "Text", desc: "Type your answers" },
-  { value: "voice", label: "Voice", desc: "Speak your answers aloud" },
-  { value: "live", label: "Live interview", desc: "Video call with AI interviewer" },
+  { value: "text", label: "Text", desc: "Type your answers — no time pressure to think", recommended: true },
+  { value: "voice", label: "Voice", desc: "Speak your answers aloud, AI replies in text" },
+  { value: "live", label: "Live interview", desc: "Full video call with a talking AI interviewer" },
 ];
 
 const STYLES = [
@@ -74,6 +74,14 @@ function SectionLabel({ children, required, filled }: { children: React.ReactNod
   );
 }
 
+function RecommendedTag() {
+  return (
+    <span style={{ fontSize: "0.6rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: "#15803d", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "9999px", padding: "0.1rem 0.45rem", flexShrink: 0 }}>
+      Good for starting out
+    </span>
+  );
+}
+
 function OptionCard({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
@@ -103,6 +111,17 @@ export default function DashboardPage() {
   const [genError, setGenError] = useState(false);
   const [usage, setUsage] = useState<UsageStatus | null>(null);
   const [usageLoading, setUsageLoading] = useState(true);
+  const [showGuideBanner, setShowGuideBanner] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!localStorage.getItem("mycaseprep_guide_visited")) setShowGuideBanner(true);
+  }, []);
+
+  const dismissGuideBanner = () => {
+    localStorage.setItem("mycaseprep_guide_visited", "1");
+    setShowGuideBanner(false);
+  };
 
   const firmEntries = Object.entries(FIRM_CONFIGS) as [FirmKey, typeof FIRM_CONFIGS[FirmKey]][];
 
@@ -214,6 +233,30 @@ export default function DashboardPage() {
           </p>
         </motion.div>
 
+        {/* New-to-case-interviews banner */}
+        {showGuideBanner && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            style={{ marginBottom: "1.5rem", padding: "1rem 1.25rem", borderRadius: "12px", border: "1px solid var(--hp-primary)", background: "var(--hp-primary-soft)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{ width: "34px", height: "34px", borderRadius: "9999px", background: "var(--hp-primary)", color: "white", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <BookOpen size={16} />
+              </div>
+              <div>
+                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--hp-foreground)" }}>New to case interviews?</div>
+                <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>The guide walks through the framework and what graders look for — takes about 2 minutes.</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+              <button onClick={() => { dismissGuideBanner(); router.push("/guide"); }} style={{ height: "34px", padding: "0 1rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>
+                Take the guide
+              </button>
+              <button onClick={dismissGuideBanner} aria-label="Dismiss" style={{ width: "30px", height: "30px", borderRadius: "9999px", border: "none", background: "transparent", color: "var(--hp-soft-foreground)", cursor: "pointer", display: "grid", placeItems: "center" }}>
+                <X size={15} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+
         {/* Usage banner */}
         {!usageLoading && usage && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }}
@@ -276,9 +319,10 @@ export default function DashboardPage() {
             <div className="hp-dash-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
               {CASE_TYPES.map(t => (
                 <OptionCard key={t.value} selected={selectedType === t.value} onClick={() => setSelectedType(t.value)}>
-                  <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedType === t.value ? "var(--hp-primary)" : "var(--hp-foreground)", textAlign: "center" }}>
+                  <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedType === t.value ? "var(--hp-primary)" : "var(--hp-foreground)", marginBottom: "3px" }}>
                     {t.label}
                   </div>
+                  <div style={{ fontSize: "0.7rem", color: "var(--hp-soft-foreground)", lineHeight: 1.4 }}>{t.desc}</div>
                 </OptionCard>
               ))}
             </div>
@@ -291,7 +335,10 @@ export default function DashboardPage() {
             <div className="hp-dash-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
               {DIFFICULTIES.map(d => (
                 <OptionCard key={d.value} selected={selectedDifficulty === d.value} onClick={() => setSelectedDifficulty(d.value)}>
-                  <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedDifficulty === d.value ? "var(--hp-primary)" : "var(--hp-foreground)", marginBottom: "3px" }}>{d.label}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "3px", flexWrap: "wrap" }}>
+                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedDifficulty === d.value ? "var(--hp-primary)" : "var(--hp-foreground)" }}>{d.label}</span>
+                    {d.recommended && <RecommendedTag />}
+                  </div>
                   <div style={{ fontSize: "0.7rem", color: "var(--hp-soft-foreground)" }}>{d.desc}</div>
                 </OptionCard>
               ))}
@@ -305,7 +352,10 @@ export default function DashboardPage() {
             <div className="hp-dash-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
               {MODES.map(m => (
                 <OptionCard key={m.value} selected={selectedMode === m.value} onClick={() => setSelectedMode(m.value as Mode | "live")}>
-                  <div style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedMode === m.value ? "var(--hp-primary)" : "var(--hp-foreground)", marginBottom: "3px" }}>{m.label}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "3px", flexWrap: "wrap" }}>
+                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: selectedMode === m.value ? "var(--hp-primary)" : "var(--hp-foreground)" }}>{m.label}</span>
+                    {m.recommended && <RecommendedTag />}
+                  </div>
                   <div style={{ fontSize: "0.7rem", color: "var(--hp-soft-foreground)" }}>{m.desc}</div>
                 </OptionCard>
               ))}

@@ -195,6 +195,8 @@ export default function GuidePage() {
       try { setChecked(JSON.parse(raw)); } catch {}
     }
     setChecklistLoaded(true);
+    // Having been here at all is enough to stop nudging from the dashboard banner.
+    localStorage.setItem("mycaseprep_guide_visited", "1");
   }, []);
   useEffect(() => {
     if (!checklistLoaded) return;
