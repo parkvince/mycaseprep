@@ -170,11 +170,35 @@ function SessionInner() {
   const stopRecording = () => { recognitionRef.current?.stop(); setIsRecording(false); setInterimText(""); };
   const stopAndSubmit = () => { recognitionRef.current?.stop(); setIsRecording(false); setInterimText(""); if (input.trim()) sendMessage(input); };
 
+  if (ready && !casePrompt) {
+    return (
+      <main style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", background: "oklch(0.985 0.005 285)", color: "var(--hp-foreground)", fontFamily: FONT, padding: "0 1.5rem", textAlign: "center" }}>
+        <p style={{ fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>No case loaded</p>
+        <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", margin: 0, maxWidth: "360px" }}>
+          This can happen after a refresh. Start a new case from your dashboard.
+        </p>
+        <button
+          onClick={() => router.push("/dashboard")}
+          style={{ marginTop: "0.5rem", height: "44px", padding: "0 1.5rem", borderRadius: "10px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.85rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer" }}
+        >
+          Go to dashboard
+        </button>
+      </main>
+    );
+  }
+
   return (
     <main style={{ height: "100vh", display: "flex", flexDirection: "column", background: "oklch(0.985 0.005 285)", color: "var(--hp-foreground)", fontFamily: FONT }}>
 
+      <style>{`
+        @media (max-width: 640px) {
+          .hp-session-topbar { flex-wrap: wrap !important; height: auto !important; padding: 0.6rem 1rem !important; gap: 0.5rem; }
+          .hp-session-topbar-left { flex-wrap: wrap; gap: 0.5rem !important; }
+        }
+      `}</style>
+
       {/* Top bar */}
-      <div style={{
+      <div className="hp-session-topbar" style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         padding: "0 1.75rem", height: "58px",
         borderBottom: "1px solid var(--hp-border)",
@@ -182,7 +206,7 @@ function SessionInner() {
         boxShadow: "0 1px 4px oklch(0.4 0.05 280 / 5%)",
       }}>
         {/* Left */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+        <div className="hp-session-topbar-left" style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
           <span
             onClick={() => router.push("/")}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--hp-foreground)", cursor: "pointer", fontFamily: FONT }}
@@ -211,7 +235,7 @@ function SessionInner() {
           </div>
           <button
             onClick={() => { setHintsUsed(h => h + 1); setShowHint(true); }}
-            style={{ display: "flex", alignItems: "center", gap: "0.35rem", height: "32px", padding: "0 0.875rem", borderRadius: "9999px", border: "1px solid var(--hp-border)", background: "white", color: "var(--hp-soft-foreground)", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "all 0.15s" }}
+            style={{ display: "flex", alignItems: "center", gap: "0.35rem", height: "32px", padding: "0 0.875rem", borderRadius: "9999px", border: "1px solid var(--hp-border)", background: "white", color: "var(--hp-soft-foreground)", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "all 0.15s", flexShrink: 0, whiteSpace: "nowrap" }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--hp-primary)"; (e.currentTarget as HTMLElement).style.color = "var(--hp-primary)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--hp-border)"; (e.currentTarget as HTMLElement).style.color = "var(--hp-soft-foreground)"; }}
           >
@@ -220,7 +244,7 @@ function SessionInner() {
           </button>
           <button
             onClick={handleEndSession}
-            style={{ display: "flex", alignItems: "center", gap: "0.35rem", height: "32px", padding: "0 0.875rem", borderRadius: "9999px", border: "none", background: "#dc2626", color: "white", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "opacity 0.15s" }}
+            style={{ display: "flex", alignItems: "center", gap: "0.35rem", height: "32px", padding: "0 0.875rem", borderRadius: "9999px", border: "none", background: "#dc2626", color: "white", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "opacity 0.15s", flexShrink: 0, whiteSpace: "nowrap" }}
             onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = "0.88")}
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = "1")}
           >
@@ -261,16 +285,21 @@ function SessionInner() {
                 {(FIRM_SHORT[firm] ?? firmConfig.name).charAt(0)}
               </div>
             )}
-            <div style={{
-              maxWidth: "680px", padding: "0.875rem 1.1rem",
-              borderRadius: msg.role === "user" ? "14px 4px 14px 14px" : "4px 14px 14px 14px",
-              background: msg.role === "user" ? "var(--hp-primary)" : "white",
-              border: msg.role === "assistant" ? "1px solid var(--hp-border)" : "none",
-              fontSize: "0.9rem", lineHeight: 1.75,
-              color: msg.role === "user" ? "white" : "var(--hp-foreground)",
-              boxShadow: msg.role === "assistant" ? "0 1px 4px oklch(0.4 0.05 280 / 5%)" : "none",
-            }}>
-              {renderContent(msg.content)}
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: msg.role === "user" ? "flex-end" : "flex-start", maxWidth: "680px" }}>
+              <div style={{
+                padding: "0.875rem 1.1rem",
+                borderRadius: msg.role === "user" ? "14px 4px 14px 14px" : "4px 14px 14px 14px",
+                background: msg.role === "user" ? "var(--hp-primary)" : "white",
+                border: msg.role === "assistant" ? "1px solid var(--hp-border)" : "none",
+                fontSize: "0.9rem", lineHeight: 1.75,
+                color: msg.role === "user" ? "white" : "var(--hp-foreground)",
+                boxShadow: msg.role === "assistant" ? "0 1px 4px oklch(0.4 0.05 280 / 5%)" : "none",
+              }}>
+                {renderContent(msg.content)}
+              </div>
+              <span style={{ fontSize: "0.68rem", color: "var(--hp-soft-foreground)", padding: "0 0.3rem" }}>
+                {new Date(msg.timestamp).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+              </span>
             </div>
           </motion.div>
         ))}

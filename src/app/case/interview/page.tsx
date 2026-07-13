@@ -84,6 +84,12 @@ function InterviewInner() {
   const [userVideoEnabled, setUserVideoEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const [mediaError, setMediaError] = useState(false);
+  // Real interviews open with small talk before the case, not a wall of text.
+  // caseRevealed gates that: the first user reply (to "are you ready?") is
+  // handled locally — no AI call — and simply unlocks the case prompt.
+  const [caseRevealed, setCaseRevealed] = useState(false);
+  const caseRevealedRef = useRef(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -111,6 +117,7 @@ function InterviewInner() {
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
   useEffect(() => { loadingRef.current = loading; }, [loading]);
   useEffect(() => { userSpeakingRef.current = userSpeaking; }, [userSpeaking]);
+  useEffect(() => { caseRevealedRef.current = caseRevealed; }, [caseRevealed]);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("caseData");
@@ -136,7 +143,7 @@ function InterviewInner() {
     if (!ready || !casePrompt) return;
     setTranscript([{
       role: "assistant",
-      content: `Good morning. I'm ${INTERVIEWER.name}, Senior Engagement Manager at ${FIRM_CONFIGS[firm].name}. Thank you for taking the time to meet with me today.\n\n${casePrompt}\n\nPlease take a moment to read through the case. Feel free to ask any clarifying questions when you're ready.`,
+      content: `Good morning! I'm ${INTERVIEWER.name}, Senior Engagement Manager at ${FIRM_CONFIGS[firm].name}. Thanks so much for taking the time to meet with me today. Before we dive in — are you ready to get started with the case?`,
       timestamp: new Date(),
     }]);
   }, [ready, casePrompt, firm]);
@@ -325,7 +332,13 @@ function InterviewInner() {
         const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         streamRef.current = audioStream;
         startAudioMonitor(audioStream);
-      } catch {}
+      } catch {
+        // Neither video nor audio access was granted — voice barge-in detection
+        // (which relies on mic volume, separate from SpeechRecognition) won't
+        // work, and there's no camera preview. Surface this instead of leaving
+        // the user wondering why the interview feels dead.
+        setMediaError(true);
+      }
     }
     setSessionStarted(true);
     startTimeRef.current = Date.now();
@@ -427,6 +440,27 @@ function InterviewInner() {
     return () => clearTimeout(t);
   }, [isMuted, isListening, sessionStarted]);
 
+  // The first exchange is small talk, not case-solving — handled locally so the
+  // case prompt is delivered verbatim (never paraphrased by the model) and so
+  // this beat costs no API call. Whatever the candidate says here just moves
+  // things along, same as a real interviewer wouldn't interrogate "yes I'm ready."
+  const revealCase = (newTranscript: Message[]) => {
+    setInput(""); setInterimText("");
+    setCaseRevealed(true);
+    setLoading(true);
+    const reveal: Message = {
+      role: "assistant",
+      content: `Great, let's get into it.\n\n${casePrompt}\n\nTake a moment to read through the case. Feel free to ask any clarifying questions when you're ready.`,
+      timestamp: new Date(),
+    };
+    setTimeout(() => {
+      if (!mountedRef.current) return;
+      setLoading(false);
+      setTranscript([...newTranscript, reveal]);
+      speak(reveal.content);
+    }, 500);
+  };
+
   const sendMessage = async (content: string) => {
     if (!content.trim() || loading) return;
     stopSpeaking();
@@ -435,6 +469,12 @@ function InterviewInner() {
     const userMessage: Message = { role: "user", content: content.trim(), timestamp: new Date() };
     const newTranscript = [...transcript, userMessage];
     setTranscript(newTranscript);
+
+    if (!caseRevealedRef.current) {
+      revealCase(newTranscript);
+      return;
+    }
+
     setInput(""); setInterimText("");
     setLoading(true);
     const controller = new AbortController();
@@ -485,6 +525,24 @@ function InterviewInner() {
     color: danger ? "#fff" : active ? "#a78bfa" : "rgba(255,255,255,0.65)",
     cursor: "pointer", flexShrink: 0, transition: "all 0.15s", fontFamily: FONT,
   });
+
+  // ── NO CASE DATA ── (e.g. a refresh, or landing here directly instead of via the dashboard)
+  if (ready && !casePrompt) {
+    return (
+      <main style={{ height: "100vh", background: "#0d0d0d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: FONT, padding: "0 1.5rem", gap: "1rem", textAlign: "center" }}>
+        <p style={{ fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>No case loaded</p>
+        <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.4)", margin: 0, maxWidth: "360px" }}>
+          This can happen after a refresh. Start a new case from your dashboard.
+        </p>
+        <button
+          onClick={() => router.push("/dashboard")}
+          style={{ marginTop: "0.5rem", height: "44px", padding: "0 1.5rem", borderRadius: "10px", border: "none", background: "#fff", color: "#111", fontSize: "0.85rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer" }}
+        >
+          Go to dashboard
+        </button>
+      </main>
+    );
+  }
 
   // ── PRE-SESSION ──
   if (!sessionStarted) {
@@ -551,7 +609,23 @@ function InterviewInner() {
 
   // ── ACTIVE SESSION ──
   return (
-    <main style={{ height: "100vh", background: "#111", display: "flex", flexDirection: "column", color: "#fff", overflow: "hidden", fontFamily: FONT }}>
+    <main style={{ height: "100vh", background: "#111", display: "flex", flexDirection: "column", color: "#fff", overflow: "hidden", fontFamily: FONT, position: "relative" }}>
+
+      <style>{`
+        @media (max-width: 760px) {
+          .hp-interview-video-grid { grid-template-columns: 1fr !important; grid-template-rows: 1fr 1fr !important; }
+          .hp-interview-ctrl-btn-label { display: none !important; }
+          .hp-interview-ctrl-btn { width: 44px !important; }
+          .hp-interview-chat-panel { position: fixed !important; inset: 44px 0 0 0 !important; width: 100% !important; z-index: 200; }
+        }
+      `}</style>
+
+      {/* Media permission warning */}
+      {mediaError && (
+        <div style={{ padding: "0.5rem 1.25rem", background: "rgba(245,158,11,0.12)", borderBottom: "1px solid rgba(245,158,11,0.3)", fontSize: "0.75rem", color: "#fbbf24", textAlign: "center", flexShrink: 0 }}>
+          Camera/mic access wasn&apos;t granted — voice barge-in won&apos;t detect your volume. You can still type, or use the Mute/Unmute button after allowing mic access in your browser.
+        </div>
+      )}
 
       {/* Top bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 1.25rem", height: "44px", background: "#191919", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
@@ -568,9 +642,9 @@ function InterviewInner() {
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <div style={{
             padding: "3px 10px", borderRadius: "9999px", fontSize: "0.72rem", fontWeight: 600,
-            background: isSpeaking ? "rgba(34,197,94,0.15)" : loading ? "rgba(255,255,255,0.06)" : "rgba(124,92,252,0.15)",
-            color: isSpeaking ? "#22c55e" : loading ? "rgba(255,255,255,0.3)" : "#a78bfa",
-            border: `1px solid ${isSpeaking ? "rgba(34,197,94,0.3)" : loading ? "rgba(255,255,255,0.08)" : "rgba(124,92,252,0.3)"}`,
+            background: isSpeaking ? "rgba(167,139,250,0.15)" : loading ? "rgba(245,158,11,0.12)" : "rgba(34,197,94,0.15)",
+            color: isSpeaking ? "#a78bfa" : loading ? "#f59e0b" : "#22c55e",
+            border: `1px solid ${isSpeaking ? "rgba(167,139,250,0.3)" : loading ? "rgba(245,158,11,0.3)" : "rgba(34,197,94,0.3)"}`,
             transition: "all 0.3s",
           }}>
             {loading ? "Thinking..." : isSpeaking ? "Interviewer speaking — jump in anytime" : isListening ? "Listening..." : "Your turn"}
@@ -618,10 +692,18 @@ function InterviewInner() {
 
         {/* Video area */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-          <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", padding: "10px 10px 6px", overflow: "hidden" }}>
+          <div className="hp-interview-video-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", padding: "10px 10px 6px", overflow: "hidden" }}>
 
             {/* Interviewer tile */}
-            <div style={{ borderRadius: "12px", overflow: "hidden", background: "#1c1c1c", position: "relative", border: `2px solid ${isSpeaking ? "#22c55e" : "rgba(255,255,255,0.04)"}`, transition: "border-color 0.25s" }}>
+            <div style={{ borderRadius: "12px", overflow: "hidden", background: "#1c1c1c", position: "relative", border: `2px solid ${isSpeaking ? "#a78bfa" : "rgba(255,255,255,0.04)"}`, transition: "border-color 0.25s", boxShadow: isSpeaking ? "0 0 0 4px rgba(167,139,250,0.12)" : "none" }}>
+              {isSpeaking && (
+                <motion.div
+                  aria-hidden
+                  animate={{ opacity: [0.35, 0.7, 0.35] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ position: "absolute", inset: 0, borderRadius: "12px", boxShadow: "0 0 24px 4px rgba(167,139,250,0.35) inset", pointerEvents: "none", zIndex: 1 }}
+                />
+              )}
               <img src={INTERVIEWER.image} alt={INTERVIEWER.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }} />
 
               <AnimatePresence>
@@ -630,7 +712,7 @@ function InterviewInner() {
                     style={{ position: "absolute", bottom: "44px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "3px", alignItems: "center", background: "rgba(0,0,0,0.6)", borderRadius: "20px", padding: "6px 12px" }}>
                     {[0, 1, 2, 3, 4].map(i => (
                       <motion.div key={i} animate={{ height: ["3px", "14px", "3px"] }} transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.09 }}
-                        style={{ width: "3px", background: "#22c55e", borderRadius: "2px" }} />
+                        style={{ width: "3px", background: "#a78bfa", borderRadius: "2px" }} />
                     ))}
                   </motion.div>
                 )}
@@ -707,25 +789,25 @@ function InterviewInner() {
 
           {/* Control bar */}
           <div style={{ height: "64px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", background: "#191919", borderTop: "1px solid rgba(255,255,255,0.06)", flexShrink: 0, padding: "0 1rem" }}>
-            <button onClick={toggleMute} style={ctrlBtn(isMuted)}>
+            <button className="hp-interview-ctrl-btn" onClick={toggleMute} style={ctrlBtn(isMuted)}>
               <MicIcon muted={isMuted} />
-              <span style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isMuted ? "Unmute" : "Mute"}</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isMuted ? "Unmute" : "Mute"}</span>
             </button>
-            <button onClick={toggleVideo} style={ctrlBtn(isVideoOff)}>
+            <button className="hp-interview-ctrl-btn" onClick={toggleVideo} style={ctrlBtn(isVideoOff)}>
               <CameraIcon off={isVideoOff} />
-              <span style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isVideoOff ? "Start cam" : "Stop cam"}</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isVideoOff ? "Start cam" : "Stop cam"}</span>
             </button>
-            <button onClick={() => { setHintsUsed(h => h + 1); setShowHint(true); }} style={ctrlBtn(false)}>
+            <button className="hp-interview-ctrl-btn" onClick={() => { setHintsUsed(h => h + 1); setShowHint(true); }} style={ctrlBtn(false)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-              <span style={{ fontSize: "0.6rem", fontWeight: 600 }}>Hint{hintsUsed > 0 ? ` (${hintsUsed})` : ""}</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Hint{hintsUsed > 0 ? ` (${hintsUsed})` : ""}</span>
             </button>
-            <button onClick={() => setShowCaseOverlay(v => !v)} style={ctrlBtn(showCaseOverlay)}>
+            <button className="hp-interview-ctrl-btn" onClick={() => setShowCaseOverlay(v => !v)} style={ctrlBtn(showCaseOverlay)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              <span style={{ fontSize: "0.6rem", fontWeight: 600 }}>Case</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Case</span>
             </button>
-            <button onClick={() => setShowChat(v => !v)} style={ctrlBtn(showChat)}>
+            <button className="hp-interview-ctrl-btn" onClick={() => setShowChat(v => !v)} style={ctrlBtn(showChat)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              <span style={{ fontSize: "0.6rem", fontWeight: 600 }}>Chat</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Chat</span>
             </button>
             <div style={{ flex: 1 }} />
             <button onClick={() => setShowEndConfirm(true)} style={ctrlBtn(false, true)}>
@@ -738,7 +820,7 @@ function InterviewInner() {
         {/* Chat panel */}
         <AnimatePresence>
           {showChat && (
-            <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 280, opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.2 }}
+            <motion.div className="hp-interview-chat-panel" initial={{ width: 0, opacity: 0 }} animate={{ width: 280, opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.2 }}
               style={{ borderLeft: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", overflow: "hidden", background: "#161616", flexShrink: 0 }}>
               <div style={{ padding: "0.65rem 0.875rem", borderBottom: "1px solid rgba(255,255,255,0.06)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", flexShrink: 0 }}>
                 Transcript

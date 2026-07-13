@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ChevronDown, RotateCcw } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
+import Term from "@/components/Term";
 
 import { MCKINSEY_RUBRIC } from "@/lib/firmRubrics/mckinsey";
 import { BCG_RUBRIC } from "@/lib/firmRubrics/bcg";
@@ -125,6 +126,32 @@ const OPTION_LETTERS = ["A", "B", "C", "D"];
 /** The rubric source data uses em dashes throughout; normalize them for display. */
 function clean(text: string): string {
   return text.replace(/\s*—\s*/g, " - ");
+}
+
+const GLOSSARY: { term: RegExp; define: string }[] = [
+  { term: /\bMECE\b/gi, define: "Mutually Exclusive, Collectively Exhaustive — your buckets don't overlap, and together they cover the whole problem. It's the test for whether a framework is actually well-structured." },
+  { term: /\bhypothesis(-driven|-led)?\b/gi, define: "Your best guess at the answer, formed early and tested with data — instead of gathering everything before you have an opinion." },
+  { term: /\bbottom[- ]line[- ]first\b/gi, define: "Leading with your conclusion, then explaining how you got there — not building up to it at the end." },
+];
+
+/** Wraps known jargon terms in an inline hover/tap definition so a first-timer
+ * isn't stuck guessing what "MECE" means mid-sentence. */
+function withTerms(text: string): React.ReactNode {
+  let parts: React.ReactNode[] = [text];
+  GLOSSARY.forEach(({ term, define }, gi) => {
+    const next: React.ReactNode[] = [];
+    parts.forEach((part, pi) => {
+      if (typeof part !== "string") { next.push(part); return; }
+      const matches = part.match(term) ?? [];
+      const pieces = part.split(term);
+      pieces.forEach((piece, i) => {
+        if (piece) next.push(piece);
+        if (i < matches.length) next.push(<Term key={`${gi}-${pi}-${i}`} define={define}>{matches[i]}</Term>);
+      });
+    });
+    parts = next;
+  });
+  return parts;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -318,7 +345,7 @@ export default function GuidePage() {
                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} style={{ overflow: "hidden" }}>
                               <ul style={{ margin: 0, padding: "0.9rem 1.1rem 1.1rem 2.6rem", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                                 {stage.tips.map((t, ti) => (
-                                  <li key={ti} style={{ fontSize: "0.82rem", color: "var(--hp-foreground)", lineHeight: 1.55 }}>{t}</li>
+                                  <li key={ti} style={{ fontSize: "0.82rem", color: "var(--hp-foreground)", lineHeight: 1.55 }}>{withTerms(t)}</li>
                                 ))}
                               </ul>
                             </motion.div>
@@ -348,7 +375,7 @@ export default function GuidePage() {
                         style={{ display: "flex", alignItems: "flex-start", gap: "0.65rem", padding: "0.75rem 0.9rem", borderRadius: "10px", border: `1.5px solid ${isChecked ? "var(--hp-primary)" : "var(--hp-border)"}`, background: isChecked ? "var(--hp-primary-soft)" : "white", cursor: "pointer", textAlign: "left", fontFamily: FONT, transition: "all 0.15s" }}
                       >
                         {isChecked ? <CheckCircle2 size={18} color="var(--hp-primary)" style={{ flexShrink: 0, marginTop: "1px" }} /> : <Circle size={18} color="var(--hp-border-strong)" style={{ flexShrink: 0, marginTop: "1px" }} />}
-                        <span style={{ fontSize: "0.85rem", color: "var(--hp-foreground)", lineHeight: 1.5, textDecoration: isChecked ? "line-through" : "none", opacity: isChecked ? 0.6 : 1 }}>{tip}</span>
+                        <span style={{ fontSize: "0.85rem", color: "var(--hp-foreground)", lineHeight: 1.5, textDecoration: isChecked ? "line-through" : "none", opacity: isChecked ? 0.6 : 1 }}>{withTerms(tip)}</span>
                       </button>
                     );
                   })}
@@ -467,7 +494,7 @@ export default function GuidePage() {
                         {tips.length > 0 && (
                           <ul style={{ margin: 0, paddingLeft: "1.1rem", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                             {tips.map((t, ti) => (
-                              <li key={ti} style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", lineHeight: 1.5 }}>{t}</li>
+                              <li key={ti} style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", lineHeight: 1.5 }}>{withTerms(t)}</li>
                             ))}
                           </ul>
                         )}
@@ -505,7 +532,7 @@ export default function GuidePage() {
                   </div>
                   <ul style={{ margin: 0, paddingLeft: "1.1rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
                     {CHECKLIST.map(tip => (
-                      <li key={tip} style={{ fontSize: "0.85rem", color: "var(--hp-foreground)" }}>{tip}</li>
+                      <li key={tip} style={{ fontSize: "0.85rem", color: "var(--hp-foreground)" }}>{withTerms(tip)}</li>
                     ))}
                   </ul>
                 </div>

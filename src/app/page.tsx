@@ -208,6 +208,7 @@ export default function LandingPage() {
     color: "var(--hp-soft-foreground)", cursor: "pointer", padding: "0 0.5rem",
     fontFamily: FONT, display: "inline-flex", alignItems: "center",
     height: BTN_H, lineHeight: "1", transition: "color 0.15s",
+    flexShrink: 0, whiteSpace: "nowrap",
   };
 
   const pillWhite: React.CSSProperties = {
@@ -217,6 +218,7 @@ export default function LandingPage() {
     cursor: "pointer", fontFamily: FONT, backdropFilter: "blur(8px)",
     display: "inline-flex", alignItems: "center", lineHeight: "1",
     whiteSpace: "nowrap", transition: "background 0.15s",
+    flexShrink: 0,
   };
 
   const pillPurple: React.CSSProperties = {
@@ -226,6 +228,7 @@ export default function LandingPage() {
     display: "inline-flex", alignItems: "center", gap: "0.4rem",
     lineHeight: "1", whiteSpace: "nowrap",
     boxShadow: "0 2px 0 oklch(0.4 0.16 285)", transition: "opacity 0.15s",
+    flexShrink: 0,
   };
 
   return (
@@ -295,8 +298,8 @@ export default function LandingPage() {
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.96)")}
               onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.78)")}>Sign in</button>
           ) : (
-            <div style={{ position: "relative" }}>
-              <button onClick={() => setProfileOpen(o => !o)} style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ position: "relative", flexShrink: 0 }}>
+              <button onClick={() => setProfileOpen(o => !o)} style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 {user.image
                   ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>

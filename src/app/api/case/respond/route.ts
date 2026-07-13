@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { callChatCompletion, ProviderName } from "@/lib/ai/providers";
 import { buildInterviewerSystemPrompt } from "@/lib/prompts/interviewer";
 import { FirmKey, Difficulty, Message } from "@/types";
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (session.user.banned) {
+      return NextResponse.json({ error: "Account suspended" }, { status: 403 });
+    }
+
     const {
       firm,
       casePrompt,

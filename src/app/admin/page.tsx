@@ -209,45 +209,46 @@ export default function AdminPage() {
                         background: u.unlimitedCases ? "var(--hp-primary)" : "white",
                         color: u.unlimitedCases ? "white" : "var(--hp-soft-foreground)",
                         fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT,
+                        flexShrink: 0, whiteSpace: "nowrap",
                       }}
                     >
                       {u.unlimitedCases ? "Unlimited ✓" : "Grant unlimited"}
                     </button>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
                       <input
                         type="number"
                         min={0}
                         value={bonusDraft}
                         onChange={e => setBonusDrafts(prev => ({ ...prev, [u.id]: e.target.value }))}
-                        style={{ width: "60px", height: "32px", padding: "0 0.5rem", borderRadius: "8px", border: "1px solid var(--hp-border)", fontSize: "0.8rem", fontFamily: FONT }}
+                        style={{ width: "60px", height: "32px", padding: "0 0.5rem", borderRadius: "8px", border: "1px solid var(--hp-border)", fontSize: "0.8rem", fontFamily: FONT, flexShrink: 0 }}
                       />
                       <button
                         disabled={busy}
                         onClick={() => patchUser(u.id, { bonusCases: parseInt(bonusDraft, 10) || 0 })}
-                        style={{ height: "32px", padding: "0 0.75rem", borderRadius: "8px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT }}
+                        style={{ height: "32px", padding: "0 0.75rem", borderRadius: "8px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT, flexShrink: 0, whiteSpace: "nowrap" }}
                       >
                         Set bonus cases
                       </button>
                     </div>
 
-                    <div style={{ flex: 1 }} />
+                    <div style={{ flex: 1, minWidth: "8px" }} />
 
                     <button
                       disabled={busy}
                       onClick={() => patchUser(u.id, { banned: !u.banned })}
-                      style={{ height: "32px", padding: "0 0.9rem", borderRadius: "9999px", border: `1.5px solid ${u.banned ? "#15803d" : "#fecaca"}`, background: "white", color: u.banned ? "#15803d" : "#dc2626", fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT }}
+                      style={{ height: "32px", padding: "0 0.9rem", borderRadius: "9999px", border: `1.5px solid ${u.banned ? "#15803d" : "#fecaca"}`, background: "white", color: u.banned ? "#15803d" : "#dc2626", fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT, flexShrink: 0, whiteSpace: "nowrap" }}
                     >
                       {u.banned ? "Unban" : "Ban"}
                     </button>
 
                     {confirmDeleteId === u.id ? (
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                        <span style={{ fontSize: "0.75rem", color: "#dc2626", fontWeight: 600 }}>Delete permanently?</span>
-                        <button disabled={busy} onClick={() => deleteUser(u.id)} style={{ height: "32px", padding: "0 0.75rem", borderRadius: "8px", border: "none", background: "#dc2626", color: "white", fontSize: "0.78rem", fontWeight: 700, cursor: busy ? "wait" : "pointer", fontFamily: FONT }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
+                        <span style={{ fontSize: "0.75rem", color: "#dc2626", fontWeight: 600, whiteSpace: "nowrap" }}>Delete permanently?</span>
+                        <button disabled={busy} onClick={() => deleteUser(u.id)} style={{ height: "32px", padding: "0 0.75rem", borderRadius: "8px", border: "none", background: "#dc2626", color: "white", fontSize: "0.78rem", fontWeight: 700, cursor: busy ? "wait" : "pointer", fontFamily: FONT, flexShrink: 0, whiteSpace: "nowrap" }}>
                           Confirm
                         </button>
-                        <button disabled={busy} onClick={() => setConfirmDeleteId(null)} style={{ height: "32px", padding: "0 0.75rem", borderRadius: "8px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>
+                        <button disabled={busy} onClick={() => setConfirmDeleteId(null)} style={{ height: "32px", padding: "0 0.75rem", borderRadius: "8px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, flexShrink: 0, whiteSpace: "nowrap" }}>
                           Cancel
                         </button>
                       </div>
@@ -255,7 +256,7 @@ export default function AdminPage() {
                       <button
                         disabled={busy}
                         onClick={() => setConfirmDeleteId(u.id)}
-                        style={{ height: "32px", padding: "0 0.9rem", borderRadius: "9999px", border: "1px solid #fecaca", background: "white", color: "#dc2626", fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT }}
+                        style={{ height: "32px", padding: "0 0.9rem", borderRadius: "9999px", border: "1px solid #fecaca", background: "white", color: "#dc2626", fontSize: "0.78rem", fontWeight: 600, cursor: busy ? "wait" : "pointer", fontFamily: FONT, flexShrink: 0, whiteSpace: "nowrap" }}
                       >
                         Delete
                       </button>

@@ -23,7 +23,12 @@
   padding: 0;
 }
 
-*:not([style*="position: absolute"]):not([style*="position: fixed"]) {
+/* Overflow protection scoped to the usual culprits (media, tables, pre blocks)
+   rather than every element — an earlier blanket `* { max-width: 100% }` rule
+   was also shrinking flex-laid-out buttons/inputs below their intended size,
+   which could throw off their clickable hit area. html/body overflow-x:hidden
+   below remains the page-level backstop. */
+img, video, svg, table {
   max-width: 100%;
 }
 

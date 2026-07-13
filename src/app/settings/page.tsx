@@ -316,13 +316,13 @@ export default function SettingsPage() {
             <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--hp-foreground)", fontFamily: FONT }}>Account</span>
           </div>
           <div style={{ padding: "1.75rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)" }}>Sign out</div>
               <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>Sign out of your MyCasePrep account</div>
             </div>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              style={{ height: "36px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid #fecaca", background: "#fef2f2", color: "#dc2626", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: "0.4rem", transition: "background 0.15s" }}
+              style={{ height: "36px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid #fecaca", background: "#fef2f2", color: "#dc2626", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: "0.4rem", transition: "background 0.15s", flexShrink: 0, whiteSpace: "nowrap" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#fee2e2")}
               onMouseLeave={e => (e.currentTarget.style.background = "#fef2f2")}
             >

@@ -148,6 +148,7 @@ export default function Navbar() {
               display: "inline-flex", alignItems: "center", gap: "0.4rem",
               boxShadow: "0 2px 0 oklch(0.4 0.16 285)",
               transition: "opacity 0.15s",
+              flexShrink: 0, whiteSpace: "nowrap",
             }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
@@ -235,8 +236,9 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Spacer so content isn't hidden behind fixed nav */}
-      <div style={{ height: "64px" }} />
+      {/* Spacer so content isn't hidden behind fixed nav — matches the header's
+          actual rendered height (padding + 38px buttons), not a rounded guess. */}
+      <div style={{ height: "68px" }} />
     </>
   );
 }
