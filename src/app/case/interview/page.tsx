@@ -299,8 +299,15 @@ function InterviewInner() {
       if (!mountedRef.current) throw new Error("unmounted");
 
       const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
+      // Reuse the same <audio> element every turn instead of `new Audio()` each
+      // time. It was created and play()'d once during the "Join interview" click
+      // (a real gesture) — later turns are triggered from async chains (fetch →
+      // timer → promise) with no gesture behind them, which strict autoplay
+      // policies (notably Safari) can silently block on a *fresh* element while
+      // still allowing playback to continue on one that's already unlocked.
+      const audio = ttsAudioRef.current ?? new Audio();
       ttsAudioRef.current = audio;
+      audio.src = url;
       audio.onended = () => {
         URL.revokeObjectURL(url);
         if (!mountedRef.current) return;
@@ -322,6 +329,19 @@ function InterviewInner() {
   };
 
   const startSession = async () => {
+    // Prime audio playback + speech synthesis synchronously inside this click
+    // handler — a genuine user gesture — so every later turn (each triggered
+    // from an async fetch/timer chain with no gesture behind it) inherits the
+    // unlock instead of getting silently blocked by autoplay policy.
+    const primer = new Audio();
+    primer.play().catch(() => {});
+    ttsAudioRef.current = primer;
+    try {
+      const unlock = new SpeechSynthesisUtterance(" ");
+      unlock.volume = 0;
+      window.speechSynthesis.speak(unlock);
+    } catch {}
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true, noiseSuppression: true } });
       streamRef.current = stream;
@@ -391,7 +411,12 @@ function InterviewInner() {
       }
       const heard = (final + interim).trim();
       // Confirmed real speech during the interviewer's turn — commit to the interruption now.
-      if (isSpeakingRef.current && userSpeakingRef.current && heard.length >= 1) {
+      // Recognition alone is the signal: it only fires on actual speech-like audio, and
+      // waiting on the separate volume detector too (which needs ~280ms sustained
+      // loudness) created a race where short interjections like "wait" or "actually"
+      // would arrive as a transcript before the volume gate opened, silently failing
+      // to interrupt and leaving no option but to click "Stop talking" by hand.
+      if (isSpeakingRef.current && heard.length >= 1) {
         stopSpeaking();
         isSpeakingRef.current = false;
         setIsSpeaking(false);
