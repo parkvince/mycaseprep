@@ -85,6 +85,9 @@ function InterviewInner() {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [mediaError, setMediaError] = useState(false);
+  // Real calls don't start with everyone already in the room — there's a beat
+  // where the other side is still connecting, then a join chime. This drives it.
+  const [interviewerJoined, setInterviewerJoined] = useState(false);
   // Real interviews open with small talk before the case, not a wall of text.
   // caseRevealed gates that: the first user reply (to "are you ready?") is
   // handled locally — no AI call — and simply unlocks the case prompt.
@@ -108,10 +111,18 @@ function InterviewInner() {
   const isSpeakingRef = useRef(false);
   const loadingRef = useRef(false);
   const userSpeakingRef = useRef(false);
-  // Once the premium voice fails, stick with the browser fallback for the rest of
-  // the session instead of flip-flopping between two very different-sounding
-  // voices turn to turn — consistency matters more than winning back one line.
-  const premiumTtsDeadRef = useRef(false);
+  // Premium-voice health: NEVER permanently give up on the natural voice — it's
+  // the default the session always returns to. A failed line falls back to the
+  // browser voice for that one line only. Only after two consecutive failures
+  // (a real outage, not a blip) do we back off for 60s, so a hard outage doesn't
+  // add a long stall to every single turn — then we automatically try again.
+  const ttsFailStreakRef = useRef(0);
+  const ttsRetryAtRef = useRef(0);
+  // Short spoken acknowledgments ("Mm-hm, okay...") in the interviewer's own
+  // voice, prefetched once at join and played while the AI is thinking — the
+  // silence between turns reads as a person considering, not a system loading.
+  const fillersRef = useRef<string[]>([]);
+  const fillerTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
@@ -151,12 +162,15 @@ function InterviewInner() {
   useEffect(() => {
     mountedRef.current = true;
     synthRef.current = window.speechSynthesis;
+    const fillers = fillersRef.current;
     return () => {
       mountedRef.current = false;
       stopSpeaking();
       if (synthRef.current) synthRef.current.onvoiceschanged = null;
       recognitionRef.current?.stop();
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      if (fillerTimerRef.current) clearTimeout(fillerTimerRef.current);
+      fillers.forEach(u => URL.revokeObjectURL(u));
       streamRef.current?.getTracks().forEach(t => t.stop());
       if (timerRef.current) clearInterval(timerRef.current);
       if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
@@ -225,17 +239,29 @@ function InterviewInner() {
   const formatTime = (secs: number) => `${Math.floor(secs / 60).toString().padStart(2, "0")}:${(secs % 60).toString().padStart(2, "0")}`;
 
   const pickVoice = (voices: SpeechSynthesisVoice[]) => {
-    const byName = (names: string[]) => voices.find(v => names.some(n => v.name.includes(n)));
-    // "Online (Natural)" voices are Edge/Chrome's neural TTS voices — free, and far
-    // more human-sounding than the classic offline robotic ones.
+    const en = voices.filter(v => v.lang.startsWith("en"));
+    const byName = (names: string[]) => en.find(v => names.some(n => v.name.includes(n)));
+    // Tiered by realism, not just gender-match. "Online (Natural)" voices are
+    // Edge/Chrome's neural TTS (near-human); Google's cloud voices and macOS
+    // Premium/Enhanced voices are next; the classic offline robotic voices are
+    // a last resort only. A natural voice of the "wrong" gender sounds far
+    // better than a robotic one of the right gender.
+    const isNeural = (v: SpeechSynthesisVoice) => /Online \(Natural\)|Natural|Neural|Premium|Enhanced/i.test(v.name);
+    const isGoogle = (v: SpeechSynthesisVoice) => /Google/i.test(v.name);
     if (INTERVIEWER.gender === "male") {
-      return byName(["Guy Online (Natural)", "Guy24kOnline", "Ryan Online (Natural)", "Guy", "Daniel", "Google UK English Male", "Alex"])
-        ?? voices.find(v => v.lang.startsWith("en") && /male/i.test(v.name))
-        ?? voices.find(v => v.lang.startsWith("en"));
+      return byName(["Guy Online (Natural)", "Ryan Online (Natural)", "Christopher Online (Natural)", "Eric Online (Natural)"])
+        ?? en.find(v => isNeural(v) && /male|guy|ryan|christopher|eric|daniel|alex/i.test(v.name))
+        ?? byName(["Google UK English Male", "Google US English"])
+        ?? byName(["Daniel", "Alex"])
+        ?? en.find(isNeural) ?? en.find(isGoogle)
+        ?? en.find(v => /male/i.test(v.name)) ?? en[0];
     }
-    return byName(["Aria Online (Natural)", "Jenny Online (Natural)", "Emma Online (Natural)", "Samantha", "Victoria", "Google UK English Female"])
-      ?? voices.find(v => v.lang.startsWith("en") && /female/i.test(v.name))
-      ?? voices.find(v => v.lang.startsWith("en"));
+    return byName(["Aria Online (Natural)", "Jenny Online (Natural)", "Emma Online (Natural)", "Michelle Online (Natural)"])
+      ?? en.find(v => isNeural(v) && /female|aria|jenny|emma|michelle|samantha|victoria/i.test(v.name))
+      ?? byName(["Google UK English Female", "Google US English"])
+      ?? byName(["Samantha", "Victoria"])
+      ?? en.find(isNeural) ?? en.find(isGoogle)
+      ?? en.find(v => /female/i.test(v.name)) ?? en[0];
   };
 
   const stopSpeaking = () => {
@@ -272,14 +298,21 @@ function InterviewInner() {
     else synthRef.current.onvoiceschanged = () => trySpeak();
   };
 
+  const noteTtsFailure = () => {
+    ttsFailStreakRef.current += 1;
+    if (ttsFailStreakRef.current >= 2) {
+      ttsRetryAtRef.current = Date.now() + 60_000;
+    }
+  };
+
   const speak = async (text: string) => {
     if (!mountedRef.current) return;
     stopSpeaking();
     const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
 
-    // Once the premium voice has failed once this session, don't keep paying its
-    // latency/quota cost on every turn — go straight to the (consistent) fallback.
-    if (premiumTtsDeadRef.current) {
+    // Only skip the natural voice while inside a backoff window after repeated
+    // failures — and even then, automatically resume trying once it elapses.
+    if (ttsFailStreakRef.current >= 2 && Date.now() < ttsRetryAtRef.current) {
       speakBrowser(clean);
       return;
     }
@@ -316,16 +349,67 @@ function InterviewInner() {
       };
       audio.onerror = () => {
         URL.revokeObjectURL(url);
-        premiumTtsDeadRef.current = true;
+        noteTtsFailure();
         if (mountedRef.current) speakBrowser(clean);
       };
       await audio.play();
+      ttsFailStreakRef.current = 0;
       setIsSpeaking(true);
     } catch {
       clearTimeout(timeoutId);
-      premiumTtsDeadRef.current = true;
+      noteTtsFailure();
       if (mountedRef.current) speakBrowser(clean);
     }
+  };
+
+  // Two-tone "participant joined" chime, synthesized on the spot — no audio
+  // asset needed, and startSession is a real click so autoplay policy allows it.
+  const playJoinChime = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      [[659.25, 0], [880, 0.16]].forEach(([freq, at]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx.currentTime + at);
+        gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + at + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + at + 0.3);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + at);
+        osc.stop(ctx.currentTime + at + 0.35);
+      });
+      setTimeout(() => ctx.close().catch(() => {}), 1000);
+    } catch {}
+  };
+
+  const FILLER_PHRASES = ["Mm-hm.", "Okay, got it.", "Right — let me think about that for a moment."];
+
+  const prefetchFillers = () => {
+    FILLER_PHRASES.forEach(async phrase => {
+      try {
+        const res = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: phrase, gender: INTERVIEWER.gender }),
+        });
+        if (!res.ok) return;
+        const blob = await res.blob();
+        if (mountedRef.current) fillersRef.current.push(URL.createObjectURL(blob));
+      } catch {}
+    });
+  };
+
+  const playFiller = () => {
+    if (!mountedRef.current || !loadingRef.current || isSpeakingRef.current) return;
+    const fillers = fillersRef.current;
+    if (fillers.length === 0) return;
+    const audio = ttsAudioRef.current;
+    if (!audio) return;
+    audio.src = fillers[Math.floor(Math.random() * fillers.length)];
+    audio.onended = () => { if (mountedRef.current) setIsSpeaking(false); };
+    audio.onerror = () => { if (mountedRef.current) setIsSpeaking(false); };
+    audio.play().then(() => setIsSpeaking(true)).catch(() => {});
   };
 
   const startSession = async () => {
@@ -368,7 +452,16 @@ function InterviewInner() {
     // Mic is live immediately — no click needed, and it runs in parallel with the
     // interviewer's opening line so you can jump in even during the greeting.
     startListening();
-    setTimeout(() => speak(transcript[0]?.content ?? ""), 600);
+    prefetchFillers();
+    // Join sequence: you land in the room first, the interviewer's tile shows
+    // "Connecting..." for a beat, then the chime plays and they greet you —
+    // the way an actual call starts, not everyone teleporting in at once.
+    setTimeout(() => {
+      if (!mountedRef.current) return;
+      setInterviewerJoined(true);
+      playJoinChime();
+      setTimeout(() => speak(transcript[0]?.content ?? ""), 700);
+    }, 1800);
   };
 
   const toggleMute = () => {
@@ -502,6 +595,11 @@ function InterviewInner() {
 
     setInput(""); setInterimText("");
     setLoading(true);
+    // A beat after you finish talking, the interviewer acknowledges out loud
+    // ("Mm-hm...") while the real reply is still being generated — the gap
+    // feels like someone considering your answer instead of a loading spinner.
+    if (fillerTimerRef.current) clearTimeout(fillerTimerRef.current);
+    fillerTimerRef.current = setTimeout(playFiller, 900);
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 25000);
     try {
@@ -527,6 +625,7 @@ function InterviewInner() {
       setTranscript(prev => [...prev, errMessage]);
       speak(errMessage.content);
     } finally {
+      if (fillerTimerRef.current) { clearTimeout(fillerTimerRef.current); fillerTimerRef.current = null; }
       if (mountedRef.current) setLoading(false);
     }
   };
@@ -643,6 +742,18 @@ function InterviewInner() {
           .hp-interview-ctrl-btn { width: 44px !important; }
           .hp-interview-chat-panel { position: fixed !important; inset: 44px 0 0 0 !important; width: 100% !important; z-index: 200; }
         }
+        /* Barely-perceptible drift on the interviewer's "camera" so the static
+           photo reads as a live video feed instead of a frozen frame. */
+        @keyframes hp-kenburns {
+          0%   { transform: scale(1.02) translate(0, 0); }
+          50%  { transform: scale(1.07) translate(-0.6%, -0.8%); }
+          100% { transform: scale(1.03) translate(0.5%, 0.3%); }
+        }
+        .hp-interviewer-video { animation: hp-kenburns 26s ease-in-out infinite alternate; transform-origin: center 30%; }
+        @keyframes hp-connect-pulse {
+          0%, 100% { opacity: 0.35; }
+          50% { opacity: 1; }
+        }
       `}</style>
 
       {/* Media permission warning */}
@@ -667,12 +778,12 @@ function InterviewInner() {
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <div style={{
             padding: "3px 10px", borderRadius: "9999px", fontSize: "0.72rem", fontWeight: 600,
-            background: isSpeaking ? "rgba(167,139,250,0.15)" : loading ? "rgba(245,158,11,0.12)" : "rgba(34,197,94,0.15)",
-            color: isSpeaking ? "#a78bfa" : loading ? "#f59e0b" : "#22c55e",
-            border: `1px solid ${isSpeaking ? "rgba(167,139,250,0.3)" : loading ? "rgba(245,158,11,0.3)" : "rgba(34,197,94,0.3)"}`,
+            background: !interviewerJoined ? "rgba(255,255,255,0.06)" : isSpeaking ? "rgba(167,139,250,0.15)" : loading ? "rgba(245,158,11,0.12)" : "rgba(34,197,94,0.15)",
+            color: !interviewerJoined ? "rgba(255,255,255,0.4)" : isSpeaking ? "#a78bfa" : loading ? "#f59e0b" : "#22c55e",
+            border: `1px solid ${!interviewerJoined ? "rgba(255,255,255,0.1)" : isSpeaking ? "rgba(167,139,250,0.3)" : loading ? "rgba(245,158,11,0.3)" : "rgba(34,197,94,0.3)"}`,
             transition: "all 0.3s",
           }}>
-            {loading ? "Thinking..." : isSpeaking ? "Interviewer speaking — jump in anytime" : isListening ? "Listening..." : "Your turn"}
+            {!interviewerJoined ? "Connecting..." : loading ? "Thinking..." : isSpeaking ? "Interviewer speaking — jump in anytime" : isListening ? "Listening..." : "Your turn"}
           </div>
           <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
             {formatTime(elapsedTime)}
@@ -729,7 +840,23 @@ function InterviewInner() {
                   style={{ position: "absolute", inset: 0, borderRadius: "12px", boxShadow: "0 0 24px 4px rgba(167,139,250,0.35) inset", pointerEvents: "none", zIndex: 1 }}
                 />
               )}
-              <img src={INTERVIEWER.image} alt={INTERVIEWER.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }} />
+              {interviewerJoined ? (
+                <motion.img
+                  initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
+                  className="hp-interviewer-video"
+                  src={INTERVIEWER.image} alt={INTERVIEWER.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.9rem" }}>
+                  <div style={{ width: "72px", height: "72px", borderRadius: "9999px", background: "rgba(255,255,255,0.07)", display: "grid", placeItems: "center", fontSize: "1.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)" }}>
+                    {INTERVIEWER.name.charAt(0)}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.4)", animation: "hp-connect-pulse 1.6s ease-in-out infinite" }}>
+                    {INTERVIEWER.name} is connecting...
+                  </div>
+                </div>
+              )}
 
               <AnimatePresence>
                 {isSpeaking && (
