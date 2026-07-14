@@ -7,7 +7,7 @@ const RATE_THIS = {
   candidateLed: {
     response: "\"Okay, so what should I look at first?\"",
     score: 1,
-    reasoning: "Completely passive — waited for the interviewer's prompt instead of proposing where to start and why. BCG's candidate-led format punishes this immediately.",
+    reasoning: "Completely passive - waited for the interviewer's prompt instead of proposing where to start and why. BCG's candidate-led format punishes this immediately.",
   },
   structure: {
     response: "\"I'll use the classic profitability framework: revenue minus costs, broken into the usual sub-drivers.\"",

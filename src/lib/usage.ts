@@ -13,7 +13,7 @@ export interface UsageStatus {
 }
 
 // Shared by /api/usage/check (what the dashboard displays) and /api/case/generate
-// (what actually gates starting a new case) so the two can never drift apart —
+// (what actually gates starting a new case) so the two can never drift apart - 
 // the display and the enforcement must always agree.
 export async function getUsageStatus(userId: string): Promise<UsageStatus> {
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { unlimitedCases: true, bonusCases: true } });

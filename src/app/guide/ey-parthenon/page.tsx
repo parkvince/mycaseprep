@@ -17,7 +17,7 @@ const RATE_THIS = {
   strategicJudgment: {
     response: "\"It depends on a lot of factors, it's really hard to say if this is a good investment without a lot more information.\"",
     score: 1,
-    reasoning: "The classic EY-Parthenon failure pattern — refuses to take an investment position at all.",
+    reasoning: "The classic EY-Parthenon failure pattern - refuses to take an investment position at all.",
   },
   communication: {
     response: "Candidate delivers findings clearly but takes several minutes to build up to the actual recommendation.",
@@ -27,7 +27,7 @@ const RATE_THIS = {
   recommendation: {
     response: "\"I'd need a lot more diligence before I could say whether to invest or not.\"",
     score: 1,
-    reasoning: "Refuses to commit to a position — the single most common EY-Parthenon failure pattern.",
+    reasoning: "Refuses to commit to a position - the single most common EY-Parthenon failure pattern.",
   },
 };
 

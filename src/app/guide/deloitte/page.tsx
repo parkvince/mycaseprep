@@ -27,7 +27,7 @@ const RATE_THIS = {
   coachability: {
     response: "Interviewer points out an error; candidate says \"You're right, I overcounted there, let me recalculate,\" and moves on smoothly.",
     score: 4,
-    reasoning: "Textbook coachable response — acknowledges the mistake openly and adapts without becoming defensive or collapsing.",
+    reasoning: "Textbook coachable response - acknowledges the mistake openly and adapts without becoming defensive or collapsing.",
   },
 };
 

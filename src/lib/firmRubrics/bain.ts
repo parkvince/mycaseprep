@@ -6,11 +6,11 @@ export const BAIN_RUBRIC = {
   offerRate: "Approximately 1% of all applicants. Roughly 10-12% of interview-stage candidates.",
 
   scoringScale: {
-    1: "Insufficient — Below minimum standard. Would not be effective with Bain clients.",
-    2: "Adequate — Below the Bain hiring bar. Shows potential but not ready.",
-    3: "Good — Meets the Bain bar. Would represent the firm well.",
-    4: "Very Good — Strong Bainie. Above the bar with clear strengths.",
-    5: "Exceptional — The kind of candidate Bain builds teams around.",
+    1: "Insufficient - Below minimum standard. Would not be effective with Bain clients.",
+    2: "Adequate - Below the Bain hiring bar. Shows potential but not ready.",
+    3: "Good - Meets the Bain bar. Would represent the firm well.",
+    4: "Very Good - Strong Bainie. Above the bar with clear strengths.",
+    5: "Exceptional - The kind of candidate Bain builds teams around.",
   },
 
   dimensions: [
@@ -18,18 +18,18 @@ export const BAIN_RUBRIC = {
       key: "answerFirst",
       label: "Answer First & Hypothesis-Driven Thinking",
       weight: 22,
-      bainNote: "Bain's defining cultural principle is 'Answer First.' This is not optional at Bain — it is the core of how Bain consultants communicate with clients. From the first moment of the case, Bain wants to hear your initial hypothesis stated clearly and confidently. Candidates who build slowly to a conclusion, or who explore without a stated point of view, score poorly on this dimension regardless of how good their eventual answer is.",
+      bainNote: "Bain's defining cultural principle is 'Answer First.' This is not optional at Bain - it is the core of how Bain consultants communicate with clients. From the first moment of the case, Bain wants to hear your initial hypothesis stated clearly and confidently. Candidates who build slowly to a conclusion, or who explore without a stated point of view, score poorly on this dimension regardless of how good their eventual answer is.",
       whatStrongLooksLike: [
         "States an initial hypothesis within the first 2 minutes: 'My hypothesis is that the profit decline is driven by cost structure, not revenue, because...'",
-        "For yes/no cases: gives a clear directional answer upfront — 'My initial read is yes, they should enter'",
+        "For yes/no cases: gives a clear directional answer upfront - 'My initial read is yes, they should enter'",
         "Uses the hypothesis to guide the entire analysis: every question asked ties back to proving or disproving it",
-        "Updates the hypothesis explicitly when data contradicts it: 'This data actually challenges my initial view — let me revise'",
+        "Updates the hypothesis explicitly when data contradicts it: 'This data actually challenges my initial view - let me revise'",
         "Conclusion at the end mirrors or extends the opening hypothesis",
       ],
       whatWeakLooksLike: [
-        "Explores data without stating a hypothesis — 'let me look at revenues first...' without a point of view",
+        "Explores data without stating a hypothesis - 'let me look at revenues first...' without a point of view",
         "Builds to the answer: presents findings before conclusion",
-        "Never commits to a view — answers are perpetually 'it depends'",
+        "Never commits to a view - answers are perpetually 'it depends'",
         "Hypothesis is so vague it is unfalsifiable: 'There might be cost or revenue issues'",
       ],
       scoringCriteria: {
@@ -45,11 +45,11 @@ export const BAIN_RUBRIC = {
       key: "structure",
       label: "Structured Thinking & Problem Decomposition",
       weight: 18,
-      bainNote: "Bain's structure standard is somewhat more flexible than McKinsey's. Bain cares that your thinking is organized and clear — but they care less about perfect MECE than McKinsey does. A slightly incomplete structure delivered with confidence and clear prioritization will score higher at Bain than a perfectly MECE structure delivered mechanically. The 'Bainie' standard: would this structure help a client CEO understand the problem?",
+      bainNote: "Bain's structure standard is somewhat more flexible than McKinsey's. Bain cares that your thinking is organized and clear - but they care less about perfect MECE than McKinsey does. A slightly incomplete structure delivered with confidence and clear prioritization will score higher at Bain than a perfectly MECE structure delivered mechanically. The 'Bainie' standard: would this structure help a client CEO understand the problem?",
       whatStrongLooksLike: [
         "Clear logical decomposition of the problem",
         "Explicit prioritization: 'I'll start here because this is most likely to be the driver'",
-        "Structure evolves as evidence comes in — not rigidly followed",
+        "Structure evolves as evidence comes in - not rigidly followed",
         "Makes the complex simple: CEO-friendly framing",
         "Acknowledges what the structure does not cover and why that is acceptable",
       ],
@@ -72,7 +72,7 @@ export const BAIN_RUBRIC = {
       key: "quantitative",
       label: "Quantitative & Financial Analysis",
       weight: 18,
-      bainNote: "Bain's quantitative standard reflects their private equity heritage. PE/financial cases appear more frequently at Bain than at McKinsey or BCG — expect valuations, EBITDA multiples, IRR calculations, and margin analysis. 'Quick math' is a direct quote from Bain's interview prep page. Speed and accuracy both matter, but the business interpretation of the result is equally important.",
+      bainNote: "Bain's quantitative standard reflects their private equity heritage. PE/financial cases appear more frequently at Bain than at McKinsey or BCG - expect valuations, EBITDA multiples, IRR calculations, and margin analysis. 'Quick math' is a direct quote from Bain's interview prep page. Speed and accuracy both matter, but the business interpretation of the result is equally important.",
       whatStrongLooksLike: [
         "Fast, accurate mental math with methodology stated upfront",
         "Handles PE-style calculations: EBITDA multiples, valuations, returns",
@@ -100,14 +100,14 @@ export const BAIN_RUBRIC = {
       key: "communication",
       label: "Communication & Composure",
       weight: 22,
-      bainNote: "Communication is weighted higher at Bain than at McKinsey or BCG. Bain's published interview guidance explicitly emphasizes making 'sensible assumptions, doing quick math, and building constructively on others' ideas' — the third element is communication. Bain interviewers care deeply about whether you would be effective in a real client conversation with a CEO. The 'Bainie' communication style: confident but not arrogant, direct but collaborative, composed under pressure.",
+      bainNote: "Communication is weighted higher at Bain than at McKinsey or BCG. Bain's published interview guidance explicitly emphasizes making 'sensible assumptions, doing quick math, and building constructively on others' ideas' - the third element is communication. Bain interviewers care deeply about whether you would be effective in a real client conversation with a CEO. The 'Bainie' communication style: confident but not arrogant, direct but collaborative, composed under pressure.",
       whatStrongLooksLike: [
         "Answer First delivery: conclusion stated first, then supporting logic",
-        "Composed under pushback: 'That's a fair challenge — let me think through that'",
+        "Composed under pushback: 'That's a fair challenge - let me think through that'",
         "Collaborative rather than performative: treats it as a dialogue, not a presentation",
         "Concise: respects the interviewer's time",
         "Confident enough to maintain a position when pushed, flexible enough to update when shown new evidence",
-        "Natural, conversational delivery — not rehearsed",
+        "Natural, conversational delivery - not rehearsed",
       ],
       whatWeakLooksLike: [
         "Builds to the answer rather than leading with it",
@@ -130,7 +130,7 @@ export const BAIN_RUBRIC = {
       key: "culturalFit",
       label: "Cultural Fit & The Bainie Factor",
       weight: 15,
-      bainNote: "This dimension is unique to Bain in the MBB context. Bain explicitly screens for cultural fit as part of the case process — not just in the PEI. Bain wants 'smart, nice, and get things done.' The 'nice' part is real: Bain interviewers notice whether they would want to work with you on a long engagement. Intellectual arrogance, a competitive rather than collaborative style, or a lack of genuine enthusiasm for the problem will score poorly here even with technically correct answers.",
+      bainNote: "This dimension is unique to Bain in the MBB context. Bain explicitly screens for cultural fit as part of the case process - not just in the PEI. Bain wants 'smart, nice, and get things done.' The 'nice' part is real: Bain interviewers notice whether they would want to work with you on a long engagement. Intellectual arrogance, a competitive rather than collaborative style, or a lack of genuine enthusiasm for the problem will score poorly here even with technically correct answers.",
       whatStrongLooksLike: [
         "Genuine intellectual curiosity about the case problem",
         "Treats the interviewer as a thought partner, not an evaluator to impress",
@@ -144,7 +144,7 @@ export const BAIN_RUBRIC = {
         "Performs rather than collaborates: treats it as a solo presentation",
         "Generic enthusiasm that applies to any firm",
         "Does not acknowledge mistakes or course-corrections",
-        "Cold or transactional energy — optimizing for the offer rather than engaging with the problem",
+        "Cold or transactional energy - optimizing for the offer rather than engaging with the problem",
       ],
       scoringCriteria: {
         1: "Would not fit the Bain culture. Arrogant, transactional, or disengaged.",
@@ -159,7 +159,7 @@ export const BAIN_RUBRIC = {
       key: "synthesis",
       label: "Synthesis & Actionable Recommendation",
       weight: 5,
-      bainNote: "Bain's 'results, not reports' culture means the final recommendation must be actionable and specific. Bain interviewers dislike abstract or theoretical conclusions — they want to know exactly what the client should do next week. The recommendation should connect back to the hypothesis stated at the beginning of the case.",
+      bainNote: "Bain's 'results, not reports' culture means the final recommendation must be actionable and specific. Bain interviewers dislike abstract or theoretical conclusions - they want to know exactly what the client should do next week. The recommendation should connect back to the hypothesis stated at the beginning of the case.",
       whatStrongLooksLike: [
         "Answer First: recommendation stated in the first sentence",
         "Specific and actionable: tells the client what to do this quarter",
@@ -208,7 +208,7 @@ export function calculateBainOffer(scores: Record<string, number>): {
       return {
         decision: "disqualified",
         label: "No Offer",
-        description: "Automatically disqualified. Communication is Bain's most client-facing skill — a score of 1 means you would not be effective in a client conversation. This is the highest-priority area to develop before your next Bain interview.",
+        description: "Automatically disqualified. Communication is Bain's most client-facing skill - a score of 1 means you would not be effective in a client conversation. This is the highest-priority area to develop before your next Bain interview.",
         weightedScore: 0,
       };
     }
@@ -227,17 +227,17 @@ export function calculateBainOffer(scores: Record<string, number>): {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the Bain bar. Communication must reach at least a 3 — Bain will not hire someone who cannot represent them in front of a client CEO. Focus on Answer First delivery and composure under pushback before your next case.",
+      description: "Below the Bain bar. Communication must reach at least a 3 - Bain will not hire someone who cannot represent them in front of a client CEO. Focus on Answer First delivery and composure under pushback before your next case.",
       weightedScore: Math.round(weightedScore),
     };
   }
 
-  // Cultural fit check — Bain-specific minimum
+  // Cultural fit check - Bain-specific minimum
   if (scores["culturalFit"] <= 1) {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the Bain bar. Cultural fit is explicitly evaluated at Bain and a score of 1 signals a fundamental mismatch with Bain's collaborative, humble culture. Bain wants 'smart, nice, and get things done' — all three matter equally.",
+      description: "Below the Bain bar. Cultural fit is explicitly evaluated at Bain and a score of 1 signals a fundamental mismatch with Bain's collaborative, humble culture. Bain wants 'smart, nice, and get things done' - all three matter equally.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -266,8 +266,8 @@ export function calculateBainOffer(scores: Record<string, number>): {
   if (weightedScore >= 55) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the Bain bar but not over it. The most common gap at this level is communication and the Bainie factor — candidates who are analytically solid but feel transactional or rehearsed. Bain's interviewers decide based partly on 'would I want this person on my team for 6 months?' Work on genuine collaborative energy and Answer First delivery.",
+      label: "Borderline - No Offer",
+      description: "Close to the Bain bar but not over it. The most common gap at this level is communication and the Bainie factor - candidates who are analytically solid but feel transactional or rehearsed. Bain's interviewers decide based partly on 'would I want this person on my team for 6 months?' Work on genuine collaborative energy and Answer First delivery.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -275,7 +275,7 @@ export function calculateBainOffer(scores: Record<string, number>): {
   return {
     decision: "no_offer",
     label: "No Offer",
-    description: "Below the Bain hiring bar. Focus first on Answer First communication and composure under pressure — these are Bain's most weighted dimensions. Most candidates need 15-20 cases before consistently meeting the Bain standard. The good news: Bain's bar on structure is more forgiving than McKinsey's, so improvement tends to come faster here.",
+    description: "Below the Bain hiring bar. Focus first on Answer First communication and composure under pressure - these are Bain's most weighted dimensions. Most candidates need 15-20 cases before consistently meeting the Bain standard. The good news: Bain's bar on structure is more forgiving than McKinsey's, so improvement tends to come faster here.",
     weightedScore: Math.round(weightedScore),
   };
 }

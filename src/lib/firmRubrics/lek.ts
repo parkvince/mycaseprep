@@ -10,7 +10,7 @@ export const LEK_RUBRIC = {
       key: "structure",
       label: "Structured Reasoning & Hypothesis-Driven Analysis",
       weight: 20,
-      lekNote: "L.E.K. uses a candidate-led format. Their culture explicitly values 'evidence over opinion' — your structure must be built to generate and test specific hypotheses, not to explore possibilities generically. L.E.K.'s deep life sciences and PE due diligence heritage means cases frequently involve biopharma market sizing, MedTech competitive positioning, or commercial due diligence for PE. Your structure should reflect sector logic. Market sizing is extremely common at L.E.K. — often a standalone case — and requires a dedicated logical approach.",
+      lekNote: "L.E.K. uses a candidate-led format. Their culture explicitly values 'evidence over opinion' - your structure must be built to generate and test specific hypotheses, not to explore possibilities generically. L.E.K.'s deep life sciences and PE due diligence heritage means cases frequently involve biopharma market sizing, MedTech competitive positioning, or commercial due diligence for PE. Your structure should reflect sector logic. Market sizing is extremely common at L.E.K. - often a standalone case - and requires a dedicated logical approach.",
       scoringCriteria: {
         1: "No structure. Cannot build a hypothesis-driven framework.",
         2: "Generic framework not adapted to life sciences or PE context. No hypothesis.",
@@ -24,7 +24,7 @@ export const LEK_RUBRIC = {
       key: "quantitative",
       label: "Quantitative Rigor & Data-Driven Reasoning",
       weight: 25,
-      lekNote: "L.E.K.'s most heavily weighted dimension. Their pre-screen includes a GMAT-style numerical reasoning test that functions as an eliminatory gate. Market sizing cases at L.E.K. are highly quantitative — candidates must work through multi-layer calculations with stated assumptions and clean methodology. PE due diligence cases require financial math fluency: revenue multiples, EBITDA margins, market penetration rates, and TAM/SAM calculations. 'Evidence over opinion' means every claim must be backed by a number.",
+      lekNote: "L.E.K.'s most heavily weighted dimension. Their pre-screen includes a GMAT-style numerical reasoning test that functions as an eliminatory gate. Market sizing cases at L.E.K. are highly quantitative - candidates must work through multi-layer calculations with stated assumptions and clean methodology. PE due diligence cases require financial math fluency: revenue multiples, EBITDA margins, market penetration rates, and TAM/SAM calculations. 'Evidence over opinion' means every claim must be backed by a number.",
       scoringCriteria: {
         1: "Cannot perform market sizing calculations or financial due diligence math.",
         2: "Some quantitative ability but calculation errors. Cannot handle PE financial math.",
@@ -52,7 +52,7 @@ export const LEK_RUBRIC = {
       key: "writtenCase",
       label: "Written Case Synthesis & Slide Communication",
       weight: 18,
-      lekNote: "L.E.K.'s written case is a major final-round component: 60 minutes to analyze a 40-50 page slide packet, create an 8-10 slide deck, and present findings to the interviewer. This tests slide-based communication, data synthesis under time pressure, and the ability to build a coherent data-driven narrative from financial exhibits. L.E.K. clients in life sciences and PE expect precise, evidence-backed slide communication — not just verbal fluency.",
+      lekNote: "L.E.K.'s written case is a major final-round component: 60 minutes to analyze a 40-50 page slide packet, create an 8-10 slide deck, and present findings to the interviewer. This tests slide-based communication, data synthesis under time pressure, and the ability to build a coherent data-driven narrative from financial exhibits. L.E.K. clients in life sciences and PE expect precise, evidence-backed slide communication - not just verbal fluency.",
       scoringCriteria: {
         1: "Cannot synthesize a 40-50 page exhibit package into a coherent recommendation.",
         2: "Basic synthesis. Summarizes exhibits rather than building a narrative. Slide quality poor.",
@@ -83,7 +83,7 @@ export const LEK_RUBRIC = {
 
 export function calculateLekOffer(scores: Record<string, number>): { decision: string; label: string; description: string; weightedScore: number; } {
   const dims = LEK_RUBRIC.dimensions;
-  for (const d of dims) { if ((d as any).dealbreaker && scores[d.key] <= 1) return { decision: "disqualified", label: "No Offer", description: "Automatically disqualified. Quantitative rigor is L.E.K.'s primary gate — their pre-screen numerical test exists specifically to eliminate candidates without it. This is the highest-priority area to develop.", weightedScore: 0 }; }
+  for (const d of dims) { if ((d as any).dealbreaker && scores[d.key] <= 1) return { decision: "disqualified", label: "No Offer", description: "Automatically disqualified. Quantitative rigor is L.E.K.'s primary gate - their pre-screen numerical test exists specifically to eliminate candidates without it. This is the highest-priority area to develop.", weightedScore: 0 }; }
 
   const other = dims.find(d => !(d as any).dealbreaker && scores[d.key] <= 1);
   if (other) return { decision: "disqualified", label: "No Offer", description: `A score of 1 on ${other.label} is disqualifying at L.E.K.`, weightedScore: 0 };
@@ -96,6 +96,6 @@ export function calculateLekOffer(scores: Record<string, number>): { decision: s
   const exc = dims.filter(d => scores[d.key] >= 4).length;
   if (w >= 84 && exc >= 3) return { decision: "strong_offer", label: "Strong Offer", description: "Exceptional. L.E.K. would extend a strong offer. The quantitative rigor, evidence-based reasoning, and written case quality are all at the level L.E.K. expects from candidates who go on to work on life sciences and PE due diligence mandates. Top 5% of candidates.", weightedScore: Math.round(w) };
   if (w >= 64 && exc >= 2) return { decision: "offer", label: "Offer", description: "Above the L.E.K. bar. An offer would likely be extended. You showed the quantitative precision, evidence-driven reasoning, and written case synthesis that L.E.K.'s culture demands. Top 10-15% of candidates.", weightedScore: Math.round(w) };
-  if (w >= 47) return { decision: "borderline", label: "Borderline — No Offer", description: "Close to the L.E.K. bar. The most common gap: written case synthesis and evidence grounding. Practice building recommendation-first narratives from dense exhibit packages. Market sizing methodology also needs to be sharper.", weightedScore: Math.round(w) };
+  if (w >= 47) return { decision: "borderline", label: "Borderline - No Offer", description: "Close to the L.E.K. bar. The most common gap: written case synthesis and evidence grounding. Practice building recommendation-first narratives from dense exhibit packages. Market sizing methodology also needs to be sharper.", weightedScore: Math.round(w) };
   return { decision: "no_offer", label: "No Offer", description: "Below the L.E.K. bar. Focus on quantitative rigor and written case synthesis. L.E.K.'s evidence-over-opinion culture means every recommendation must be data-backed. Most candidates need 12-18 cases to consistently meet this standard.", weightedScore: Math.round(w) };
 }

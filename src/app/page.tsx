@@ -33,7 +33,7 @@ function FadeImg({ src, alt, style, animate, transition, fetchPriority }: FadeIm
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Cached images can finish loading before React attaches the onLoad
-  // listener, so the load event never fires — check .complete on mount too.
+  // listener, so the load event never fires - check .complete on mount too.
   useEffect(() => {
     if (imgRef.current?.complete) setLoaded(true);
   }, []);
@@ -397,8 +397,8 @@ export default function LandingPage() {
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
                 style={{ marginTop: "1.5rem", maxWidth: "28rem", fontSize: "1.05rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, fontWeight: 400 }}>
                 Practice with a realistic interviewer simulation. Firm-specific scoring from{" "}
-                <Term define="McKinsey, Bain & Company, and Boston Consulting Group — the three top-tier 'MBB' strategy consulting firms.">MBB</Term>,{" "}
-                <Term define="Deloitte, EY, KPMG, and PwC — the four largest professional services firms, all with growing consulting arms.">Big 4</Term>, and 10+ leading consulting firms.
+                <Term define="McKinsey, Bain & Company, and Boston Consulting Group - the three top-tier 'MBB' strategy consulting firms.">MBB</Term>,{" "}
+                <Term define="Deloitte, EY, KPMG, and PwC - the four largest professional services firms, all with growing consulting arms.">Big 4</Term>, and 10+ leading consulting firms.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ marginTop: "2rem", display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap" }}>
@@ -512,7 +512,7 @@ export default function LandingPage() {
 
             <div style={{ maxWidth: "860px", margin: "0 auto", display: "grid", gap: "1rem" }}>
               {[
-                { title: "Data we collect", body: "When you sign up, I collect your name and email to create your account. If you sign in with Google, I receive your name, email, and profile photo — I never see your Google password. Your case interview transcripts, scores, and performance history are stored to power your history and tracking features.", color: "var(--hp-lavender)" },
+                { title: "Data we collect", body: "When you sign up, I collect your name and email to create your account. If you sign in with Google, I receive your name, email, and profile photo - I never see your Google password. Your case interview transcripts, scores, and performance history are stored to power your history and tracking features.", color: "var(--hp-lavender)" },
                 { title: "Data sharing & security", body: "I do not sell, rent, or share your personal data with third parties for marketing purposes. Your interview transcripts are used only to generate your scorecard and are never shared publicly. I use industry-standard encryption in transit (HTTPS) and at rest.", color: "var(--hp-mint)" },
                 { title: "Interview processing", body: "Your interview responses are processed by a scoring system to generate feedback and dimensional scores. I do not use your transcripts to train any models. Your responses are yours and remain private to your account.", color: "var(--hp-peach)" },
                 { title: "Data deletion", body: "You may request deletion of your account and all associated data at any time by contacting me. Upon request, I will remove your account, transcripts, and personal information within 30 days.", color: "var(--hp-sky)" },

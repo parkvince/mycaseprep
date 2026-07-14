@@ -3,14 +3,14 @@ export const EY_PARTHENON_RUBRIC = {
   firmFullName: "EY-Parthenon",
   format: "candidate-led",
   interviewDuration: "25-35 minutes",
-  offerRate: "Approximately 1-2% of applicants. MBB-adjacent bar — not standard Big 4.",
+  offerRate: "Approximately 1-2% of applicants. MBB-adjacent bar - not standard Big 4.",
 
   scoringScale: {
-    1: "Insufficient — Would not be placed in front of a client.",
-    2: "Adequate — Below the EY-Parthenon bar. Shows potential but not ready.",
-    3: "Good — Meets the bar. Would represent EY-Parthenon competently.",
-    4: "Very Good — Strong candidate. Above the bar.",
-    5: "Exceptional — McKinsey/BCG-level performance.",
+    1: "Insufficient - Would not be placed in front of a client.",
+    2: "Adequate - Below the EY-Parthenon bar. Shows potential but not ready.",
+    3: "Good - Meets the bar. Would represent EY-Parthenon competently.",
+    4: "Very Good - Strong candidate. Above the bar.",
+    5: "Exceptional - McKinsey/BCG-level performance.",
   },
 
   dimensions: [
@@ -18,7 +18,7 @@ export const EY_PARTHENON_RUBRIC = {
       key: "problemSolving",
       label: "Problem Solving Approach & Structure",
       weight: 25,
-      eypNote: "EY-Parthenon's official prep guide lists this as Dimension 1. Because EY-Parthenon uses a candidate-led format, you must drive the analysis independently. Their prep guide explicitly states: identify and understand issues, ask clarifying questions, structure the problem, develop and prioritize recommendations. PE/investment cases dominate — your structure must reflect commercial diligence logic, not just generic consulting frameworks.",
+      eypNote: "EY-Parthenon's official prep guide lists this as Dimension 1. Because EY-Parthenon uses a candidate-led format, you must drive the analysis independently. Their prep guide explicitly states: identify and understand issues, ask clarifying questions, structure the problem, develop and prioritize recommendations. PE/investment cases dominate - your structure must reflect commercial diligence logic, not just generic consulting frameworks.",
       whatStrongLooksLike: [
         "Drives the case independently without waiting for interviewer prompts",
         "For PE/investment cases: structures around market attractiveness, competitive position, financial performance, and value creation",
@@ -46,9 +46,9 @@ export const EY_PARTHENON_RUBRIC = {
       key: "quantitative",
       label: "Numerical & Financial Skills",
       weight: 28,
-      eypNote: "EY-Parthenon's official prep guide lists numerical skills as Dimension 2 and explicitly requires 'financial literacy — strong understanding of P&L and Balance Sheet.' This is the most distinctly EY-Parthenon dimension. Because of the PE heritage, candidates are expected to handle EBITDA, revenue multiples, margin math, and investment returns more fluently than at McKinsey or BCG. Their guide adds: 'We do not require complex analysis requiring unnecessary technical knowledge' — the bar is financial fluency, not investment banking modeling.",
+      eypNote: "EY-Parthenon's official prep guide lists numerical skills as Dimension 2 and explicitly requires 'financial literacy - strong understanding of P&L and Balance Sheet.' This is the most distinctly EY-Parthenon dimension. Because of the PE heritage, candidates are expected to handle EBITDA, revenue multiples, margin math, and investment returns more fluently than at McKinsey or BCG. Their guide adds: 'We do not require complex analysis requiring unnecessary technical knowledge' - the bar is financial fluency, not investment banking modeling.",
       whatStrongLooksLike: [
-        "Reads P&L and Balance Sheet with ease — knows what the numbers mean commercially",
+        "Reads P&L and Balance Sheet with ease - knows what the numbers mean commercially",
         "Handles PE math: EBITDA margins, revenue multiples, investment returns, unit economics",
         "Fast, accurate mental math with clear narration",
         "Sanity-checks results against commercial reality: 'A 15x EBITDA multiple for a declining business seems high...'",
@@ -74,7 +74,7 @@ export const EY_PARTHENON_RUBRIC = {
       key: "strategicJudgment",
       label: "Strategic & Investment Judgment",
       weight: 22,
-      eypNote: "This is EY-Parthenon's most distinctive dimension relative to other Big 4 firms. Because the firm does PE commercial diligence and transaction advisory, candidates must think like investors — not just consultants. The key question: would you invest in this business? That requires making a judgment call with incomplete information, acknowledging risks explicitly, and taking a clear position. EY-Parthenon interviewers explicitly note that candidates who hedge every answer with 'it depends' without committing to a view are the most common failure pattern.",
+      eypNote: "This is EY-Parthenon's most distinctive dimension relative to other Big 4 firms. Because the firm does PE commercial diligence and transaction advisory, candidates must think like investors - not just consultants. The key question: would you invest in this business? That requires making a judgment call with incomplete information, acknowledging risks explicitly, and taking a clear position. EY-Parthenon interviewers explicitly note that candidates who hedge every answer with 'it depends' without committing to a view are the most common failure pattern.",
       whatStrongLooksLike: [
         "Takes a clear investment position with incomplete information: 'My view is this is an attractive investment because...'",
         "Identifies the 2-3 key value drivers that determine whether the investment thesis holds",
@@ -103,14 +103,14 @@ export const EY_PARTHENON_RUBRIC = {
       key: "communication",
       label: "Communication & Client Readiness",
       weight: 15,
-      eypNote: "EY-Parthenon's internal standard for communication is explicitly: 'Would I feel comfortable placing you in front of a client?' This is a slightly higher commercial bar than pure analytical clarity. EY-Parthenon clients include PE partners, CFOs, and board members — communication must be executive-ready. The firm also has strong collaborative culture ('smart, nice, and driven') — communication should be confident but never arrogant.",
+      eypNote: "EY-Parthenon's internal standard for communication is explicitly: 'Would I feel comfortable placing you in front of a client?' This is a slightly higher commercial bar than pure analytical clarity. EY-Parthenon clients include PE partners, CFOs, and board members - communication must be executive-ready. The firm also has strong collaborative culture ('smart, nice, and driven') - communication should be confident but never arrogant.",
       whatStrongLooksLike: [
         "Executive-ready delivery: conclusion first, then logic, then implications",
         "Would feel natural presenting to a PE partner or CFO",
         "Confident but not arrogant: acknowledges uncertainty without hedging everything",
         "Concise: respects the client's time",
-        "Handles pushback professionally: 'That's a fair point — let me reconsider the assumption on...'",
-        "Natural, genuine delivery — not rehearsed",
+        "Handles pushback professionally: 'That's a fair point - let me reconsider the assumption on...'",
+        "Natural, genuine delivery - not rehearsed",
       ],
       whatWeakLooksLike: [
         "Would need significant coaching before being placed with a client",
@@ -132,7 +132,7 @@ export const EY_PARTHENON_RUBRIC = {
       key: "recommendation",
       label: "Recommendation Commitment & Decisiveness",
       weight: 10,
-      eypNote: "EY-Parthenon explicitly identifies candidates who fail to commit to a recommendation as the most common failure pattern. This is linked to their PE heritage — in a real commercial diligence, the PE partner needs a clear answer: invest or don't invest. An EY-Parthenon consultant who says 'it's too early to tell' or hedges the final recommendation is not useful to the client. Decisiveness with appropriate caveats is the standard.",
+      eypNote: "EY-Parthenon explicitly identifies candidates who fail to commit to a recommendation as the most common failure pattern. This is linked to their PE heritage - in a real commercial diligence, the PE partner needs a clear answer: invest or don't invest. An EY-Parthenon consultant who says 'it's too early to tell' or hedges the final recommendation is not useful to the client. Decisiveness with appropriate caveats is the standard.",
       whatStrongLooksLike: [
         "Clear, committed recommendation stated in the first sentence of the conclusion",
         "Specific: invest/don't invest, enter/don't enter, with a clear rationale",
@@ -200,17 +200,17 @@ export function calculateEyParthenonOffer(scores: Record<string, number>): {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the EY-Parthenon bar. Quantitative and financial skills must reach at least a 3 — EY-Parthenon's PE and transaction advisory work requires financial fluency. Strengthen your P&L literacy, EBITDA math, and investment return calculations before your next interview.",
+      description: "Below the EY-Parthenon bar. Quantitative and financial skills must reach at least a 3 - EY-Parthenon's PE and transaction advisory work requires financial fluency. Strengthen your P&L literacy, EBITDA math, and investment return calculations before your next interview.",
       weightedScore: Math.round(weightedScore),
     };
   }
 
-  // Recommendation check — EY-Parthenon specific
+  // Recommendation check - EY-Parthenon specific
   if (scores["recommendation"] <= 1) {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the EY-Parthenon bar. Failing to commit to a recommendation is the most common failure pattern at EY-Parthenon. PE partners and CFOs need a clear answer — not 'it depends.' Practice making decisive recommendations with appropriate caveats.",
+      description: "Below the EY-Parthenon bar. Failing to commit to a recommendation is the most common failure pattern at EY-Parthenon. PE partners and CFOs need a clear answer - not 'it depends.' Practice making decisive recommendations with appropriate caveats.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -239,8 +239,8 @@ export function calculateEyParthenonOffer(scores: Record<string, number>): {
   if (weightedScore >= 50) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the EY-Parthenon bar. The most common gap at this level is investment judgment and recommendation commitment — candidates who are analytically solid but hedge their final position. Practice making clear investment calls with appropriate caveats rather than deferring to more data.",
+      label: "Borderline - No Offer",
+      description: "Close to the EY-Parthenon bar. The most common gap at this level is investment judgment and recommendation commitment - candidates who are analytically solid but hedge their final position. Practice making clear investment calls with appropriate caveats rather than deferring to more data.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -248,7 +248,7 @@ export function calculateEyParthenonOffer(scores: Record<string, number>): {
   return {
     decision: "no_offer",
     label: "No Offer",
-    description: "Below the EY-Parthenon bar. Focus first on financial literacy (P&L, EBITDA, investment math) and practice making committed investment recommendations. EY-Parthenon's bar is MBB-adjacent — most candidates need 12-20 cases before consistently clearing it.",
+    description: "Below the EY-Parthenon bar. Focus first on financial literacy (P&L, EBITDA, investment math) and practice making committed investment recommendations. EY-Parthenon's bar is MBB-adjacent - most candidates need 12-20 cases before consistently clearing it.",
     weightedScore: Math.round(weightedScore),
   };
 }

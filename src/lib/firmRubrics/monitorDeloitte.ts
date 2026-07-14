@@ -1,7 +1,7 @@
 export const MONITOR_DELOITTE_RUBRIC = {
   firm: "monitor-deloitte",
   firmFullName: "Monitor Deloitte",
-  format: "candidate-led — treat as BCG/Bain prep, not standard Deloitte",
+  format: "candidate-led - treat as BCG/Bain prep, not standard Deloitte",
   interviewDuration: "30-45 minutes per case",
   offerRate: "Approximately 3-4% of applicants. Pure strategy arm of Deloitte. Competes directly with MBB and EY-Parthenon for strategy mandates.",
 
@@ -10,7 +10,7 @@ export const MONITOR_DELOITTE_RUBRIC = {
       key: "strategicStructure",
       label: "Strategic Structure & CEO-Level Point of View",
       weight: 25,
-      mdNote: "Monitor Deloitte's most critical dimension. 'Your recommendation needs a clear CEO-level point of view, not a balanced list of pros and cons.' This distinguishes Monitor Deloitte prep from standard Deloitte: Monitor expects you to take a clear position from the outset and build the case for it, not explore all sides equally. Cases focus on market entry, corporate strategy, growth, and M&A — the same work MBB firms do. Treat this like BCG or Bain prep, not Big 4.",
+      mdNote: "Monitor Deloitte's most critical dimension. 'Your recommendation needs a clear CEO-level point of view, not a balanced list of pros and cons.' This distinguishes Monitor Deloitte prep from standard Deloitte: Monitor expects you to take a clear position from the outset and build the case for it, not explore all sides equally. Cases focus on market entry, corporate strategy, growth, and M&A - the same work MBB firms do. Treat this like BCG or Bain prep, not Big 4.",
       whatStrongLooksLike: [
         "Opens with a clear hypothesis and point of view: 'My initial view is they should enter the market because...'",
         "Structures the case to prove or disprove that point of view, not to explore all possibilities",
@@ -37,7 +37,7 @@ export const MONITOR_DELOITTE_RUBRIC = {
       key: "strategyDepth",
       label: "Strategy Depth & Analytical Insight",
       weight: 23,
-      mdNote: "Monitor Deloitte does MBB-equivalent strategy work — market entry, corporate strategy, M&A, and competitive positioning. The analytical depth must match. 'Don't under-prepare for case rigor' is their explicit warning. Office specializations matter: Boston leans life sciences/healthcare, NYC focuses on financial services, Chicago on innovation strategy, SF on technology/digital. Cases are often built from real client engagements, so industry context matters.",
+      mdNote: "Monitor Deloitte does MBB-equivalent strategy work - market entry, corporate strategy, M&A, and competitive positioning. The analytical depth must match. 'Don't under-prepare for case rigor' is their explicit warning. Office specializations matter: Boston leans life sciences/healthcare, NYC focuses on financial services, Chicago on innovation strategy, SF on technology/digital. Cases are often built from real client engagements, so industry context matters.",
       scoringCriteria: {
         1: "No strategic depth. Analysis is generic and surface-level.",
         2: "Basic strategic analysis. Missing the second-order insights that distinguish Monitor from standard Big 4.",
@@ -51,7 +51,7 @@ export const MONITOR_DELOITTE_RUBRIC = {
       key: "quantitative",
       label: "Quantitative Analysis & Financial Logic",
       weight: 20,
-      mdNote: "Monitor Deloitte strategy cases are quant-intensive — market sizing, financial feasibility, M&A valuation logic, and competitive economics. 'Round numbers ruthlessly' and 'write your recommendation in one sentence before presenting' are their explicit tips. Financial feasibility must accompany every strategic recommendation.",
+      mdNote: "Monitor Deloitte strategy cases are quant-intensive - market sizing, financial feasibility, M&A valuation logic, and competitive economics. 'Round numbers ruthlessly' and 'write your recommendation in one sentence before presenting' are their explicit tips. Financial feasibility must accompany every strategic recommendation.",
       scoringCriteria: {
         1: "Cannot perform financial calculations or market sizing.",
         2: "Some quantitative analysis but missing financial feasibility grounding.",
@@ -65,7 +65,7 @@ export const MONITOR_DELOITTE_RUBRIC = {
       key: "communication",
       label: "Communication & Delivery Under Pressure",
       weight: 17,
-      mdNote: "'Defend your reasoning under pressure: when the interviewer pushes back, do not immediately cave. Restate your logic, point to the data, and explain why your conclusion still holds.' Monitor Deloitte specifically tests composure under pushback — a partner will challenge your recommendation. The standard: hold your position with evidence, not stubbornness.",
+      mdNote: "'Defend your reasoning under pressure: when the interviewer pushes back, do not immediately cave. Restate your logic, point to the data, and explain why your conclusion still holds.' Monitor Deloitte specifically tests composure under pushback - a partner will challenge your recommendation. The standard: hold your position with evidence, not stubbornness.",
       scoringCriteria: {
         1: "Collapses under pushback. Cannot defend position. Buries conclusions.",
         2: "Defends position poorly. Either caves immediately or doubles down without engaging.",
@@ -79,7 +79,7 @@ export const MONITOR_DELOITTE_RUBRIC = {
       key: "writtenCase",
       label: "Written Case & Strategic Synthesis",
       weight: 15,
-      mdNote: "Monitor Deloitte uses written case interviews in some regional processes — 30-50 page slide packet, 30-60 minutes of prep, then a presentation to a Partner. 'Stay calm if you do not finish — the goal is not to answer everything, it is to answer the most important things well.' This dimension scores the ability to prioritize the strategic questions that matter most and build a CEO-level recommendation from the data.",
+      mdNote: "Monitor Deloitte uses written case interviews in some regional processes - 30-50 page slide packet, 30-60 minutes of prep, then a presentation to a Partner. 'Stay calm if you do not finish - the goal is not to answer everything, it is to answer the most important things well.' This dimension scores the ability to prioritize the strategic questions that matter most and build a CEO-level recommendation from the data.",
       scoringCriteria: {
         1: "Cannot build a strategic recommendation from a dense slide packet.",
         2: "Basic synthesis. Summarizes rather than builds a strategic narrative.",
@@ -108,6 +108,6 @@ export function calculateMonitorDeloitteOffer(scores: Record<string, number>): {
   const exc = dims.filter(d => scores[d.key] >= 4).length;
   if (w >= 83 && exc >= 3) return { decision: "strong_offer", label: "Strong Offer", description: "Exceptional. Monitor Deloitte would extend a strong offer. You demonstrated MBB-level strategic depth, CEO-level point of view, and the composure under pressure that Monitor's strategy partners look for. Top 5% of candidates.", weightedScore: Math.round(w) };
   if (w >= 64 && exc >= 2) return { decision: "offer", label: "Offer", description: "Above the Monitor Deloitte bar. An offer would likely be extended. You showed clear strategic hypothesis, analytical depth, and the ability to hold a position under pressure. Top 10-15% of candidates.", weightedScore: Math.round(w) };
-  if (w >= 47) return { decision: "borderline", label: "Borderline — No Offer", description: "Close to the Monitor bar. The most common gap: strategic point of view. Candidates who explore all options equally without committing to a CEO-level recommendation fall short here. Practice leading with your recommendation from minute one.", weightedScore: Math.round(w) };
+  if (w >= 47) return { decision: "borderline", label: "Borderline - No Offer", description: "Close to the Monitor bar. The most common gap: strategic point of view. Candidates who explore all options equally without committing to a CEO-level recommendation fall short here. Practice leading with your recommendation from minute one.", weightedScore: Math.round(w) };
   return { decision: "no_offer", label: "No Offer", description: "Below the Monitor Deloitte bar. The biggest mistake: treating this like a standard Deloitte S&O interview. Monitor requires MBB-level case prep. Focus on CEO-level point of view and strategic depth. Most candidates need 12-18 cases to meet this standard.", weightedScore: Math.round(w) };
 }

@@ -102,7 +102,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
     style: "strategy-focused, candidate-led, MBB-adjacent rigor",
     tone: "thoughtful, CEO-level point of view required",
     evaluationWeights: { structure: 25, problemSolving: 25, quantitative: 20, communication: 20, creativity: 10 },
-    feedbackTone: "Pure strategy. Treat as BCG/Bain prep — not standard Deloitte.",
+    feedbackTone: "Pure strategy. Treat as BCG/Bain prep - not standard Deloitte.",
     color: "#86BC25",
   },
   ibm: {

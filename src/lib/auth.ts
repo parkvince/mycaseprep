@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (existing) {
-          // User already exists — update name only, NEVER touch image
+          // User already exists - update name only, NEVER touch image
           const dbUser = await prisma.user.update({
             where: { id: existing.id },
             data: { name: (profile as any).name },
@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
           token.id = dbUser.id;
           token.name = dbUser.name;
         } else {
-          // Brand new user — create with Google's picture
+          // Brand new user - create with Google's picture
           const dbUser = await prisma.user.create({
             data: {
               email: profile.email,

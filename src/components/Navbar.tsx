@@ -236,7 +236,7 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Spacer so content isn't hidden behind fixed nav — matches the header's
+      {/* Spacer so content isn't hidden behind fixed nav - matches the header's
           actual rendered height (padding + 38px buttons), not a rounded guess. */}
       <div style={{ height: "68px" }} />
     </>

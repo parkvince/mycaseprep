@@ -5,7 +5,7 @@ export interface Interviewer {
   image: string;
 }
 
-// The interviewer roster — one of these is picked at case-generation time and
+// The interviewer roster - one of these is picked at case-generation time and
 // rides along in the session's caseData, so the live call, voice mode, and text
 // mode all show the same person (same face, same name, same TTS voice) for a
 // given case. Names follow each sprite's color/look.

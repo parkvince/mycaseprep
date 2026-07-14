@@ -10,7 +10,7 @@ export const OLIVER_WYMAN_RUBRIC = {
       key: "structure",
       label: "Structured Thinking & Framework Design",
       weight: 23,
-      owNote: "Oliver Wyman uses a fully candidate-led format identical to BCG and Bain. You must drive the entire case independently. OW's financial services heritage means cases frequently involve regulatory capital, revenue strategy, insurance pricing, or digital banking — your structure must reflect sector-specific logic, not generic frameworks. OW explicitly evaluates whether your framework reflects genuine understanding of the business problem.",
+      owNote: "Oliver Wyman uses a fully candidate-led format identical to BCG and Bain. You must drive the entire case independently. OW's financial services heritage means cases frequently involve regulatory capital, revenue strategy, insurance pricing, or digital banking - your structure must reflect sector-specific logic, not generic frameworks. OW explicitly evaluates whether your framework reflects genuine understanding of the business problem.",
       whatStrongLooksLike: [
         "Builds a MECE structure independently from the first minute",
         "For financial services cases: structures around revenue levers, cost structure, risk/capital, and regulatory constraints",
@@ -38,7 +38,7 @@ export const OLIVER_WYMAN_RUBRIC = {
       key: "financialServicesKnowledge",
       label: "Financial Services & Sector Expertise",
       weight: 22,
-      owNote: "Oliver Wyman's most distinctive dimension — no other Tier 2 firm matches OW's financial services depth. Their cases frequently involve banking capital allocation, insurance pricing dynamics, asset management strategy, and fintech disruption. Candidates who demonstrate genuine sector fluency — not just generic business knowledge — score significantly higher. OW's three core values (Courage, Curiosity, Passion) are reflected in how they evaluate intellectual engagement with the sector.",
+      owNote: "Oliver Wyman's most distinctive dimension - no other Tier 2 firm matches OW's financial services depth. Their cases frequently involve banking capital allocation, insurance pricing dynamics, asset management strategy, and fintech disruption. Candidates who demonstrate genuine sector fluency - not just generic business knowledge - score significantly higher. OW's three core values (Courage, Curiosity, Passion) are reflected in how they evaluate intellectual engagement with the sector.",
       whatStrongLooksLike: [
         "For banking cases: understands net interest margins, regulatory capital requirements, credit risk dynamics",
         "For insurance cases: understands combined ratios, underwriting cycles, claims reserves",
@@ -50,7 +50,7 @@ export const OLIVER_WYMAN_RUBRIC = {
       whatWeakLooksLike: [
         "Treats a banking case like a generic profitability case with no financial services knowledge",
         "Cannot explain what net interest margin, combined ratio, or AUM mean",
-        "No genuine curiosity about the sector — just going through framework motions",
+        "No genuine curiosity about the sector - just going through framework motions",
       ],
       scoringCriteria: {
         1: "No financial services knowledge. Cannot engage with sector-specific case content.",
@@ -65,7 +65,7 @@ export const OLIVER_WYMAN_RUBRIC = {
       key: "quantitative",
       label: "Analytical Execution & Quantitative Rigor",
       weight: 22,
-      owNote: "OW's written case (final round) tests quantitative rigor explicitly — candidates receive a 30-minute deck of financial data and must analyze it independently before presenting. Even in verbal cases, OW places high emphasis on quantitative precision. Financial services cases frequently involve complex multi-step calculations: ROE analysis, break-even modeling, revenue per customer math, insurance loss ratios. OW interviewers care about methodology as much as the answer.",
+      owNote: "OW's written case (final round) tests quantitative rigor explicitly - candidates receive a 30-minute deck of financial data and must analyze it independently before presenting. Even in verbal cases, OW places high emphasis on quantitative precision. Financial services cases frequently involve complex multi-step calculations: ROE analysis, break-even modeling, revenue per customer math, insurance loss ratios. OW interviewers care about methodology as much as the answer.",
       whatStrongLooksLike: [
         "States approach before calculating: 'I'll analyze this as net revenue minus loss ratio...'",
         "For written case: quickly identifies which data in the deck is relevant and which is noise",
@@ -92,7 +92,7 @@ export const OLIVER_WYMAN_RUBRIC = {
       key: "communication",
       label: "Communication & Conversational Interview",
       weight: 18,
-      owNote: "OW uses 'conversational interviews' alongside case interviews — a format unique to the firm. This is a behavioral + intellectual discussion that evaluates how you engage in professional dialogue. OW's Curiosity value is directly tested here: do you ask thoughtful follow-up questions? Do you engage with intellectual depth on topics outside your direct experience? Communication at OW must be both analytically precise and genuinely engaging.",
+      owNote: "OW uses 'conversational interviews' alongside case interviews - a format unique to the firm. This is a behavioral + intellectual discussion that evaluates how you engage in professional dialogue. OW's Curiosity value is directly tested here: do you ask thoughtful follow-up questions? Do you engage with intellectual depth on topics outside your direct experience? Communication at OW must be both analytically precise and genuinely engaging.",
       whatStrongLooksLike: [
         "Conclusion-first delivery: 'My recommendation is X because...'",
         "In conversational interview: genuinely curious intellectual engagement, not performance",
@@ -119,13 +119,13 @@ export const OLIVER_WYMAN_RUBRIC = {
       key: "writtenCase",
       label: "Written Case Quality & Synthesis",
       weight: 15,
-      owNote: "Oliver Wyman's final round includes a written case: candidates receive a financial services data package, analyze it independently for ~30 minutes, then present findings to the interviewer. This tests slide-based communication, data synthesis under time pressure, and the ability to build a coherent narrative from financial data. The written case is often the final gate — candidates who pass verbal cases but struggle with written synthesis do not get offers.",
+      owNote: "Oliver Wyman's final round includes a written case: candidates receive a financial services data package, analyze it independently for ~30 minutes, then present findings to the interviewer. This tests slide-based communication, data synthesis under time pressure, and the ability to build a coherent narrative from financial data. The written case is often the final gate - candidates who pass verbal cases but struggle with written synthesis do not get offers.",
       whatStrongLooksLike: [
-        "Reads the questions before diving into the data — focuses only on relevant exhibits",
+        "Reads the questions before diving into the data - focuses only on relevant exhibits",
         "Recommendation stated in one sentence before presenting evidence",
         "Synthesizes across multiple data sources rather than summarizing each exhibit separately",
         "Handles the financial data with sector fluency",
-        "Presents crisply in the time available — does not try to cover everything",
+        "Presents crisply in the time available - does not try to cover everything",
       ],
       whatWeakLooksLike: [
         "Reads all data before identifying what questions need to be answered",
@@ -176,6 +176,6 @@ export function calculateOliverWymanOffer(scores: Record<string, number>): {
   const exc = dims.filter(d => scores[d.key] >= 4).length;
   if (weightedScore >= 84 && exc >= 3) return { decision: "strong_offer", label: "Strong Offer", description: "Exceptional performance. Oliver Wyman would extend a strong offer. You demonstrated MBB-level case rigor, genuine financial services sector fluency, and the intellectual curiosity that OW's culture is built on. Top 5% of interview-stage candidates.", weightedScore: Math.round(weightedScore) };
   if (weightedScore >= 65 && exc >= 2) return { decision: "offer", label: "Offer", description: "Above the Oliver Wyman bar. An offer would likely be extended. You showed sector-specific analytical depth and the conversational engagement that OW's Courage, Curiosity, Passion values demand. Top 10-15% of interview-stage candidates.", weightedScore: Math.round(weightedScore) };
-  if (weightedScore >= 48) return { decision: "borderline", label: "Borderline — No Offer", description: "Close to the OW bar. The most common gap: financial services sector knowledge and written case synthesis. Deepen your familiarity with banking, insurance, and capital markets business models before your next interview.", weightedScore: Math.round(weightedScore) };
-  return { decision: "no_offer", label: "No Offer", description: "Below the Oliver Wyman bar. Focus on financial services sector knowledge and written case synthesis. OW's 1-3% offer rate reflects MBB-adjacent rigor — most candidates need 12-20 cases before consistently clearing the bar.", weightedScore: Math.round(weightedScore) };
+  if (weightedScore >= 48) return { decision: "borderline", label: "Borderline - No Offer", description: "Close to the OW bar. The most common gap: financial services sector knowledge and written case synthesis. Deepen your familiarity with banking, insurance, and capital markets business models before your next interview.", weightedScore: Math.round(weightedScore) };
+  return { decision: "no_offer", label: "No Offer", description: "Below the Oliver Wyman bar. Focus on financial services sector knowledge and written case synthesis. OW's 1-3% offer rate reflects MBB-adjacent rigor - most candidates need 12-20 cases before consistently clearing the bar.", weightedScore: Math.round(weightedScore) };
 }

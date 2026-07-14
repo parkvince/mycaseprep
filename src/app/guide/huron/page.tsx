@@ -7,7 +7,7 @@ const RATE_THIS = {
   analyticalThinking: {
     response: "Interviewer directs candidate to analyze hospital readmission costs; candidate struggles to organize a response to the specific prompt.",
     score: 2,
-    reasoning: "Huron is interviewer-led — the standard is responding clearly to directed prompts, and this response is disorganized.",
+    reasoning: "Huron is interviewer-led - the standard is responding clearly to directed prompts, and this response is disorganized.",
   },
   industryKnowledge: {
     response: "Candidate is asked about hospital payer mix and has no idea what that means.",

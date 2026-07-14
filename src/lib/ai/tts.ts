@@ -1,5 +1,5 @@
 // Text-to-speech via Gemini's native TTS models, reusing the same GEMINI_API_KEY
-// already configured for the text fallback chain — no separate signup needed.
+// already configured for the text fallback chain - no separate signup needed.
 // Returns null (rather than throwing) whenever TTS isn't usable, so callers can
 // fall back to the browser's built-in speechSynthesis without special-casing errors.
 
@@ -36,7 +36,7 @@ function pcmToWav(pcm: Buffer, sampleRate: number, numChannels = 1, bitsPerSampl
 
 const MAX_ATTEMPTS = 3;
 const REQUEST_TIMEOUT_MS = 12000;
-// Rate limits (429) and transient server errors (5xx) are worth a quick retry —
+// Rate limits (429) and transient server errors (5xx) are worth a quick retry - 
 // a mid-interview quota blip shouldn't be the reason the voice suddenly changes.
 const RETRYABLE_STATUS = (status: number) => status === 429 || status >= 500;
 
@@ -89,7 +89,7 @@ export async function synthesizeSpeech(text: string, gender: "male" | "female"):
       return pcmToWav(pcm, sampleRate);
     } catch {
       clearTimeout(timeoutId);
-      // Network blip or timeout — retry the same way as a transient server error.
+      // Network blip or timeout - retry the same way as a transient server error.
       if (attempt < MAX_ATTEMPTS) {
         await sleep(400 * attempt);
         continue;

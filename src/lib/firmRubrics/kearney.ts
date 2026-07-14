@@ -10,7 +10,7 @@ export const KEARNEY_RUBRIC = {
       key: "structure",
       label: "Structured Thinking & Problem Framing",
       weight: 22,
-      kearneyNote: "Kearney uses a hybrid format — the interviewer will guide some elements but you must also show initiative when the reins are handed to you. This requires adaptability: excelling at answering structured questions AND demonstrating candidate-led initiative. Kearney's heritage in operations and supply chain means cases frequently involve manufacturing process improvement, procurement optimization, or supply chain restructuring — your structure must reflect operational logic alongside strategic reasoning.",
+      kearneyNote: "Kearney uses a hybrid format - the interviewer will guide some elements but you must also show initiative when the reins are handed to you. This requires adaptability: excelling at answering structured questions AND demonstrating candidate-led initiative. Kearney's heritage in operations and supply chain means cases frequently involve manufacturing process improvement, procurement optimization, or supply chain restructuring - your structure must reflect operational logic alongside strategic reasoning.",
       scoringCriteria: {
         1: "No structure. Cannot frame an operations or supply chain problem.",
         2: "Generic strategy framework with no operational dimension. Not adapted to the case.",
@@ -24,7 +24,7 @@ export const KEARNEY_RUBRIC = {
       key: "operationalExcellence",
       label: "Operational Excellence & Implementation Thinking",
       weight: 25,
-      kearneyNote: "Kearney's most distinctive dimension. Founded as a procurement and operations consultancy, Kearney's signature is operational depth — supply chain mastery, procurement optimization, manufacturing efficiency, and process improvement. Candidates who deliver pure strategy without operational execution detail miss the Kearney standard. Their evaluation 'particularly emphasizes practical implementation thinking: strategy without execution is merely theory.' This means your recommendations must include HOW to execute, not just WHAT to do.",
+      kearneyNote: "Kearney's most distinctive dimension. Founded as a procurement and operations consultancy, Kearney's signature is operational depth - supply chain mastery, procurement optimization, manufacturing efficiency, and process improvement. Candidates who deliver pure strategy without operational execution detail miss the Kearney standard. Their evaluation 'particularly emphasizes practical implementation thinking: strategy without execution is merely theory.' This means your recommendations must include HOW to execute, not just WHAT to do.",
       whatStrongLooksLike: [
         "Recommendations include operational execution pathway, not just strategic direction",
         "For supply chain cases: structures around procurement, logistics, inventory, and supplier relationships",
@@ -80,7 +80,7 @@ export const KEARNEY_RUBRIC = {
       key: "communication",
       label: "Communication & Practical Clarity",
       weight: 15,
-      kearneyNote: "Kearney's communication standard: practical clarity over consulting polish. Kearney clients are often operational leaders — plant managers, procurement directors, COOs — who want clear, actionable communication, not strategy jargon. The best Kearney candidates speak in plain language about complex operations topics. Recommendations should sound like something you could tell a plant manager over coffee.",
+      kearneyNote: "Kearney's communication standard: practical clarity over consulting polish. Kearney clients are often operational leaders - plant managers, procurement directors, COOs - who want clear, actionable communication, not strategy jargon. The best Kearney candidates speak in plain language about complex operations topics. Recommendations should sound like something you could tell a plant manager over coffee.",
       scoringCriteria: {
         1: "Cannot communicate analysis clearly. Operational topics become jargon-heavy and confusing.",
         2: "Communicates but uses overly abstract language for operational topics.",
@@ -109,6 +109,6 @@ export function calculateKearneyOffer(scores: Record<string, number>): { decisio
   const exc = dims.filter(d => scores[d.key] >= 4).length;
   if (w >= 83 && exc >= 3) return { decision: "strong_offer", label: "Strong Offer", description: "Exceptional. Kearney would extend a strong offer. You demonstrated the rare combination of operational depth, structured thinking, and collaborative instinct that Kearney's culture is built on. Top 5% of interview-stage candidates.", weightedScore: Math.round(w) };
   if (w >= 63 && exc >= 2) return { decision: "offer", label: "Offer", description: "Above the Kearney bar. An offer would likely be extended. You showed operational excellence thinking, practical implementation focus, and collaborative leadership. Top 10-15% of candidates.", weightedScore: Math.round(w) };
-  if (w >= 46) return { decision: "borderline", label: "Borderline — No Offer", description: "Close to the Kearney bar. The most common gap: operational execution depth — candidates who deliver good strategy but miss the 'how do we actually do this' dimension. Add implementation sequencing and supply chain specifics to every recommendation.", weightedScore: Math.round(w) };
-  return { decision: "no_offer", label: "No Offer", description: "Below the Kearney bar. Focus on operational excellence — Kearney's signature. Every recommendation needs an execution pathway, not just a strategic direction. Most candidates clear the Kearney bar within 10-15 cases of targeted preparation.", weightedScore: Math.round(w) };
+  if (w >= 46) return { decision: "borderline", label: "Borderline - No Offer", description: "Close to the Kearney bar. The most common gap: operational execution depth - candidates who deliver good strategy but miss the 'how do we actually do this' dimension. Add implementation sequencing and supply chain specifics to every recommendation.", weightedScore: Math.round(w) };
+  return { decision: "no_offer", label: "No Offer", description: "Below the Kearney bar. Focus on operational excellence - Kearney's signature. Every recommendation needs an execution pathway, not just a strategic direction. Most candidates clear the Kearney bar within 10-15 cases of targeted preparation.", weightedScore: Math.round(w) };
 }

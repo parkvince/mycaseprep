@@ -18,7 +18,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
   bain: {
     name: "Bain & Company",
     style: "Candidate-led with active coaching. Bain expects candidates to drive the structure but interviewers will redirect if you go off track.",
-    tone: "Collaborative and direct. Bain values the 'so what' — they want actionable insights, not just analysis. Practical over theoretical.",
+    tone: "Collaborative and direct. Bain values the 'so what' - they want actionable insights, not just analysis. Practical over theoretical.",
     evaluationWeights: {
       structure: 25,
       problemSolving: 25,
@@ -26,7 +26,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 10,
     },
-    feedbackTone: `Bain emphasizes the answer-first approach. Candidates are expected to state a recommendation early and refine it as data emerges. Bain interviewers are notably more conversational — they will coach mid-case if you are heading in the wrong direction. The fit interview at Bain focuses heavily on collaboration, leadership, and impact. Numbers must be clean and the narrative must be tight.`,
+    feedbackTone: `Bain emphasizes the answer-first approach. Candidates are expected to state a recommendation early and refine it as data emerges. Bain interviewers are notably more conversational - they will coach mid-case if you are heading in the wrong direction. The fit interview at Bain focuses heavily on collaboration, leadership, and impact. Numbers must be clean and the narrative must be tight.`,
     color: "#CC0000",
   },
   bcg: {
@@ -54,7 +54,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 10,
       creativity: 10,
     },
-    feedbackTone: `EY-Parthenon is the strategy arm of EY and evaluates candidates more like a boutique than a Big 4 firm. Quantitative accuracy is paramount — expect complex math, financial analysis, and data interpretation. Cases often involve M&A, private equity, or market strategy. Candidates must show sharp analytical instincts and the ability to quickly identify the most financially material issues. Communication should be precise and data-anchored.`,
+    feedbackTone: `EY-Parthenon is the strategy arm of EY and evaluates candidates more like a boutique than a Big 4 firm. Quantitative accuracy is paramount - expect complex math, financial analysis, and data interpretation. Cases often involve M&A, private equity, or market strategy. Candidates must show sharp analytical instincts and the ability to quickly identify the most financially material issues. Communication should be precise and data-anchored.`,
     color: "#FFE600",
   },
   deloitte: {
@@ -68,7 +68,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 15,
     },
-    feedbackTone: `Deloitte cases frequently involve digital transformation, organizational change, or operational improvement — not just pure strategy. Candidates are expected to think about implementation feasibility, stakeholder management, and change management. Deloitte rewards practical creativity: novel ideas that are actually executable. Communication and presence are weighted more heavily here than at pure-play strategy firms.`,
+    feedbackTone: `Deloitte cases frequently involve digital transformation, organizational change, or operational improvement - not just pure strategy. Candidates are expected to think about implementation feasibility, stakeholder management, and change management. Deloitte rewards practical creativity: novel ideas that are actually executable. Communication and presence are weighted more heavily here than at pure-play strategy firms.`,
     color: "#86BC25",
   },
   kpmg: {
@@ -82,7 +82,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 15,
       creativity: 10,
     },
-    feedbackTone: `KPMG strategy cases often have a risk management or regulatory dimension. Candidates are expected to flag compliance considerations, financial risks, and operational vulnerabilities alongside the core strategic analysis. Thoroughness is rewarded — missing a key risk area is a significant negative signal. Communication should be clear and structured, with explicit acknowledgment of uncertainty and assumptions.`,
+    feedbackTone: `KPMG strategy cases often have a risk management or regulatory dimension. Candidates are expected to flag compliance considerations, financial risks, and operational vulnerabilities alongside the core strategic analysis. Thoroughness is rewarded - missing a key risk area is a significant negative signal. Communication should be clear and structured, with explicit acknowledgment of uncertainty and assumptions.`,
     color: "#00338D",
   },
   pwc: {
@@ -96,7 +96,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 15,
     },
-    feedbackTone: `PwC Strategy& (formerly Booz & Company) focuses heavily on operating model and transformation cases. Candidates are expected to demonstrate digital fluency — understanding of AI, data strategy, and technology-enabled business models is a differentiator. The interview style is collaborative, and interviewers appreciate candidates who build on their prompts rather than ignoring them. Practical implementation thinking is valued alongside strategic vision.`,
+    feedbackTone: `PwC Strategy& (formerly Booz & Company) focuses heavily on operating model and transformation cases. Candidates are expected to demonstrate digital fluency - understanding of AI, data strategy, and technology-enabled business models is a differentiator. The interview style is collaborative, and interviewers appreciate candidates who build on their prompts rather than ignoring them. Practical implementation thinking is valued alongside strategic vision.`,
     color: "#D04A02",
   },
   rolandberger: {
@@ -110,7 +110,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 15,
       creativity: 15,
     },
-    feedbackTone: `Roland Berger is Europe's largest independent strategy consultancy and values intellectual independence. Cases frequently involve restructuring, turnaround, or market entry in non-US contexts. Candidates who rely on US-centric frameworks without adaptation are penalized. Original thinking and the willingness to challenge the client's assumptions are highly rewarded. Roland Berger interviewers are notably direct — expect blunt feedback mid-case.`,
+    feedbackTone: `Roland Berger is Europe's largest independent strategy consultancy and values intellectual independence. Cases frequently involve restructuring, turnaround, or market entry in non-US contexts. Candidates who rely on US-centric frameworks without adaptation are penalized. Original thinking and the willingness to challenge the client's assumptions are highly rewarded. Roland Berger interviewers are notably direct - expect blunt feedback mid-case.`,
     color: "#0F4C81",
   },
   accenture: {
@@ -124,7 +124,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 15,
       creativity: 15,
     },
-    feedbackTone: `Accenture Strategy cases almost always have a technology or digital transformation dimension. Candidates should be fluent in concepts like AI/ML applications, cloud strategy, data monetization, and platform business models. Pure strategy thinking without technology integration is insufficient. Accenture also values scalability — recommendations must work at enterprise scale. The interview style is more conversational than MBB and interviewers are often more generous with hints.`,
+    feedbackTone: `Accenture Strategy cases almost always have a technology or digital transformation dimension. Candidates should be fluent in concepts like AI/ML applications, cloud strategy, data monetization, and platform business models. Pure strategy thinking without technology integration is insufficient. Accenture also values scalability - recommendations must work at enterprise scale. The interview style is more conversational than MBB and interviewers are often more generous with hints.`,
     color: "#A100FF",
   },
   "oliver-wyman": {
@@ -138,7 +138,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 10,
       creativity: 10,
     },
-    feedbackTone: `Oliver Wyman is known for exceptionally technical cases, particularly in financial services, insurance, and risk. Candidates are expected to perform sophisticated quantitative analysis and demonstrate genuine industry knowledge. Surface-level frameworks are insufficient — Oliver Wyman interviewers will probe until they find the limits of your knowledge. The bar for quantitative accuracy is the highest of any firm on this list. Cases often involve actuarial concepts, risk modeling, or financial market dynamics.`,
+    feedbackTone: `Oliver Wyman is known for exceptionally technical cases, particularly in financial services, insurance, and risk. Candidates are expected to perform sophisticated quantitative analysis and demonstrate genuine industry knowledge. Surface-level frameworks are insufficient - Oliver Wyman interviewers will probe until they find the limits of your knowledge. The bar for quantitative accuracy is the highest of any firm on this list. Cases often involve actuarial concepts, risk modeling, or financial market dynamics.`,
     color: "#E4002B",
   },
   "kearney": {
@@ -152,13 +152,13 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 10,
     },
-    feedbackTone: `Kearney has deep roots in operations and procurement consulting. Cases often involve supply chain optimization, manufacturing efficiency, or cost transformation. Candidates who only think at the strategic level without understanding operational mechanics will struggle. Kearney rewards candidates who can quickly identify the highest-impact operational lever and build a concrete action plan around it. The interview style is notably direct — interviewers will tell you quickly if your approach is wrong.`,
+    feedbackTone: `Kearney has deep roots in operations and procurement consulting. Cases often involve supply chain optimization, manufacturing efficiency, or cost transformation. Candidates who only think at the strategic level without understanding operational mechanics will struggle. Kearney rewards candidates who can quickly identify the highest-impact operational lever and build a concrete action plan around it. The interview style is notably direct - interviewers will tell you quickly if your approach is wrong.`,
     color: "#00A3E0",
   },
   lek: {
     name: "L.E.K. Consulting",
     style: "Interviewer-led with private equity intensity. L.E.K. cases are fast-paced, data-heavy, and expect PE-grade analytical precision.",
-    tone: "Sharp, rigorous, and data-driven. L.E.K. has a PE diligence culture — every number must be defensible and every assumption explicit.",
+    tone: "Sharp, rigorous, and data-driven. L.E.K. has a PE diligence culture - every number must be defensible and every assumption explicit.",
     evaluationWeights: {
       structure: 20,
       problemSolving: 25,
@@ -166,7 +166,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 10,
       creativity: 5,
     },
-    feedbackTone: `L.E.K. is heavily oriented toward private equity due diligence and transaction advisory. Cases move fast and expect candidates to handle complex financial analysis under time pressure. Every assumption must be stated explicitly, every number must be derived logically, and every recommendation must have a clear financial basis. L.E.K. interviewers are among the most technically demanding — vague qualitative answers are not acceptable. Creativity is the lowest-weighted dimension here; rigor is everything.`,
+    feedbackTone: `L.E.K. is heavily oriented toward private equity due diligence and transaction advisory. Cases move fast and expect candidates to handle complex financial analysis under time pressure. Every assumption must be stated explicitly, every number must be derived logically, and every recommendation must have a clear financial basis. L.E.K. interviewers are among the most technically demanding - vague qualitative answers are not acceptable. Creativity is the lowest-weighted dimension here; rigor is everything.`,
     color: "#1D3557",
   },
   "monitor-deloitte": {
@@ -180,7 +180,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 10,
     },
-    feedbackTone: `Monitor Deloitte (the strategy practice of Deloitte) has its roots in Michael Porter's competitive strategy framework. Cases frequently involve market strategy, brand positioning, and customer segmentation. Candidates are expected to demonstrate genuine insight into customer behavior and competitive dynamics — not just financial analysis. Monitor Deloitte rewards candidates who can articulate a differentiated strategic position and back it up with market evidence.`,
+    feedbackTone: `Monitor Deloitte (the strategy practice of Deloitte) has its roots in Michael Porter's competitive strategy framework. Cases frequently involve market strategy, brand positioning, and customer segmentation. Candidates are expected to demonstrate genuine insight into customer behavior and competitive dynamics - not just financial analysis. Monitor Deloitte rewards candidates who can articulate a differentiated strategic position and back it up with market evidence.`,
     color: "#86BC25",
   },
   "ibm": {
@@ -194,7 +194,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 15,
       creativity: 15,
     },
-    feedbackTone: `IBM Consulting sits at the intersection of strategy and technology. Cases virtually always have an AI, cloud, or enterprise software dimension. Candidates are expected to understand how technology enables or constrains strategic choices — purely business-side thinking is insufficient. IBM rewards candidates who can translate technical capabilities into business value and who understand implementation complexity at enterprise scale. Familiarity with IBM's own product portfolio (watsonx, Red Hat, etc.) is a differentiator.`,
+    feedbackTone: `IBM Consulting sits at the intersection of strategy and technology. Cases virtually always have an AI, cloud, or enterprise software dimension. Candidates are expected to understand how technology enables or constrains strategic choices - purely business-side thinking is insufficient. IBM rewards candidates who can translate technical capabilities into business value and who understand implementation complexity at enterprise scale. Familiarity with IBM's own product portfolio (watsonx, Red Hat, etc.) is a differentiator.`,
     color: "#0530AD",
   },
   "capital-one": {
@@ -208,7 +208,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 15,
     },
-    feedbackTone: `Strategy& (formerly Booz & Company) is known for its 'capabilities-driven strategy' framework — the idea that companies should compete based on what they do uniquely well, not by following industry best practices. Cases reward candidates who identify a company's distinctive capabilities and build strategies around them rather than applying generic frameworks. Quantitative analysis is less central here than at other firms — strategic insight and original thinking are the primary differentiators.`,
+    feedbackTone: `Strategy& (formerly Booz & Company) is known for its 'capabilities-driven strategy' framework - the idea that companies should compete based on what they do uniquely well, not by following industry best practices. Cases reward candidates who identify a company's distinctive capabilities and build strategies around them rather than applying generic frameworks. Quantitative analysis is less central here than at other firms - strategic insight and original thinking are the primary differentiators.`,
     color: "#D04A02",
   },
   huron: {
@@ -222,7 +222,7 @@ export const FIRM_CONFIGS: Record<FirmKey, FirmConfig> = {
       communication: 20,
       creativity: 10,
     },
-    feedbackTone: `Huron Consulting specializes in healthcare, higher education, and life sciences. Cases will almost always have a sector-specific dimension — regulatory constraints, reimbursement models, academic governance, or research commercialization. Generic business frameworks applied without sector context are a red flag. Huron rewards candidates who demonstrate genuine domain knowledge and understand the unique stakeholder dynamics of mission-driven organizations. Communication and the ability to build consensus are weighted heavily.`,
+    feedbackTone: `Huron Consulting specializes in healthcare, higher education, and life sciences. Cases will almost always have a sector-specific dimension - regulatory constraints, reimbursement models, academic governance, or research commercialization. Generic business frameworks applied without sector context are a red flag. Huron rewards candidates who demonstrate genuine domain knowledge and understand the unique stakeholder dynamics of mission-driven organizations. Communication and the ability to build consensus are weighted heavily.`,
     color: "#00558C",
   },
 };

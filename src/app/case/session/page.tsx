@@ -127,7 +127,7 @@ function SessionInner() {
     } catch (err) {
       clearTimeout(timeoutId);
       console.error(err);
-      setTranscript(prev => [...prev, { role: "assistant", content: "Sorry — something went wrong generating a reply. Please try sending your response again.", timestamp: new Date() }]);
+      setTranscript(prev => [...prev, { role: "assistant", content: "Sorry - something went wrong generating a reply. Please try sending your response again.", timestamp: new Date() }]);
     } finally {
       setLoading(false);
     }
@@ -334,7 +334,7 @@ function SessionInner() {
         {/* Voice unsupported notice */}
         {mode === "voice" && voiceUnsupported && (
           <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "10px", fontSize: "0.82rem", color: "#92400e" }}>
-            Voice input isn&apos;t supported in this browser — try Chrome or Edge, or just type your response below.
+            Voice input isn&apos;t supported in this browser - try Chrome or Edge, or just type your response below.
           </div>
         )}
 

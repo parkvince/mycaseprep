@@ -27,7 +27,7 @@ function renderContent(text: string): React.ReactNode[] {
 
 function getHint(hintsUsed: number, caseContext: string, casePrompt: string): string {
   const stage = hintsUsed % 3;
-  if (stage === 0) return caseContext || "Start by clarifying the objective, then lay out 2-3 buckets to break the problem into — make sure they don't overlap and together cover the whole thing (that's what \"MECE\" means) before diving into analysis.";
+  if (stage === 0) return caseContext || "Start by clarifying the objective, then lay out 2-3 buckets to break the problem into - make sure they don't overlap and together cover the whole thing (that's what \"MECE\" means) before diving into analysis.";
   if (stage === 1) {
     const p = casePrompt.toLowerCase();
     if (p.includes("profit") || p.includes("revenue") || p.includes("cost")) return "Break profitability into Revenue and Costs. For revenue: price x volume. For costs: fixed vs. variable, then by function.";
@@ -82,12 +82,12 @@ function InterviewInner() {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [mediaError, setMediaError] = useState(false);
-  // Real calls don't start with everyone already in the room — there's a beat
+  // Real calls don't start with everyone already in the room - there's a beat
   // where the other side is still connecting, then a join chime. This drives it.
   const [interviewerJoined, setInterviewerJoined] = useState(false);
   // Real interviews open with small talk before the case, not a wall of text.
   // caseRevealed gates that: the first user reply (to "are you ready?") is
-  // handled locally — no AI call — and simply unlocks the case prompt.
+  // handled locally - no AI call - and simply unlocks the case prompt.
   const [caseRevealed, setCaseRevealed] = useState(false);
   const caseRevealedRef = useRef(false);
 
@@ -108,15 +108,15 @@ function InterviewInner() {
   const isSpeakingRef = useRef(false);
   const loadingRef = useRef(false);
   const userSpeakingRef = useRef(false);
-  // Premium-voice health: NEVER permanently give up on the natural voice — it's
+  // Premium-voice health: NEVER permanently give up on the natural voice - it's
   // the default the session always returns to. A failed line falls back to the
   // browser voice for that one line only. Only after two consecutive failures
   // (a real outage, not a blip) do we back off for 60s, so a hard outage doesn't
-  // add a long stall to every single turn — then we automatically try again.
+  // add a long stall to every single turn - then we automatically try again.
   const ttsFailStreakRef = useRef(0);
   const ttsRetryAtRef = useRef(0);
   // Short spoken acknowledgments ("Mm-hm, okay...") in the interviewer's own
-  // voice, prefetched once at join and played while the AI is thinking — the
+  // voice, prefetched once at join and played while the AI is thinking - the
   // silence between turns reads as a person considering, not a system loading.
   const fillersRef = useRef<string[]>([]);
   const fillerTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -152,7 +152,7 @@ function InterviewInner() {
     if (!ready || !casePrompt) return;
     setTranscript([{
       role: "assistant",
-      content: `Good morning! I'm ${interviewer.name}, ${interviewer.title} at ${FIRM_CONFIGS[firm].name}. Thanks so much for taking the time to meet with me today. Before we dive in — are you ready to get started with the case?`,
+      content: `Good morning! I'm ${interviewer.name}, ${interviewer.title} at ${FIRM_CONFIGS[firm].name}. Thanks so much for taking the time to meet with me today. Before we dive in - are you ready to get started with the case?`,
       timestamp: new Date(),
     }]);
   }, [ready, casePrompt, firm, interviewer]);
@@ -198,7 +198,7 @@ function InterviewInner() {
       const data = new Uint8Array(analyser.frequencyBinCount);
       // Simple hysteresis-based voice activity detection: a single noisy frame
       // (a cough, a chair creak, a mic pop) shouldn't count as "the user is
-      // speaking" — the volume has to stay up for a bit, and has to stay down
+      // speaking" - the volume has to stay up for a bit, and has to stay down
       // for a bit before we call it over. This is what keeps barge-in from
       // firing on every little sound in the room.
       const SPEECH_THRESHOLD = 20;
@@ -309,7 +309,7 @@ function InterviewInner() {
     const clean = text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
 
     // Only skip the natural voice while inside a backoff window after repeated
-    // failures — and even then, automatically resume trying once it elapses.
+    // failures - and even then, automatically resume trying once it elapses.
     if (ttsFailStreakRef.current >= 2 && Date.now() < ttsRetryAtRef.current) {
       speakBrowser(clean);
       return;
@@ -332,7 +332,7 @@ function InterviewInner() {
       const url = URL.createObjectURL(blob);
       // Reuse the same <audio> element every turn instead of `new Audio()` each
       // time. It was created and play()'d once during the "Join interview" click
-      // (a real gesture) — later turns are triggered from async chains (fetch →
+      // (a real gesture) - later turns are triggered from async chains (fetch →
       // timer → promise) with no gesture behind them, which strict autoplay
       // policies (notably Safari) can silently block on a *fresh* element while
       // still allowing playback to continue on one that's already unlocked.
@@ -360,7 +360,7 @@ function InterviewInner() {
     }
   };
 
-  // Two-tone "participant joined" chime, synthesized on the spot — no audio
+  // Two-tone "participant joined" chime, synthesized on the spot - no audio
   // asset needed, and startSession is a real click so autoplay policy allows it.
   const playJoinChime = () => {
     try {
@@ -381,7 +381,7 @@ function InterviewInner() {
     } catch {}
   };
 
-  const FILLER_PHRASES = ["Mm-hm.", "Okay, got it.", "Right — let me think about that for a moment."];
+  const FILLER_PHRASES = ["Mm-hm.", "Okay, got it.", "Right - let me think about that for a moment."];
 
   const prefetchFillers = () => {
     FILLER_PHRASES.forEach(async phrase => {
@@ -412,7 +412,7 @@ function InterviewInner() {
 
   const startSession = async () => {
     // Prime audio playback + speech synthesis synchronously inside this click
-    // handler — a genuine user gesture — so every later turn (each triggered
+    // handler - a genuine user gesture - so every later turn (each triggered
     // from an async fetch/timer chain with no gesture behind it) inherits the
     // unlock instead of getting silently blocked by autoplay policy.
     const primer = new Audio();
@@ -435,7 +435,7 @@ function InterviewInner() {
         streamRef.current = audioStream;
         startAudioMonitor(audioStream);
       } catch {
-        // Neither video nor audio access was granted — voice barge-in detection
+        // Neither video nor audio access was granted - voice barge-in detection
         // (which relies on mic volume, separate from SpeechRecognition) won't
         // work, and there's no camera preview. Surface this instead of leaving
         // the user wondering why the interview feels dead.
@@ -447,12 +447,12 @@ function InterviewInner() {
     timerRef.current = setInterval(() => {
       setElapsedTime(Math.floor((Date.now() - startTimeRef.current) / 1000));
     }, 1000);
-    // Mic is live immediately — no click needed, and it runs in parallel with the
+    // Mic is live immediately - no click needed, and it runs in parallel with the
     // interviewer's opening line so you can jump in even during the greeting.
     startListening();
     prefetchFillers();
     // Join sequence: you land in the room first, the interviewer's tile shows
-    // "Connecting..." for a beat, then the chime plays and they greet you —
+    // "Connecting..." for a beat, then the chime plays and they greet you - 
     // the way an actual call starts, not everyone teleporting in at once.
     setTimeout(() => {
       if (!mountedRef.current) return;
@@ -478,12 +478,12 @@ function InterviewInner() {
   const SILENCE_MS = 1000;
 
   // Fully continuous, hands-free listening: the mic stays open the entire session,
-  // including while the interviewer is talking or the AI is thinking — there's no
+  // including while the interviewer is talking or the AI is thinking - there's no
   // "your turn" gate to wait on. After ~1s of silence following speech, whatever
   // was heard is sent automatically, like a real conversation.
   //
   // Interrupting the interviewer requires BOTH speech recognition hearing words
-  // AND the volume-based monitor (userSpeakingRef) confirming real mic-level sound —
+  // AND the volume-based monitor (userSpeakingRef) confirming real mic-level sound - 
   // this pair keeps the interviewer's own voice bleeding back through the speakers
   // from falsely triggering a self-interruption.
   const startListening = () => {
@@ -501,7 +501,7 @@ function InterviewInner() {
         else interim += event.results[i][0].transcript;
       }
       const heard = (final + interim).trim();
-      // Confirmed real speech during the interviewer's turn — commit to the interruption now.
+      // Confirmed real speech during the interviewer's turn - commit to the interruption now.
       // Recognition alone is the signal: it only fires on actual speech-like audio, and
       // waiting on the separate volume detector too (which needs ~280ms sustained
       // loudness) created a race where short interjections like "wait" or "actually"
@@ -547,7 +547,7 @@ function InterviewInner() {
 
   // Self-healing watchdog: recognition sessions end on their own (browser
   // timeouts, transient errors, a deliberate stop before sending). Whenever the
-  // mic should be live but isn't, restart it a beat later — no click required.
+  // mic should be live but isn't, restart it a beat later - no click required.
   useEffect(() => {
     if (isMuted || !sessionStarted || isListening) return;
     const t = setTimeout(() => {
@@ -556,7 +556,7 @@ function InterviewInner() {
     return () => clearTimeout(t);
   }, [isMuted, isListening, sessionStarted]);
 
-  // The first exchange is small talk, not case-solving — handled locally so the
+  // The first exchange is small talk, not case-solving - handled locally so the
   // case prompt is delivered verbatim (never paraphrased by the model) and so
   // this beat costs no API call. Whatever the candidate says here just moves
   // things along, same as a real interviewer wouldn't interrogate "yes I'm ready."
@@ -594,7 +594,7 @@ function InterviewInner() {
     setInput(""); setInterimText("");
     setLoading(true);
     // A beat after you finish talking, the interviewer acknowledges out loud
-    // ("Mm-hm...") while the real reply is still being generated — the gap
+    // ("Mm-hm...") while the real reply is still being generated - the gap
     // feels like someone considering your answer instead of a loading spinner.
     if (fillerTimerRef.current) clearTimeout(fillerTimerRef.current);
     fillerTimerRef.current = setTimeout(playFiller, 900);
@@ -619,7 +619,7 @@ function InterviewInner() {
       clearTimeout(timeoutId);
       console.error(err);
       if (!mountedRef.current) return;
-      const errMessage: Message = { role: "assistant", content: "Sorry — I lost that for a moment. Could you say that again?", timestamp: new Date() };
+      const errMessage: Message = { role: "assistant", content: "Sorry - I lost that for a moment. Could you say that again?", timestamp: new Date() };
       setTranscript(prev => [...prev, errMessage]);
       speak(errMessage.content);
     } finally {
@@ -697,7 +697,7 @@ function InterviewInner() {
           {casePrompt && (
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem 1.25rem", width: "100%", boxSizing: "border-box" }}>
               <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", marginBottom: "0.5rem" }}>Case brief</div>
-              {/* Full text, never truncated — scrolls within the panel if the case runs long. */}
+              {/* Full text, never truncated - scrolls within the panel if the case runs long. */}
               <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0, whiteSpace: "pre-wrap", maxHeight: "34vh", overflowY: "auto", paddingRight: "0.4rem" }}>
                 {casePrompt}
               </p>
@@ -705,7 +705,7 @@ function InterviewInner() {
           )}
 
           <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.25)", textAlign: "center", lineHeight: 1.65, margin: 0 }}>
-            Your mic is live the moment you join — just talk naturally, no clicking or waiting your turn. Jump in anytime, even mid-sentence. You can also type instead.
+            Your mic is live the moment you join - just talk naturally, no clicking or waiting your turn. Jump in anytime, even mid-sentence. You can also type instead.
           </p>
 
           <button
@@ -758,7 +758,7 @@ function InterviewInner() {
       {/* Media permission warning */}
       {mediaError && (
         <div style={{ padding: "0.5rem 1.25rem", background: "rgba(245,158,11,0.12)", borderBottom: "1px solid rgba(245,158,11,0.3)", fontSize: "0.75rem", color: "#fbbf24", textAlign: "center", flexShrink: 0 }}>
-          Camera/mic access wasn&apos;t granted — voice barge-in won&apos;t detect your volume. You can still type, or use the Mute/Unmute button after allowing mic access in your browser.
+          Camera/mic access wasn&apos;t granted - voice barge-in won&apos;t detect your volume. You can still type, or use the Mute/Unmute button after allowing mic access in your browser.
         </div>
       )}
 
@@ -782,7 +782,7 @@ function InterviewInner() {
             border: `1px solid ${!interviewerJoined ? "rgba(255,255,255,0.1)" : isSpeaking ? "rgba(167,139,250,0.3)" : loading ? "rgba(245,158,11,0.3)" : "rgba(34,197,94,0.3)"}`,
             transition: "all 0.3s",
           }}>
-            {!interviewerJoined ? "Connecting..." : loading ? "Thinking..." : isSpeaking ? "Interviewer speaking — jump in anytime" : isListening ? "Listening..." : "Your turn"}
+            {!interviewerJoined ? "Connecting..." : loading ? "Thinking..." : isSpeaking ? "Interviewer speaking - jump in anytime" : isListening ? "Listening..." : "Your turn"}
           </div>
           <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
             {formatTime(elapsedTime)}
@@ -917,7 +917,7 @@ function InterviewInner() {
                 </div>
               )}
 
-              {/* Live caption — shows what's being heard right now, even if the chat panel is closed */}
+              {/* Live caption - shows what's being heard right now, even if the chat panel is closed */}
               <AnimatePresence>
                 {isListening && (
                   <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
@@ -1011,7 +1011,7 @@ function InterviewInner() {
               <div style={{ padding: "0.625rem 0.75rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexShrink: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.68rem", color: isListening ? "#a78bfa" : "rgba(255,255,255,0.25)", fontWeight: 600 }}>
                   <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: isListening ? "#a78bfa" : isMuted ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.25)", flexShrink: 0 }} />
-                  {isMuted ? "Muted — unmute to talk" : isListening ? "Listening..." : "Type below, or just talk — jump in anytime"}
+                  {isMuted ? "Muted - unmute to talk" : isListening ? "Listening..." : "Type below, or just talk - jump in anytime"}
                 </div>
                 <textarea
                   value={input}

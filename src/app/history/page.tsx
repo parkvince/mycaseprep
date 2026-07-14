@@ -301,9 +301,9 @@ export default function HistoryPage() {
             style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.875rem", marginBottom: "1.5rem" }}>
             {[
               { icon: <BarChart2 size={16} />, label: "Total sessions", value: sessions.length },
-              { icon: <BarChart2 size={16} />, label: "Average score", value: avgScore != null ? avgScore : "—" },
-              { icon: <Briefcase size={16} />, label: "Most practiced", value: topFirm ? firmLabel(topFirm) : "—" },
-              { icon: <Clock size={16} />, label: "Total time", value: totalMinutes > 0 ? `${totalMinutes} min` : "—" },
+              { icon: <BarChart2 size={16} />, label: "Average score", value: avgScore != null ? avgScore : " - " },
+              { icon: <Briefcase size={16} />, label: "Most practiced", value: topFirm ? firmLabel(topFirm) : " - " },
+              { icon: <Clock size={16} />, label: "Total time", value: totalMinutes > 0 ? `${totalMinutes} min` : " - " },
             ].map(stat => (
               <div key={stat.label} style={{ background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)", padding: "1.1rem 1.25rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--hp-soft-foreground)" }}>
@@ -434,7 +434,7 @@ export default function HistoryPage() {
                       display: "grid", placeItems: "center",
                     }}>
                       <span style={{ fontSize: "1rem", fontWeight: 800, color: score != null ? scoreColor(score) : "var(--hp-primary)", lineHeight: 1 }}>
-                        {score != null ? score : "—"}
+                        {score != null ? score : " - "}
                       </span>
                     </div>
 

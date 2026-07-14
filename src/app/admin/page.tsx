@@ -74,7 +74,7 @@ export default function AdminPage() {
       const updated = await res.json();
       setUsers(prev => prev.map(u => (u.id === id ? { ...u, ...updated } : u)));
     } catch {
-      alert("Couldn't update this user — try again.");
+      alert("Couldn't update this user - try again.");
     } finally {
       setBusyId(null);
     }
@@ -87,7 +87,7 @@ export default function AdminPage() {
       if (!res.ok) throw new Error("failed");
       setUsers(prev => prev.filter(u => u.id !== id));
     } catch {
-      alert("Couldn't delete this user — try again.");
+      alert("Couldn't delete this user - try again.");
     } finally {
       setBusyId(null);
       setConfirmDeleteId(null);
@@ -126,7 +126,7 @@ export default function AdminPage() {
             <StatTile icon={<Users size={16} />} label="Total users" value={totalUsers} />
             <StatTile icon={<ShieldCheck size={16} />} label="Unlimited grants" value={unlimitedCount} />
             <StatTile icon={<Ban size={16} />} label="Banned" value={bannedCount} />
-            <StatTile icon={<Users size={16} />} label="Avg score (all)" value={avgScoreAll ?? "—"} />
+            <StatTile icon={<Users size={16} />} label="Avg score (all)" value={avgScoreAll ?? " - "} />
           </motion.div>
         )}
 
@@ -178,7 +178,7 @@ export default function AdminPage() {
                       <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)" }}>
                         {u.name ?? "Unnamed"} {u.banned && <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#dc2626", marginLeft: "0.4rem" }}>BANNED</span>}
                       </div>
-                      <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>{u.email ?? "—"}</div>
+                      <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>{u.email ?? " - "}</div>
                     </div>
 
                     <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
@@ -187,7 +187,7 @@ export default function AdminPage() {
                         <div style={{ fontSize: "0.65rem", color: "var(--hp-soft-foreground)" }}>sessions</div>
                       </div>
                       <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--hp-foreground)" }}>{u.avgScore ?? "—"}</div>
+                        <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--hp-foreground)" }}>{u.avgScore ?? " - "}</div>
                         <div style={{ fontSize: "0.65rem", color: "var(--hp-soft-foreground)" }}>avg score</div>
                       </div>
                       <div style={{ textAlign: "center" }}>

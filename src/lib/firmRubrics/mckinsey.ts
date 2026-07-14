@@ -4,11 +4,11 @@ export const MCKINSEY_RUBRIC = {
   format: "interviewer-led",
 
   scoringScale: {
-    1: "Insufficient — Does not display basic command of the skill. Almost always disqualifying.",
-    2: "Adequate — Below the hiring bar. Shows basics but not at required level.",
-    3: "Good — Meets the bar. Solid with minor areas for improvement.",
-    4: "Very Good — Above the bar. Strong, differentiated performance.",
-    5: "Exceptional — Rare. Partner-level clarity, precision, and insight.",
+    1: "Insufficient - Does not display basic command of the skill. Almost always disqualifying.",
+    2: "Adequate - Below the hiring bar. Shows basics but not at required level.",
+    3: "Good - Meets the bar. Solid with minor areas for improvement.",
+    4: "Very Good - Above the bar. Strong, differentiated performance.",
+    5: "Exceptional - Rare. Partner-level clarity, precision, and insight.",
   },
 
   dimensions: [
@@ -170,8 +170,8 @@ export function calculateMckinseyOffer(scores: Record<string, number>): {
   if (weightedScore >= 58) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the McKinsey bar but not over it. An offer would not be extended at this stage. You have the foundation — targeted work on your lowest-scoring dimensions will close the gap.",
+      label: "Borderline - No Offer",
+      description: "Close to the McKinsey bar but not over it. An offer would not be extended at this stage. You have the foundation - targeted work on your lowest-scoring dimensions will close the gap.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -179,7 +179,7 @@ export function calculateMckinseyOffer(scores: Record<string, number>): {
   return {
     decision: "no_offer",
     label: "No Offer",
-    description: "Below the McKinsey hiring bar. Clear gaps in one or more critical dimensions. Most candidates are here in their first 15-20 cases — this is normal. Focus on structure and quantitative first.",
+    description: "Below the McKinsey hiring bar. Clear gaps in one or more critical dimensions. Most candidates are here in their first 15-20 cases - this is normal. Focus on structure and quantitative first.",
     weightedScore: Math.round(weightedScore),
   };
 }

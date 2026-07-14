@@ -6,11 +6,11 @@ export const KPMG_RUBRIC = {
   offerRate: "Approximately 3-7% of applicants. More accessible than MBB and EY-Parthenon but still competitive.",
 
   scoringScale: {
-    1: "Insufficient — Would not represent KPMG with a client or fit the team culture.",
-    2: "Adequate — Below the KPMG bar. Shows potential but not ready.",
-    3: "Good — Meets the bar. Would perform competently on a KPMG engagement.",
-    4: "Very Good — Strong candidate. Above the bar with clear strengths.",
-    5: "Exceptional — Among the strongest candidates this cycle.",
+    1: "Insufficient - Would not represent KPMG with a client or fit the team culture.",
+    2: "Adequate - Below the KPMG bar. Shows potential but not ready.",
+    3: "Good - Meets the bar. Would perform competently on a KPMG engagement.",
+    4: "Very Good - Strong candidate. Above the bar with clear strengths.",
+    5: "Exceptional - Among the strongest candidates this cycle.",
   },
 
   dimensions: [
@@ -18,7 +18,7 @@ export const KPMG_RUBRIC = {
       key: "structure",
       label: "Structured Thinking & Problem Decomposition",
       weight: 22,
-      kpmgNote: "KPMG uses a candidate-led format — you must drive the structure. Uniquely, KPMG cases lean operational and hybrid: expect profitability + implementation, market entry + change management, or M&A + integration planning in the same case. Your structure must account for BOTH the strategic recommendation AND the execution pathway. A structure that solves the strategy but ignores 'how do we actually do this' is incomplete at KPMG.",
+      kpmgNote: "KPMG uses a candidate-led format - you must drive the structure. Uniquely, KPMG cases lean operational and hybrid: expect profitability + implementation, market entry + change management, or M&A + integration planning in the same case. Your structure must account for BOTH the strategic recommendation AND the execution pathway. A structure that solves the strategy but ignores 'how do we actually do this' is incomplete at KPMG.",
       whatStrongLooksLike: [
         "Structures cover both strategic direction AND operational execution",
         "For hybrid cases: explicitly separates 'what should we do' from 'how do we do it'",
@@ -31,7 +31,7 @@ export const KPMG_RUBRIC = {
         "Pure strategy framework with no operational component",
         "Rigid adherence to a textbook framework not adapted to the case",
         "No prioritization among branches",
-        "Ignores implementation entirely — only addresses the strategic question",
+        "Ignores implementation entirely - only addresses the strategic question",
       ],
       scoringCriteria: {
         1: "No structure. Analysis is disorganized. Cannot frame a hybrid strategy/operations problem.",
@@ -46,7 +46,7 @@ export const KPMG_RUBRIC = {
       key: "analytical",
       label: "Analytical Ability & Data Interpretation",
       weight: 18,
-      kpmgNote: "KPMG evaluates analytical ability but with a different emphasis than MBB: speed matters less than accuracy and professional judgment. KPMG's written case exercise (used in second rounds for many roles) specifically tests data synthesis, prioritization, and presentation quality under timed conditions. The online assessment filters for numerical reasoning and extracting key information under time pressure — not advanced math.",
+      kpmgNote: "KPMG evaluates analytical ability but with a different emphasis than MBB: speed matters less than accuracy and professional judgment. KPMG's written case exercise (used in second rounds for many roles) specifically tests data synthesis, prioritization, and presentation quality under timed conditions. The online assessment filters for numerical reasoning and extracting key information under time pressure - not advanced math.",
       whatStrongLooksLike: [
         "Extracts the key insight from data, not just the headline number",
         "Accurate mental math with clear narration of approach",
@@ -74,7 +74,7 @@ export const KPMG_RUBRIC = {
       key: "operationalJudgment",
       label: "Business & Operational Judgment",
       weight: 22,
-      kpmgNote: "This is the most distinctly KPMG dimension. Unlike MBB which rewards pure strategic insight, KPMG cases require operational and implementation awareness alongside strategic logic. KPMG serves clients on execution — post-merger integration, change management, operational improvement, digital transformation. Candidates who deliver elegant strategy without acknowledging 'how do we actually do this' miss the KPMG standard. The ideal KPMG recommendation covers what to do, how to sequence it, and what will be hard.",
+      kpmgNote: "This is the most distinctly KPMG dimension. Unlike MBB which rewards pure strategic insight, KPMG cases require operational and implementation awareness alongside strategic logic. KPMG serves clients on execution - post-merger integration, change management, operational improvement, digital transformation. Candidates who deliver elegant strategy without acknowledging 'how do we actually do this' miss the KPMG standard. The ideal KPMG recommendation covers what to do, how to sequence it, and what will be hard.",
       whatStrongLooksLike: [
         "Recommendations address both strategy AND execution pathway",
         "Identifies implementation risks and proposes how to manage them",
@@ -102,12 +102,12 @@ export const KPMG_RUBRIC = {
       key: "communication",
       label: "Communication & Client Readiness",
       weight: 18,
-      kpmgNote: "KPMG's communication standard: clear, concise, and structured. KPMG serves a wide client base including government, financial services, healthcare, and technology — communication must be accessible to a non-consulting client without oversimplifying. The group case (used in some final rounds) specifically tests whether you can contribute constructively to a team discussion, summarize others' points fairly, and move a group toward consensus. Solo communication and collaborative communication are both evaluated.",
+      kpmgNote: "KPMG's communication standard: clear, concise, and structured. KPMG serves a wide client base including government, financial services, healthcare, and technology - communication must be accessible to a non-consulting client without oversimplifying. The group case (used in some final rounds) specifically tests whether you can contribute constructively to a team discussion, summarize others' points fairly, and move a group toward consensus. Solo communication and collaborative communication are both evaluated.",
       whatStrongLooksLike: [
         "Conclusion-first: states the key finding or recommendation upfront",
         "Concise: respects the interviewer's time without being terse",
         "In group settings: listens actively, builds on others' contributions, and advances the discussion",
-        "Professional but natural delivery — not rehearsed",
+        "Professional but natural delivery - not rehearsed",
         "Adapts to feedback mid-case",
         "Would feel natural presenting to a CFO or government agency head",
       ],
@@ -123,7 +123,7 @@ export const KPMG_RUBRIC = {
         2: "Communicates but buries conclusions. Either dominates or goes silent in groups.",
         3: "Clear enough. Mostly conclusion-first. Collaborative in group settings.",
         4: "Strong communicator. Concise, structured, and professional. Excellent in group dynamics.",
-        5: "Exceptional. Would represent KPMG with any client — government, C-suite, or financial services. Natural and authoritative.",
+        5: "Exceptional. Would represent KPMG with any client - government, C-suite, or financial services. Natural and authoritative.",
       },
       dealbreaker: false,
     },
@@ -131,10 +131,10 @@ export const KPMG_RUBRIC = {
       key: "valuesAlignment",
       label: "Values Alignment & Professional Mindset",
       weight: 20,
-      kpmgNote: "This is KPMG's most unique scoring dimension. Unlike any other firm in this app, KPMG explicitly evaluates candidates against five named core values during interviews: Integrity (doing what is right even when difficult), Excellence (never stop learning and improving), Courage (think and act boldly, push back when warranted), Together (respect others, draw strength from differences), and For Better (broader impact on society). Interviewers often ask questions naming a specific value directly. Even in case interviews, the professional mindset dimension is implicit: the best KPMG answers are prudent, ethical, and client-aware — not just analytically sharp.",
+      kpmgNote: "This is KPMG's most unique scoring dimension. Unlike any other firm in this app, KPMG explicitly evaluates candidates against five named core values during interviews: Integrity (doing what is right even when difficult), Excellence (never stop learning and improving), Courage (think and act boldly, push back when warranted), Together (respect others, draw strength from differences), and For Better (broader impact on society). Interviewers often ask questions naming a specific value directly. Even in case interviews, the professional mindset dimension is implicit: the best KPMG answers are prudent, ethical, and client-aware - not just analytically sharp.",
       whatStrongLooksLike: [
         "Integrity: raises a hard issue in the case analysis even when it complicates the recommendation",
-        "Excellence: shows continuous improvement instinct — 'what I'd want to know next is...'",
+        "Excellence: shows continuous improvement instinct - 'what I'd want to know next is...'",
         "Courage: pushes back on an assumption in the case when it seems wrong",
         "Together: in group settings, builds on others' ideas rather than overriding them",
         "For Better: shows awareness of broader stakeholder impact of the recommendation",
@@ -206,12 +206,12 @@ export function calculateKpmgOffer(scores: Record<string, number>): {
     };
   }
 
-  // Values alignment check — KPMG specific
+  // Values alignment check - KPMG specific
   if (scores["valuesAlignment"] <= 1) {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the KPMG bar. Values alignment is explicitly scored at KPMG — a score of 1 signals a fundamental mismatch with KPMG's culture of integrity, excellence, courage, collaboration, and broader impact. Review KPMG's five core values and practice connecting them to your analytical responses.",
+      description: "Below the KPMG bar. Values alignment is explicitly scored at KPMG - a score of 1 signals a fundamental mismatch with KPMG's culture of integrity, excellence, courage, collaboration, and broader impact. Review KPMG's five core values and practice connecting them to your analytical responses.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -240,8 +240,8 @@ export function calculateKpmgOffer(scores: Record<string, number>): {
   if (weightedScore >= 42) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the KPMG bar but not over it. The most common gap at this level is operational judgment and values alignment — candidates who are analytically competent but miss the execution dimension or seem purely strategy-focused. KPMG wants people who think about 'how do we actually do this.' Practice adding implementation pathways to every recommendation.",
+      label: "Borderline - No Offer",
+      description: "Close to the KPMG bar but not over it. The most common gap at this level is operational judgment and values alignment - candidates who are analytically competent but miss the execution dimension or seem purely strategy-focused. KPMG wants people who think about 'how do we actually do this.' Practice adding implementation pathways to every recommendation.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -249,7 +249,7 @@ export function calculateKpmgOffer(scores: Record<string, number>): {
   return {
     decision: "no_offer",
     label: "No Offer",
-    description: "Below the KPMG bar. Focus first on operational judgment (adding execution pathways to every recommendation) and values alignment (connecting your analysis to KPMG's five core values). KPMG's bar is more accessible than MBB — most candidates clear it within 8-12 cases of targeted practice.",
+    description: "Below the KPMG bar. Focus first on operational judgment (adding execution pathways to every recommendation) and values alignment (connecting your analysis to KPMG's five core values). KPMG's bar is more accessible than MBB - most candidates clear it within 8-12 cases of targeted practice.",
     weightedScore: Math.round(weightedScore),
   };
 }

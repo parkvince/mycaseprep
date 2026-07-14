@@ -6,11 +6,11 @@ export const ROLAND_BERGER_RUBRIC = {
   offerRate: "Approximately 3-5% of applicants. Tier 2 firm with MBB-adjacent rigor, particularly in European industrial sectors.",
 
   scoringScale: {
-    1: "Insufficient — Would not represent Roland Berger with a European industrial client.",
-    2: "Adequate — Below the Roland Berger bar. Shows potential but not ready.",
-    3: "Good — Meets the bar. Solid consultant material.",
-    4: "Very Good — Above the bar. Strong analytical and entrepreneurial profile.",
-    5: "Exceptional — MBB-level performance with Roland Berger's entrepreneurial edge.",
+    1: "Insufficient - Would not represent Roland Berger with a European industrial client.",
+    2: "Adequate - Below the Roland Berger bar. Shows potential but not ready.",
+    3: "Good - Meets the bar. Solid consultant material.",
+    4: "Very Good - Above the bar. Strong analytical and entrepreneurial profile.",
+    5: "Exceptional - MBB-level performance with Roland Berger's entrepreneurial edge.",
   },
 
   dimensions: [
@@ -18,12 +18,12 @@ export const ROLAND_BERGER_RUBRIC = {
       key: "structure",
       label: "Structure & Case Design",
       weight: 25,
-      rbNote: "Explicitly named as Roland Berger's first scoring dimension. Roland Berger uses a candidate-led format identical to BCG and Bain — you must drive the structure independently. What makes Roland Berger's structure standard unique: cases frequently involve European industrial, automotive, and manufacturing contexts. A generic profitability structure for an automotive Tier 1 supplier case is insufficient — you must show familiarity with value chain dynamics, OEM relationships, and industrial cost structures. 'Building good structures instead of forcing frameworks' is RB's explicit standard.",
+      rbNote: "Explicitly named as Roland Berger's first scoring dimension. Roland Berger uses a candidate-led format identical to BCG and Bain - you must drive the structure independently. What makes Roland Berger's structure standard unique: cases frequently involve European industrial, automotive, and manufacturing contexts. A generic profitability structure for an automotive Tier 1 supplier case is insufficient - you must show familiarity with value chain dynamics, OEM relationships, and industrial cost structures. 'Building good structures instead of forcing frameworks' is RB's explicit standard.",
       whatStrongLooksLike: [
         "Drives the structure independently from the first minute",
         "For automotive/industrial cases: structures around value chain, cost structure, and OEM/supplier dynamics",
         "For energy/sustainability cases: addresses both economics and regulatory/ESG dimensions",
-        "Prioritizes branches based on case context — not all equally",
+        "Prioritizes branches based on case context - not all equally",
         "Adapts cleanly when evidence redirects the analysis",
         "Avoids forcing textbook frameworks onto industry-specific problems",
       ],
@@ -46,9 +46,9 @@ export const ROLAND_BERGER_RUBRIC = {
       key: "execution",
       label: "Analytical Execution & Quantitative Drive",
       weight: 22,
-      rbNote: "Explicitly named as Roland Berger's second scoring dimension. 'Execution' at Roland Berger means actually driving the analysis — not just designing a good framework and waiting. RB cases involve complex multi-step calculations, particularly in automotive and industrial contexts: margin recovery analysis, volume/price decomposition, cost optimization math, EV transition economics. Mental math is described as 'non-negotiable.' Being passive is as costly as being structurally wrong.",
+      rbNote: "Explicitly named as Roland Berger's second scoring dimension. 'Execution' at Roland Berger means actually driving the analysis - not just designing a good framework and waiting. RB cases involve complex multi-step calculations, particularly in automotive and industrial contexts: margin recovery analysis, volume/price decomposition, cost optimization math, EV transition economics. Mental math is described as 'non-negotiable.' Being passive is as costly as being structurally wrong.",
       whatStrongLooksLike: [
-        "Drives the analysis independently — proactively requests data rather than waiting",
+        "Drives the analysis independently - proactively requests data rather than waiting",
         "Fast, accurate mental math with narration: margin analysis, breakeven, volume/price decomposition",
         "For automotive cases: comfortable with OEM pricing dynamics, Tier 1 supplier margins, EV cost curves",
         "For industrial cases: understands capacity utilization, fixed/variable cost ratios, restructuring math",
@@ -84,7 +84,7 @@ export const ROLAND_BERGER_RUBRIC = {
         "Connects back to the case objective stated at the beginning",
       ],
       whatWeakLooksLike: [
-        "No quantified impact estimate — 'we should reduce costs' without a number",
+        "No quantified impact estimate - 'we should reduce costs' without a number",
         "Recommendation disconnected from the root cause identified",
         "Vague or hedged recommendation",
         "Rushed synthesis that misses the quantification step",
@@ -102,10 +102,10 @@ export const ROLAND_BERGER_RUBRIC = {
       key: "entrepreneurialMindset",
       label: "Entrepreneurial Mindset & Pragmatic Implementation",
       weight: 18,
-      rbNote: "Roland Berger's most distinctive scoring dimension — the 'entrepreneurial presence' that separates RB candidates from those at other firms. RB was founded by an entrepreneur and remains independently owned. They explicitly state they value 'entrepreneurial spirit' and have a Gap Year Program that rotates consultants through startups. The entrepreneurial dimension at RB means: do you spot opportunities where others see only problems? Are your solutions actionable in the real world? Are you a self-starter who doesn't wait to be told what to do? This is different from BCG's creativity — at RB it is about initiative-taking AND practical implementation.",
+      rbNote: "Roland Berger's most distinctive scoring dimension - the 'entrepreneurial presence' that separates RB candidates from those at other firms. RB was founded by an entrepreneur and remains independently owned. They explicitly state they value 'entrepreneurial spirit' and have a Gap Year Program that rotates consultants through startups. The entrepreneurial dimension at RB means: do you spot opportunities where others see only problems? Are your solutions actionable in the real world? Are you a self-starter who doesn't wait to be told what to do? This is different from BCG's creativity - at RB it is about initiative-taking AND practical implementation.",
       whatStrongLooksLike: [
         "Spots the opportunity inside the problem: 'The margin decline is painful but the EV transition creates a new revenue line if they move fast'",
-        "Recommendations are pragmatic and implementable — not just theoretically optimal",
+        "Recommendations are pragmatic and implementable - not just theoretically optimal",
         "Shows initiative within the case: proactively suggests next steps without being asked",
         "Bridges analysis and action: 'Here's what the client should do by Q3'",
         "International perspective: shows awareness of cross-border dynamics in European industrial cases",
@@ -131,20 +131,20 @@ export const ROLAND_BERGER_RUBRIC = {
       key: "collaboration",
       label: "Collaboration & Group Case Performance",
       weight: 15,
-      rbNote: "Roland Berger's final round includes a group case where 3-6 candidates collaborate on a shared business problem and present to a panel. This is an explicitly scored component — not just an add-on. RB evaluates: do you lead when needed and follow when appropriate? Do you build on others' ideas or just add new points? Do you synthesize across the group when discussion gets tangled? The scoring standard: 'Showing analytical leadership in minute 5 and then going quiet for 30 minutes is a red flag.' Consistent contribution throughout, not just an impressive opening, is what RB scores.",
+      rbNote: "Roland Berger's final round includes a group case where 3-6 candidates collaborate on a shared business problem and present to a panel. This is an explicitly scored component - not just an add-on. RB evaluates: do you lead when needed and follow when appropriate? Do you build on others' ideas or just add new points? Do you synthesize across the group when discussion gets tangled? The scoring standard: 'Showing analytical leadership in minute 5 and then going quiet for 30 minutes is a red flag.' Consistent contribution throughout, not just an impressive opening, is what RB scores.",
       whatStrongLooksLike: [
         "Volunteers to organize the group's approach in the first 2-3 minutes",
         "Builds explicitly on others' ideas: 'Building on what X said...'",
-        "Synthesizes when the group gets stuck: 'The core tension we're seeing is X vs Y — which should we prioritize?'",
-        "Consistent contribution throughout — not just at the start",
-        "Credits others explicitly — noticed by evaluators",
+        "Synthesizes when the group gets stuck: 'The core tension we're seeing is X vs Y - which should we prioritize?'",
+        "Consistent contribution throughout - not just at the start",
+        "Credits others explicitly - noticed by evaluators",
         "Balances analytical contribution with team facilitation",
       ],
       whatWeakLooksLike: [
         "Dominates early then disengages",
         "Only adds new points without building on what others said",
         "Silent during key moments of synthesis or decision-making",
-        "Competitive rather than collaborative — tries to 'win' the group case",
+        "Competitive rather than collaborative - tries to 'win' the group case",
         "No facilitation instinct when group discussion gets stuck",
       ],
       scoringCriteria: {
@@ -182,7 +182,7 @@ export function calculateRolandBergerOffer(scores: Record<string, number>): {
       return {
         decision: "disqualified",
         label: "No Offer",
-        description: "Automatically disqualified. Analytical execution is non-negotiable at Roland Berger — being passive in the analysis is as costly as being structurally wrong. A score of 1 means you waited for direction rather than driving the case. This is the most critical gap to close before your next RB interview.",
+        description: "Automatically disqualified. Analytical execution is non-negotiable at Roland Berger - being passive in the analysis is as costly as being structurally wrong. A score of 1 means you waited for direction rather than driving the case. This is the most critical gap to close before your next RB interview.",
         weightedScore: 0,
       };
     }
@@ -212,7 +212,7 @@ export function calculateRolandBergerOffer(scores: Record<string, number>): {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the Roland Berger bar. Analytical execution must reach at least a 3 — driving the analysis independently is Roland Berger's second explicit scoring dimension. Being passive or waiting for direction is a fundamental mismatch with RB's entrepreneurial, self-starter culture.",
+      description: "Below the Roland Berger bar. Analytical execution must reach at least a 3 - driving the analysis independently is Roland Berger's second explicit scoring dimension. Being passive or waiting for direction is a fundamental mismatch with RB's entrepreneurial, self-starter culture.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -241,8 +241,8 @@ export function calculateRolandBergerOffer(scores: Record<string, number>): {
   if (weightedScore >= 48) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the Roland Berger bar but not over it. The most common gap at this level is entrepreneurial presence and synthesis quality — candidates who are analytically solid but deliver generic recommendations without the root cause → recommendation → quantified impact format. Practice the RB synthesis structure and add entrepreneurial initiative to every case.",
+      label: "Borderline - No Offer",
+      description: "Close to the Roland Berger bar but not over it. The most common gap at this level is entrepreneurial presence and synthesis quality - candidates who are analytically solid but deliver generic recommendations without the root cause → recommendation → quantified impact format. Practice the RB synthesis structure and add entrepreneurial initiative to every case.",
       weightedScore: Math.round(weightedScore),
     };
   }

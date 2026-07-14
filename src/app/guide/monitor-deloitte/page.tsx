@@ -27,7 +27,7 @@ const RATE_THIS = {
   writtenCase: {
     response: "Candidate runs out of time trying to cover every slide in the packet instead of prioritizing the most important ones.",
     score: 2,
-    reasoning: "Misses Monitor's own explicit guidance — the goal is answering the most important questions well, not everything.",
+    reasoning: "Misses Monitor's own explicit guidance - the goal is answering the most important questions well, not everything.",
   },
 };
 

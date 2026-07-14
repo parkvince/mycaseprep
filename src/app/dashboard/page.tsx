@@ -22,12 +22,12 @@ const FIRM_SHORT_NAMES: Record<string, string> = {
 };
 
 const CASE_TYPES: { label: string; value: CaseType; desc: string }[] = [
-  { label: "Market sizing", value: "market_sizing", desc: "Estimate a number — \"how many pianos are tuned in NYC?\"" },
-  { label: "Profitability", value: "profitability", desc: "A company's profit dropped — find out why and fix it" },
+  { label: "Market sizing", value: "market_sizing", desc: "Estimate a number - \"how many pianos are tuned in NYC?\"" },
+  { label: "Profitability", value: "profitability", desc: "A company's profit dropped - find out why and fix it" },
   { label: "Market entry", value: "market_entry", desc: "Should this company enter a new market? Make the call" },
   { label: "M&A", value: "merger_acquisition", desc: "Should this company buy, or merge with, another one?" },
-  { label: "Operations", value: "operations", desc: "Something in the business is inefficient — improve it" },
-  { label: "Random", value: "random", desc: "Surprise me — good for well-rounded practice" },
+  { label: "Operations", value: "operations", desc: "Something in the business is inefficient - improve it" },
+  { label: "Random", value: "random", desc: "Surprise me - good for well-rounded practice" },
 ];
 
 const DIFFICULTIES: { label: string; value: Difficulty; desc: string; recommended?: boolean }[] = [
@@ -37,7 +37,7 @@ const DIFFICULTIES: { label: string; value: Difficulty; desc: string; recommende
 ];
 
 const MODES = [
-  { value: "text", label: "Text", desc: "Type your answers — no time pressure to think", recommended: true },
+  { value: "text", label: "Text", desc: "Type your answers - no time pressure to think", recommended: true },
   { value: "voice", label: "Voice", desc: "Speak your answers aloud, AI replies in text" },
   { value: "live", label: "Live interview", desc: "Full video call with a talking AI interviewer" },
 ];
@@ -174,10 +174,10 @@ export default function DashboardPage() {
         title: caseData.title, prompt: caseData.prompt, context: caseData.context ?? "",
         aiProvider: caseData.provider ?? null,
         // Picked here so every mode (live/voice/text) shows the same person for
-        // this case — face, name, and TTS voice all stay consistent.
+        // this case - face, name, and TTS voice all stay consistent.
         interviewer: pickRandomInterviewer(),
       }));
-      // The case is already generated and saved at this point — refreshing the
+      // The case is already generated and saved at this point - refreshing the
       // displayed usage count is a nice-to-have, not a gate. A blip here must
       // never strand the user on a case they already paid API cost to generate.
       router.push(selectedMode === "live" ? "/case/interview" : "/case/session");
@@ -247,7 +247,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--hp-foreground)" }}>New to case interviews?</div>
-                <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>The guide walks through the framework and what graders look for — takes about 2 minutes.</div>
+                <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>The guide walks through the framework and what graders look for - takes about 2 minutes.</div>
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
@@ -403,7 +403,7 @@ export default function DashboardPage() {
               )}
               {genError && (
                 <div style={{ fontSize: "0.8rem", color: "#dc2626", textAlign: "center", fontFamily: FONT }}>
-                  Couldn&apos;t generate that case — likely a temporary connection issue. Try again.
+                  Couldn&apos;t generate that case - likely a temporary connection issue. Try again.
                 </div>
               )}
               <button

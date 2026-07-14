@@ -6,14 +6,14 @@ import { createPortal } from "react-dom";
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 const TOOLTIP_WIDTH = 220;
 
-/** A jargon word/phrase with a plain-language definition on hover/tap — for
+/** A jargon word/phrase with a plain-language definition on hover/tap - for
  * beginners who've never done a case interview and don't know what "MECE" or
  * "hypothesis-driven" mean yet.
  *
  * Renders the tooltip through a portal to <body>, positioned in fixed/viewport
  * coordinates rather than as a normal absolutely-positioned child. Terms often
  * sit inside containers with overflow:hidden (e.g. an animated accordion panel)
- * — a regular absolute-positioned popup gets silently clipped there, showing
+ * - a regular absolute-positioned popup gets silently clipped there, showing
  * only a sliver of its edge instead of the tooltip. */
 export default function Term({ children, define }: { children: React.ReactNode; define: string }) {
   const [open, setOpen] = useState(false);

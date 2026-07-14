@@ -6,11 +6,11 @@ export const BCG_RUBRIC = {
   offerRate: "Approximately 1% of all applicants. Roughly 10-15% of interview-stage candidates.",
 
   scoringScale: {
-    1: "Insufficient — Does not display basic command of the skill.",
-    2: "Adequate — Below the BCG hiring bar. Shows basics but not at the required level.",
-    3: "Good — Meets the bar. Solid performance with minor gaps.",
-    4: "Very Good — Above the bar. Strong, differentiated performance.",
-    5: "Exceptional — Rare. The kind of thinking that gets you a fast-track offer.",
+    1: "Insufficient - Does not display basic command of the skill.",
+    2: "Adequate - Below the BCG hiring bar. Shows basics but not at the required level.",
+    3: "Good - Meets the bar. Solid performance with minor gaps.",
+    4: "Very Good - Above the bar. Strong, differentiated performance.",
+    5: "Exceptional - Rare. The kind of thinking that gets you a fast-track offer.",
   },
 
   dimensions: [
@@ -18,7 +18,7 @@ export const BCG_RUBRIC = {
       key: "candidateLed",
       label: "Case Leadership & Independent Drive",
       weight: 23,
-      bcgNote: "This is the most distinctly BCG dimension. Unlike McKinsey where the interviewer leads, BCG expects YOU to drive the entire case. Did you frame the problem, decide where to go next, ask for the right data proactively, and maintain the analytical thread without being guided? BCG interviewers will go silent and wait — candidates who freeze or wait for direction fail this dimension immediately.",
+      bcgNote: "This is the most distinctly BCG dimension. Unlike McKinsey where the interviewer leads, BCG expects YOU to drive the entire case. Did you frame the problem, decide where to go next, ask for the right data proactively, and maintain the analytical thread without being guided? BCG interviewers will go silent and wait - candidates who freeze or wait for direction fail this dimension immediately.",
       whatStrongLooksLike: [
         "Takes ownership from minute one: frames the problem before the interviewer finishes speaking",
         "Decides which branches to explore and states why: 'I want to start with demand-side because...'",
@@ -49,7 +49,7 @@ export const BCG_RUBRIC = {
       bcgNote: "BCG evaluates structure differently from McKinsey. At BCG, structure must be ORIGINAL and bespoke to the case. Using a memorized framework from a prep book is a significant negative signal at BCG. The interviewer will notice immediately if your profitability structure for a healthcare case looks identical to your market entry structure from 10 minutes ago.",
       whatStrongLooksLike: [
         "Custom structure built from first principles, not from a prep guide",
-        "Evolves the structure as new information arrives — not rigid",
+        "Evolves the structure as new information arrives - not rigid",
         "Makes explicit tradeoffs: 'I'm prioritizing this branch because it's more likely to be the driver'",
         "MECE but not formulaically so",
         "Shows creative angles the interviewer hasn't heard from the previous 20 candidates",
@@ -73,13 +73,13 @@ export const BCG_RUBRIC = {
       key: "quantitative",
       label: "Analytical & Quantitative Skills",
       weight: 22,
-      bcgNote: "BCG cases are exhibit-heavy. The quantitative dimension at BCG is as much about data interpretation as arithmetic. BCG explicitly names this as 'numerical skills' on their careers page — and the emphasis is on extracting the NON-OBVIOUS insight from a chart, not just reading the obvious number. Mental math accuracy matters but is secondary to analytical interpretation.",
+      bcgNote: "BCG cases are exhibit-heavy. The quantitative dimension at BCG is as much about data interpretation as arithmetic. BCG explicitly names this as 'numerical skills' on their careers page - and the emphasis is on extracting the NON-OBVIOUS insight from a chart, not just reading the obvious number. Mental math accuracy matters but is secondary to analytical interpretation.",
       whatStrongLooksLike: [
         "Reads an exhibit and immediately identifies the non-obvious insight, not just the headline number",
         "States approach before calculating",
         "Fast, accurate mental math with narration",
         "Triangulates data across exhibits to build a composite picture",
-        "Sanity-checks results: 'That would imply 40% market share — is that realistic?'",
+        "Sanity-checks results: 'That would imply 40% market share - is that realistic?'",
         "Identifies what data is missing and why it matters",
       ],
       whatWeakLooksLike: [
@@ -102,7 +102,7 @@ export const BCG_RUBRIC = {
       key: "creativity",
       label: "Creativity & Original Thinking",
       weight: 18,
-      bcgNote: "This is BCG's most distinctive scoring dimension — it does not exist in the same form at McKinsey. BCG explicitly values 'generating original, non-obvious insights and solutions instead of relying on textbook frameworks.' BCG interviewers are actively looking for candidates who say something they haven't heard before. If your answer sounds like it came from a prep guide, you will not score above a 3 here regardless of technical accuracy.",
+      bcgNote: "This is BCG's most distinctive scoring dimension - it does not exist in the same form at McKinsey. BCG explicitly values 'generating original, non-obvious insights and solutions instead of relying on textbook frameworks.' BCG interviewers are actively looking for candidates who say something they haven't heard before. If your answer sounds like it came from a prep guide, you will not score above a 3 here regardless of technical accuracy.",
       whatStrongLooksLike: [
         "Proposes a solution or angle the interviewer genuinely hasn't heard in recent sessions",
         "Makes cross-industry connections: 'This is similar to how airlines used dynamic pricing...'",
@@ -114,7 +114,7 @@ export const BCG_RUBRIC = {
       whatWeakLooksLike: [
         "Every answer sounds like it came from a case prep book",
         "Cannot think beyond the framework laid out at the start",
-        "Technically correct but boring — solves the math without adding strategic value",
+        "Technically correct but boring - solves the math without adding strategic value",
         "Brainstorming list is generic (e.g. 'reduce costs, increase revenue, enter new markets')",
       ],
       scoringCriteria: {
@@ -130,12 +130,12 @@ export const BCG_RUBRIC = {
       key: "communication",
       label: "Communication Style",
       weight: 17,
-      bcgNote: "BCG explicitly names communication style as one of three scored criteria on their careers page. At BCG the communication standard is slightly more conversational than McKinsey — they want a thought partner, not a presenter. The ideal BCG communication style is collaborative: you think out loud, invite the interviewer into the analysis, and show intellectual curiosity through your questions.",
+      bcgNote: "BCG explicitly names communication style as one of three scored criteria on their careers page. At BCG the communication standard is slightly more conversational than McKinsey - they want a thought partner, not a presenter. The ideal BCG communication style is collaborative: you think out loud, invite the interviewer into the analysis, and show intellectual curiosity through your questions.",
       whatStrongLooksLike: [
         "Thinks out loud in a structured way: narrates the analytical process",
         "Invites dialogue: 'Does that logic seem right to you?'",
         "Bottom-line first but with genuine intellectual engagement",
-        "Responds to pushback with curiosity, not defensiveness: 'That's a fair challenge — let me reconsider...'",
+        "Responds to pushback with curiosity, not defensiveness: 'That's a fair challenge - let me reconsider...'",
         "Shows enthusiasm for the problem without being performative",
         "Concise but not robotic",
       ],
@@ -182,18 +182,18 @@ export function calculateBcgOffer(scores: Record<string, number>): {
       return {
         decision: "disqualified",
         label: "No Offer",
-        description: `Automatically disqualified. A score of 1 on ${dim.label} is disqualifying at BCG. ${dim.key === "candidateLed" ? "BCG's candidate-led format requires you to drive the case independently. This is the single most important thing to practice before your next BCG interview." : "Analytical and quantitative skills are a core BCG requirement — this is the priority to fix."}`,
+        description: `Automatically disqualified. A score of 1 on ${dim.label} is disqualifying at BCG. ${dim.key === "candidateLed" ? "BCG's candidate-led format requires you to drive the case independently. This is the single most important thing to practice before your next BCG interview." : "Analytical and quantitative skills are a core BCG requirement - this is the priority to fix."}`,
         weightedScore: 0,
       };
     }
   }
 
-  // Creativity minimum check — BCG-specific
+  // Creativity minimum check - BCG-specific
   if (scores["creativity"] <= 1) {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "BCG will not extend an offer when creativity scores at 1. Relying entirely on textbook frameworks is a fundamental mismatch with BCG's culture. BCG wants original thinkers — practice generating non-obvious insights and cross-domain connections.",
+      description: "BCG will not extend an offer when creativity scores at 1. Relying entirely on textbook frameworks is a fundamental mismatch with BCG's culture. BCG wants original thinkers - practice generating non-obvious insights and cross-domain connections.",
       weightedScore: 0,
     };
   }
@@ -212,7 +212,7 @@ export function calculateBcgOffer(scores: Record<string, number>): {
       return {
         decision: "no_offer",
         label: "No Offer",
-        description: `Below the BCG bar. ${dimKey === "candidateLed" ? "You must be able to drive the case independently — BCG interviewers will not guide you. This is the most critical gap to close before your next BCG interview." : "Quantitative and exhibit analysis must reach at least a 3. BCG cases are data-heavy and this is non-negotiable."}`,
+        description: `Below the BCG bar. ${dimKey === "candidateLed" ? "You must be able to drive the case independently - BCG interviewers will not guide you. This is the most critical gap to close before your next BCG interview." : "Quantitative and exhibit analysis must reach at least a 3. BCG cases are data-heavy and this is non-negotiable."}`,
         weightedScore: Math.round(weightedScore),
       };
     }
@@ -225,7 +225,7 @@ export function calculateBcgOffer(scores: Record<string, number>): {
     return {
       decision: "strong_offer",
       label: "Strong Offer",
-      description: "Exceptional performance across all dimensions including the critical creativity dimension. BCG would extend a strong offer. You are performing in the top 5% of interview-stage candidates — the kind of original thinking BCG actively recruits for.",
+      description: "Exceptional performance across all dimensions including the critical creativity dimension. BCG would extend a strong offer. You are performing in the top 5% of interview-stage candidates - the kind of original thinking BCG actively recruits for.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -242,8 +242,8 @@ export function calculateBcgOffer(scores: Record<string, number>): {
   if (weightedScore >= 58) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the BCG bar but not over it. The foundation is there. The most common gap at this level is creativity — candidates who are technically strong but analytically predictable. Push your thinking beyond the first obvious answer.",
+      label: "Borderline - No Offer",
+      description: "Close to the BCG bar but not over it. The foundation is there. The most common gap at this level is creativity - candidates who are technically strong but analytically predictable. Push your thinking beyond the first obvious answer.",
       weightedScore: Math.round(weightedScore),
     };
   }

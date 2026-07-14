@@ -73,8 +73,8 @@ Each score must be an INTEGER between 1 and 5.`;
 BCG-SPECIFIC RULES:
 1. BCG is CANDIDATE-LED. Did the candidate DRIVE the case independently without waiting for prompts?
 2. Creativity is a UNIQUE BCG dimension. Using textbook frameworks without original thinking = 2 at most on creativity.
-3. Quantitative includes EXHIBIT ANALYSIS — can they extract the non-obvious insight from a chart?
-4. Communication at BCG is collaborative — do they treat it as a dialogue or a solo performance?
+3. Quantitative includes EXHIBIT ANALYSIS - can they extract the non-obvious insight from a chart?
+4. Communication at BCG is collaborative - do they treat it as a dialogue or a solo performance?
 5. BCG's bar is VERY HIGH. Most candidates score 2s on their first 15-20 cases. Do NOT inflate scores.
 6. If the candidate waited for prompts rather than driving, candidateLed must be 1 or 2.
 SCORING DIMENSIONS:\n${dims}
@@ -92,7 +92,7 @@ BAIN-SPECIFIC RULES:
 1. "ANSWER FIRST" is Bain's core principle. Did the candidate state a clear hypothesis immediately? If not, answerFirst cannot exceed 2.
 2. Communication and composure are weighted HIGHER at Bain than at McKinsey or BCG.
 3. Cultural fit ("Bainie factor") is an explicit scoring dimension. Were they collaborative, humble, and genuine?
-4. Bain's structure standard is more flexible than McKinsey's — organized and clear matters more than perfect MECE.
+4. Bain's structure standard is more flexible than McKinsey's - organized and clear matters more than perfect MECE.
 5. If the candidate was defensive under pushback rather than curious, communication cannot exceed 2.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: answerFirst, structure, quantitative, communication, culturalFit, synthesis
@@ -106,11 +106,11 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating this candidate using EY-Parthenon's ACTUAL case interview rubric.
 EY-PARTHENON-SPECIFIC RULES:
-1. This is NOT standard Big 4 — EY-Parthenon is MBB-level difficulty. Do not inflate scores.
+1. This is NOT standard Big 4 - EY-Parthenon is MBB-level difficulty. Do not inflate scores.
 2. PE/investment judgment is a core dimension. Did the candidate think like an investor, not just a consultant?
-3. Financial literacy is explicit — P&L, EBITDA, investment multiples. Score quantitative harshly if these are missing.
+3. Financial literacy is explicit - P&L, EBITDA, investment multiples. Score quantitative harshly if these are missing.
 4. The most common EY-Parthenon failure: refusing to commit to a recommendation. If the candidate hedged their final answer, recommendation cannot exceed 2.
-5. Candidate-led format — did they drive the case or wait for prompts?
+5. Candidate-led format - did they drive the case or wait for prompts?
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: problemSolving, quantitative, strategicJudgment, communication, recommendation
 Each score must be an INTEGER between 1 and 5.`;
@@ -124,9 +124,9 @@ Each score must be an INTEGER between 1 and 5.`;
     return `You are evaluating this candidate using Deloitte's ACTUAL case interview rubric.
 DELOITTE-SPECIFIC RULES:
 1. Deloitte explicitly names 5 dimensions: structured thinking, analytical ability, business acumen, communication, and professional demeanor/coachability.
-2. Coachability is unique to Deloitte — score it harshly if the candidate was defensive under pushback or showed no intellectual curiosity.
+2. Coachability is unique to Deloitte - score it harshly if the candidate was defensive under pushback or showed no intellectual curiosity.
 3. Business acumen must reflect PRACTICAL judgment, not just theoretical strategy. Implementation awareness matters.
-4. The communication standard: "clear, concise, and persuasive — can you walk someone through your logic under pressure?"
+4. The communication standard: "clear, concise, and persuasive - can you walk someone through your logic under pressure?"
 5. AI/digital transformation awareness is a plus given Deloitte's strategic focus.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, analytical, businessAcumen, communication, coachability
@@ -140,7 +140,7 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating this candidate using KPMG's ACTUAL case interview rubric.
 KPMG-SPECIFIC RULES:
-1. KPMG cases are HYBRID — strategy AND operations/implementation. A recommendation missing the execution dimension is incomplete.
+1. KPMG cases are HYBRID - strategy AND operations/implementation. A recommendation missing the execution dimension is incomplete.
 2. Values alignment is an EXPLICIT KPMG scoring dimension tied to: Integrity, Excellence, Courage, Together, For Better.
 3. Operational judgment is weighted equally with structure. Did they address "how do we do this" alongside "what should we do"?
 4. Professional mindset matters: were responses prudent, ethical, and client-aware?
@@ -157,7 +157,7 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating this candidate using PwC Strategy&'s ACTUAL case interview rubric.
 PWC STRATEGY&-SPECIFIC RULES:
-1. Behavioral fit is an EXPLICIT ELIMINATOR at PwC — can disqualify regardless of case performance. Did the candidate show genuine motivation for Strategy& specifically?
+1. Behavioral fit is an EXPLICIT ELIMINATOR at PwC - can disqualify regardless of case performance. Did the candidate show genuine motivation for Strategy& specifically?
 2. Strategy& uses a capabilities-driven approach. Did the candidate identify what distinctive capabilities the client needs? Generic recommendations score below a 3.
 3. Financial viability must accompany every strategic recommendation.
 4. Hypothesis-driven structure is the expectation. No hypothesis = no score above 2 on structure.
@@ -179,7 +179,7 @@ ROLAND BERGER-SPECIFIC RULES:
 3. Roland Berger's synthesis format: root cause → recommendation → quantified impact. No number = incomplete.
 4. Entrepreneurial presence: did the candidate spot opportunities, take initiative, and deliver pragmatic solutions?
 5. Cases skew toward European industrial, automotive, and manufacturing contexts.
-6. Collaboration scores group case behavior — did they lead when needed and credit others?
+6. Collaboration scores group case behavior - did they lead when needed and credit others?
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, execution, synthesis, entrepreneurialMindset, collaboration
 Each score must be an INTEGER between 1 and 5.`;
@@ -193,10 +193,10 @@ Each score must be an INTEGER between 1 and 5.`;
     return `You are evaluating this candidate using Accenture's ACTUAL case interview rubric.
 ACCENTURE-SPECIFIC RULES:
 1. Accenture explicitly names six core skills: structured thinking, problem solving, business judgment, quantitative ability, communication, and executive presence.
-2. DIGITAL AWARENESS is embedded in business judgment — candidates who treat technology cases like pure strategy problems score below a 3.
+2. DIGITAL AWARENESS is embedded in business judgment - candidates who treat technology cases like pure strategy problems score below a 3.
 3. Three unique case formats: Great Unknown (minimal data), Parade of Facts (dense data), Back of the Envelope (estimation).
-4. Executive presence is an EXPLICIT dimension — would a Fortune 500 CEO trust this person?
-5. Group case collaboration is scored — did the candidate advance the group's thinking?
+4. Executive presence is an EXPLICIT dimension - would a Fortune 500 CEO trust this person?
+5. Group case collaboration is scored - did the candidate advance the group's thinking?
 6. 80/20 prioritization and forest vs. trees thinking are explicitly valued.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structuredThinking, problemSolving, businessJudgment, quantitative, communicationPresence, collaboration
@@ -211,10 +211,10 @@ Each score must be an INTEGER between 1 and 5.`;
     return `You are evaluating using Oliver Wyman's rubric.
 OW RULES:
 1. Fully candidate-led. Did they drive the case independently?
-2. Financial services sector knowledge is explicit — score harshly if banking/insurance fluency is missing.
-3. Written case synthesis is evaluated — can they build a recommendation from financial data?
-4. Three values: Courage, Curiosity, Passion — evident in how they engage intellectually.
-5. 1-3% offer rate — do not inflate scores.
+2. Financial services sector knowledge is explicit - score harshly if banking/insurance fluency is missing.
+3. Written case synthesis is evaluated - can they build a recommendation from financial data?
+4. Three values: Courage, Curiosity, Passion - evident in how they engage intellectually.
+5. 1-3% offer rate - do not inflate scores.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, financialServicesKnowledge, quantitative, communication, writtenCase
 Each score must be an INTEGER between 1 and 5.`;
@@ -227,11 +227,11 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating using Kearney's rubric.
 KEARNEY RULES:
-1. HYBRID format — must handle both interviewer-guided AND candidate-led segments.
+1. HYBRID format - must handle both interviewer-guided AND candidate-led segments.
 2. Operational excellence is Kearney's signature. Did the recommendation include an execution pathway? If not, operationalExcellence cannot exceed 2.
 3. Supply chain and operations vocabulary matters.
-4. Practical implementation over pure strategy — every recommendation needs a HOW.
-5. 2% offer rate — rigorous standard.
+4. Practical implementation over pure strategy - every recommendation needs a HOW.
+5. 2% offer rate - rigorous standard.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, operationalExcellence, quantitative, collaboration, communication
 Each score must be an INTEGER between 1 and 5.`;
@@ -244,11 +244,11 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating using L.E.K. Consulting's rubric.
 LEK RULES:
-1. Candidate-led. Evidence over opinion — every claim must be backed by data or stated assumptions.
+1. Candidate-led. Evidence over opinion - every claim must be backed by data or stated assumptions.
 2. Quantitative rigor is the highest-weighted dimension. Market sizing and PE math must be precise.
-3. Written case synthesis — can they build a recommendation-first narrative from financial exhibits?
+3. Written case synthesis - can they build a recommendation-first narrative from financial exhibits?
 4. Life sciences and PE due diligence sector knowledge is a plus.
-5. 2-3% offer rate — do not inflate.
+5. 2-3% offer rate - do not inflate.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, quantitative, evidenceReasoning, writtenCase, communication
 Each score must be an INTEGER between 1 and 5.`;
@@ -261,10 +261,10 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating using Monitor Deloitte's rubric.
 MONITOR RULES:
-1. TREAT AS BCG/BAIN PREP — not standard Deloitte. Candidate-led pure strategy.
-2. CEO-level point of view required — NOT balanced pros and cons. If the candidate explored all options equally without committing, strategicStructure cannot exceed 2.
-3. Hold position under pushback — test composure under pressure.
-4. 3-4% offer rate — MBB-adjacent rigor.
+1. TREAT AS BCG/BAIN PREP - not standard Deloitte. Candidate-led pure strategy.
+2. CEO-level point of view required - NOT balanced pros and cons. If the candidate explored all options equally without committing, strategicStructure cannot exceed 2.
+3. Hold position under pushback - test composure under pressure.
+4. 3-4% offer rate - MBB-adjacent rigor.
 5. Do not apply standard Big 4 scoring leniency.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: strategicStructure, strategyDepth, quantitative, communication, writtenCase
@@ -278,11 +278,11 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating using IBM Consulting's rubric.
 IBM RULES:
-1. Every case has a TECHNOLOGY LAYER — cloud, AI, ERP, digital transformation. Missing this = below 3 on technologyBusinessJudgment.
+1. Every case has a TECHNOLOGY LAYER - cloud, AI, ERP, digital transformation. Missing this = below 3 on technologyBusinessJudgment.
 2. Business-first technology thinking: start with the business problem, bring tech in as the solution.
-3. Quantify technology ROI — cloud migration savings, AI cost curve, ERP implementation payback.
+3. Quantify technology ROI - cloud migration savings, AI cost curve, ERP implementation payback.
 4. Three IBM divisions: iX (design/experience), Strategy & Transformation (finance/ops), Technology Consulting (delivery).
-5. More accessible than Tier 2 strategy firms — but still rigorous.
+5. More accessible than Tier 2 strategy firms - but still rigorous.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: structure, technologyBusinessJudgment, quantitative, communication, collaboration
 Each score must be an INTEGER between 1 and 5.`;
@@ -295,12 +295,12 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating using Huron Consulting's rubric.
 HURON RULES:
-1. INTERVIEWER-LED format — candidate responds to directed prompts, does not drive independently.
+1. INTERVIEWER-LED format - candidate responds to directed prompts, does not drive independently.
 2. Healthcare and education industry knowledge is explicitly scored. Missing sector fluency = below 3 on industryKnowledge.
 3. Key healthcare concepts: operating margin, payer mix, contract labor, length of stay, revenue cycle.
 4. Key education concepts: enrollment, net tuition revenue, administrative cost drivers.
 5. Impact orientation: recommendations must be specific and actionable for a hospital CEO or university president.
-6. More accessible than MBB — score appropriately, do not apply MBB-level strictness.
+6. More accessible than MBB - score appropriately, do not apply MBB-level strictness.
 SCORING DIMENSIONS:\n${dims}
 Return scores for these EXACT keys: analyticalThinking, industryKnowledge, quantitative, communication, impactOrientation
 Each score must be an INTEGER between 1 and 5.`;
@@ -313,10 +313,10 @@ Each score must be an INTEGER between 1 and 5.`;
     ).join("\n\n");
     return `You are evaluating using Capital One's rubric.
 CAPITAL ONE RULES:
-1. INTERVIEWER-LED format — directed prompts, not candidate-led frameworks. Issue trees have limited value here.
-2. QUANTITATIVE SKILLS are the most heavily weighted dimension. Equation translation is the key test — not just arithmetic.
+1. INTERVIEWER-LED format - directed prompts, not candidate-led frameworks. Issue trees have limited value here.
+2. QUANTITATIVE SKILLS are the most heavily weighted dimension. Equation translation is the key test - not just arithmetic.
 3. Financial product knowledge: credit card economics (interchange, interest income, charge-off), loan math (default rates, LTV, net interest margin).
-4. Calculator is allowed — precision of equation setup matters more than mental math speed.
+4. Calculator is allowed - precision of equation setup matters more than mental math speed.
 5. ARES values scored through behavioral questions: Excellence, Do the Right Thing, Respect for Individuals, Succeed Together.
 6. Post-Discover acquisition (May 2025): credit card economics appear more frequently in cases.
 SCORING DIMENSIONS:\n${dims}

@@ -12,7 +12,7 @@ const RATE_THIS = {
   structure: {
     response: "\"I'll focus here first since it's most likely the driver, even though I know I'm skipping a few smaller branches.\"",
     score: 4,
-    reasoning: "Not perfectly MECE, but confidently prioritized and CEO-friendly — exactly what Bain rewards over mechanical completeness.",
+    reasoning: "Not perfectly MECE, but confidently prioritized and CEO-friendly - exactly what Bain rewards over mechanical completeness.",
   },
   quantitative: {
     response: "\"This deal is priced at 6x EBITDA, which given typical multiples in this sector feels low, that's worth flagging.\"",
@@ -27,7 +27,7 @@ const RATE_THIS = {
   culturalFit: {
     response: "Candidate dismisses a hint from the interviewer with \"No, I think my way is right,\" and moves on without engaging further.",
     score: 1,
-    reasoning: "Arrogant and dismissive — a direct mismatch with Bain's \"smart, nice, get things done\" culture.",
+    reasoning: "Arrogant and dismissive - a direct mismatch with Bain's \"smart, nice, get things done\" culture.",
   },
   synthesis: {
     response: "\"They should probably think about improving profitability somehow going forward.\"",

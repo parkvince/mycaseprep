@@ -7,7 +7,7 @@ const RATE_THIS = {
   structure: {
     response: "Handed a supply chain case, candidate immediately proposes a framework covering procurement, logistics, inventory, and supplier relationships, adapting as the interviewer redirects.",
     score: 4,
-    reasoning: "Strong hybrid performance — shows operational logic and adapts fluidly between guided and independent segments.",
+    reasoning: "Strong hybrid performance - shows operational logic and adapts fluidly between guided and independent segments.",
   },
   operationalExcellence: {
     response: "\"We should just consolidate suppliers to save costs,\" with no sequencing or feasibility discussion.",
@@ -27,7 +27,7 @@ const RATE_THIS = {
   communication: {
     response: "Candidate explains a supply chain recommendation using heavy consulting jargon a plant manager wouldn't recognize.",
     score: 2,
-    reasoning: "Kearney wants practical clarity — plain language a COO or plant manager could act on, not consulting-speak.",
+    reasoning: "Kearney wants practical clarity - plain language a COO or plant manager could act on, not consulting-speak.",
   },
 };
 

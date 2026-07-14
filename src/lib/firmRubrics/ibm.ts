@@ -10,7 +10,7 @@ export const IBM_RUBRIC = {
       key: "structure",
       label: "Structured Thinking & Problem Framing",
       weight: 20,
-      ibmNote: "IBM Consulting cases always carry a technology layer — even a growth or profitability case will incorporate cloud strategy, AI implementation costs, or ERP integration constraints. Your structure must address BOTH the business problem AND the technology dimension. IBM has three distinct divisions with different case content: IBM iX (design/experience), Strategy & Transformation (finance/operations), and Technology Consulting (delivery/implementation). Know which track you're interviewing for.",
+      ibmNote: "IBM Consulting cases always carry a technology layer - even a growth or profitability case will incorporate cloud strategy, AI implementation costs, or ERP integration constraints. Your structure must address BOTH the business problem AND the technology dimension. IBM has three distinct divisions with different case content: IBM iX (design/experience), Strategy & Transformation (finance/operations), and Technology Consulting (delivery/implementation). Know which track you're interviewing for.",
       scoringCriteria: {
         1: "No structure. Cannot frame a technology + business hybrid problem.",
         2: "Pure strategy structure with no technology dimension.",
@@ -73,7 +73,7 @@ export const IBM_RUBRIC = {
       key: "collaboration",
       label: "Collaboration & Team Orientation",
       weight: 15,
-      ibmNote: "IBM's scale requires strong collaborative instincts. IBM Consulting teams are large and cross-functional — technology specialists, business consultants, and client teams all need to work together. Candidates who demonstrate collaborative problem-solving, active listening, and team facilitation instincts fit IBM's culture well.",
+      ibmNote: "IBM's scale requires strong collaborative instincts. IBM Consulting teams are large and cross-functional - technology specialists, business consultants, and client teams all need to work together. Candidates who demonstrate collaborative problem-solving, active listening, and team facilitation instincts fit IBM's culture well.",
       scoringCriteria: {
         1: "No collaborative instinct. Solo approach. Cannot work in cross-functional teams.",
         2: "Adequate alone but shows no team-orientation.",
@@ -102,6 +102,6 @@ export function calculateIbmOffer(scores: Record<string, number>): { decision: s
   const exc = dims.filter(d => scores[d.key] >= 4).length;
   if (w >= 80 && exc >= 3) return { decision: "strong_offer", label: "Strong Offer", description: "Exceptional. IBM Consulting would extend a strong offer. You demonstrated the rare combination of business-first technology thinking, quantified transformation cases, and collaborative instinct that IBM's scale requires. Top 5% of candidates.", weightedScore: Math.round(w) };
   if (w >= 55 && exc >= 2) return { decision: "offer", label: "Offer", description: "Above the IBM bar. An offer would likely be extended. You showed solid technology-business judgment, executive communication, and collaborative orientation. Top 15-20% of candidates.", weightedScore: Math.round(w) };
-  if (w >= 38) return { decision: "borderline", label: "Borderline — No Offer", description: "Close to the IBM bar. The most common gap: technology-business integration. Candidates who treat IBM cases like pure strategy miss the technology dimension that IBM clients always need. Practice framing technology decisions as quantified business cases.", weightedScore: Math.round(w) };
-  return { decision: "no_offer", label: "No Offer", description: "Below the IBM bar. Focus on technology-business judgment — IBM's most distinctive dimension. Learn to frame cloud, AI, and ERP decisions as business cases with ROI. IBM's bar is more accessible than MBB — most candidates clear it within 8-12 targeted cases.", weightedScore: Math.round(w) };
+  if (w >= 38) return { decision: "borderline", label: "Borderline - No Offer", description: "Close to the IBM bar. The most common gap: technology-business integration. Candidates who treat IBM cases like pure strategy miss the technology dimension that IBM clients always need. Practice framing technology decisions as quantified business cases.", weightedScore: Math.round(w) };
+  return { decision: "no_offer", label: "No Offer", description: "Below the IBM bar. Focus on technology-business judgment - IBM's most distinctive dimension. Learn to frame cloud, AI, and ERP decisions as business cases with ROI. IBM's bar is more accessible than MBB - most candidates clear it within 8-12 targeted cases.", weightedScore: Math.round(w) };
 }

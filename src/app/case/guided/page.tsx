@@ -102,7 +102,7 @@ function GuidedCaseInner() {
     }
   };
 
-  // No overflowX on wrap — let the page scroll naturally
+  // No overflowX on wrap - let the page scroll naturally
 const wrap: React.CSSProperties = {
   minHeight: "100vh",
   width: "100%",

@@ -10,7 +10,7 @@ export const HURON_RUBRIC = {
       key: "analyticalThinking",
       label: "Analytical Thinking & Problem Setup",
       weight: 22,
-      huronNote: "Huron uses an INTERVIEWER-LED format — unlike BCG, Bain, or most Tier 2 firms, the interviewer guides which areas to explore. Your job is to respond clearly and logically to each prompt, not to independently drive the case. Huron's interviewers 'do not care so much about the right numbers — they care about how you would go about setting up the analysis.' Cases draw heavily from Huron's real client engagements in healthcare (hospitals, health systems), higher education (enrollment, cost), and life sciences.",
+      huronNote: "Huron uses an INTERVIEWER-LED format - unlike BCG, Bain, or most Tier 2 firms, the interviewer guides which areas to explore. Your job is to respond clearly and logically to each prompt, not to independently drive the case. Huron's interviewers 'do not care so much about the right numbers - they care about how you would go about setting up the analysis.' Cases draw heavily from Huron's real client engagements in healthcare (hospitals, health systems), higher education (enrollment, cost), and life sciences.",
       scoringCriteria: {
         1: "Cannot set up a logical analysis framework when prompted.",
         2: "Basic analytical setup but misses key drivers in healthcare or education context.",
@@ -45,7 +45,7 @@ export const HURON_RUBRIC = {
       key: "quantitative",
       label: "Quantitative Analysis & Business Math",
       weight: 20,
-      huronNote: "Huron cases involve straightforward but sector-specific math: hospital cost-per-case analysis, revenue per patient day, enrollment yield calculations, and contract labor premium calculations. Huron sometimes allows calculators. The interviewer cares more about analytical setup than arithmetic perfection — but you must connect the numbers to the healthcare or education business implication.",
+      huronNote: "Huron cases involve straightforward but sector-specific math: hospital cost-per-case analysis, revenue per patient day, enrollment yield calculations, and contract labor premium calculations. Huron sometimes allows calculators. The interviewer cares more about analytical setup than arithmetic perfection - but you must connect the numbers to the healthcare or education business implication.",
       scoringCriteria: {
         1: "Cannot perform sector-specific calculations when prompted.",
         2: "Some quantitative ability but cannot connect numbers to healthcare or education implications.",
@@ -59,7 +59,7 @@ export const HURON_RUBRIC = {
       key: "communication",
       label: "Communication & Client Engagement",
       weight: 20,
-      huronNote: "Huron clients are often healthcare executives (hospital CEOs, CFOs, CNOs) and university presidents — leaders who need clear, practical communication. 'Huron values consultants who can keep clients engaged and informed even when under pressure.' Communication at Huron must be accessible to non-consulting executives without oversimplifying the analysis.",
+      huronNote: "Huron clients are often healthcare executives (hospital CEOs, CFOs, CNOs) and university presidents - leaders who need clear, practical communication. 'Huron values consultants who can keep clients engaged and informed even when under pressure.' Communication at Huron must be accessible to non-consulting executives without oversimplifying the analysis.",
       scoringCriteria: {
         1: "Cannot communicate analysis to a healthcare or university executive audience.",
         2: "Adequate but too abstract. Healthcare executives would struggle to follow.",
@@ -73,7 +73,7 @@ export const HURON_RUBRIC = {
       key: "impactOrientation",
       label: "Impact Orientation & Practical Recommendations",
       weight: 15,
-      huronNote: "Huron explicitly evaluates 'impact orientation: showing drive, confidence, and focus on real-world outcomes.' Recommendations must be actionable and specific. Huron's performance improvement heritage means they want consultants who can identify concrete actions that will move the needle — not just strategic frameworks.",
+      huronNote: "Huron explicitly evaluates 'impact orientation: showing drive, confidence, and focus on real-world outcomes.' Recommendations must be actionable and specific. Huron's performance improvement heritage means they want consultants who can identify concrete actions that will move the needle - not just strategic frameworks.",
       scoringCriteria: {
         1: "Recommendations are theoretical with no real-world action path.",
         2: "Some recommendations but vague. Cannot identify specific actions.",
@@ -102,6 +102,6 @@ export function calculateHuronOffer(scores: Record<string, number>): { decision:
   const exc = dims.filter(d => scores[d.key] >= 4).length;
   if (w >= 78 && exc >= 3) return { decision: "strong_offer", label: "Strong Offer", description: "Exceptional. Huron would extend a strong offer. You demonstrated genuine healthcare and education industry knowledge, practical impact-oriented recommendations, and client-ready communication. Top 5% of candidates.", weightedScore: Math.round(w) };
   if (w >= 55 && exc >= 2) return { decision: "offer", label: "Offer", description: "Above the Huron bar. An offer would likely be extended. You showed solid sector knowledge, analytical rigor, and the practical recommendation quality Huron's clients need. Top 15-20% of candidates.", weightedScore: Math.round(w) };
-  if (w >= 38) return { decision: "borderline", label: "Borderline — No Offer", description: "Close to the Huron bar. The most common gap: healthcare and education industry knowledge. Generic business analysis without sector context consistently underperforms at Huron. Study hospital operations, health system economics, and university enrollment management before your next interview.", weightedScore: Math.round(w) };
-  return { decision: "no_offer", label: "No Offer", description: "Below the Huron bar. Focus first on healthcare and education industry knowledge — Huron's most distinctive requirement. Then practice the interviewer-led format (responding to directed prompts, not driving independently). Huron's bar is more accessible than MBB — most candidates clear it within 6-10 targeted cases.", weightedScore: Math.round(w) };
+  if (w >= 38) return { decision: "borderline", label: "Borderline - No Offer", description: "Close to the Huron bar. The most common gap: healthcare and education industry knowledge. Generic business analysis without sector context consistently underperforms at Huron. Study hospital operations, health system economics, and university enrollment management before your next interview.", weightedScore: Math.round(w) };
+  return { decision: "no_offer", label: "No Offer", description: "Below the Huron bar. Focus first on healthcare and education industry knowledge - Huron's most distinctive requirement. Then practice the interviewer-led format (responding to directed prompts, not driving independently). Huron's bar is more accessible than MBB - most candidates clear it within 6-10 targeted cases.", weightedScore: Math.round(w) };
 }

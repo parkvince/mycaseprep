@@ -23,7 +23,7 @@ export default function FloatingBlob({
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Cached images can finish loading before React attaches the onLoad
-  // listener, so the load event never fires — check .complete on mount too.
+  // listener, so the load event never fires - check .complete on mount too.
   useEffect(() => {
     if (imgRef.current?.complete) setLoaded(true);
   }, []);

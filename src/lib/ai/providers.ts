@@ -41,7 +41,7 @@ export interface CallChatCompletionOptions {
   maxTokens: number;
   temperature?: number;
   jsonMode?: boolean;
-  /** From a prior response in the same session — try this provider first. */
+  /** From a prior response in the same session - try this provider first. */
   preferredProvider?: ProviderName | null;
 }
 
@@ -109,7 +109,7 @@ async function callProvider(provider: ProviderName, opts: CallChatCompletionOpti
 /**
  * Tries the preferred provider first (if one was already established for this
  * session), then cascades through the rest of the chain in order. Throws only
- * if every configured provider fails — an unconfigured provider (missing API
+ * if every configured provider fails - an unconfigured provider (missing API
  * key) is treated the same as a failure and skipped.
  */
 export async function callChatCompletion(opts: CallChatCompletionOptions): Promise<CallChatCompletionResult> {

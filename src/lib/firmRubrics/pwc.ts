@@ -6,11 +6,11 @@ export const PWC_RUBRIC = {
   offerRate: "Approximately 3-5% of applicants. MBB-adjacent bar for Strategy&. More accessible than McKinsey but more demanding than standard Big 4.",
 
   scoringScale: {
-    1: "Insufficient — Would not represent PwC/Strategy& with a client.",
-    2: "Adequate — Below the PwC bar. Shows potential but not ready.",
-    3: "Good — Meets the bar. Would perform competently on a PwC engagement.",
-    4: "Very Good — Strong candidate. Above the bar with clear strengths.",
-    5: "Exceptional — MBB-adjacent performance.",
+    1: "Insufficient - Would not represent PwC/Strategy& with a client.",
+    2: "Adequate - Below the PwC bar. Shows potential but not ready.",
+    3: "Good - Meets the bar. Would perform competently on a PwC engagement.",
+    4: "Very Good - Strong candidate. Above the bar with clear strengths.",
+    5: "Exceptional - MBB-adjacent performance.",
   },
 
   dimensions: [
@@ -18,7 +18,7 @@ export const PWC_RUBRIC = {
       key: "structure",
       label: "Structured Reasoning & Hypothesis-Driven Thinking",
       weight: 22,
-      pwcNote: "PwC Strategy& uses a candidate-led format and explicitly rewards hypothesis-driven structuring. Their proprietary 'capabilities-driven strategy' framework shapes how they think: the best structures identify what distinctive capabilities the client has or needs to build — not just generic strategic buckets. Unlike McKinsey's rigidly MECE standard, PwC rewards clear, hypothesis-led thinking that is commercially grounded. Form a clear hypothesis early and use it to guide the entire analysis.",
+      pwcNote: "PwC Strategy& uses a candidate-led format and explicitly rewards hypothesis-driven structuring. Their proprietary 'capabilities-driven strategy' framework shapes how they think: the best structures identify what distinctive capabilities the client has or needs to build - not just generic strategic buckets. Unlike McKinsey's rigidly MECE standard, PwC rewards clear, hypothesis-led thinking that is commercially grounded. Form a clear hypothesis early and use it to guide the entire analysis.",
       whatStrongLooksLike: [
         "States a clear, testable hypothesis at the start: 'My initial view is that the client's challenge is capability-related, not market-related'",
         "Structure is organized around testing that hypothesis rather than exploring all possibilities equally",
@@ -28,7 +28,7 @@ export const PWC_RUBRIC = {
         "Commercially grounded from the first sentence",
       ],
       whatWeakLooksLike: [
-        "No hypothesis — explores all branches equally without a guiding view",
+        "No hypothesis - explores all branches equally without a guiding view",
         "Generic MECE framework not adapted to the strategic context",
         "Rigid adherence to initial structure even when evidence points elsewhere",
         "Structure that is analytically correct but commercially disconnected",
@@ -46,7 +46,7 @@ export const PWC_RUBRIC = {
       key: "quantitative",
       label: "Quantitative Analysis & Financial Logic",
       weight: 20,
-      pwcNote: "PwC Strategy& explicitly emphasizes financial logic and commercial viability alongside strategic reasoning. Their prep materials highlight ROI, break-even, CAGR, and market sizing as core mathematical skills. The standard is 'structured reasoning and financial logic' — not PE-level modeling (that's EY-Parthenon), but every strategic recommendation must be grounded in whether the client can financially execute and justify it. AI implementation ROI cases are increasingly common given PwC's heavy AI investment.",
+      pwcNote: "PwC Strategy& explicitly emphasizes financial logic and commercial viability alongside strategic reasoning. Their prep materials highlight ROI, break-even, CAGR, and market sizing as core mathematical skills. The standard is 'structured reasoning and financial logic' - not PE-level modeling (that's EY-Parthenon), but every strategic recommendation must be grounded in whether the client can financially execute and justify it. AI implementation ROI cases are increasingly common given PwC's heavy AI investment.",
       whatStrongLooksLike: [
         "Every strategic recommendation is grounded in financial feasibility: 'This makes sense strategically only if the ROI exceeds X%'",
         "Fast, accurate mental math with clear narration of approach",
@@ -74,7 +74,7 @@ export const PWC_RUBRIC = {
       key: "strategicJudgment",
       label: "Strategic & Commercial Judgment",
       weight: 23,
-      pwcNote: "This is the core Strategy& dimension. Strategy& was built from Booz & Company's 'capabilities-driven strategy' approach — the firm genuinely believes competitive advantage comes from building distinctive capabilities, not from generic strategic positioning. The best candidates identify WHAT capabilities the client needs to win, WHETHER they currently have them, and HOW to build or acquire them. Compared to EY-Parthenon (which focuses on investment attractiveness) and Deloitte (which focuses on implementation), Strategy& focuses on long-term strategic alignment and differentiation.",
+      pwcNote: "This is the core Strategy& dimension. Strategy& was built from Booz & Company's 'capabilities-driven strategy' approach - the firm genuinely believes competitive advantage comes from building distinctive capabilities, not from generic strategic positioning. The best candidates identify WHAT capabilities the client needs to win, WHETHER they currently have them, and HOW to build or acquire them. Compared to EY-Parthenon (which focuses on investment attractiveness) and Deloitte (which focuses on implementation), Strategy& focuses on long-term strategic alignment and differentiation.",
       whatStrongLooksLike: [
         "Identifies the 2-3 capabilities that would actually determine whether the strategy succeeds",
         "Distinguishes between market tailwinds (external) and distinctive capabilities (internal)",
@@ -103,14 +103,14 @@ export const PWC_RUBRIC = {
       key: "communication",
       label: "Communication & Structured Delivery",
       weight: 18,
-      pwcNote: "PwC Strategy& communication standard: clear, structured, and commercially grounded. PwC serves a wide range of clients across sectors including energy, healthcare, industrials, and public sector — communication must be adaptable to different client contexts. Written case and group case components in final rounds test different communication skills: slide-based communication (written case) and collaborative discussion facilitation (group case). In the live case, hypothesis-led communication that mirrors how Strategy& consultants actually work with clients is the ideal.",
+      pwcNote: "PwC Strategy& communication standard: clear, structured, and commercially grounded. PwC serves a wide range of clients across sectors including energy, healthcare, industrials, and public sector - communication must be adaptable to different client contexts. Written case and group case components in final rounds test different communication skills: slide-based communication (written case) and collaborative discussion facilitation (group case). In the live case, hypothesis-led communication that mirrors how Strategy& consultants actually work with clients is the ideal.",
       whatStrongLooksLike: [
         "Conclusion-first: 'My recommendation is X because it leverages the client's core capabilities in Y'",
         "Hypothesis-led communication throughout: consistently ties back to the initial view",
-        "Adapts language to the industry context — does not use generic consulting jargon",
+        "Adapts language to the industry context - does not use generic consulting jargon",
         "Concise and structured under pressure",
         "For group cases: contributes substantively while building on others' ideas",
-        "Natural delivery — not rehearsed",
+        "Natural delivery - not rehearsed",
       ],
       whatWeakLooksLike: [
         "Builds to the conclusion rather than leading with it",
@@ -131,10 +131,10 @@ export const PWC_RUBRIC = {
       key: "behavioralFit",
       label: "Behavioral Fit & Genuine Motivation",
       weight: 17,
-      pwcNote: "This is PwC's most unique evaluative dimension and the one most candidates underestimate. PwC/Strategy& behavioral fit can ELIMINATE you even with strong case performance — it is an explicit gate, not just a secondary consideration. PwC interviewers are specifically checking two things: (1) Do you genuinely want to work at PwC/Strategy& specifically, or are you just using it as an MBB backup? (2) Do you fit PwC's values of inclusion, integrity, and long-term societal impact? Generic 'why consulting' answers that don't specifically reference PwC or Strategy& score poorly here.",
+      pwcNote: "This is PwC's most unique evaluative dimension and the one most candidates underestimate. PwC/Strategy& behavioral fit can ELIMINATE you even with strong case performance - it is an explicit gate, not just a secondary consideration. PwC interviewers are specifically checking two things: (1) Do you genuinely want to work at PwC/Strategy& specifically, or are you just using it as an MBB backup? (2) Do you fit PwC's values of inclusion, integrity, and long-term societal impact? Generic 'why consulting' answers that don't specifically reference PwC or Strategy& score poorly here.",
       whatStrongLooksLike: [
         "Demonstrates genuine knowledge of Strategy& specifically: references capabilities-driven strategy, named sectors, or recent Strategy& work",
-        "Articulates why PwC/Strategy& specifically — not just 'because you're a top firm'",
+        "Articulates why PwC/Strategy& specifically - not just 'because you're a top firm'",
         "Stories show leadership, teamwork, and navigating complexity under pressure",
         "Connects personal values to PwC's stated values (inclusion, integrity, societal impact)",
         "Shows intellectual curiosity about the specific industries Strategy& focuses on",
@@ -142,7 +142,7 @@ export const PWC_RUBRIC = {
       ],
       whatWeakLooksLike: [
         "Generic 'why consulting' answer with no PwC-specific content",
-        "Obvious MBB backup mentality — would clearly prefer McKinsey/BCG/Bain",
+        "Obvious MBB backup mentality - would clearly prefer McKinsey/BCG/Bain",
         "Cannot articulate what makes Strategy& different from other firms",
         "Stories are generic without PwC values connection",
         "No genuine curiosity about the firm or its work",
@@ -181,7 +181,7 @@ export function calculatePwcOffer(scores: Record<string, number>): {
     return {
       decision: "disqualified",
       label: "No Offer",
-      description: "Automatically disqualified. PwC's behavioral fit interview can eliminate candidates regardless of case performance. A score of 1 signals a clear MBB backup mentality or lack of genuine interest in Strategy& specifically. Before your next PwC interview, deeply research Strategy&'s capabilities-driven approach and articulate specifically why you want to work there — not just at consulting generally.",
+      description: "Automatically disqualified. PwC's behavioral fit interview can eliminate candidates regardless of case performance. A score of 1 signals a clear MBB backup mentality or lack of genuine interest in Strategy& specifically. Before your next PwC interview, deeply research Strategy&'s capabilities-driven approach and articulate specifically why you want to work there - not just at consulting generally.",
       weightedScore: 0,
     };
   }
@@ -210,7 +210,7 @@ export function calculatePwcOffer(scores: Record<string, number>): {
     return {
       decision: "no_offer",
       label: "No Offer",
-      description: "Below the PwC bar. Behavioral fit must reach at least a 2 — PwC specifically screens for genuine motivation to join Strategy& rather than using it as an MBB backup. Research Strategy&'s capabilities-driven approach, named sectors, and recent work before your next interview.",
+      description: "Below the PwC bar. Behavioral fit must reach at least a 2 - PwC specifically screens for genuine motivation to join Strategy& rather than using it as an MBB backup. Research Strategy&'s capabilities-driven approach, named sectors, and recent work before your next interview.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -239,8 +239,8 @@ export function calculatePwcOffer(scores: Record<string, number>): {
   if (weightedScore >= 47) {
     return {
       decision: "borderline",
-      label: "Borderline — No Offer",
-      description: "Close to the PwC bar but not over it. The most common gap at this level is behavioral fit and strategic judgment — candidates who are analytically solid but seem to view PwC as an MBB backup, or who deliver structured but generic recommendations without the capabilities-driven lens. Deepen your knowledge of Strategy& specifically before your next interview.",
+      label: "Borderline - No Offer",
+      description: "Close to the PwC bar but not over it. The most common gap at this level is behavioral fit and strategic judgment - candidates who are analytically solid but seem to view PwC as an MBB backup, or who deliver structured but generic recommendations without the capabilities-driven lens. Deepen your knowledge of Strategy& specifically before your next interview.",
       weightedScore: Math.round(weightedScore),
     };
   }
@@ -248,7 +248,7 @@ export function calculatePwcOffer(scores: Record<string, number>): {
   return {
     decision: "no_offer",
     label: "No Offer",
-    description: "Below the PwC Strategy& bar. Focus first on behavioral fit (genuine PwC motivation is an explicit gate) and strategic judgment (practice capabilities-driven thinking). Strategy&'s bar is more accessible than MBB — most candidates clear it within 10-15 cases of targeted preparation combined with firm-specific research.",
+    description: "Below the PwC Strategy& bar. Focus first on behavioral fit (genuine PwC motivation is an explicit gate) and strategic judgment (practice capabilities-driven thinking). Strategy&'s bar is more accessible than MBB - most candidates clear it within 10-15 cases of targeted preparation combined with firm-specific research.",
     weightedScore: Math.round(weightedScore),
   };
 }

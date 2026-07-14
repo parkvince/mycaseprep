@@ -123,15 +123,15 @@ const QUIZ = {
 
 const OPTION_LETTERS = ["A", "B", "C", "D"];
 
-/** The rubric source data uses em dashes throughout; normalize them for display. */
+/** Safety net: normalize any em dash (—) that sneaks into data for display. */
 function clean(text: string): string {
   return text.replace(/\s*—\s*/g, " - ");
 }
 
 const GLOSSARY: { term: RegExp; define: string }[] = [
-  { term: /\bMECE\b/gi, define: "Mutually Exclusive, Collectively Exhaustive — your buckets don't overlap, and together they cover the whole problem. It's the test for whether a framework is actually well-structured." },
-  { term: /\bhypothesis(-driven|-led)?\b/gi, define: "Your best guess at the answer, formed early and tested with data — instead of gathering everything before you have an opinion." },
-  { term: /\bbottom[- ]line[- ]first\b/gi, define: "Leading with your conclusion, then explaining how you got there — not building up to it at the end." },
+  { term: /\bMECE\b/gi, define: "Mutually Exclusive, Collectively Exhaustive - your buckets don't overlap, and together they cover the whole problem. It's the test for whether a framework is actually well-structured." },
+  { term: /\bhypothesis(-driven|-led)?\b/gi, define: "Your best guess at the answer, formed early and tested with data - instead of gathering everything before you have an opinion." },
+  { term: /\bbottom[- ]line[- ]first\b/gi, define: "Leading with your conclusion, then explaining how you got there - not building up to it at the end." },
 ];
 
 /** Wraps known jargon terms in an inline hover/tap definition so a first-timer
@@ -188,7 +188,7 @@ export default function GuidePage() {
   const [quizPick, setQuizPick] = useState<number | null>(null);
   const [firmIndex, setFirmIndex] = useState(0);
 
-  // Persist checklist progress across visits — it's your own personal prep tracker.
+  // Persist checklist progress across visits - it's your own personal prep tracker.
   useEffect(() => {
     const raw = localStorage.getItem("mycaseprep_guide_checklist");
     if (raw) {

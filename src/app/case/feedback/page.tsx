@@ -105,7 +105,7 @@ function FeedbackInner() {
     document.title = `Feedback: ${caseTitle} · MyCasePrep`;
   }, [caseTitle]);
 
-  // Retried up to twice with backoff — a save failure here is silent otherwise,
+  // Retried up to twice with backoff - a save failure here is silent otherwise,
   // and losing a completed session out of History with no signal to the user
   // is worse than a couple extra seconds of latency.
   const saveSession = async (t: Message[], overallScore: number, attempt = 1): Promise<void> => {
@@ -292,7 +292,7 @@ function FeedbackInner() {
       <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", fontFamily: FONT, padding: "0 1.5rem", textAlign: "center" }}>
         <p style={{ color: "var(--hp-foreground)", fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>Couldn&apos;t evaluate this session</p>
         <p style={{ color: "var(--hp-soft-foreground)", fontSize: "0.85rem", margin: 0, maxWidth: "360px" }}>
-          Your transcript is still intact — this was likely a temporary connection issue.
+          Your transcript is still intact - this was likely a temporary connection issue.
         </p>
         <button
           onClick={runEvaluation}
@@ -317,7 +317,7 @@ function FeedbackInner() {
             style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "10px", padding: "0.75rem 1rem", marginBottom: "1.25rem" }}>
             <AlertTriangle size={16} color="#d97706" style={{ flexShrink: 0 }} />
             <p style={{ flex: 1, fontSize: "0.82rem", color: "#92400e", margin: 0, lineHeight: 1.5 }}>
-              This score wasn&apos;t saved to your history — it won&apos;t show up in your progress trend yet.
+              This score wasn&apos;t saved to your history - it won&apos;t show up in your progress trend yet.
             </p>
             <button
               onClick={retrySave}

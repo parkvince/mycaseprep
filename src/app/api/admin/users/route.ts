@@ -18,7 +18,7 @@ export async function GET() {
         unlimitedCases: true,
         bonusCases: true,
         banned: true,
-        // Only score/date fields — never the transcript content of another user's session.
+        // Only score/date fields - never the transcript content of another user's session.
         caseSessions: {
           select: { overallScore: true, guidedScore: true, completedAt: true },
         },

@@ -10,14 +10,14 @@ import FloatingBlob from "@/components/FloatingBlob";
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
 const DEFAULT_SCORING_SCALE: Record<number, string> = {
-  1: "Insufficient — Does not display basic command of the skill. Almost always disqualifying.",
-  2: "Adequate — Below the hiring bar. Shows basics but not at the required level.",
-  3: "Good — Meets the bar. Solid with minor areas for improvement.",
-  4: "Very Good — Above the bar. Strong, differentiated performance.",
-  5: "Exceptional — Rare. Partner-level clarity, precision, and insight.",
+  1: "Insufficient - Does not display basic command of the skill. Almost always disqualifying.",
+  2: "Adequate - Below the hiring bar. Shows basics but not at the required level.",
+  3: "Good - Meets the bar. Solid with minor areas for improvement.",
+  4: "Very Good - Above the bar. Strong, differentiated performance.",
+  5: "Exceptional - Rare. Partner-level clarity, precision, and insight.",
 };
 
-/** Some rubric source data uses em dashes; normalize them for display. */
+/** Safety net: normalize any em dash (—) that sneaks into data for display. */
 function clean(text: string): string {
   return text.replace(/\s*—\s*/g, " - ");
 }
