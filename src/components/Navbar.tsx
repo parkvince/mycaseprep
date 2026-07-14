@@ -14,7 +14,13 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function h(e: MouseEvent) { if (ref.current && !ref.current.contains(e.target as Node)) onClose(); }
+    function h(e: MouseEvent) {
+      const t = e.target as Element;
+      // The avatar button toggles the menu itself - closing here too would make
+      // its own onClick immediately reopen the menu (close/reopen flicker).
+      if (t.closest?.("[data-profile-toggle]")) return;
+      if (ref.current && !ref.current.contains(t)) onClose();
+    }
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
   }, [onClose]);
@@ -158,24 +164,23 @@ export default function Navbar() {
           </button>
 
           {!loading && user && (
-            <div style={{ position: "relative" }}>
-              <button
-                onClick={() => setProfileOpen(o => !o)}
-                style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
-              >
-                {user.image
-                  ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                  : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
-                }
-              </button>
-              {profileOpen && <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />}
-            </div>
+            <button
+              data-profile-toggle
+              onClick={() => setProfileOpen(o => !o)}
+              style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+            >
+              {user.image
+                ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                : <span style={{ color: "white", fontWeight: 700, fontSize: "0.95rem", fontFamily: FONT }}>{(user.name ?? user.email ?? "?").charAt(0).toUpperCase()}</span>
+              }
+            </button>
           )}
         </div>
 
         <div className="hp-nav-mobile-controls" style={{ display: "none", alignItems: "center", gap: "0.5rem" }}>
           {!loading && user && (
             <button
+              data-profile-toggle
               onClick={() => setProfileOpen(o => !o)}
               style={{ width: BTN_H, height: BTN_H, borderRadius: "9999px", border: "2px solid var(--hp-primary)", padding: 0, cursor: "pointer", background: "var(--hp-primary)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}
             >
@@ -185,11 +190,6 @@ export default function Navbar() {
               }
             </button>
           )}
-          {profileOpen && (
-            <div style={{ position: "absolute", top: "56px", right: "1.25rem" }}>
-              <ProfileDropdown user={user!} onClose={() => setProfileOpen(false)} />
-            </div>
-          )}
           <button
             onClick={() => setMobileMenuOpen(o => !o)}
             aria-label="Menu"
@@ -198,6 +198,18 @@ export default function Navbar() {
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
+
+        {/* Exactly ONE dropdown instance, anchored to the header itself. Rendering
+            a copy inside both the desktop and mobile control divs (one hidden by
+            CSS but still mounted) meant two outside-mousedown handlers were live;
+            pressing a menu item counted as "outside" the hidden copy, which closed
+            and unmounted the menu between mousedown and mouseup - so the click
+            never fired and the buttons appeared dead. */}
+        {!loading && user && profileOpen && (
+          <div style={{ position: "absolute", top: "calc(100% + 2px)", right: "1.5rem" }}>
+            <ProfileDropdown user={user} onClose={() => setProfileOpen(false)} />
+          </div>
+        )}
       </motion.header>
 
       <style>{`
@@ -217,6 +229,7 @@ export default function Navbar() {
               { label: "Home", action: () => router.push("/") },
               { label: "Library", action: () => router.push("/library") },
               { label: "Guide", action: () => router.push("/guide") },
+              ...(isAdminEmail(user?.email) ? [{ label: "Admin", action: () => router.push("/admin") }] : []),
             ].map(item => (
               <button
                 key={item.label}
