@@ -669,7 +669,7 @@ function InterviewInner() {
   // ── PRE-SESSION ──
   if (!sessionStarted) {
     return (
-      <main style={{ height: "100vh", background: "#0d0d0d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: FONT, padding: "0 1.5rem" }}>
+      <main style={{ minHeight: "100vh", background: "#0d0d0d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: FONT, padding: "2.5rem 1.5rem" }}>
         <div style={{ width: "100%", maxWidth: "480px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem" }}>
 
           <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
@@ -695,9 +695,10 @@ function InterviewInner() {
 
           {/* Case brief */}
           {casePrompt && (
-            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem 1.25rem", width: "100%" }}>
+            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem 1.25rem", width: "100%", boxSizing: "border-box" }}>
               <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", marginBottom: "0.5rem" }}>Case brief</div>
-              <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0, display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+              {/* Full text, never truncated — scrolls within the panel if the case runs long. */}
+              <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0, whiteSpace: "pre-wrap", maxHeight: "34vh", overflowY: "auto", paddingRight: "0.4rem" }}>
                 {casePrompt}
               </p>
             </div>
