@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Mode, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
+import { INTERVIEWERS, type Interviewer } from "@/lib/interviewers";
 import { ArrowRight, Clock, Lightbulb, X } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
@@ -31,6 +32,7 @@ function SessionInner() {
   const [caseType, setCaseType] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [mode, setMode] = useState<Mode>("text");
+  const [interviewer, setInterviewer] = useState<Interviewer>(INTERVIEWERS[0]);
   const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [casePrompt, setCasePrompt] = useState("");
@@ -69,6 +71,7 @@ function SessionInner() {
       setCasePrompt(data.prompt ?? "");
       setCaseContext(data.context ?? "");
       setAiProvider(data.aiProvider ?? null);
+      if (data.interviewer?.name && data.interviewer?.image) setInterviewer(data.interviewer);
     }
     setReady(true);
   }, []);
@@ -77,10 +80,10 @@ function SessionInner() {
     if (!ready || !casePrompt) return;
     setTranscript([{
       role: "assistant",
-      content: `Welcome. I'm your ${FIRM_CONFIGS[firm].name} interviewer today.\n\n${casePrompt}\n\nTake a moment to read through the prompt. When you're ready, feel free to ask any clarifying questions.`,
+      content: `Welcome! I'm ${interviewer.name}, ${interviewer.title} at ${FIRM_CONFIGS[firm].name}, and I'll be your interviewer today.\n\n${casePrompt}\n\nTake a moment to read through the prompt. When you're ready, feel free to ask any clarifying questions.`,
       timestamp: new Date(),
     }]);
-  }, [ready, casePrompt, firm]);
+  }, [ready, casePrompt, firm, interviewer]);
 
   useEffect(() => {
     timerRef.current = setInterval(() => setElapsedTime(t => t + 1), 1000);
@@ -281,8 +284,8 @@ function SessionInner() {
             style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start", gap: "0.75rem", alignItems: "flex-start" }}
           >
             {msg.role === "assistant" && (
-              <div style={{ width: "30px", height: "30px", borderRadius: "9999px", background: "var(--hp-primary)", display: "grid", placeItems: "center", fontSize: "0.7rem", fontWeight: 700, color: "white", flexShrink: 0, marginTop: "2px" }}>
-                {(FIRM_SHORT[firm] ?? firmConfig.name).charAt(0)}
+              <div style={{ width: "32px", height: "32px", borderRadius: "9999px", background: "var(--hp-primary-soft)", border: "1px solid var(--hp-border)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: "2px", overflow: "hidden" }}>
+                <img src={interviewer.image} alt={interviewer.name} style={{ width: "80%", height: "80%", objectFit: "contain", marginTop: "4px" }} />
               </div>
             )}
             <div style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: msg.role === "user" ? "flex-end" : "flex-start", maxWidth: "680px" }}>
@@ -306,8 +309,8 @@ function SessionInner() {
 
         {loading && (
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-            <div style={{ width: "30px", height: "30px", borderRadius: "9999px", background: "var(--hp-primary)", display: "grid", placeItems: "center", fontSize: "0.7rem", fontWeight: 700, color: "white", flexShrink: 0 }}>
-              {(FIRM_SHORT[firm] ?? firmConfig.name).charAt(0)}
+            <div style={{ width: "32px", height: "32px", borderRadius: "9999px", background: "var(--hp-primary-soft)", border: "1px solid var(--hp-border)", display: "grid", placeItems: "center", flexShrink: 0, overflow: "hidden" }}>
+              <img src={interviewer.image} alt={interviewer.name} style={{ width: "80%", height: "80%", objectFit: "contain", marginTop: "4px" }} />
             </div>
             <div style={{ padding: "0.875rem 1.1rem", borderRadius: "4px 14px 14px 14px", background: "white", border: "1px solid var(--hp-border)", display: "flex", gap: "4px", alignItems: "center" }}>
               {[0, 1, 2].map(i => (

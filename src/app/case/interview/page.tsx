@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
+import { INTERVIEWERS, type Interviewer } from "@/lib/interviewers";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -17,12 +18,7 @@ const FIRM_SHORT: Record<string, string> = {
   "capital-one": "Capital One", huron: "Huron",
 };
 
-const INTERVIEWERS = [
-  { name: "James", title: "Senior Engagement Manager", gender: "male", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=800&fit=crop&crop=face" },
-  { name: "Sarah", title: "Senior Engagement Manager", gender: "female", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=800&fit=crop&crop=face" },
-];
-
-const INTERVIEWER = INTERVIEWERS[Math.floor(Math.random() * INTERVIEWERS.length)];
+const DEFAULT_INTERVIEWER = INTERVIEWERS[0];
 
 function renderContent(text: string): React.ReactNode[] {
   const parts = text.split(/\*\*(.*?)\*\*/g);
@@ -62,6 +58,7 @@ function InterviewInner() {
   const [caseType, setCaseType] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [personality, setPersonality] = useState<"strict" | "friendly">("strict");
+  const [interviewer, setInterviewer] = useState<Interviewer>(DEFAULT_INTERVIEWER);
   const [caseTitle, setCaseTitle] = useState("Case Interview");
   const [casePrompt, setCasePrompt] = useState("");
   const [caseContext, setCaseContext] = useState("");
@@ -142,6 +139,7 @@ function InterviewInner() {
       setCasePrompt(data.prompt ?? "");
       setCaseContext(data.context ?? "");
       setAiProvider(data.aiProvider ?? null);
+      if (data.interviewer?.name && data.interviewer?.image) setInterviewer(data.interviewer);
     }
     setReady(true);
   }, []);
@@ -154,10 +152,10 @@ function InterviewInner() {
     if (!ready || !casePrompt) return;
     setTranscript([{
       role: "assistant",
-      content: `Good morning! I'm ${INTERVIEWER.name}, Senior Engagement Manager at ${FIRM_CONFIGS[firm].name}. Thanks so much for taking the time to meet with me today. Before we dive in — are you ready to get started with the case?`,
+      content: `Good morning! I'm ${interviewer.name}, ${interviewer.title} at ${FIRM_CONFIGS[firm].name}. Thanks so much for taking the time to meet with me today. Before we dive in — are you ready to get started with the case?`,
       timestamp: new Date(),
     }]);
-  }, [ready, casePrompt, firm]);
+  }, [ready, casePrompt, firm, interviewer]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -248,7 +246,7 @@ function InterviewInner() {
     // better than a robotic one of the right gender.
     const isNeural = (v: SpeechSynthesisVoice) => /Online \(Natural\)|Natural|Neural|Premium|Enhanced/i.test(v.name);
     const isGoogle = (v: SpeechSynthesisVoice) => /Google/i.test(v.name);
-    if (INTERVIEWER.gender === "male") {
+    if (interviewer.gender === "male") {
       return byName(["Guy Online (Natural)", "Ryan Online (Natural)", "Christopher Online (Natural)", "Eric Online (Natural)"])
         ?? en.find(v => isNeural(v) && /male|guy|ryan|christopher|eric|daniel|alex/i.test(v.name))
         ?? byName(["Google UK English Male", "Google US English"])
@@ -323,7 +321,7 @@ function InterviewInner() {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: clean, gender: INTERVIEWER.gender }),
+        body: JSON.stringify({ text: clean, gender: interviewer.gender }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -391,7 +389,7 @@ function InterviewInner() {
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: phrase, gender: INTERVIEWER.gender }),
+          body: JSON.stringify({ text: phrase, gender: interviewer.gender }),
         });
         if (!res.ok) return;
         const blob = await res.blob();
@@ -686,12 +684,12 @@ function InterviewInner() {
 
           {/* Interviewer */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.6rem" }}>
-            <div style={{ width: "80px", height: "80px", borderRadius: "9999px", overflow: "hidden", border: "2px solid rgba(255,255,255,0.1)" }}>
-              <img src={INTERVIEWER.image} alt={INTERVIEWER.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+            <div style={{ width: "84px", height: "84px", borderRadius: "9999px", overflow: "hidden", border: "2px solid rgba(255,255,255,0.1)", background: "linear-gradient(160deg, #2a2a3e 0%, #1c1c2a 100%)", display: "grid", placeItems: "center" }}>
+              <img src={interviewer.image} alt={interviewer.name} style={{ width: "82%", height: "82%", objectFit: "contain", marginTop: "10px" }} />
             </div>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "0.9rem", fontWeight: 600 }}>{INTERVIEWER.name}</div>
-              <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", marginTop: "2px" }}>{INTERVIEWER.title}, {FIRM_SHORT[firm] ?? firmConfig.name}</div>
+              <div style={{ fontSize: "0.9rem", fontWeight: 600 }}>{interviewer.name}</div>
+              <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", marginTop: "2px" }}>{interviewer.title}, {FIRM_SHORT[firm] ?? firmConfig.name}</div>
             </div>
           </div>
 
@@ -841,19 +839,23 @@ function InterviewInner() {
                 />
               )}
               {interviewerJoined ? (
-                <motion.img
+                <motion.div
                   initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
-                  className="hp-interviewer-video"
-                  src={INTERVIEWER.image} alt={INTERVIEWER.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
-                />
+                  style={{ width: "100%", height: "100%", background: "linear-gradient(165deg, #2e2e44 0%, #232338 45%, #1a1a28 100%)", display: "grid", placeItems: "center" }}
+                >
+                  <img
+                    className="hp-interviewer-video"
+                    src={interviewer.image} alt={interviewer.name}
+                    style={{ width: "auto", height: "78%", maxWidth: "85%", objectFit: "contain", display: "block", filter: "drop-shadow(0 18px 28px rgba(0,0,0,0.45))" }}
+                  />
+                </motion.div>
               ) : (
                 <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.9rem" }}>
                   <div style={{ width: "72px", height: "72px", borderRadius: "9999px", background: "rgba(255,255,255,0.07)", display: "grid", placeItems: "center", fontSize: "1.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)" }}>
-                    {INTERVIEWER.name.charAt(0)}
+                    {interviewer.name.charAt(0)}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.4)", animation: "hp-connect-pulse 1.6s ease-in-out infinite" }}>
-                    {INTERVIEWER.name} is connecting...
+                    {interviewer.name} is connecting...
                   </div>
                 </div>
               )}
@@ -880,7 +882,7 @@ function InterviewInner() {
               )}
 
               <div style={{ position: "absolute", bottom: "10px", left: "10px", background: "rgba(0,0,0,0.6)", borderRadius: "8px", padding: "4px 10px" }}>
-                <div style={{ fontSize: "0.75rem", fontWeight: 600 }}>{INTERVIEWER.name}</div>
+                <div style={{ fontSize: "0.75rem", fontWeight: 600 }}>{interviewer.name}</div>
                 <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.35)" }}>{FIRM_SHORT[firm] ?? firmConfig.name}</div>
               </div>
 
@@ -981,7 +983,7 @@ function InterviewInner() {
                 {transcript.map((msg, i) => (
                   <div key={i} style={{ display: "flex", flexDirection: "column", gap: "3px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
                     <span style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.2)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      {msg.role === "user" ? (session?.user?.name ?? "You") : INTERVIEWER.name}
+                      {msg.role === "user" ? (session?.user?.name ?? "You") : interviewer.name}
                     </span>
                     <div style={{ maxWidth: "90%", padding: "0.5rem 0.75rem", borderRadius: msg.role === "user" ? "10px 3px 10px 10px" : "3px 10px 10px 10px", background: msg.role === "user" ? "rgba(124,92,252,0.2)" : "rgba(255,255,255,0.05)", fontSize: "0.8rem", lineHeight: 1.6, color: "rgba(255,255,255,0.75)" }}>
                       {renderContent(msg.content)}

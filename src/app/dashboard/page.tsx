@@ -8,6 +8,7 @@ import { CaseType, Difficulty, FirmKey, Mode } from "@/types";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
 import { ArrowRight, BookOpen, X } from "lucide-react";
+import { pickRandomInterviewer } from "@/lib/interviewers";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -172,6 +173,9 @@ export default function DashboardPage() {
         mode: selectedMode, personality,
         title: caseData.title, prompt: caseData.prompt, context: caseData.context ?? "",
         aiProvider: caseData.provider ?? null,
+        // Picked here so every mode (live/voice/text) shows the same person for
+        // this case — face, name, and TTS voice all stay consistent.
+        interviewer: pickRandomInterviewer(),
       }));
       // The case is already generated and saved at this point — refreshing the
       // displayed usage count is a nice-to-have, not a gate. A blip here must
