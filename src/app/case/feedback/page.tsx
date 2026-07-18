@@ -7,7 +7,7 @@ import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
-import { ArrowRight, Clock, AlertTriangle } from "lucide-react";
+import { ArrowRight, Clock, AlertTriangle, Download } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -79,6 +79,19 @@ function FeedbackInner() {
   const [saveFailed, setSaveFailed] = useState(false);
   const [savingRetry, setSavingRetry] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "breakdown" | "ideal" | "transcript">("overview");
+  const [printing, setPrinting] = useState(false);
+
+  // When exporting, every section is rendered (not just the active tab) so the
+  // whole scorecard lands in the PDF, then the browser print dialog is opened.
+  // "Save as PDF" is a native destination — no library, no server round-trip.
+  useEffect(() => {
+    if (!printing) return;
+    const t = setTimeout(() => {
+      window.print();
+      setPrinting(false);
+    }, 80);
+    return () => clearTimeout(t);
+  }, [printing]);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("transcriptData");
@@ -308,7 +321,13 @@ function FeedbackInner() {
 
   return (
     <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", color: "var(--hp-foreground)", fontFamily: FONT }}>
-      <Navbar />
+      <style>{`
+        @media print {
+          .fb-no-print { display: none !important; }
+          body { background: white !important; }
+        }
+      `}</style>
+      <div className="fb-no-print"><Navbar /></div>
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2.5rem 2rem 5rem" }}>
 
@@ -381,19 +400,27 @@ function FeedbackInner() {
           )}
         </motion.div>
 
-        {/* Tabs */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-          style={{ display: "flex", gap: "3px", marginBottom: "1.25rem", background: "white", padding: "4px", borderRadius: "10px", border: "1px solid var(--hp-border)", width: "fit-content", flexWrap: "wrap" }}>
-          <button style={tabBtn(activeTab === "overview")} onClick={() => setActiveTab("overview")}>Overview</button>
-          <button style={tabBtn(activeTab === "breakdown")} onClick={() => setActiveTab("breakdown")}>Score breakdown</button>
-          <button style={tabBtn(activeTab === "ideal")} onClick={() => setActiveTab("ideal")}>Top 1% answer</button>
-          {transcript.length > 0 && (
-            <button style={tabBtn(activeTab === "transcript")} onClick={() => setActiveTab("transcript")}>Transcript</button>
-          )}
+        {/* Tabs + export */}
+        <motion.div className="fb-no-print" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
+          style={{ display: "flex", gap: "0.75rem", marginBottom: "1.25rem", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "3px", background: "white", padding: "4px", borderRadius: "10px", border: "1px solid var(--hp-border)", width: "fit-content", flexWrap: "wrap" }}>
+            <button style={tabBtn(activeTab === "overview")} onClick={() => setActiveTab("overview")}>Overview</button>
+            <button style={tabBtn(activeTab === "breakdown")} onClick={() => setActiveTab("breakdown")}>Score breakdown</button>
+            <button style={tabBtn(activeTab === "ideal")} onClick={() => setActiveTab("ideal")}>Top 1% answer</button>
+            {transcript.length > 0 && (
+              <button style={tabBtn(activeTab === "transcript")} onClick={() => setActiveTab("transcript")}>Transcript</button>
+            )}
+          </div>
+          <button
+            onClick={() => setPrinting(true)}
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "36px", padding: "0 1rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, whiteSpace: "nowrap" }}
+          >
+            <Download size={14} /> Save as PDF
+          </button>
         </motion.div>
 
         {/* Overview */}
-        {activeTab === "overview" && (
+        {(printing || activeTab === "overview") && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div style={card}>
               <div style={{ ...sectionLabel, color: "#15803d" }}>What went well</div>
@@ -439,7 +466,7 @@ function FeedbackInner() {
         )}
 
         {/* Breakdown */}
-        {activeTab === "breakdown" && (
+        {(printing || activeTab === "breakdown") && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             style={{ ...card, display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {hasFirmRubric ? (
@@ -507,7 +534,7 @@ function FeedbackInner() {
         )}
 
         {/* Ideal answer */}
-        {activeTab === "ideal" && (
+        {(printing || activeTab === "ideal") && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={card}>
             <div style={sectionLabel}>What a top 1% candidate would say</div>
             <p style={{ fontSize: "0.9rem", lineHeight: 1.85, margin: 0 }}>{evaluation.topCandidateResponse}</p>
@@ -515,7 +542,7 @@ function FeedbackInner() {
         )}
 
         {/* Transcript */}
-        {activeTab === "transcript" && (
+        {(printing || activeTab === "transcript") && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div style={{ padding: "0.75rem 1rem", background: "white", border: "1px solid var(--hp-border)", borderRadius: "10px", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
               <Clock size={13} />
@@ -550,7 +577,7 @@ function FeedbackInner() {
         )}
 
         {/* Actions */}
-        <div style={{ marginTop: "2rem", display: "flex", gap: "0.75rem" }}>
+        <div className="fb-no-print" style={{ marginTop: "2rem", display: "flex", gap: "0.75rem" }}>
           <button
             onClick={() => router.push("/dashboard")}
             style={{ flex: 1, height: "48px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}

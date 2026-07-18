@@ -130,7 +130,7 @@ function clean(text: string): string {
 
 const GLOSSARY: { term: RegExp; define: string }[] = [
   { term: /\bMECE\b/gi, define: "Mutually Exclusive, Collectively Exhaustive - your buckets don't overlap, and together they cover the whole problem. It's the test for whether a framework is actually well-structured." },
-  { term: /\bhypothesis(-driven|-led)?\b/gi, define: "Your best guess at the answer, formed early and tested with data - instead of gathering everything before you have an opinion." },
+  { term: /\bhypothesis(?:-driven|-led)?\b/gi, define: "Your best guess at the answer, formed early and tested with data - instead of gathering everything before you have an opinion." },
   { term: /\bbottom[- ]line[- ]first\b/gi, define: "Leading with your conclusion, then explaining how you got there - not building up to it at the end." },
 ];
 
@@ -152,6 +152,20 @@ function withTerms(text: string): React.ReactNode {
     parts = next;
   });
   return parts;
+}
+
+// Resolves internal dimension keys (e.g. "structure") to their human labels and
+// joins them into a readable, grammatical list so the offer-threshold line reads
+// as a complete sentence rather than a truncated list of raw keys.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatDimensionList(keys: string[], dimensions: any[]): string {
+  const labels = keys.map(k => {
+    const dim = dimensions.find(d => d.key === k);
+    return dim ? clean(dim.label) : k;
+  });
+  if (labels.length <= 1) return labels[0] ?? "";
+  if (labels.length === 2) return `${labels[0]} and ${labels[1]}`;
+  return `${labels.slice(0, -1).join(", ")}, and ${labels[labels.length - 1]}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -506,10 +520,11 @@ export default function GuidePage() {
 
                   {rubric.offerDecision?.offerThreshold && (
                     <div style={{ borderTop: "1px solid var(--hp-border)", paddingTop: "1rem", fontSize: "0.76rem", color: "var(--hp-soft-foreground)" }}>
-                      Offer threshold: weighted score of {rubric.offerDecision.offerThreshold} or higher
+                      Offer threshold: a weighted score of {rubric.offerDecision.offerThreshold} or higher
                       {rubric.offerDecision.hardFloorDimensions?.length > 0 && (
-                        <>, with a hard floor of {rubric.offerDecision.hardFloorScore} on {rubric.offerDecision.hardFloorDimensions.join(", ")}</>
+                        <>, with a hard floor of {rubric.offerDecision.hardFloorScore} out of 5 on {formatDimensionList(rubric.offerDecision.hardFloorDimensions, dimensions)}</>
                       )}
+                      .
                     </div>
                   )}
                 </div>
@@ -538,11 +553,23 @@ export default function GuidePage() {
                     ))}
                   </ul>
                 </div>
+                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.75rem" }}>
+                  <Link href="/dashboard"
+                    style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "44px", padding: "0 1.4rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontWeight: 700, fontSize: "0.9rem", textDecoration: "none", fontFamily: FONT, boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}
+                  >
+                    Start practicing <ArrowRight size={16} />
+                  </Link>
+                  <Link href="/library"
+                    style={{ display: "inline-flex", alignItems: "center", height: "44px", padding: "0 1.25rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontWeight: 600, fontSize: "0.9rem", textDecoration: "none", fontFamily: FONT }}
+                  >
+                    Browse the library
+                  </Link>
+                </div>
                 <button
                   onClick={restart}
-                  style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", color: "var(--hp-primary)", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", fontFamily: FONT, padding: 0 }}
+                  style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: "0.4rem", background: "none", border: "none", color: "var(--hp-soft-foreground)", fontWeight: 600, fontSize: "0.82rem", cursor: "pointer", fontFamily: FONT, padding: 0 }}
                 >
-                  <RotateCcw size={15} /> Go through it again
+                  <RotateCcw size={14} /> Go through it again
                 </button>
               </Card>
             )}
@@ -550,8 +577,11 @@ export default function GuidePage() {
           </div>
         </AnimatePresence>
 
-        {/* Nav buttons */}
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem" }}>
+        {/* Nav buttons — sticky to the bottom of the viewport so "Next" stays in a
+            fixed, predictable spot. Previously it sat in normal flow below the step
+            content, so expanding an accordion pushed it down and users clicked an
+            accordion where Next used to be. */}
+        <div style={{ position: "sticky", bottom: 0, zIndex: 5, display: "flex", justifyContent: "space-between", gap: "0.75rem", padding: "0.75rem 0 1rem", marginTop: "0.5rem", background: "linear-gradient(to top, var(--hp-bg) 65%, transparent)" }}>
           <button
             onClick={goBack}
             disabled={step === 0}

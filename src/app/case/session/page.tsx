@@ -45,6 +45,7 @@ function SessionInner() {
   const [hintsUsed, setHintsUsed] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [timedMode, setTimedMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [voiceUnsupported, setVoiceUnsupported] = useState(false);
 
@@ -101,6 +102,11 @@ function SessionInner() {
     const s = (secs % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
+
+  // Optional timed-pressure countdown (visual only — never force-ends the case).
+  const targetSeconds = difficulty === "advanced" ? 15 * 60 : difficulty === "intermediate" ? 20 * 60 : 25 * 60;
+  const remaining = Math.max(0, targetSeconds - elapsedTime);
+  const timeColor = !timedMode ? "var(--hp-soft-foreground)" : remaining === 0 ? "#dc2626" : remaining <= 120 ? "#d97706" : "var(--hp-foreground)";
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || loading) return;
@@ -232,10 +238,14 @@ function SessionInner() {
 
         {/* Right */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.82rem", color: "var(--hp-soft-foreground)", fontVariantNumeric: "tabular-nums" }}>
+          <button
+            onClick={() => setTimedMode(t => !t)}
+            title={timedMode ? "Switch to a count-up timer" : "Switch to a timed countdown for interview pressure"}
+            style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.82rem", color: timeColor, fontVariantNumeric: "tabular-nums", fontWeight: timedMode ? 700 : 500, background: timedMode ? "#fffbeb" : "none", border: timedMode ? "1px solid #fde68a" : "1px solid transparent", borderRadius: "9999px", padding: "0.2rem 0.6rem", cursor: "pointer", fontFamily: FONT }}
+          >
             <Clock size={13} />
-            {formatTime(elapsedTime)}
-          </div>
+            {timedMode ? (remaining === 0 ? "Time's up" : formatTime(remaining)) : formatTime(elapsedTime)}
+          </button>
           <button
             onClick={() => { setHintsUsed(h => h + 1); setShowHint(true); }}
             style={{ display: "flex", alignItems: "center", gap: "0.35rem", height: "32px", padding: "0 0.875rem", borderRadius: "9999px", border: "1px solid var(--hp-border)", background: "white", color: "var(--hp-soft-foreground)", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "all 0.15s", flexShrink: 0, whiteSpace: "nowrap" }}

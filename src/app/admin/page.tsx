@@ -39,6 +39,7 @@ export default function AdminPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [forbidden, setForbidden] = useState(false);
   const [search, setSearch] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -47,13 +48,19 @@ export default function AdminPage() {
   const loadUsers = () => {
     setLoading(true);
     setLoadFailed(false);
+    setForbidden(false);
+    let wasForbidden = false;
     fetch("/api/admin/users")
       .then(r => {
+        // Belt-and-suspenders: the edge middleware already blocks non-admins from
+        // this route, but the API independently enforces admin-only access. A 403
+        // here means "not you", which no amount of retrying will fix.
+        if (r.status === 403) { wasForbidden = true; setForbidden(true); throw new Error("forbidden"); }
         if (!r.ok) throw new Error("failed");
         return r.json();
       })
       .then(d => setUsers(d.users ?? []))
-      .catch(() => setLoadFailed(true))
+      .catch(() => { if (!wasForbidden) setLoadFailed(true); })
       .finally(() => setLoading(false));
   };
 
@@ -144,6 +151,11 @@ export default function AdminPage() {
         {loading ? (
           <div style={{ textAlign: "center", padding: "5rem", color: "var(--hp-soft-foreground)", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>
             Loading users...
+          </div>
+        ) : forbidden ? (
+          <div style={{ textAlign: "center", padding: "3rem", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>
+            <p style={{ color: "var(--hp-foreground)", fontSize: "0.95rem", fontWeight: 600, margin: "0 0 0.4rem" }}>Not authorized</p>
+            <p style={{ color: "var(--hp-soft-foreground)", fontSize: "0.85rem", margin: 0 }}>This page is restricted to administrators.</p>
           </div>
         ) : loadFailed ? (
           <div style={{ textAlign: "center", padding: "3rem", background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)" }}>

@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
-import { LogOut, User, Briefcase, Sliders, Mic } from "lucide-react";
+import { LogOut, User, Briefcase, Sliders, Mic, Download, Trash2, ShieldAlert } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
+import { isAdminEmail } from "@/lib/admin";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -129,6 +130,12 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const [exporting, setExporting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteEmail, setDeleteEmail] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
   const [targetFirm, setTargetFirm] = useState("McKinsey & Company");
   const [targetRole, setTargetRole] = useState("Business Analyst");
   const [timeline, setTimeline] = useState("1–3 months");
@@ -185,6 +192,50 @@ export default function SettingsPage() {
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch("/api/user/export");
+      if (!res.ok) throw new Error("export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mycaseprep-data-export.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Non-fatal — the button just re-enables so they can retry.
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const res = await fetch("/api/user/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmEmail: deleteEmail }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error ?? "Failed to delete account.");
+      }
+      // Account is gone — end the session and land back on the marketing page.
+      await signOut({ callbackUrl: "/" });
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Failed to delete account.");
+      setDeleting(false);
+    }
+  };
+
+  const isAdmin = isAdminEmail(user?.email);
 
   return (
     <div style={{
@@ -329,7 +380,84 @@ export default function SettingsPage() {
               <LogOut size={14} /> Sign out
             </button>
           </div>
+
+          {/* Export data */}
+          <div style={{ padding: "1.5rem 1.75rem", borderTop: "1px solid var(--hp-border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)" }}>Export your data</div>
+              <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>Download everything we hold about your account as a JSON file.</div>
+            </div>
+            <button
+              onClick={handleExport}
+              disabled={exporting}
+              style={{ height: "36px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.875rem", fontWeight: 600, cursor: exporting ? "wait" : "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: "0.4rem", flexShrink: 0, whiteSpace: "nowrap" }}
+            >
+              <Download size={14} /> {exporting ? "Preparing..." : "Export data"}
+            </button>
+          </div>
         </motion.div>
+
+        {/* Danger zone — self-service account deletion */}
+        {!isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}
+            style={{ background: "white", borderRadius: "20px", border: "1px solid #fecaca", boxShadow: "var(--hp-shadow-card)", overflow: "hidden" }}
+          >
+            <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid #fee2e2", display: "flex", alignItems: "center", gap: "0.75rem", background: "#fef2f2" }}>
+              <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "#fee2e2", color: "#dc2626", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <ShieldAlert size={16} />
+              </div>
+              <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "#b91c1c", fontFamily: FONT }}>Delete account</span>
+            </div>
+            <div style={{ padding: "1.75rem" }}>
+              {!showDeleteConfirm ? (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--hp-foreground)" }}>Permanently delete your account</div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "2px", maxWidth: "34rem" }}>
+                      This erases your profile and every practice session immediately. It can&apos;t be undone. Consider exporting your data first.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setShowDeleteConfirm(true); setDeleteError(""); setDeleteEmail(""); }}
+                    style={{ height: "36px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid #fecaca", background: "#fef2f2", color: "#dc2626", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: "0.4rem", flexShrink: 0, whiteSpace: "nowrap" }}
+                  >
+                    <Trash2 size={14} /> Delete account
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  <div style={{ fontSize: "0.85rem", color: "var(--hp-foreground)", lineHeight: 1.6 }}>
+                    To confirm, type your email <strong>{user?.email}</strong> below. This is permanent.
+                  </div>
+                  <input
+                    value={deleteEmail}
+                    onChange={e => setDeleteEmail(e.target.value)}
+                    placeholder="Type your email to confirm"
+                    style={{ width: "100%", maxWidth: "24rem", padding: "0.6rem 0.9rem", borderRadius: "10px", border: "1px solid #fecaca", background: "white", color: "var(--hp-foreground)", fontSize: "0.9rem", fontFamily: FONT, outline: "none", boxSizing: "border-box" }}
+                  />
+                  {deleteError && <div style={{ fontSize: "0.8rem", color: "#b91c1c" }}>{deleteError}</div>}
+                  <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+                    <button
+                      onClick={handleDelete}
+                      disabled={deleting || deleteEmail.trim().toLowerCase() !== (user?.email ?? "").toLowerCase()}
+                      style={{ height: "38px", padding: "0 1.2rem", borderRadius: "9999px", border: "none", background: "#dc2626", color: "white", fontSize: "0.85rem", fontWeight: 700, cursor: deleting ? "wait" : "pointer", fontFamily: FONT, opacity: deleteEmail.trim().toLowerCase() !== (user?.email ?? "").toLowerCase() ? 0.5 : 1 }}
+                    >
+                      {deleting ? "Deleting..." : "Permanently delete"}
+                    </button>
+                    <button
+                      onClick={() => { setShowDeleteConfirm(false); setDeleteError(""); }}
+                      disabled={deleting}
+                      style={{ height: "38px", padding: "0 1.2rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
 
         {/* Save button */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}>

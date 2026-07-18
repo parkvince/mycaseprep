@@ -108,15 +108,34 @@ const DIFFICULTIES = [
   { label: "Advanced", value: "advanced" },
 ];
 
+// A session counts toward stats only if it was a genuine attempt: it has a score
+// and wasn't abandoned within the first few seconds. This keeps "left immediately"
+// sessions (a handful of seconds, usually a 0) from dragging the average and the
+// trend around. 30s is comfortably below any real case or read-through.
+const MIN_GENUINE_SECONDS = 30;
+function isGenuineScored(s: SessionRecord): boolean {
+  const hasScore = s.overallScore != null || s.guidedScore != null;
+  const longEnough = s.duration == null || s.duration >= MIN_GENUINE_SECONDS;
+  return hasScore && longEnough;
+}
+function sessionScore(s: SessionRecord): number {
+  return (s.overallScore ?? s.guidedScore) as number;
+}
+function avgOf(nums: number[]): number {
+  return Math.round(nums.reduce((a, b) => a + b, 0) / nums.length);
+}
+
 function ScoreTrend({ sessions }: { sessions: SessionRecord[] }) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
   const points = sessions
-    .filter(s => s.overallScore != null || s.guidedScore != null)
-    .map(s => ({ date: s.completedAt, score: (s.overallScore ?? s.guidedScore) as number }))
+    .filter(isGenuineScored)
+    .map(s => ({ date: s.completedAt, score: sessionScore(s) }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  if (points.length < 2) return null;
+  // Need at least 3 genuine points before a "trend" is meaningful — a single
+  // swing between two sessions is noise, not a trajectory.
+  if (points.length < 3) return null;
 
   const W = 640, H = 160, PAD_X = 14, PAD_Y = 22;
   const n = points.length;
@@ -124,9 +143,14 @@ function ScoreTrend({ sessions }: { sessions: SessionRecord[] }) {
   const yFor = (score: number) => H - PAD_Y - (score / 100) * (H - PAD_Y * 2);
   const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${xFor(i).toFixed(1)} ${yFor(p.score).toFixed(1)}`).join(" ");
 
-  const first = points[0].score;
-  const last = points[points.length - 1].score;
-  const delta = last - first;
+  // Compare the average of the most recent handful of sessions to the average of
+  // the earliest handful, rather than a single last-minus-first number. This is
+  // far less jumpy and doesn't read as "-100" just because one guided case scored
+  // 100 and one AI case scored 0.
+  const window = Math.min(3, Math.floor(n / 2));
+  const earlyAvg = avgOf(points.slice(0, window).map(p => p.score));
+  const recentAvg = avgOf(points.slice(n - window).map(p => p.score));
+  const delta = recentAvg - earlyAvg;
   const deltaColor = delta > 0 ? "#15803d" : delta < 0 ? "#b91c1c" : "var(--hp-soft-foreground)";
 
   const handlePointer = (e: React.PointerEvent<SVGSVGElement>) => {
@@ -151,12 +175,12 @@ function ScoreTrend({ sessions }: { sessions: SessionRecord[] }) {
             Score over time
           </div>
           <div style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>
-            Across your {n} scored sessions
+            Across your {n} genuine scored sessions
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.9rem", fontWeight: 800, color: deltaColor }}>
           {delta > 0 ? <TrendingUp size={16} /> : delta < 0 ? <TrendingDown size={16} /> : <Minus size={16} />}
-          {delta > 0 ? `+${delta}` : delta} since your first session
+          {delta > 0 ? `+${delta}` : delta} pts, recent vs. early average
         </div>
       </div>
 
@@ -232,10 +256,11 @@ export default function HistoryPage() {
     return true;
   });
 
-  // Stats from all sessions (not filtered)
-  const scored = sessions.filter(s => s.overallScore != null || s.guidedScore != null);
-  const avgScore = scored.length > 0
-    ? Math.round(scored.reduce((acc, s) => acc + (s.overallScore ?? s.guidedScore ?? 0), 0) / scored.length)
+  // Stats from all sessions (not filtered). The average uses only genuine attempts
+  // so a string of abandoned few-second sessions (usually a 0) doesn't skew it.
+  const genuineScored = sessions.filter(isGenuineScored);
+  const avgScore = genuineScored.length > 0
+    ? avgOf(genuineScored.map(sessionScore))
     : null;
   const firmCounts = sessions.reduce((acc, s) => {
     acc[s.firm] = (acc[s.firm] ?? 0) + 1;
@@ -243,6 +268,22 @@ export default function HistoryPage() {
   }, {} as Record<string, number>);
   const topFirm = Object.entries(firmCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
   const totalMinutes = Math.round(sessions.reduce((acc, s) => acc + (s.duration ?? 0), 0) / 60);
+
+  // Weakest area: the case type you score lowest on, across genuine attempts.
+  // (Per-dimension breakdowns aren't persisted, but case type + score is — and
+  // "practice your weakest case archetype" is a concrete, actionable next step.)
+  const typeStats = new Map<string, number[]>();
+  for (const s of genuineScored) {
+    if (!s.caseType || s.caseType === "random") continue;
+    const arr = typeStats.get(s.caseType) ?? [];
+    arr.push(sessionScore(s));
+    typeStats.set(s.caseType, arr);
+  }
+  const rankedTypes = [...typeStats.entries()]
+    .filter(([, scores]) => scores.length >= 2) // need a couple of data points to be fair
+    .map(([type, scores]) => ({ type, avg: avgOf(scores), n: scores.length }))
+    .sort((a, b) => a.avg - b.avg);
+  const weakest = rankedTypes[0];
 
   // Only show firms that actually appear in sessions
   const activeFirms = FIRMS.filter(f => f.value === "all" || sessions.some(s => s.firm === f.value));
@@ -320,6 +361,27 @@ export default function HistoryPage() {
 
         {/* Progress trend */}
         <ScoreTrend sessions={sessions} />
+
+        {/* Weakest area → one-click practice */}
+        {weakest && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.07 }}
+            style={{ background: "white", borderRadius: "14px", border: "1px solid var(--hp-border)", padding: "1.1rem 1.4rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "3px" }}>
+                Your weakest area
+              </div>
+              <div style={{ fontSize: "0.9rem", color: "var(--hp-foreground)" }}>
+                You average <strong style={{ color: scoreColor(weakest.avg) }}>{weakest.avg}</strong> on <strong>{typeLabel(weakest.type)}</strong> cases across {weakest.n} attempts. Target it next.
+              </div>
+            </div>
+            <button
+              onClick={() => router.push(`/dashboard?type=${weakest.type}`)}
+              style={{ height: "38px", padding: "0 1.1rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.82rem", fontWeight: 700, cursor: "pointer", fontFamily: FONT, flexShrink: 0, whiteSpace: "nowrap" }}
+            >
+              Practice {typeLabel(weakest.type)}
+            </button>
+          </motion.div>
+        )}
 
         {/* Filters */}
         {sessions.length > 0 && (

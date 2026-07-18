@@ -78,6 +78,7 @@ function InterviewInner() {
   const [showCaseOverlay, setShowCaseOverlay] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [timedMode, setTimedMode] = useState(false);
   const [userVideoEnabled, setUserVideoEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
@@ -235,6 +236,15 @@ function InterviewInner() {
 
   const firmConfig = FIRM_CONFIGS[firm];
   const formatTime = (secs: number) => `${Math.floor(secs / 60).toString().padStart(2, "0")}:${(secs % 60).toString().padStart(2, "0")}`;
+
+  // Optional timed-pressure mode: a realistic target length by difficulty. Purely
+  // a visual clock — it never force-ends the case (cutting someone off mid-thought
+  // is harsh), it just turns amber then red to simulate interview time pressure.
+  const targetSeconds = difficulty === "advanced" ? 15 * 60 : difficulty === "intermediate" ? 20 * 60 : 25 * 60;
+  const remaining = Math.max(0, targetSeconds - elapsedTime);
+  const timeColor = !timedMode
+    ? "rgba(255,255,255,0.3)"
+    : remaining === 0 ? "#ef4444" : remaining <= 120 ? "#f59e0b" : "rgba(255,255,255,0.55)";
 
   const pickVoice = (voices: SpeechSynthesisVoice[]) => {
     const en = voices.filter(v => v.lang.startsWith("en"));
@@ -784,9 +794,16 @@ function InterviewInner() {
           }}>
             {!interviewerJoined ? "Connecting..." : loading ? "Thinking..." : isSpeaking ? "Interviewer speaking - jump in anytime" : isListening ? "Listening..." : "Your turn"}
           </div>
-          <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
-            {formatTime(elapsedTime)}
-          </span>
+          <button
+            onClick={() => setTimedMode(t => !t)}
+            title={timedMode ? "Switch to a count-up timer" : "Switch to a timed countdown for interview pressure"}
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem", background: timedMode ? "rgba(245,158,11,0.12)" : "rgba(255,255,255,0.05)", border: `1px solid ${timedMode ? "rgba(245,158,11,0.3)" : "rgba(255,255,255,0.1)"}`, borderRadius: "9999px", padding: "3px 10px", cursor: "pointer", fontFamily: FONT }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={timeColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2" /><path d="M9 2h6" /></svg>
+            <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.8rem", color: timeColor, fontWeight: timedMode ? 700 : 400 }}>
+              {timedMode ? (remaining === 0 ? "Time's up" : formatTime(remaining)) : formatTime(elapsedTime)}
+            </span>
+          </button>
         </div>
       </div>
 

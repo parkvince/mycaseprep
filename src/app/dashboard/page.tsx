@@ -117,6 +117,12 @@ export default function DashboardPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!localStorage.getItem("mycaseprep_guide_visited")) setShowGuideBanner(true);
+    // Deep link from History's "practice your weakest area" — pre-select the type.
+    const t = new URLSearchParams(window.location.search).get("type");
+    if (t && CASE_TYPES.some(c => c.value === t)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedType(t as CaseType);
+    }
   }, []);
 
   const dismissGuideBanner = () => {
@@ -233,7 +239,7 @@ export default function DashboardPage() {
             Start a case
           </h1>
           <p style={{ marginTop: "0.4rem", fontSize: "0.9rem", color: "var(--hp-soft-foreground)" }}>
-            Configure your simulation and start practicing
+            Configure your simulation and start practicing. Free tier includes 2 AI interviews every 12 hours, plus unlimited guided cases.
           </p>
         </motion.div>
 
