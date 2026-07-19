@@ -1,10 +1,11 @@
 "use client";
-//empty file for now
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import FloatingBlob from "@/components/FloatingBlob";
+import TermsModal from "@/components/TermsModal";
+import { SUPPORT_EMAIL } from "@/lib/support";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -38,6 +39,15 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
+
+  // Open the Create-account tab when arrived at via a "get started / sign up" CTA.
+  useEffect(() => {
+    const mode = new URLSearchParams(window.location.search).get("mode");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (mode === "signup") setTab("signup");
+  }, []);
 
   const strength = tab === "signup" ? getPasswordStrength(password) : null;
   const emailInvalid = emailTouched && email.length > 0 && !isValidEmail(email);
@@ -121,6 +131,24 @@ export default function AuthPage() {
       >
         <img src="/newlogomcp.png" alt="" style={{ width: "28px", height: "28px", flexShrink: 0 }} />
         <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
+      </motion.div>
+
+      {/* Value context so this isn't a bare login wall — tells a first-time visitor
+          what they get, matching the "free" promise from the homepage. */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }}
+        style={{ width: "100%", maxWidth: "420px", marginBottom: "1rem", textAlign: "center" }}
+      >
+        <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--hp-foreground)", letterSpacing: "-0.01em", marginBottom: "0.5rem" }}>
+          {tab === "signup" ? "Create your free account" : "Welcome back"}
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.4rem 0.9rem", fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
+          {["2 AI interviews / 12h — free", "16 firm-specific rubrics", "Instant scorecards"].map(t => (
+            <span key={t} style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
+              <span style={{ color: "#16a34a", fontWeight: 700 }}>✓</span>{t}
+            </span>
+          ))}
+        </div>
       </motion.div>
 
       <motion.div
@@ -225,8 +253,19 @@ export default function AuthPage() {
                   <p style={{ fontSize: "0.72rem", color: strength.color, marginTop: "3px", fontWeight: 600 }}>{strength.label} password</p>
                 </div>
               )}
+              {tab === "signin" && (
+                <div style={{ marginTop: "0.5rem", textAlign: "right" }}>
+                  <span
+                    onClick={() => setShowForgot(true)}
+                    style={{ fontSize: "0.78rem", color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer" }}
+                  >
+                    Forgot password?
+                  </span>
+                </div>
+              )}
               {tab === "signup" && (
                 <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "3px" }}>
+                  <div style={{ fontSize: "0.72rem", color: "var(--hp-soft-foreground)", fontWeight: 600, marginBottom: "2px" }}>Your password needs:</div>
                   {[
                     { label: "At least 8 characters", ok: password.length >= 8 },
                     { label: "Uppercase letter", ok: /[A-Z]/.test(password) },
@@ -299,8 +338,51 @@ export default function AuthPage() {
       </motion.div>
 
       <p style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "1.5rem", textAlign: "center" }}>
-        By continuing, you agree to our terms and privacy policy
+        By continuing, you agree to our{" "}
+        <span onClick={() => setShowTerms(true)} style={{ color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px" }}>terms</span>
+        {" "}and{" "}
+        <span onClick={() => setShowTerms(true)} style={{ color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px" }}>privacy policy</span>.
       </p>
+
+      <AnimatePresence>
+        {showTerms && <TermsModal onClose={() => setShowTerms(false)} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showForgot && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setShowForgot(false)}
+            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }} transition={{ duration: 0.2 }}
+              onClick={e => e.stopPropagation()}
+              style={{ background: "white", borderRadius: "18px", maxWidth: "420px", width: "100%", padding: "1.75rem", boxShadow: "0 24px 64px rgba(0,0,0,0.2)", fontFamily: FONT }}
+            >
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--hp-foreground)", margin: "0 0 0.5rem" }}>Reset your password</h2>
+              <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, margin: "0 0 1rem" }}>
+                If you signed up with Google, just use <strong>Continue with Google</strong> — no password needed.
+                Otherwise, email us from your account address and we&apos;ll help you reset it.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}?subject=Password%20reset%20request`}
+                  style={{ height: "44px", borderRadius: "10px", background: "var(--hp-primary)", color: "white", fontSize: "0.88rem", fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}
+                >
+                  Email support
+                </a>
+                <button
+                  onClick={() => setShowForgot(false)}
+                  style={{ height: "42px", borderRadius: "10px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
+                >
+                  Back to sign in
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

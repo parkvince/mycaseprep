@@ -284,8 +284,10 @@ export default function DashboardPage() {
                 {usage.unlimited
                   ? "No limit on this account"
                   : blocked
-                  ? usage.resetsAt ? `Resets in ${formatResetsAt(usage.resetsAt)} · try a guided case in the meantime` : "Resets every 12 hours"
-                  : `${usage.casesUsed} of ${usage.casesUsed + (usage.casesRemaining ?? 0)} used · resets every 12 hours`}
+                  ? (usage.resetsAt
+                      ? `Your free AI interviews reset in ${formatResetsAt(usage.resetsAt)}. Guided library cases are always unlimited — keep practicing with those in the meantime.`
+                      : "Resets every 12 hours. Guided library cases are always unlimited.")
+                  : `${usage.casesUsed} of ${usage.casesUsed + (usage.casesRemaining ?? 0)} used · resets every 12 hours · guided cases are unlimited`}
               </div>
             </div>
             {usage.unlimited ? null : blocked ? (
