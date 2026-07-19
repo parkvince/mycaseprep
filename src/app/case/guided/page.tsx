@@ -4,10 +4,60 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GUIDED_CASES } from "@/lib/guidedCases";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight, BookOpen, MousePointerClick, MessageCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import FloatingBlob from "@/components/FloatingBlob";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
+
+// Shared page shell: the same pastel gradient wash + floating blobs the rest of
+// the app uses, so the guided player stops feeling like a stiff survey form.
+const inner: React.CSSProperties = {
+  maxWidth: "680px", margin: "0 auto", padding: "1.5rem 1.5rem 6rem",
+  boxSizing: "border-box", width: "100%", position: "relative", zIndex: 1,
+};
+
+const card: React.CSSProperties = {
+  background: "white", borderRadius: "18px", border: "1px solid var(--hp-border)",
+  boxShadow: "var(--hp-shadow-card)", padding: "1.5rem 1.75rem",
+  boxSizing: "border-box", width: "100%",
+};
+
+const sectionLabel: React.CSSProperties = {
+  fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase",
+  letterSpacing: "0.1em", color: "var(--hp-soft-foreground)",
+  marginBottom: "0.6rem", fontFamily: FONT,
+};
+
+function Shell({ children, progressPct }: { children: React.ReactNode; progressPct?: number }) {
+  return (
+    <div style={{
+      minHeight: "100vh", width: "100%", fontFamily: FONT, color: "var(--hp-foreground)",
+      background: "var(--hp-bg)",
+      backgroundImage: [
+        "radial-gradient(at 8% 12%, var(--hp-lavender) 0px, transparent 45%)",
+        "radial-gradient(at 92% 10%, var(--hp-peach) 0px, transparent 45%)",
+        "radial-gradient(at 85% 92%, var(--hp-mint) 0px, transparent 50%)",
+        "radial-gradient(at 10% 92%, var(--hp-sky) 0px, transparent 45%)",
+      ].join(", "),
+      backgroundAttachment: "fixed",
+      position: "relative", zIndex: 0, overflowX: "hidden",
+    }}>
+      <FloatingBlob src="/homepage/new3-blob-meditating.png" alt="" size={140} top="12%" left="3%" duration={7} rotate={-5} />
+      <FloatingBlob src="/homepage/new3-blob-planting.png" alt="" size={130} bottom="16%" right="3%" duration={7.5} delay={0.6} rotate={5} />
+      <FloatingBlob src="/homepage/new3-blob-juggling.png" alt="" size={120} bottom="4%" left="5%" duration={6.5} delay={1} rotate={-4} />
+
+      <Navbar />
+      {progressPct != null && (
+        <div style={{ height: "4px", background: "color-mix(in oklab, var(--hp-primary) 12%, transparent)", position: "relative", zIndex: 1 }}>
+          <motion.div initial={{ width: 0 }} animate={{ width: `${progressPct}%` }} transition={{ duration: 0.4 }}
+            style={{ height: "100%", background: "var(--hp-primary)", borderRadius: "0 3px 3px 0" }} />
+        </div>
+      )}
+      <div style={inner}>{children}</div>
+    </div>
+  );
+}
 
 function scoreColor(s: number) {
   if (s >= 85) return "#15803d";
@@ -102,99 +152,71 @@ function GuidedCaseInner() {
     }
   };
 
-  // No overflowX on wrap - let the page scroll naturally
-const wrap: React.CSSProperties = {
-  minHeight: "100vh",
-  width: "100%",
-  fontFamily: FONT,
-  background: "oklch(0.985 0.005 285)",
-  color: "var(--hp-foreground)",
-  overflowX: "hidden",
-};
-
-  const inner: React.CSSProperties = {
-    maxWidth: "680px",
-    margin: "0 auto",
-    padding: "2.5rem 1.5rem 6rem",
-    boxSizing: "border-box" as const,
-    width: "100%",
-  };
-
-  const card: React.CSSProperties = {
-    background: "white",
-    borderRadius: "14px",
-    border: "1px solid var(--hp-border)",
-    padding: "1.5rem 1.75rem",
-    boxSizing: "border-box" as const,
-    width: "100%",
-  };
-
-  const sectionLabel: React.CSSProperties = {
-    fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase" as const,
-    letterSpacing: "0.1em", color: "var(--hp-soft-foreground)",
-    marginBottom: "0.6rem", fontFamily: FONT,
-  };
-
   // ── INTRO ──
   if (stage === "intro") {
     return (
-      <div style={wrap}>
-        <Navbar />
-        <div style={inner}>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginBottom: "2rem" }}>
-              <span style={{ cursor: "pointer" }} onClick={() => router.push("/library")}>Library</span>
-              <ChevronRight size={13} />
-              <span style={{ color: "var(--hp-foreground)", fontWeight: 500 }}>{currentCase.title}</span>
-            </div>
+      <Shell>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginBottom: "1.5rem" }}>
+            <span style={{ cursor: "pointer" }} onClick={() => router.push("/library")}>Library</span>
+            <ChevronRight size={13} />
+            <span style={{ color: "var(--hp-foreground)", fontWeight: 500 }}>{currentCase.title}</span>
+          </div>
 
-            <div style={{ marginBottom: "2rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
-                <span style={{ fontSize: "0.72rem", fontWeight: 700, padding: "0.2rem 0.6rem", borderRadius: "9999px", background: "var(--hp-primary-soft)", color: "var(--hp-primary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Guided</span>
-                <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--hp-soft-foreground)", textTransform: "capitalize" }}>{currentCase.difficulty}</span>
+          {/* Hero */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1.1rem", marginBottom: "1.5rem" }}>
+            <img src="/homepage/new3-blob-reading.png" alt="" style={{ width: "88px", height: "auto", flexShrink: 0 }} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "0.68rem", fontWeight: 700, padding: "0.2rem 0.6rem", borderRadius: "9999px", background: "var(--hp-primary-soft)", color: "var(--hp-primary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Guided</span>
+                <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--hp-soft-foreground)", textTransform: "capitalize" }}>{currentCase.difficulty} · {currentCase.estimatedMinutes} min</span>
               </div>
-              <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", fontWeight: 800, letterSpacing: "-0.025em", color: "var(--hp-foreground)", margin: 0, lineHeight: 1.15 }}>
+              <h1 style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.025em", color: "var(--hp-foreground)", margin: 0, lineHeight: 1.15 }}>
                 {currentCase.title}
               </h1>
-              <p style={{ marginTop: "0.75rem", fontSize: "0.95rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7 }}>
-                {currentCase.overview}
-              </p>
             </div>
+          </div>
 
-            <div style={{ display: "flex", borderRadius: "14px", border: "1px solid var(--hp-border)", overflow: "hidden", background: "white", marginBottom: "1.25rem" }}>
+          <p style={{ fontSize: "0.95rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+            {currentCase.overview}
+          </p>
+
+          {/* How this works — beginner-friendly explainer */}
+          <div style={{ ...card, marginBottom: "1rem", background: "var(--hp-primary-soft)", border: "1px solid color-mix(in oklab, var(--hp-primary) 20%, transparent)", boxShadow: "none" }}>
+            <div style={{ ...sectionLabel, color: "var(--hp-primary)" }}>How this works</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
               {[
-                { label: "Format", value: "Branching path" },
-                { label: "Duration", value: `${currentCase.estimatedMinutes} min` },
-                { label: "Difficulty", value: currentCase.difficulty },
-              ].map((item, i) => (
-                <div key={item.label} style={{ flex: 1, padding: "1rem 1.25rem", textAlign: "center" as const, borderRight: i < 2 ? "1px solid var(--hp-border)" : "none" }}>
-                  <div style={sectionLabel}>{item.label}</div>
-                  <div style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--hp-foreground)", textTransform: "capitalize" as const }}>{item.value}</div>
+                { icon: <BookOpen size={16} />, text: "Read each situation — you play the consultant on the case." },
+                { icon: <MousePointerClick size={16} />, text: "Pick the move a strong candidate would make. There's no time pressure." },
+                { icon: <MessageCircle size={16} />, text: "Get instant feedback after every choice, then write a final recommendation." },
+              ].map((step, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+                  <div style={{ width: "28px", height: "28px", borderRadius: "9999px", background: "white", color: "var(--hp-primary)", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 1px 3px oklch(0.4 0.05 280 / 12%)" }}>{step.icon}</div>
+                  <p style={{ fontSize: "0.86rem", lineHeight: 1.6, margin: 0, color: "var(--hp-foreground)", paddingTop: "3px" }}>{step.text}</p>
                 </div>
               ))}
             </div>
+          </div>
 
-            <div style={{ ...card, marginBottom: "1rem" }}>
-              <div style={sectionLabel}>Client background</div>
-              <p style={{ fontSize: "0.9rem", lineHeight: 1.75, color: "var(--hp-foreground)", margin: 0 }}>{currentCase.clientBackground}</p>
-            </div>
+          <div style={{ ...card, marginBottom: "1rem" }}>
+            <div style={sectionLabel}>Client background</div>
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.75, color: "var(--hp-foreground)", margin: 0 }}>{currentCase.clientBackground}</p>
+          </div>
 
-            <div style={{ ...card, marginBottom: "1.5rem" }}>
-              <div style={sectionLabel}>Your role</div>
-              <p style={{ fontSize: "0.9rem", lineHeight: 1.75, color: "var(--hp-foreground)", margin: 0 }}>{currentCase.yourRole}</p>
-            </div>
+          <div style={{ ...card, marginBottom: "1.5rem" }}>
+            <div style={sectionLabel}>Your role</div>
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.75, color: "var(--hp-foreground)", margin: 0 }}>{currentCase.yourRole}</p>
+          </div>
 
-            <div style={{ padding: "0.875rem 1.1rem", borderRadius: "10px", background: "var(--hp-primary-soft)", border: "1px solid color-mix(in oklab, var(--hp-primary) 20%, transparent)", fontSize: "0.82rem", color: "var(--hp-foreground)", lineHeight: 1.65, marginBottom: "1.75rem", boxSizing: "border-box" as const }}>
-              Each answer routes you down a different path. Your score reflects every decision you make. Read carefully. The right answer is not always the most obvious one.
-            </div>
-
-            <button onClick={handleStart}
-              style={{ width: "100%", height: "52px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "1rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)", boxSizing: "border-box" as const }}>
-              Begin case <ArrowRight size={17} />
-            </button>
-          </motion.div>
-        </div>
-      </div>
+          <button onClick={handleStart}
+            style={{ width: "100%", height: "54px", borderRadius: "14px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "1rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)", boxSizing: "border-box" }}>
+            Start the case <ArrowRight size={17} />
+          </button>
+          <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "0.75rem" }}>
+            Guided cases are always free and unlimited — take your time.
+          </p>
+        </motion.div>
+      </Shell>
     );
   }
 
@@ -203,137 +225,155 @@ const wrap: React.CSSProperties = {
     const progressPct = Math.min((questionCount / totalQuestions) * 100, 95);
 
     return (
-      <div style={wrap}>
-        <Navbar />
-        <div style={{ height: "3px", background: "var(--hp-border)" }}>
-          <motion.div initial={{ width: 0 }} animate={{ width: `${progressPct}%` }} transition={{ duration: 0.4 }}
-            style={{ height: "100%", background: "var(--hp-primary)", borderRadius: "0 2px 2px 0" }} />
-        </div>
-
-        <div style={inner}>
-          <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--hp-soft-foreground)", marginBottom: "0.5rem" }}>
+      <Shell progressPct={progressPct}>
+        <motion.div key={currentQuestionId} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", marginBottom: "0.75rem", flexWrap: "wrap" }}>
+            <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--hp-primary)" }}>
               {currentQuestion.stage}
             </div>
+            <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--hp-soft-foreground)" }}>
+              Decision {questionCount + 1}
+            </div>
+          </div>
 
-            <h2 style={{ fontSize: "clamp(1.1rem, 2vw, 1.35rem)", fontWeight: 700, lineHeight: 1.5, letterSpacing: "-0.01em", color: "var(--hp-foreground)", marginBottom: currentQuestion.context ? "1rem" : "1.75rem" }}>
+          <div style={{ ...card, marginBottom: "1.25rem" }}>
+            <h2 style={{ fontSize: "clamp(1.05rem, 2vw, 1.3rem)", fontWeight: 700, lineHeight: 1.5, letterSpacing: "-0.01em", color: "var(--hp-foreground)", margin: currentQuestion.context ? "0 0 1rem" : 0 }}>
               {currentQuestion.question}
             </h2>
 
             {currentQuestion.context && (
-              <p style={{ fontSize: "0.875rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7, marginBottom: "1.5rem", padding: "0.875rem 1.1rem", background: "white", borderRadius: "10px", border: "1px solid var(--hp-border)", boxSizing: "border-box" as const }}>
+              <p style={{ fontSize: "0.875rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7, margin: 0 }}>
                 {currentQuestion.context}
               </p>
             )}
+          </div>
 
-            {currentQuestion.exhibit && (
-              <div style={{ ...card, marginBottom: "1.5rem", overflowX: "auto" as const }}>
-                <div style={sectionLabel}>Exhibit: {currentQuestion.exhibit.title}</div>
-                <pre style={{ fontSize: "0.8rem", lineHeight: 1.65, color: "var(--hp-foreground)", fontFamily: "'Courier New', monospace", whiteSpace: "pre", margin: 0 }}>
-                  {currentQuestion.exhibit.data}
-                </pre>
-              </div>
-            )}
-
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.6rem", marginBottom: "1.5rem" }}>
-              {currentQuestion.options.map(option => {
-                const isSelected = selectedOptionId === option.id;
-                let borderColor = "var(--hp-border)";
-                let bg = "white";
-                if (isSelected && !showFeedback) { borderColor = "var(--hp-primary)"; bg = "var(--hp-primary-soft)"; }
-                if (showFeedback && isSelected) {
-                  if (option.scoreImpact > 10) { borderColor = "#16a34a"; bg = "#f0fdf4"; }
-                  else if (option.scoreImpact > 0) { borderColor = "#d97706"; bg = "#fffbeb"; }
-                  else if (option.scoreImpact < 0) { borderColor = "#dc2626"; bg = "#fef2f2"; }
-                  else { borderColor = "var(--hp-border-strong)"; }
-                }
-                return (
-                  <div key={option.id} onClick={() => handleSelectOption(option.id)}
-                    style={{ padding: "1rem 1.25rem", borderRadius: "12px", border: `1.5px solid ${borderColor}`, background: bg, cursor: showFeedback ? "default" : "pointer", transition: "all 0.15s", boxSizing: "border-box" as const }}>
-                    <div style={{ display: "flex", gap: "0.875rem", alignItems: "flex-start" }}>
-                      <div style={{ width: "17px", height: "17px", borderRadius: "50%", border: `2px solid ${isSelected ? borderColor : "var(--hp-border)"}`, background: isSelected && !showFeedback ? "var(--hp-primary)" : isSelected && showFeedback ? borderColor : "transparent", flexShrink: 0, marginTop: "3px", transition: "all 0.15s" }} />
-                      <p style={{ fontSize: "0.9rem", lineHeight: 1.65, margin: 0, color: "var(--hp-foreground)" }}>{option.text}</p>
-                    </div>
-                    <AnimatePresence>
-                      {showFeedback && isSelected && (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                          style={{ marginTop: "0.875rem", paddingTop: "0.875rem", borderTop: `1px solid ${borderColor}`, fontSize: "0.85rem", lineHeight: 1.65, color: option.scoreImpact > 10 ? "#15803d" : option.scoreImpact > 0 ? "#b45309" : option.scoreImpact < 0 ? "#b91c1c" : "var(--hp-soft-foreground)" }}>
-                          {option.feedback}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
+          {currentQuestion.exhibit && (
+            <div style={{ ...card, marginBottom: "1.25rem", overflowX: "auto" }}>
+              <div style={sectionLabel}>Exhibit: {currentQuestion.exhibit.title}</div>
+              <pre style={{ fontSize: "0.8rem", lineHeight: 1.65, color: "var(--hp-foreground)", fontFamily: "'Courier New', monospace", whiteSpace: "pre", margin: 0 }}>
+                {currentQuestion.exhibit.data}
+              </pre>
             </div>
+          )}
 
-            {!showFeedback ? (
-              <button onClick={handleSubmitAnswer} disabled={!selectedOptionId}
-                style={{ width: "100%", height: "48px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: selectedOptionId ? "pointer" : "not-allowed", opacity: selectedOptionId ? 1 : 0.4, boxShadow: selectedOptionId ? "0 3px 0 oklch(0.4 0.16 285)" : "none", transition: "opacity 0.15s", boxSizing: "border-box" as const }}>
-                Submit answer
-              </button>
-            ) : (
-              <button onClick={handleNext}
-                style={{ width: "100%", height: "48px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)", boxSizing: "border-box" as const }}>
-                {selectedOption?.nextQuestionId === "end" ? "Continue to final recommendation" : "Next"} <ArrowRight size={16} />
-              </button>
-            )}
-          </motion.div>
-        </div>
-      </div>
+          {!showFeedback && (
+            <p style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)", marginBottom: "0.75rem" }}>
+              Choose the option a strong candidate would pick — you&apos;ll see why after you submit.
+            </p>
+          )}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
+            {currentQuestion.options.map((option, oi) => {
+              const isSelected = selectedOptionId === option.id;
+              let borderColor = "var(--hp-border)";
+              let bg = "white";
+              if (isSelected && !showFeedback) { borderColor = "var(--hp-primary)"; bg = "var(--hp-primary-soft)"; }
+              if (showFeedback && isSelected) {
+                if (option.scoreImpact > 10) { borderColor = "#16a34a"; bg = "#f0fdf4"; }
+                else if (option.scoreImpact > 0) { borderColor = "#d97706"; bg = "#fffbeb"; }
+                else if (option.scoreImpact < 0) { borderColor = "#dc2626"; bg = "#fef2f2"; }
+                else { borderColor = "var(--hp-border-strong)"; }
+              }
+              const letter = String.fromCharCode(65 + oi);
+              return (
+                <motion.div key={option.id} onClick={() => handleSelectOption(option.id)}
+                  whileHover={!showFeedback ? { y: -2 } : undefined}
+                  style={{ padding: "1rem 1.1rem", borderRadius: "14px", border: `1.5px solid ${borderColor}`, background: bg, cursor: showFeedback ? "default" : "pointer", transition: "border-color 0.15s, background 0.15s, box-shadow 0.15s", boxShadow: isSelected ? "0 4px 14px oklch(0.4 0.05 280 / 8%)" : "var(--hp-shadow-card)", boxSizing: "border-box" }}>
+                  <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                    <div style={{ width: "26px", height: "26px", borderRadius: "9999px", flexShrink: 0, display: "grid", placeItems: "center", fontSize: "0.78rem", fontWeight: 700, marginTop: "1px",
+                      background: isSelected ? borderColor : "var(--hp-primary-soft)",
+                      color: isSelected ? "white" : "var(--hp-primary)",
+                      transition: "all 0.15s" }}>
+                      {showFeedback && isSelected && option.scoreImpact > 0 ? "✓" : showFeedback && isSelected && option.scoreImpact < 0 ? "✕" : letter}
+                    </div>
+                    <p style={{ fontSize: "0.9rem", lineHeight: 1.6, margin: 0, color: "var(--hp-foreground)", paddingTop: "3px" }}>{option.text}</p>
+                  </div>
+                  <AnimatePresence>
+                    {showFeedback && isSelected && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+                        style={{ marginTop: "0.875rem", paddingTop: "0.875rem", borderTop: `1px solid ${borderColor}`, fontSize: "0.85rem", lineHeight: 1.65, color: option.scoreImpact > 10 ? "#15803d" : option.scoreImpact > 0 ? "#b45309" : option.scoreImpact < 0 ? "#b91c1c" : "var(--hp-soft-foreground)" }}>
+                        {option.feedback}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {!showFeedback ? (
+            <button onClick={handleSubmitAnswer} disabled={!selectedOptionId}
+              style={{ width: "100%", height: "50px", borderRadius: "14px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: selectedOptionId ? "pointer" : "not-allowed", opacity: selectedOptionId ? 1 : 0.4, boxShadow: selectedOptionId ? "0 3px 0 oklch(0.4 0.16 285)" : "none", transition: "opacity 0.15s", boxSizing: "border-box" }}>
+              Lock in answer
+            </button>
+          ) : (
+            <button onClick={handleNext}
+              style={{ width: "100%", height: "50px", borderRadius: "14px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)", boxSizing: "border-box" }}>
+              {selectedOption?.nextQuestionId === "end" ? "Continue to final recommendation" : "Next decision"} <ArrowRight size={16} />
+            </button>
+          )}
+        </motion.div>
+      </Shell>
     );
   }
 
   // ── FINAL ──
   if (stage === "final") {
+    const ready = finalAnswer.trim().length >= 40;
     return (
-      <div style={wrap}>
-        <Navbar />
-        <div style={inner}>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-            <h2 style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "0.5rem" }}>
-              Final recommendation
-            </h2>
-            <p style={{ fontSize: "0.9rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7, marginBottom: "1.75rem" }}>
+      <Shell>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.25rem" }}>
+            <img src="/homepage/new-blob-writing.png" alt="" style={{ width: "80px", height: "auto", flexShrink: 0 }} />
+            <div>
+              <h2 style={{ fontSize: "clamp(1.3rem, 3vw, 1.8rem)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 0.25rem" }}>
+                Your final recommendation
+              </h2>
+              <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", lineHeight: 1.6, margin: 0 }}>
+                Wrap it up like you would for the client.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ ...card, marginBottom: "1rem" }}>
+            <div style={sectionLabel}>The prompt</div>
+            <p style={{ fontSize: "0.9rem", color: "var(--hp-foreground)", lineHeight: 1.7, margin: 0 }}>
               {currentCase.finalRecommendationPrompt}
             </p>
-            <textarea
-              value={finalAnswer}
-              onChange={e => setFinalAnswer(e.target.value)}
-              placeholder="Write your recommendation here. Be specific about actions, timeline, and expected impact..."
-              style={{
-                display: "block",
-                width: "100%",
-                minHeight: "200px",
-                background: "white",
-                border: "1px solid var(--hp-border)",
-                borderRadius: "12px",
-                padding: "1.1rem 1.25rem",
-                color: "var(--hp-foreground)",
-                fontSize: "0.9rem",
-                fontFamily: FONT,
-                resize: "vertical",
-                outline: "none",
-                lineHeight: 1.75,
-                marginBottom: "0.75rem",
-                boxSizing: "border-box" as const,
-                transition: "border-color 0.15s",
-              }}
-              onFocus={e => (e.currentTarget.style.borderColor = "var(--hp-primary)")}
-              onBlur={e => (e.currentTarget.style.borderColor = "var(--hp-border)")}
-            />
-            <div style={{ fontSize: "0.78rem", color: finalAnswer.trim().length < 40 ? "var(--hp-soft-foreground)" : "#15803d", marginBottom: "1.25rem", fontWeight: 500 }}>
-              {finalAnswer.trim().length < 40 ? `${40 - finalAnswer.trim().length} more characters needed` : "Ready to submit"}
-            </div>
-            <button
-              onClick={handleSubmitFinal}
-              disabled={finalAnswer.trim().length < 40 || saving}
-              style={{ display: "flex", width: "100%", height: "52px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "1rem", fontWeight: 700, fontFamily: FONT, cursor: finalAnswer.trim().length >= 40 && !saving ? "pointer" : "not-allowed", opacity: finalAnswer.trim().length >= 40 && !saving ? 1 : 0.45, boxShadow: "0 3px 0 oklch(0.4 0.16 285)", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxSizing: "border-box" as const }}>
-              {saving ? "Saving..." : <> See results <ArrowRight size={17} /></>}
-            </button>
-          </motion.div>
-        </div>
-      </div>
+          </div>
+
+          {/* Beginner scaffold */}
+          <div style={{ padding: "0.8rem 1.1rem", borderRadius: "12px", background: "var(--hp-primary-soft)", fontSize: "0.8rem", color: "var(--hp-foreground)", lineHeight: 1.6, marginBottom: "1rem" }}>
+            A strong answer leads with the <strong>recommendation</strong>, backs it with your <strong>key reasons</strong>, names the main <strong>risk</strong>, and ends with a concrete <strong>next step</strong>.
+          </div>
+
+          <textarea
+            value={finalAnswer}
+            onChange={e => setFinalAnswer(e.target.value)}
+            placeholder="Lead with your recommendation, then your reasoning, the biggest risk, and a next step..."
+            style={{
+              display: "block", width: "100%", minHeight: "200px",
+              background: "white", border: "1px solid var(--hp-border)", borderRadius: "14px",
+              padding: "1.1rem 1.25rem", color: "var(--hp-foreground)", fontSize: "0.9rem",
+              fontFamily: FONT, resize: "vertical", outline: "none", lineHeight: 1.75,
+              marginBottom: "0.75rem", boxSizing: "border-box", transition: "border-color 0.15s",
+              boxShadow: "var(--hp-shadow-card)",
+            }}
+            onFocus={e => (e.currentTarget.style.borderColor = "var(--hp-primary)")}
+            onBlur={e => (e.currentTarget.style.borderColor = "var(--hp-border)")}
+          />
+          <div style={{ fontSize: "0.78rem", color: ready ? "#15803d" : "var(--hp-soft-foreground)", marginBottom: "1.25rem", fontWeight: 500 }}>
+            {ready ? "Ready to submit" : `${40 - finalAnswer.trim().length} more characters to go`}
+          </div>
+          <button
+            onClick={handleSubmitFinal}
+            disabled={!ready || saving}
+            style={{ display: "flex", width: "100%", height: "54px", borderRadius: "14px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "1rem", fontWeight: 700, fontFamily: FONT, cursor: ready && !saving ? "pointer" : "not-allowed", opacity: ready && !saving ? 1 : 0.45, boxShadow: "0 3px 0 oklch(0.4 0.16 285)", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxSizing: "border-box" }}>
+            {saving ? "Saving..." : <> See how you did <ArrowRight size={17} /></>}
+          </button>
+        </motion.div>
+      </Shell>
     );
   }
 
@@ -343,55 +383,59 @@ const wrap: React.CSSProperties = {
     const label = scoreLabel(score);
 
     return (
-      <div style={wrap}>
-        <Navbar />
-        <div style={inner}>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-            <div style={{ textAlign: "center" as const, marginBottom: "2.5rem" }}>
-              <div style={{ fontSize: "5rem", fontWeight: 800, color, lineHeight: 1, letterSpacing: "-0.04em" }}>{score}</div>
-              <div style={{ fontSize: "1rem", color, fontWeight: 700, marginTop: "0.25rem" }}>{label}</div>
-              <div style={{ fontSize: "0.82rem", color: "var(--hp-soft-foreground)", marginTop: "0.25rem" }}>
-                {questionCount} decisions · {currentCase.title}
+      <Shell>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          {/* Celebratory score card */}
+          <div style={{ ...card, marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "1.25rem" }}>
+            <img src="/homepage/new3-blob-birthday.png" alt="" style={{ width: "84px", height: "auto", flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hp-soft-foreground)", marginBottom: "2px" }}>Case complete</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: "0.6rem" }}>
+                <span style={{ fontSize: "3rem", fontWeight: 800, color, lineHeight: 1, letterSpacing: "-0.04em" }}>{score}</span>
+                <span style={{ fontSize: "1rem", color, fontWeight: 700 }}>{label}</span>
+              </div>
+              <div style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginTop: "0.35rem" }}>
+                {questionCount} decisions · saved to your history
               </div>
             </div>
+          </div>
 
-            <div style={{ ...card, marginBottom: "1rem" }}>
-              <div style={sectionLabel}>Ideal recommendation</div>
-              <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "var(--hp-foreground)", margin: 0 }}>{currentCase.idealRecommendation}</p>
-            </div>
+          <div style={{ ...card, marginBottom: "1rem" }}>
+            <div style={{ ...sectionLabel, color: "#15803d" }}>Ideal recommendation</div>
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "var(--hp-foreground)", margin: 0 }}>{currentCase.idealRecommendation}</p>
+          </div>
 
-            <div style={{ ...card, marginBottom: "1rem" }}>
-              <div style={sectionLabel}>Your recommendation</div>
-              <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "var(--hp-soft-foreground)", margin: 0 }}>{finalAnswer}</p>
-            </div>
+          <div style={{ ...card, marginBottom: "1rem" }}>
+            <div style={sectionLabel}>Your recommendation</div>
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "var(--hp-soft-foreground)", margin: 0, whiteSpace: "pre-wrap" }}>{finalAnswer}</p>
+          </div>
 
-            <div style={{ ...card, marginBottom: "2rem" }}>
-              <div style={sectionLabel}>Key takeaways</div>
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.875rem" }}>
-                {currentCase.keyTakeaways.map((t, i) => (
-                  <div key={i} style={{ display: "flex", gap: "0.875rem", alignItems: "flex-start" }}>
-                    <div style={{ width: "22px", height: "22px", borderRadius: "50%", background: "var(--hp-primary-soft)", border: "1px solid color-mix(in oklab, var(--hp-primary) 25%, transparent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 700, flexShrink: 0, marginTop: "1px", color: "var(--hp-primary)" }}>
-                      {i + 1}
-                    </div>
-                    <p style={{ fontSize: "0.875rem", lineHeight: 1.7, margin: 0, color: "var(--hp-foreground)" }}>{t}</p>
+          <div style={{ ...card, marginBottom: "1.5rem" }}>
+            <div style={sectionLabel}>Key takeaways</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+              {currentCase.keyTakeaways.map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: "0.875rem", alignItems: "flex-start" }}>
+                  <div style={{ width: "22px", height: "22px", borderRadius: "50%", background: "var(--hp-primary-soft)", border: "1px solid color-mix(in oklab, var(--hp-primary) 25%, transparent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 700, flexShrink: 0, marginTop: "1px", color: "var(--hp-primary)" }}>
+                    {i + 1}
                   </div>
-                ))}
-              </div>
+                  <p style={{ fontSize: "0.875rem", lineHeight: 1.7, margin: 0, color: "var(--hp-foreground)" }}>{t}</p>
+                </div>
+              ))}
             </div>
+          </div>
 
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-              <button onClick={() => router.push("/library")}
-                style={{ flex: 1, height: "48px", borderRadius: "12px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}>
-                Try another case <ArrowRight size={16} />
-              </button>
-              <button onClick={() => router.push("/history")}
-                style={{ flex: 1, height: "48px", borderRadius: "12px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.9rem", fontWeight: 600, fontFamily: FONT, cursor: "pointer" }}>
-                View history
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+            <button onClick={() => router.push("/library")}
+              style={{ flex: 1, minWidth: "160px", height: "50px", borderRadius: "14px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.9rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}>
+              Try another case <ArrowRight size={16} />
+            </button>
+            <button onClick={() => router.push("/history")}
+              style={{ flex: 1, minWidth: "160px", height: "50px", borderRadius: "14px", border: "1px solid var(--hp-border-strong)", background: "white", color: "var(--hp-foreground)", fontSize: "0.9rem", fontWeight: 600, fontFamily: FONT, cursor: "pointer" }}>
+              View history
+            </button>
+          </div>
+        </motion.div>
+      </Shell>
     );
   }
 
