@@ -42,17 +42,16 @@ export const authOptions: NextAuthOptions = {
         // Find existing user first
         const existing = await prisma.user.findUnique({
           where: { email: profile.email },
-          select: { id: true, image: true },
+          select: { id: true, name: true, image: true },
         });
 
         if (existing) {
-          // User already exists - update name only, NEVER touch image
-          const dbUser = await prisma.user.update({
-            where: { id: existing.id },
-            data: { name: (profile as any).name },
-          });
-          token.id = dbUser.id;
-          token.name = dbUser.name;
+          // Existing user: never overwrite their profile from Google. The name
+          // they set in Settings is the source of truth - re-syncing it on every
+          // login would silently undo their chosen display name (and drag their
+          // full legal name back in) each time they signed in.
+          token.id = existing.id;
+          token.name = existing.name;
         } else {
           // Brand new user - create with Google's picture
           const dbUser = await prisma.user.create({
