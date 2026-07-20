@@ -41,6 +41,33 @@ function scoreLabel5(s: number) {
   return "Insufficient";
 }
 
+/** Estimated percentile for a 1-5 rubric score.
+ *
+ * This is a CALIBRATION, not measured peer data - we deliberately do not claim
+ * "you beat X% of MyCasePrep users", because we don't have the sample to back
+ * that up and a fabricated peer stat would mislead someone deciding whether
+ * they're ready for a real interview.
+ *
+ * The curve is anchored to how the firm rubrics themselves describe the field:
+ * a 3 is "meets the bar" (the median-ish candidate), most candidates cluster at
+ * 2-3 early on, and a 5 is explicitly described as rare/partner-level. So the
+ * spacing is intentionally non-linear at the top end. */
+function estimatedPercentile(score: number): number {
+  const curve: Record<number, number> = { 1: 10, 2: 30, 3: 55, 4: 80, 5: 95 };
+  const lo = Math.floor(score);
+  const hi = Math.ceil(score);
+  if (curve[lo] == null || curve[hi] == null) return 50;
+  if (lo === hi) return curve[lo];
+  // Interpolate for any half-step scores.
+  return Math.round(curve[lo] + (curve[hi] - curve[lo]) * (score - lo));
+}
+
+function ordinal(n: number): string {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] ?? s[v] ?? s[0]);
+}
+
 function offerColor(d: string) {
   if (d === "strong_offer" || d === "offer") return "#15803d";
   if (d === "borderline") return "#d97706";
@@ -401,8 +428,8 @@ function FeedbackInner() {
             </div>
             <div style={{ width: "1px", height: "56px", background: "var(--hp-border)" }} />
             <div>
-              <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginBottom: "2px" }}>Percentile</div>
-              <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--hp-foreground)" }}>Top {100 - evaluation.percentileEstimate}%</div>
+              <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginBottom: "2px" }}>Est. percentile</div>
+              <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--hp-foreground)" }}>~Top {100 - evaluation.percentileEstimate}%</div>
             </div>
           </div>
 
@@ -572,6 +599,9 @@ function FeedbackInner() {
                       <div style={{ textAlign: "right" }}>
                         <span style={{ fontSize: "0.9rem", fontWeight: 700, color }}>{score}/5</span>
                         <span style={{ marginLeft: "0.5rem", fontSize: "0.72rem", color, fontWeight: 600 }}>{scoreLabel5(score)}</span>
+                        <div style={{ fontSize: "0.7rem", color: "var(--hp-soft-foreground)", fontWeight: 600, marginTop: "2px" }}>
+                          ~{ordinal(estimatedPercentile(score))} pct
+                        </div>
                       </div>
                     </div>
                     <div style={{ height: "5px", background: "var(--hp-border)", borderRadius: "3px", overflow: "hidden" }}>
@@ -617,6 +647,13 @@ function FeedbackInner() {
                   </div>
                 );
               })
+            )}
+
+            {hasFirmRubric && (
+              <p style={{ fontSize: "0.72rem", color: "var(--hp-soft-foreground)", lineHeight: 1.6, margin: 0, paddingTop: "0.5rem", borderTop: "1px solid var(--hp-border)" }}>
+                Percentiles are estimates calibrated to {FIRM_SHORT[firm] ?? firmConfig.name}&apos;s published scoring bar
+                (a 3 out of 5 is &ldquo;meets the bar&rdquo;), not a measured comparison against other MyCasePrep users.
+              </p>
             )}
           </motion.div>
         )}
