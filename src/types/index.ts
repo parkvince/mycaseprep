@@ -46,6 +46,14 @@ export interface ScoreBreakdown {
   creativity: number;
 }
 
+/** A feedback point anchored to something the candidate actually said, so the
+ * advice is specific rather than generic. `instead` is only used for weaknesses. */
+export interface EvidencePoint {
+  point: string;
+  quote: string;
+  instead?: string;
+}
+
 export interface Evaluation {
   overallScore: number;
   breakdown: ScoreBreakdown;
@@ -61,6 +69,12 @@ export interface Evaluation {
   weightedScore: number;
 };
 dimensionFeedback?: Record<string, string>;
+/** Evidence-backed versions of the two lists above. Optional so older stored
+ * evaluations (and any model response that omits them) still render. */
+strengthsDetailed?: EvidencePoint[];
+improvementsDetailed?: EvidencePoint[];
+/** One or two sentences on how the candidate managed their time. */
+pacingNote?: string;
 }
 
 

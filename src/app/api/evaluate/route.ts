@@ -416,6 +416,38 @@ function getDefaultEvaluation(firm: FirmKey) {
   };
 }
 
+/** Loosens text just enough that a genuinely-copied quote still matches even if
+ * the model normalized curly quotes, dashes, or whitespace along the way. */
+function normalizeForMatch(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[‘’ʼ]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[–—]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// The single biggest complaint about the old feedback was that it was generic
+// ("strong communication" - but why?). These extra keys force every point to be
+// anchored to something the candidate actually said, plus a concrete rewrite.
+const EVIDENCE_SPEC = `ALSO include these THREE additional keys in the SAME JSON object. They are REQUIRED:
+
+"strengthsDetailed": [
+  { "point": "<specifically what they did well>", "quote": "<VERBATIM words the candidate actually said>" }
+],
+"improvementsDetailed": [
+  { "point": "<specifically what was weak>", "quote": "<VERBATIM words showing the weakness>", "instead": "<the concrete sentence they should have said instead>" }
+],
+"pacingNote": "<1-2 sentences on how they managed their time: did they rush the structure, over-explore clarifications, or leave the recommendation thin?>"
+
+HARD RULES FOR THESE KEYS:
+1. Give 2-3 items in each array.
+2. Every "quote" MUST be copied WORD-FOR-WORD from a CANDIDATE (user) message in the transcript. Never quote yourself (the interviewer). Never paraphrase, summarize, or invent a quote.
+3. If the candidate genuinely said too little to quote for a point, set "quote" to "" (empty string). Do NOT fabricate one.
+4. "instead" must be a specific, sayable replacement sentence tailored to THIS case - not generic advice like "be more structured".
+5. "point" must reference the actual content of this case (numbers, drivers, the client's situation), not generic interview platitudes.`;
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -440,12 +472,14 @@ export async function POST(req: NextRequest) {
     const hasFirmRubric = !!FIRM_RUBRICS[firm as string];
 
     const fullPrompt = firmContext
-      ? `${firmContext}\n\n${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}`
-      : `${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}`;
+      ? `${firmContext}\n\n${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}\n\n${EVIDENCE_SPEC}`
+      : `${basePrompt}\n\nReturn ONLY valid JSON in this exact format:\n${jsonSpec}\n\n${EVIDENCE_SPEC}`;
 
     const { text, provider } = await callChatCompletion({
       messages: [{ role: "user", content: fullPrompt }],
-      maxTokens: 2000,
+      // Evidence quotes + rewrites need noticeably more room than the old
+      // bullet-only response, otherwise the JSON gets truncated mid-object.
+      maxTokens: 3200,
       jsonMode: true,
       preferredProvider: (preferredProvider as ProviderName) ?? null,
     });
@@ -470,6 +504,33 @@ export async function POST(req: NextRequest) {
     evaluation.firmSpecificNote = evaluation.firmSpecificNote ?? "";
     evaluation.percentileEstimate = evaluation.percentileEstimate ?? 50;
     evaluation.overallScore = evaluation.overallScore ?? 50;
+
+    // Evidence points: keep only well-formed entries, and drop any "quote" the
+    // model invented rather than copied from the candidate's own words. A
+    // hallucinated quote is worse than no quote - it makes the feedback untrustworthy.
+    const candidateText = (Array.isArray(transcript) ? transcript : [])
+      .filter((m: Message) => m.role === "user")
+      .map((m: Message) => normalizeForMatch(m.content))
+      .join("   ");
+
+    const cleanEvidence = (arr: unknown, withInstead: boolean) =>
+      (Array.isArray(arr) ? arr : [])
+        .filter((e): e is Record<string, unknown> => !!e && typeof e === "object")
+        .map(e => {
+          const rawQuote = typeof e.quote === "string" ? e.quote.trim() : "";
+          const verified = rawQuote.length > 0 && candidateText.includes(normalizeForMatch(rawQuote));
+          return {
+            point: typeof e.point === "string" ? e.point : "",
+            quote: verified ? rawQuote : "",
+            ...(withInstead ? { instead: typeof e.instead === "string" ? e.instead : "" } : {}),
+          };
+        })
+        .filter(e => e.point.length > 0)
+        .slice(0, 3);
+
+    evaluation.strengthsDetailed = cleanEvidence(evaluation.strengthsDetailed, false);
+    evaluation.improvementsDetailed = cleanEvidence(evaluation.improvementsDetailed, true);
+    evaluation.pacingNote = typeof evaluation.pacingNote === "string" ? evaluation.pacingNote : "";
     evaluation.provider = provider;
 
     return NextResponse.json(evaluation);

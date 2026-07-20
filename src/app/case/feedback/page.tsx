@@ -318,6 +318,27 @@ function FeedbackInner() {
   }
 
   const overallColor = formatScoreColor(evaluation.overallScore);
+  const strengths = evaluation.strengthsDetailed ?? [];
+  const improvements = evaluation.improvementsDetailed ?? [];
+
+  // Real pacing, measured from the gap between the interviewer's message and the
+  // candidate's reply. No invented "top performer" benchmarks - just what happened.
+  const pacing = (() => {
+    const gaps: number[] = [];
+    for (let i = 1; i < transcript.length; i++) {
+      if (transcript[i].role !== "user" || transcript[i - 1].role !== "assistant") continue;
+      const t1 = new Date(transcript[i - 1].timestamp).getTime();
+      const t2 = new Date(transcript[i].timestamp).getTime();
+      const secs = (t2 - t1) / 1000;
+      if (Number.isFinite(secs) && secs >= 0 && secs < 3600) gaps.push(secs);
+    }
+    if (gaps.length === 0) return null;
+    return {
+      replies: gaps.length,
+      avgSeconds: Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length),
+      longestSeconds: Math.round(Math.max(...gaps)),
+    };
+  })();
 
   return (
     <div style={{ minHeight: "100vh", background: "oklch(0.985 0.005 285)", color: "var(--hp-foreground)", fontFamily: FONT }}>
@@ -424,27 +445,94 @@ function FeedbackInner() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div style={card}>
               <div style={{ ...sectionLabel, color: "#15803d" }}>What went well</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {evaluation.whatWentWell.map((item, i) => (
-                  <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                    <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16a34a", marginTop: "8px", flexShrink: 0 }} />
-                    <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>{item}</p>
-                  </div>
-                ))}
-              </div>
+              {strengths.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+                  {strengths.map((s, i) => (
+                    <div key={i}>
+                      <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                        <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16a34a", marginTop: "8px", flexShrink: 0 }} />
+                        <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{s.point}</p>
+                      </div>
+                      {s.quote && (
+                        <blockquote style={{ margin: "0.5rem 0 0 1.4rem", padding: "0.6rem 0.9rem", borderLeft: "3px solid #86efac", background: "#f0fdf4", borderRadius: "0 8px 8px 0", fontSize: "0.85rem", lineHeight: 1.65, color: "#166534", fontStyle: "italic" }}>
+                          &ldquo;{s.quote}&rdquo;
+                        </blockquote>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {evaluation.whatWentWell.map((item, i) => (
+                    <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                      <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16a34a", marginTop: "8px", flexShrink: 0 }} />
+                      <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div style={card}>
               <div style={{ ...sectionLabel, color: "#d97706" }}>Areas to improve</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {evaluation.areasToImprove.map((item, i) => (
-                  <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                    <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d97706", marginTop: "8px", flexShrink: 0 }} />
-                    <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>{item}</p>
-                  </div>
-                ))}
-              </div>
+              {improvements.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                  {improvements.map((s, i) => (
+                    <div key={i}>
+                      <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                        <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d97706", marginTop: "8px", flexShrink: 0 }} />
+                        <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{s.point}</p>
+                      </div>
+                      {s.quote && (
+                        <blockquote style={{ margin: "0.5rem 0 0 1.4rem", padding: "0.6rem 0.9rem", borderLeft: "3px solid #fcd34d", background: "#fffbeb", borderRadius: "0 8px 8px 0", fontSize: "0.85rem", lineHeight: 1.65, color: "#92400e", fontStyle: "italic" }}>
+                          &ldquo;{s.quote}&rdquo;
+                        </blockquote>
+                      )}
+                      {s.instead && (
+                        <div style={{ margin: "0.5rem 0 0 1.4rem", padding: "0.7rem 0.9rem", background: "var(--hp-primary-soft)", borderRadius: "8px" }}>
+                          <div style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--hp-primary)", marginBottom: "0.3rem" }}>
+                            Try saying instead
+                          </div>
+                          <p style={{ fontSize: "0.85rem", lineHeight: 1.65, margin: 0, color: "var(--hp-foreground)" }}>{s.instead}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {evaluation.areasToImprove.map((item, i) => (
+                    <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                      <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d97706", marginTop: "8px", flexShrink: 0 }} />
+                      <p style={{ fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {/* Pacing — measured from real message timestamps, not estimated */}
+            {pacing && (
+              <div style={card}>
+                <div style={sectionLabel}>Pacing</div>
+                <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", marginBottom: evaluation.pacingNote ? "0.9rem" : 0 }}>
+                  {[
+                    { label: "Total time", value: formatDuration(duration) },
+                    { label: "Your responses", value: `${pacing.replies}` },
+                    { label: "Avg per response", value: `${pacing.avgSeconds}s` },
+                    { label: "Longest pause", value: `${pacing.longestSeconds}s` },
+                  ].map(m => (
+                    <div key={m.label}>
+                      <div style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--hp-soft-foreground)", marginBottom: "2px" }}>{m.label}</div>
+                      <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--hp-foreground)" }}>{m.value}</div>
+                    </div>
+                  ))}
+                </div>
+                {evaluation.pacingNote && (
+                  <p style={{ fontSize: "0.88rem", lineHeight: 1.7, margin: 0, color: "var(--hp-soft-foreground)" }}>{evaluation.pacingNote}</p>
+                )}
+              </div>
+            )}
 
             <div style={card}>
               <div style={sectionLabel}>{FIRM_SHORT[firm] ?? firmConfig.name} note</div>

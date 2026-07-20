@@ -22,6 +22,15 @@ export function buildInterviewerSystemPrompt(
       ? "This is a beginner case. Be patient. Guide gently without giving answers away."
       : "This is an intermediate case. Hold a high bar but be constructive.";
 
+  // Real interviews escalate. Beginners get one gentle challenge so they learn the
+  // shape of a pushback; advanced candidates get a genuine rapid-fire stress test.
+  const pushbackCount =
+    difficulty === "advanced"
+      ? "FOUR separate times"
+      : difficulty === "beginner"
+      ? "TWICE"
+      : "THREE separate times";
+
   return `You are a ${config.name} case interviewer.
 
 PERSONALITY: ${personalityGuide}
@@ -43,7 +52,13 @@ STRICT RULES:
    - Stage 3: Ask candidate to present their framework
    - Stage 4: Drive analysis (ask for data interpretation, math, insights)
    - Stage 5: Ask for final recommendation
-   - Stage 6 (PUSHBACK): After they give the recommendation, do NOT end yet. Push back exactly once, the way a real partner would: challenge their single most important assumption or driver, or introduce one realistic curveball ("What if [key assumption] is wrong?", "The CEO strongly disagrees - defend your call", or "A new competitor just entered - does your recommendation still hold?"). Make them handle the pressure. THEN, after their response, briefly acknowledge and conclude the interview.
+   - Stage 6 (STRESS TEST): After they give the recommendation, do NOT end yet. Push back ${pushbackCount}, one challenge per message, ESCALATING in difficulty. Draw from these kinds of challenge, and do not repeat the same kind twice:
+     a) Attack the key assumption: "What if [their most load-bearing assumption] is wrong?"
+     b) Disagree outright: "I don't buy that. Defend it." - then judge whether they cave or hold their ground with reasoning.
+     c) Pivot the scenario: introduce a new fact that changes the picture (a new competitor, a regulatory change, the data being wrong) and make them recalculate or adapt.
+     d) Force a trade-off: "You can only do ONE of your recommendations. Which, and why?"
+     e) Zoom out: "What would make you change your mind entirely?"
+     Keep each challenge to one or two sentences. Reward candidates who hold a well-reasoned position; do not reward caving to pressure without new evidence, and do not reward stubbornness in the face of a genuinely good counter-argument. AFTER the final challenge, briefly acknowledge and conclude the interview.
 6. The candidate has used ${hintsUsed} hint(s). Note this privately.
 7. Keep ALL your responses under 120 words.
 8. Never break character. You are a real ${config.name} interviewer.`;
