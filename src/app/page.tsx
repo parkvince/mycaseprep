@@ -516,13 +516,13 @@ export default function LandingPage() {
                   <img src="/newlogomcp.png" alt="" style={{ width: "28px", height: "28px", flexShrink: 0 }} />
                   <span style={{ position: "relative", top: "-1px" }}>mycaseprep<span style={{ color: "var(--hp-primary)" }}>.</span></span>
                 </div>
-                <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "oklch(0.55 0.02 280)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "oklch(0.64 0.02 280)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
                   © {new Date().getFullYear()} MyCasePrep. All rights reserved.
                 </div>
               </div>
               <div style={{ display: "flex", gap: "2.5rem", flexWrap: "wrap" }}>
                 <div>
-                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(0.55 0.02 280)", marginBottom: "0.75rem" }}>Product</div>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(0.64 0.02 280)", marginBottom: "0.75rem" }}>Product</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {[
                       { label: "Features", action: () => smoothScrollTo("features") },
@@ -539,7 +539,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(0.55 0.02 280)", marginBottom: "0.75rem" }}>Legal</div>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(0.64 0.02 280)", marginBottom: "0.75rem" }}>Legal</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     <button onClick={() => smoothScrollTo("privacy")}
                       style={{ background: "none", border: "none", color: "oklch(0.72 0.02 280)", fontSize: "0.875rem", cursor: "pointer", fontFamily: FONT, textAlign: "left", padding: 0, transition: "color 0.15s" }}

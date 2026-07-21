@@ -29,6 +29,9 @@ export default function TermsModal({ onClose }: { onClose: () => void }) {
       style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}
     >
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="terms-modal-title"
         initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 24, scale: 0.97 }} transition={{ duration: 0.2 }}
         onClick={e => e.stopPropagation()}
         style={{ background: "white", borderRadius: "18px", maxWidth: "580px", width: "100%", maxHeight: "82vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.2)", fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" }}
@@ -36,10 +39,10 @@ export default function TermsModal({ onClose }: { onClose: () => void }) {
         <div style={{ padding: "1.5rem 1.75rem", borderBottom: "1px solid var(--hp-border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
             <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--hp-soft-foreground)", marginBottom: "3px" }}>Legal</div>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--hp-foreground)", margin: 0 }}>Terms &amp; privacy</h2>
+            <h2 id="terms-modal-title" style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--hp-foreground)", margin: 0 }}>Terms &amp; privacy</h2>
             <div style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "2px" }}>Last updated: June 26, 2026</div>
           </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "1.3rem", lineHeight: 1, padding: "0.25rem", marginLeft: "1rem" }}>✕</button>
+          <button onClick={onClose} aria-label="Close terms and privacy dialog" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--hp-soft-foreground)", fontSize: "1.3rem", lineHeight: 1, padding: "0.25rem", marginLeft: "1rem" }}>✕</button>
         </div>
         <div style={{ overflowY: "auto", padding: "1.25rem 1.75rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           {cards.map(c => (

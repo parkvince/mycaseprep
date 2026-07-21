@@ -19,7 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <SessionWrapper>{children}</SessionWrapper>
+        {/* Lets keyboard and screen-reader users jump past the nav on every page
+            instead of tabbing through it repeatedly (WCAG 2.4.1). Visually hidden
+            until it receives focus. */}
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <SessionWrapper>
+          <div id="main-content">{children}</div>
+        </SessionWrapper>
       </body>
     </html>
   );

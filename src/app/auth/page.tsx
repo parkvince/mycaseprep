@@ -211,9 +211,9 @@ export default function AuthPage() {
             <AnimatePresence>
               {tab === "signup" && (
                 <motion.div key="name" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                  <label style={labelStyle}>Full name</label>
+                  <label htmlFor="auth-name" style={labelStyle}>Full name</label>
                   <input
-                    type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" style={inputStyle}
+                    id="auth-name" autoComplete="name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" style={inputStyle}
                     onFocus={e => (e.currentTarget.style.borderColor = "var(--hp-primary)")}
                     onBlur={e => (e.currentTarget.style.borderColor = "var(--hp-border)")}
                   />
@@ -222,9 +222,9 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label style={labelStyle}>Email</label>
+              <label htmlFor="auth-email" style={labelStyle}>Email</label>
               <input
-                type="email" value={email}
+                id="auth-email" autoComplete="email" type="email" value={email}
                 onChange={e => setEmail(e.target.value)}
                 onBlur={() => setEmailTouched(true)}
                 placeholder="you@example.com"
@@ -239,9 +239,9 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label style={labelStyle}>Password</label>
+              <label htmlFor="auth-password" style={labelStyle}>Password</label>
               <input
-                type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={inputStyle}
+                id="auth-password" autoComplete={tab === "signup" ? "new-password" : "current-password"} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={inputStyle}
                 onFocus={e => (e.currentTarget.style.borderColor = "var(--hp-primary)")}
                 onBlur={e => (e.currentTarget.style.borderColor = "var(--hp-border)")}
               />
@@ -285,9 +285,9 @@ export default function AuthPage() {
             <AnimatePresence>
               {tab === "signup" && (
                 <motion.div key="confirm" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                  <label style={labelStyle}>Confirm password</label>
+                  <label htmlFor="auth-confirm" style={labelStyle}>Confirm password</label>
                   <input
-                    type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••"
+                    id="auth-confirm" autoComplete="new-password" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••"
                     style={{ ...inputStyle, borderColor: confirmPassword && confirmPassword !== password ? "#dc2626" : "var(--hp-border)" }}
                     onFocus={e => (e.currentTarget.style.borderColor = "var(--hp-primary)")}
                     onBlur={e => (e.currentTarget.style.borderColor = confirmPassword && confirmPassword !== password ? "#dc2626" : "var(--hp-border)")}
@@ -339,9 +339,9 @@ export default function AuthPage() {
 
       <p style={{ fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "1.5rem", textAlign: "center" }}>
         By continuing, you agree to our{" "}
-        <span onClick={() => setShowTerms(true)} style={{ color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px" }}>terms</span>
+        <button type="button" onClick={() => setShowTerms(true)} style={{ background: "none", border: "none", padding: 0, font: "inherit", fontFamily: FONT, color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px" }}>terms</button>
         {" "}and{" "}
-        <span onClick={() => setShowTerms(true)} style={{ color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px" }}>privacy policy</span>.
+        <button type="button" onClick={() => setShowTerms(true)} style={{ background: "none", border: "none", padding: 0, font: "inherit", fontFamily: FONT, color: "var(--hp-primary)", fontWeight: 600, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px" }}>privacy policy</button>.
       </p>
 
       <AnimatePresence>

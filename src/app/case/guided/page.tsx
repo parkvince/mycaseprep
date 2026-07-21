@@ -157,11 +157,14 @@ function GuidedCaseInner() {
     return (
       <Shell>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginBottom: "1.5rem" }}>
-            <span style={{ cursor: "pointer" }} onClick={() => router.push("/library")}>Library</span>
-            <ChevronRight size={13} />
-            <span style={{ color: "var(--hp-foreground)", fontWeight: 500 }}>{currentCase.title}</span>
-          </div>
+          <nav aria-label="Breadcrumb" style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.8rem", color: "var(--hp-soft-foreground)", marginBottom: "1.5rem" }}>
+            <button type="button" onClick={() => router.push("/library")}
+              style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "inherit", font: "inherit", fontFamily: FONT, textDecoration: "underline", textUnderlineOffset: "2px" }}>
+              Library
+            </button>
+            <ChevronRight size={13} aria-hidden="true" />
+            <span aria-current="page" style={{ color: "var(--hp-foreground)", fontWeight: 500 }}>{currentCase.title}</span>
+          </nav>
 
           {/* Hero */}
           <div style={{ display: "flex", alignItems: "center", gap: "1.1rem", marginBottom: "1.5rem" }}>
@@ -263,7 +266,8 @@ function GuidedCaseInner() {
             </p>
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
+          <div role="radiogroup" aria-label={`Answer options for: ${currentQuestion.question}`}
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
             {currentQuestion.options.map((option, oi) => {
               const isSelected = selectedOptionId === option.id;
               let borderColor = "var(--hp-border)";
@@ -277,27 +281,37 @@ function GuidedCaseInner() {
               }
               const letter = String.fromCharCode(65 + oi);
               return (
-                <motion.div key={option.id} onClick={() => handleSelectOption(option.id)}
+                // A real <button> with radio semantics: previously this was a
+                // clickable <div>, which meant keyboard and screen-reader users
+                // could not answer a case at all (WCAG 2.1.1).
+                <motion.button
+                  key={option.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  disabled={showFeedback && !isSelected}
+                  onClick={() => handleSelectOption(option.id)}
                   whileHover={!showFeedback ? { y: -2 } : undefined}
-                  style={{ padding: "1rem 1.1rem", borderRadius: "14px", border: `1.5px solid ${borderColor}`, background: bg, cursor: showFeedback ? "default" : "pointer", transition: "border-color 0.15s, background 0.15s, box-shadow 0.15s", boxShadow: isSelected ? "0 4px 14px oklch(0.4 0.05 280 / 8%)" : "var(--hp-shadow-card)", boxSizing: "border-box" }}>
-                  <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                    <div style={{ width: "26px", height: "26px", borderRadius: "9999px", flexShrink: 0, display: "grid", placeItems: "center", fontSize: "0.78rem", fontWeight: 700, marginTop: "1px",
+                  style={{ display: "block", width: "100%", textAlign: "left", font: "inherit", fontFamily: FONT, padding: "1rem 1.1rem", borderRadius: "14px", border: `1.5px solid ${borderColor}`, background: bg, cursor: showFeedback ? "default" : "pointer", transition: "border-color 0.15s, background 0.15s, box-shadow 0.15s", boxShadow: isSelected ? "0 4px 14px oklch(0.4 0.05 280 / 8%)" : "var(--hp-shadow-card)", boxSizing: "border-box" }}
+                >
+                  <span style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                    <span aria-hidden="true" style={{ width: "26px", height: "26px", borderRadius: "9999px", flexShrink: 0, display: "grid", placeItems: "center", fontSize: "0.78rem", fontWeight: 700, marginTop: "1px",
                       background: isSelected ? borderColor : "var(--hp-primary-soft)",
                       color: isSelected ? "white" : "var(--hp-primary)",
                       transition: "all 0.15s" }}>
                       {showFeedback && isSelected && option.scoreImpact > 0 ? "✓" : showFeedback && isSelected && option.scoreImpact < 0 ? "✕" : letter}
-                    </div>
-                    <p style={{ fontSize: "0.9rem", lineHeight: 1.6, margin: 0, color: "var(--hp-foreground)", paddingTop: "3px" }}>{option.text}</p>
-                  </div>
+                    </span>
+                    <span style={{ fontSize: "0.9rem", lineHeight: 1.6, margin: 0, color: "var(--hp-foreground)", paddingTop: "3px" }}>{option.text}</span>
+                  </span>
                   <AnimatePresence>
                     {showFeedback && isSelected && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                        style={{ marginTop: "0.875rem", paddingTop: "0.875rem", borderTop: `1px solid ${borderColor}`, fontSize: "0.85rem", lineHeight: 1.65, color: option.scoreImpact > 10 ? "#15803d" : option.scoreImpact > 0 ? "#b45309" : option.scoreImpact < 0 ? "#b91c1c" : "var(--hp-soft-foreground)" }}>
+                      <motion.span initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+                        style={{ display: "block", marginTop: "0.875rem", paddingTop: "0.875rem", borderTop: `1px solid ${borderColor}`, fontSize: "0.85rem", lineHeight: 1.65, color: option.scoreImpact > 10 ? "#15803d" : option.scoreImpact > 0 ? "#b45309" : option.scoreImpact < 0 ? "#b91c1c" : "var(--hp-soft-foreground)" }}>
                         {option.feedback}
-                      </motion.div>
+                      </motion.span>
                     )}
                   </AnimatePresence>
-                </motion.div>
+                </motion.button>
               );
             })}
           </div>
