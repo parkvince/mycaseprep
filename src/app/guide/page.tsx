@@ -581,22 +581,38 @@ export default function GuidePage() {
             fixed, predictable spot. Previously it sat in normal flow below the step
             content, so expanding an accordion pushed it down and users clicked an
             accordion where Next used to be. */}
-        <div style={{ position: "sticky", bottom: 0, zIndex: 5, display: "flex", justifyContent: "space-between", gap: "0.75rem", padding: "0.75rem 0 1rem", marginTop: "0.5rem", background: "linear-gradient(to top, var(--hp-bg) 65%, transparent)" }}>
-          <button
-            onClick={goBack}
-            disabled={step === 0}
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "42px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: step === 0 ? "var(--hp-border-strong)" : "var(--hp-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: step === 0 ? "not-allowed" : "pointer", fontFamily: FONT }}
-          >
-            <ArrowLeft size={15} /> Back
-          </button>
-          {step < TOTAL_STEPS - 1 && (
+        <div style={{ position: "sticky", bottom: 0, zIndex: 5, marginTop: "0.5rem" }}>
+          {/* Frosted backdrop rather than a solid fill: the page background is a
+              multi-colour pastel gradient, so any fixed colour here (it used to be
+              --hp-bg cream) shows up as a mismatched band. Blur adapts to whatever
+              is behind it, and the mask fades the top edge so there's no hard seam. */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute", left: 0, right: 0, top: "-1.75rem", bottom: 0,
+              backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+              maskImage: "linear-gradient(to top, #000 62%, transparent)",
+              WebkitMaskImage: "linear-gradient(to top, #000 62%, transparent)",
+              pointerEvents: "none",
+            }}
+          />
+          <div style={{ position: "relative", display: "flex", justifyContent: "space-between", gap: "0.75rem", padding: "0.75rem 0 1rem" }}>
             <button
-              onClick={goNext}
-              style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "42px", padding: "0 1.25rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", fontFamily: FONT, boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}
+              onClick={goBack}
+              disabled={step === 0}
+              style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "42px", padding: "0 1.1rem", borderRadius: "9999px", border: "1px solid var(--hp-border-strong)", background: "white", color: step === 0 ? "var(--hp-border-strong)" : "var(--hp-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: step === 0 ? "not-allowed" : "pointer", fontFamily: FONT, boxShadow: "0 2px 8px oklch(0.4 0.05 280 / 10%)" }}
             >
-              {step === 0 ? "Let's go" : "Next"} <ArrowRight size={15} />
+              <ArrowLeft size={15} /> Back
             </button>
-          )}
+            {step < TOTAL_STEPS - 1 && (
+              <button
+                onClick={goNext}
+                style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", height: "42px", padding: "0 1.25rem", borderRadius: "9999px", border: "none", background: "var(--hp-primary)", color: "white", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", fontFamily: FONT, boxShadow: "0 3px 0 oklch(0.34 0.16 285)" }}
+              >
+                {step === 0 ? "Let's go" : "Next"} <ArrowRight size={15} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
