@@ -208,7 +208,7 @@ export default function SettingsPage() {
       a.remove();
       URL.revokeObjectURL(url);
     } catch {
-      // Non-fatal — the button just re-enables so they can retry.
+      // Non-fatal - the button just re-enables so they can retry.
     } finally {
       setExporting(false);
     }
@@ -227,7 +227,7 @@ export default function SettingsPage() {
         const data = await res.json().catch(() => null);
         throw new Error(data?.error ?? "Failed to delete account.");
       }
-      // Account is gone — end the session and land back on the marketing page.
+      // Account is gone - end the session and land back on the marketing page.
       await signOut({ callbackUrl: "/" });
     } catch (err) {
       setDeleteError(err instanceof Error ? err.message : "Failed to delete account.");
@@ -397,7 +397,7 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* Danger zone — self-service account deletion */}
+        {/* Danger zone - self-service account deletion */}
         {!isAdmin && (
           <motion.div
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}

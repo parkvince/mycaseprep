@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 // Self-service data export (GDPR/CCPA-style access right). Returns everything this
-// account holds about itself as a downloadable JSON file — profile, usage, and the
+// account holds about itself as a downloadable JSON file - profile, usage, and the
 // full transcript of every practice session.
 export async function GET() {
   try {

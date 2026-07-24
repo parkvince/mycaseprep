@@ -103,7 +103,7 @@ function SessionInner() {
     return `${m}:${s}`;
   };
 
-  // Optional timed-pressure countdown (visual only — never force-ends the case).
+  // Optional timed-pressure countdown (visual only - never force-ends the case).
   const targetSeconds = difficulty === "advanced" ? 15 * 60 : difficulty === "intermediate" ? 20 * 60 : 25 * 60;
   const remaining = Math.max(0, targetSeconds - elapsedTime);
   const timeColor = !timedMode ? "var(--hp-soft-foreground)" : remaining === 0 ? "#dc2626" : remaining <= 120 ? "#d97706" : "var(--hp-foreground)";

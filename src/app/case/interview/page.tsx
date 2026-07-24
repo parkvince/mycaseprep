@@ -238,7 +238,7 @@ function InterviewInner() {
   const formatTime = (secs: number) => `${Math.floor(secs / 60).toString().padStart(2, "0")}:${(secs % 60).toString().padStart(2, "0")}`;
 
   // Optional timed-pressure mode: a realistic target length by difficulty. Purely
-  // a visual clock — it never force-ends the case (cutting someone off mid-thought
+  // a visual clock - it never force-ends the case (cutting someone off mid-thought
   // is harsh), it just turns amber then red to simulate interview time pressure.
   const targetSeconds = difficulty === "advanced" ? 15 * 60 : difficulty === "intermediate" ? 20 * 60 : 25 * 60;
   const remaining = Math.max(0, targetSeconds - elapsedTime);

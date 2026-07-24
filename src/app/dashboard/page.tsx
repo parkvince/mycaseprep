@@ -117,7 +117,7 @@ export default function DashboardPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!localStorage.getItem("mycaseprep_guide_visited")) setShowGuideBanner(true);
-    // Deep link from History's "practice your weakest area" — pre-select the type.
+    // Deep link from History's "practice your weakest area" - pre-select the type.
     const t = new URLSearchParams(window.location.search).get("type");
     if (t && CASE_TYPES.some(c => c.value === t)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                   ? "No limit on this account"
                   : blocked
                   ? (usage.resetsAt
-                      ? `Your free AI interviews reset in ${formatResetsAt(usage.resetsAt)}. Guided library cases are always unlimited — keep practicing with those in the meantime.`
+                      ? `Your free AI interviews reset in ${formatResetsAt(usage.resetsAt)}. Guided library cases are always unlimited - keep practicing with those in the meantime.`
                       : "Resets every 12 hours. Guided library cases are always unlimited.")
                   : `${usage.casesUsed} of ${usage.casesUsed + (usage.casesRemaining ?? 0)} used · resets every 12 hours · guided cases are unlimited`}
               </div>

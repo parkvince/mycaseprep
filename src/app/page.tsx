@@ -450,7 +450,7 @@ export default function LandingPage() {
                   </button>
                 </div>
                 <p style={{ margin: "1rem auto 0", maxWidth: "30rem", color: "oklch(0.99 0.005 95 / 65%)", fontSize: "0.82rem", lineHeight: 1.6, position: "relative", zIndex: 1 }}>
-                  Free to use — 2 full AI interviews every 12 hours, plus unlimited guided library cases.
+                  Free to use - 2 full AI interviews every 12 hours, plus unlimited guided library cases.
                 </p>
               </div>
             </Reveal>
@@ -475,10 +475,10 @@ export default function LandingPage() {
 
             <div style={{ maxWidth: "860px", margin: "0 auto", display: "grid", gap: "1rem" }}>
               {[
-                { title: "Data we collect", body: "When you sign up, MyCasePrep collects your name and email to create your account. If you sign in with Google, MyCasePrep receives your name, email, and profile photo — never your Google password. Your case interview transcripts, scores, and performance history are stored to power your history and tracking features.", color: "var(--hp-lavender)" },
+                { title: "Data we collect", body: "When you sign up, MyCasePrep collects your name and email to create your account. If you sign in with Google, MyCasePrep receives your name, email, and profile photo - never your Google password. Your case interview transcripts, scores, and performance history are stored to power your history and tracking features.", color: "var(--hp-lavender)" },
                 { title: "Data sharing & security", body: "MyCasePrep does not sell, rent, or share your personal data with third parties for marketing purposes. Your interview transcripts are used only to generate your scorecard and are never shared publicly. Data is protected with industry-standard encryption in transit (HTTPS) and at rest.", color: "var(--hp-mint)" },
                 { title: "Interview processing", body: "Your interview responses are processed by a scoring system to generate feedback and dimensional scores. MyCasePrep does not use your transcripts to train any models. Your responses remain private to your account.", color: "var(--hp-peach)" },
-                { title: "Your data rights", body: "You can export all of your data or permanently delete your account and everything attached to it at any time, instantly, from Settings — no request or waiting period required.", color: "var(--hp-sky)" },
+                { title: "Your data rights", body: "You can export all of your data or permanently delete your account and everything attached to it at any time, instantly, from Settings - no request or waiting period required.", color: "var(--hp-sky)" },
               ].map((card, i) => (
                 <Reveal key={card.title} delay={i * 0.07}>
                   <div className="hp-surface-card" style={{ padding: "1.5rem 1.75rem", display: "flex", gap: "1.25rem", alignItems: "flex-start" }}>

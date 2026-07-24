@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-// Shared legal modal — used by the homepage footer and the auth form so the
+// Shared legal modal - used by the homepage footer and the auth form so the
 // "terms and privacy policy" text is actually clickable in both places.
 export default function TermsModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {

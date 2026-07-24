@@ -110,7 +110,7 @@ function FeedbackInner() {
 
   // When exporting, every section is rendered (not just the active tab) so the
   // whole scorecard lands in the PDF, then the browser print dialog is opened.
-  // "Save as PDF" is a native destination — no library, no server round-trip.
+  // "Save as PDF" is a native destination - no library, no server round-trip.
   useEffect(() => {
     if (!printing) return;
     const t = setTimeout(() => {
@@ -538,7 +538,7 @@ function FeedbackInner() {
               )}
             </div>
 
-            {/* Pacing — measured from real message timestamps, not estimated */}
+            {/* Pacing - measured from real message timestamps, not estimated */}
             {pacing && (
               <div style={card}>
                 <div style={sectionLabel}>Pacing</div>

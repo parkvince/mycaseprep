@@ -1,4 +1,4 @@
-// FEEDBACK-FEATURE: admin-only per-item actions on a feedback submission —
+// FEEDBACK-FEATURE: admin-only per-item actions on a feedback submission -
 // mark resolved / reopen (PATCH) and dismiss (DELETE).
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";

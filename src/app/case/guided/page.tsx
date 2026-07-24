@@ -184,12 +184,12 @@ function GuidedCaseInner() {
             {currentCase.overview}
           </p>
 
-          {/* How this works — beginner-friendly explainer */}
+          {/* How this works - beginner-friendly explainer */}
           <div style={{ ...card, marginBottom: "1rem", background: "var(--hp-primary-soft)", border: "1px solid color-mix(in oklab, var(--hp-primary) 20%, transparent)", boxShadow: "none" }}>
             <div style={{ ...sectionLabel, color: "var(--hp-primary)" }}>How this works</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
               {[
-                { icon: <BookOpen size={16} />, text: "Read each situation — you play the consultant on the case." },
+                { icon: <BookOpen size={16} />, text: "Read each situation - you play the consultant on the case." },
                 { icon: <MousePointerClick size={16} />, text: "Pick the move a strong candidate would make. There's no time pressure." },
                 { icon: <MessageCircle size={16} />, text: "Get instant feedback after every choice, then write a final recommendation." },
               ].map((step, i) => (
@@ -216,7 +216,7 @@ function GuidedCaseInner() {
             Start the case <ArrowRight size={17} />
           </button>
           <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--hp-soft-foreground)", marginTop: "0.75rem" }}>
-            Guided cases are always free and unlimited — take your time.
+            Guided cases are always free and unlimited - take your time.
           </p>
         </motion.div>
       </Shell>
@@ -262,7 +262,7 @@ function GuidedCaseInner() {
 
           {!showFeedback && (
             <p style={{ fontSize: "0.78rem", color: "var(--hp-soft-foreground)", marginBottom: "0.75rem" }}>
-              Choose the option a strong candidate would pick — you&apos;ll see why after you submit.
+              Choose the option a strong candidate would pick - you&apos;ll see why after you submit.
             </p>
           )}
 

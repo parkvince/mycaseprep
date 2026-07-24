@@ -1,7 +1,7 @@
 // FEEDBACK-FEATURE: the shared "Help & feedback" page. Every help / support /
 // email button in the app routes here (replacing the old mailto: links that
 // exposed a personal address). Submissions POST to /api/feedback and show up in
-// the admin panel. Works logged out — email is a required field so we can reply.
+// the admin panel. Works logged out - email is a required field so we can reply.
 "use client";
 
 import { useState } from "react";
@@ -114,7 +114,7 @@ export default function FeedbackPage() {
               <div style={{ width: "52px", height: "52px", borderRadius: "9999px", background: "var(--hp-mint)", display: "grid", placeItems: "center", margin: "0 auto 1rem" }}>
                 <CheckCircle2 size={26} style={{ color: "oklch(0.4 0.12 165)" }} />
               </div>
-              <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--hp-foreground)", margin: "0 0 0.4rem" }}>Thanks — we got your message</h2>
+              <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--hp-foreground)", margin: "0 0 0.4rem" }}>Thanks - we got your message</h2>
               <p style={{ fontSize: "0.88rem", color: "var(--hp-soft-foreground)", lineHeight: 1.6, margin: "0 0 1.5rem" }}>
                 We&apos;ll reply to <strong style={{ color: "var(--hp-foreground)" }}>{effectiveEmail.trim()}</strong> if a response is needed.
               </p>
@@ -170,7 +170,7 @@ export default function FeedbackPage() {
                   style={{ ...fieldStyle, borderColor: emailTouched && !emailValid ? "#dc2626" : "var(--hp-border-strong)" }}
                 />
                 <p style={{ fontSize: "0.72rem", color: "var(--hp-soft-foreground)", margin: "0.4rem 0 0" }}>
-                  Required — this is the only way we can reply to you.
+                  Required - this is the only way we can reply to you.
                 </p>
               </div>
 

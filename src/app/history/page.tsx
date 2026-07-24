@@ -133,7 +133,7 @@ function ScoreTrend({ sessions }: { sessions: SessionRecord[] }) {
     .map(s => ({ date: s.completedAt, score: sessionScore(s) }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  // Need at least 3 genuine points before a "trend" is meaningful — a single
+  // Need at least 3 genuine points before a "trend" is meaningful - a single
   // swing between two sessions is noise, not a trajectory.
   if (points.length < 3) return null;
 
@@ -270,7 +270,7 @@ export default function HistoryPage() {
   const totalMinutes = Math.round(sessions.reduce((acc, s) => acc + (s.duration ?? 0), 0) / 60);
 
   // Weakest area: the case type you score lowest on, across genuine attempts.
-  // (Per-dimension breakdowns aren't persisted, but case type + score is — and
+  // (Per-dimension breakdowns aren't persisted, but case type + score is - and
   // "practice your weakest case archetype" is a concrete, actionable next step.)
   const typeStats = new Map<string, number[]>();
   for (const s of genuineScored) {

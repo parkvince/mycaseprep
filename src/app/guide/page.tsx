@@ -577,7 +577,7 @@ export default function GuidePage() {
           </div>
         </AnimatePresence>
 
-        {/* Nav buttons — sticky to the bottom of the viewport so "Next" stays in a
+        {/* Nav buttons - sticky to the bottom of the viewport so "Next" stays in a
             fixed, predictable spot. Previously it sat in normal flow below the step
             content, so expanding an accordion pushed it down and users clicked an
             accordion where Next used to be. */}

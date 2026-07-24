@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { isAdminEmail } from "@/lib/admin";
 
 // Self-service account deletion (GDPR/CCPA-style erasure right). Wipes the account
-// and everything attached to it immediately — no email, no 30-day wait. Requires
+// and everything attached to it immediately - no email, no 30-day wait. Requires
 // the caller to re-type their exact email as a confirmation, so a stray click or
 // a CSRF-style POST can't nuke an account.
 export async function POST(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // The single-owner admin account can't be self-deleted — it would lock the app
+    // The single-owner admin account can't be self-deleted - it would lock the app
     // out of its own admin surface. (An owner who really wants out does it in the DB.)
     if (isAdminEmail(session.user.email)) {
       return NextResponse.json({ error: "The admin account can't be deleted here." }, { status: 400 });

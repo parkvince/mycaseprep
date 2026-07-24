@@ -132,7 +132,7 @@ export default function AuthPage() {
         <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
       </motion.div>
 
-      {/* Value context so this isn't a bare login wall — tells a first-time visitor
+      {/* Value context so this isn't a bare login wall - tells a first-time visitor
           what they get, matching the "free" promise from the homepage. */}
       <motion.div
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }}
@@ -142,7 +142,7 @@ export default function AuthPage() {
           {tab === "signup" ? "Create your free account" : "Welcome back"}
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.4rem 0.9rem", fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
-          {["2 AI interviews / 12h — free", "16 firm-specific rubrics", "Instant scorecards"].map(t => (
+          {["2 AI interviews / 12h - free", "16 firm-specific rubrics", "Instant scorecards"].map(t => (
             <span key={t} style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
               <span style={{ color: "#16a34a", fontWeight: 700 }}>✓</span>{t}
             </span>
@@ -361,7 +361,7 @@ export default function AuthPage() {
             >
               <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--hp-foreground)", margin: "0 0 0.5rem" }}>Reset your password</h2>
               <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, margin: "0 0 1rem" }}>
-                If you signed up with Google, just use <strong>Continue with Google</strong> — no password needed.
+                If you signed up with Google, just use <strong>Continue with Google</strong> - no password needed.
                 Otherwise, contact support and we&apos;ll help you reset it.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
