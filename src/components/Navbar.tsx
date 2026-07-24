@@ -62,8 +62,8 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
             {isAdminEmail(user.email) && item(<ShieldCheck size={16} />, "Admin", () => { router.push("/admin"); onClose(); })}
           </div>
           <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
-            {item(<HelpCircle size={16} />, "Help", () => {})}
-            {item(<MessageSquare size={16} />, "Send feedback", () => {})}
+            {item(<HelpCircle size={16} />, "Help", () => { router.push("/feedback"); onClose(); })}
+            {item(<MessageSquare size={16} />, "Send feedback", () => { router.push("/feedback"); onClose(); })}
           </div>
           <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
             {item(

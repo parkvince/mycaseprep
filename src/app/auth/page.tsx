@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import FloatingBlob from "@/components/FloatingBlob";
 import TermsModal from "@/components/TermsModal";
-import { SUPPORT_EMAIL } from "@/lib/support";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -363,14 +362,14 @@ export default function AuthPage() {
               <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--hp-foreground)", margin: "0 0 0.5rem" }}>Reset your password</h2>
               <p style={{ fontSize: "0.85rem", color: "var(--hp-soft-foreground)", lineHeight: 1.65, margin: "0 0 1rem" }}>
                 If you signed up with Google, just use <strong>Continue with Google</strong> — no password needed.
-                Otherwise, email us from your account address and we&apos;ll help you reset it.
+                Otherwise, contact support and we&apos;ll help you reset it.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                 <a
-                  href={`mailto:${SUPPORT_EMAIL}?subject=Password%20reset%20request`}
+                  href="/feedback"
                   style={{ height: "44px", borderRadius: "10px", background: "var(--hp-primary)", color: "white", fontSize: "0.88rem", fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 3px 0 oklch(0.4 0.16 285)" }}
                 >
-                  Email support
+                  Contact support
                 </a>
                 <button
                   onClick={() => setShowForgot(false)}

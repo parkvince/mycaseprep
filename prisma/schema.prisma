@@ -54,3 +54,18 @@ model DailyUsage {
   windowStart DateTime @default(now())
   @@unique([userId])
 }
+
+// FEEDBACK-FEATURE: support/feedback submissions from the /feedback page. email
+// is required so the operator can reply. Not relationally linked to User (userId
+// is a plain optional id) so feedback survives even if the account is deleted.
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String?
+  email     String
+  category  String   @default("general")
+  message   String   @db.Text
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([resolved, createdAt])
+}

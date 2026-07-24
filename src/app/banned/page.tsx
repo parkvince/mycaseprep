@@ -12,7 +12,9 @@ export default function BannedPage() {
           This account has been suspended
         </h1>
         <p style={{ fontSize: "0.9rem", color: "var(--hp-soft-foreground)", lineHeight: 1.7, margin: 0 }}>
-          If you think this is a mistake, reach out to support to get it sorted out.
+          If you think this is a mistake,{" "}
+          <a href="/feedback" style={{ color: "var(--hp-primary)", fontWeight: 600, textDecoration: "none" }}>reach out to support</a>{" "}
+          to get it sorted out.
         </p>
         <button
           onClick={() => signOut({ callbackUrl: "/" })}

@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { SUPPORT_EMAIL } from "@/lib/support";
 
 // Shared legal modal — used by the homepage footer and the auth form so the
 // "terms and privacy policy" text is actually clickable in both places.
@@ -19,7 +18,7 @@ export default function TermsModal({ onClose }: { onClose: () => void }) {
     { title: "3. Account responsibility", body: "You are responsible for maintaining the security of your account credentials. MyCasePrep reserves the right to suspend or terminate accounts that violate these terms." },
     { title: "4. Privacy & your data", body: "MyCasePrep collects your name and email to run your account, and stores your interview transcripts and scores to power your history. Your data is never sold or shared for marketing, and is never used to train models. You can export or permanently delete everything at any time from Settings." },
     { title: "5. Disclaimers & limitation of liability", body: 'The app is provided "as is" without warranties of any kind. In no event shall MyCasePrep be liable for any indirect, incidental, or consequential damages, including loss of profits or data.' },
-    { title: "6. Contact", body: `For questions about these terms, contact the MyCasePrep team at ${SUPPORT_EMAIL}.` },
+    { title: "6. Contact", body: "For questions about these terms, reach out through the Help & feedback page, linked from any Help or Contact button in the app." },
   ];
 
   return (

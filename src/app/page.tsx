@@ -9,7 +9,6 @@ import { isAdminEmail } from "@/lib/admin";
 import { Reveal } from "@/components/ui/reveal";
 import Term from "@/components/Term";
 import TermsModal from "@/components/TermsModal";
-import { SUPPORT_EMAIL } from "@/lib/support";
 
 const FEATURES = [
   { img: "/homepage/blob-lavender.png", title: "Firm-specific feedback", copy: "Graded the way McKinsey, Bain, and BCG actually evaluate candidates. Each firm has its own rubric." },
@@ -129,7 +128,7 @@ function ProfileDropdown({ user, onClose }: { user: { name?: string | null; emai
           </div>
           <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
             {item(<HelpCircle size={16} />, "Help & guide", () => { router.push("/guide"); onClose(); })}
-            {item(<MessageSquare size={16} />, "Send feedback", () => {})}
+            {item(<MessageSquare size={16} />, "Send feedback", () => { router.push("/feedback"); onClose(); })}
           </div>
           <div style={{ borderTop: "1px solid var(--hp-border)", padding: "0.5rem" }}>
             {item(
@@ -499,7 +498,7 @@ export default function LandingPage() {
               <div style={{ maxWidth: "860px", margin: "1.5rem auto 0", textAlign: "center" }}>
                 <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)" }}>
                   Questions?{" "}
-                  <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: "var(--hp-primary)", fontWeight: 600, textDecoration: "none" }}>Contact the MyCasePrep team</a>
+                  <a href="/feedback" style={{ color: "var(--hp-primary)", fontWeight: 600, textDecoration: "none" }}>Contact the MyCasePrep team</a>
                   {" "}· Last updated June 26, 2026
                 </p>
               </div>
@@ -558,7 +557,7 @@ export default function LandingPage() {
             <div style={{ paddingTop: "1.5rem", display: "flex", justifyContent: "flex-end", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
               <div style={{ display: "flex", gap: "0.75rem" }}>
                 {[
-                  { icon: <Mail size={18} />, href: `mailto:${SUPPORT_EMAIL}`, label: "Email support" },
+                  { icon: <Mail size={18} />, href: "/feedback", label: "Contact support" },
                   { icon: <HelpCircle size={18} />, href: "/guide", label: "Help & guide" },
                 ].map(btn => (
                   <a key={btn.label} href={btn.href} title={btn.label}
