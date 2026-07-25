@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import FeedbackAdmin from "@/components/FeedbackAdmin";
-import { Users, Search, ShieldCheck, Ban, MessageSquare } from "lucide-react";
+import AuditLog from "@/components/AuditLog";
+import { Users, Search, ShieldCheck, Ban, MessageSquare, Activity } from "lucide-react";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -41,7 +42,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
   const [forbidden, setForbidden] = useState(false);
-  const [view, setView] = useState<"users" | "feedback">("users");
+  const [view, setView] = useState<"users" | "feedback" | "activity">("users");
   const [search, setSearch] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -131,18 +132,20 @@ export default function AdminPage() {
 
         {/* FEEDBACK-FEATURE: switch between the user table and feedback inbox. */}
         <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
-          {([["users", "Users"], ["feedback", "Feedback"]] as const).map(([v, label]) => (
+          {([["users", "Users"], ["feedback", "Feedback"], ["activity", "Activity"]] as const).map(([v, label]) => (
             <button
               key={v}
               onClick={() => setView(v)}
               style={{ height: "38px", padding: "0 1.1rem", borderRadius: "9999px", border: `1.5px solid ${view === v ? "var(--hp-primary)" : "var(--hp-border-strong)"}`, background: view === v ? "var(--hp-primary)" : "white", color: view === v ? "white" : "var(--hp-soft-foreground)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: "0.45rem" }}
             >
-              {v === "users" ? <Users size={15} /> : <MessageSquare size={15} />} {label}
+              {v === "users" ? <Users size={15} /> : v === "feedback" ? <MessageSquare size={15} /> : <Activity size={15} />} {label}
             </button>
           ))}
         </div>
 
         {view === "feedback" && <FeedbackAdmin />}
+
+        {view === "activity" && <AuditLog />}
 
         {view === "users" && (
           <>

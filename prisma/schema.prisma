@@ -69,3 +69,19 @@ model Feedback {
 
   @@index([resolved, createdAt])
 }
+
+// AUDIT-LOG: immutable trail of privileged admin actions (ban/delete/grant/
+// feedback moderation) so there's a record of who did what, when. Written by
+// src/lib/audit.ts; viewed under the admin panel's "Activity" tab.
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  adminEmail  String
+  action      String
+  targetType  String
+  targetId    String?
+  targetLabel String?
+  detail      String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}

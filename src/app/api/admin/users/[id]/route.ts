@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/adminAuth";
 import { isAdminEmail } from "@/lib/admin";
+import { logAdminAction } from "@/lib/audit";
 
 export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/admin/users/[id]">) {
   const admin = await requireAdminSession();
@@ -28,6 +29,19 @@ export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/admin/user
     }
 
     const updated = await prisma.user.update({ where: { id }, data });
+
+    // AUDIT-LOG: one entry per field actually changed in this request.
+    const adminEmail = admin.user?.email ?? "unknown";
+    if (typeof data.banned === "boolean") {
+      await logAdminAction({ adminEmail, action: data.banned ? "user.ban" : "user.unban", targetType: "user", targetId: id, targetLabel: target.email });
+    }
+    if (typeof data.unlimitedCases === "boolean") {
+      await logAdminAction({ adminEmail, action: data.unlimitedCases ? "user.grant_unlimited" : "user.revoke_unlimited", targetType: "user", targetId: id, targetLabel: target.email });
+    }
+    if (typeof data.bonusCases === "number") {
+      await logAdminAction({ adminEmail, action: "user.set_bonus", targetType: "user", targetId: id, targetLabel: target.email, detail: `bonusCases=${data.bonusCases}` });
+    }
+
     return NextResponse.json({
       id: updated.id,
       unlimitedCases: updated.unlimitedCases,
@@ -57,6 +71,8 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext<"/api/admin/us
       prisma.dailyUsage.deleteMany({ where: { userId: id } }),
       prisma.user.delete({ where: { id } }),
     ]);
+
+    await logAdminAction({ adminEmail: admin.user?.email ?? "unknown", action: "user.delete", targetType: "user", targetId: id, targetLabel: target.email });
 
     return NextResponse.json({ success: true });
   } catch (error) {

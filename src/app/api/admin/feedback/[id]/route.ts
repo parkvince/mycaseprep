@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/adminAuth";
+import { logAdminAction } from "@/lib/audit";
 
 export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/admin/feedback/[id]">) {
   const admin = await requireAdminSession();
@@ -19,6 +20,9 @@ export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/admin/feed
       where: { id },
       data: { resolved: body.resolved },
     });
+
+    await logAdminAction({ adminEmail: admin.user?.email ?? "unknown", action: body.resolved ? "feedback.resolve" : "feedback.reopen", targetType: "feedback", targetId: id, targetLabel: updated.email, detail: updated.category });
+
     return NextResponse.json({ id: updated.id, resolved: updated.resolved });
   } catch (error) {
     console.error("Admin feedback update error:", error);
@@ -32,7 +36,10 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext<"/api/admin/fe
 
   try {
     const { id } = await ctx.params;
-    await prisma.feedback.delete({ where: { id } });
+    const deleted = await prisma.feedback.delete({ where: { id } });
+
+    await logAdminAction({ adminEmail: admin.user?.email ?? "unknown", action: "feedback.delete", targetType: "feedback", targetId: id, targetLabel: deleted.email, detail: deleted.category });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Admin feedback delete error:", error);
