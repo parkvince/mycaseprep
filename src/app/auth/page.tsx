@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import FloatingBlob from "@/components/FloatingBlob";
 import TermsModal from "@/components/TermsModal";
+import { markPendingAuth } from "@/lib/analytics";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -78,6 +79,7 @@ export default function AuthPage() {
 
       const result = await signIn("credentials", { email, password, redirect: false });
       if (result?.error) { setError("Invalid email or password"); setLoading(false); return; }
+      markPendingAuth(tab === "signup" ? "sign_up" : "login", "email");
       router.push("/");
     } catch {
       setError("Something went wrong. Try again");
@@ -178,7 +180,10 @@ export default function AuthPage() {
 
           {/* Google */}
           <button
-            onClick={() => signIn("google", { callbackUrl: "/" })}
+            onClick={() => {
+              markPendingAuth(tab === "signup" ? "sign_up" : "login", "google");
+              void signIn("google", { callbackUrl: "/" });
+            }}
             style={{
               width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
               gap: "0.6rem", padding: "0.7rem 1rem",

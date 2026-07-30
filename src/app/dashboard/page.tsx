@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
 import { ArrowRight, BookOpen, X } from "lucide-react";
 import { pickRandomInterviewer } from "@/lib/interviewers";
+import { trackEvent } from "@/lib/analytics";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -183,6 +184,14 @@ export default function DashboardPage() {
         // this case - face, name, and TTS voice all stay consistent.
         interviewer: pickRandomInterviewer(),
       }));
+      trackEvent("case_started", {
+        case_source: "ai",
+        firm: selectedFirm,
+        case_type: selectedType,
+        difficulty: selectedDifficulty,
+        practice_mode: selectedMode,
+        interviewer_style: personality,
+      });
       // The case is already generated and saved at this point - refreshing the
       // displayed usage count is a nice-to-have, not a gate. A blip here must
       // never strand the user on a case they already paid API cost to generate.

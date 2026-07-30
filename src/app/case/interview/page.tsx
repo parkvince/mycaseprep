@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
+import { trackEvent } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { FirmKey, Difficulty, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
@@ -645,7 +646,17 @@ function InterviewInner() {
     if (synthRef.current) synthRef.current.onvoiceschanged = null;
     streamRef.current?.getTracks().forEach(t => t.stop());
     if (audioFrameRef.current) cancelAnimationFrame(audioFrameRef.current);
-    sessionStorage.setItem("transcriptData", JSON.stringify({ firm, caseType, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider }));
+    trackEvent("case_completed", {
+      case_source: "ai",
+      firm,
+      case_type: caseType,
+      difficulty,
+      practice_mode: "live",
+      duration_seconds: elapsedTime,
+      hints_used: hintsUsed,
+      user_responses: transcript.filter(message => message.role === "user").length,
+    });
+    sessionStorage.setItem("transcriptData", JSON.stringify({ firm, caseType, difficulty, mode: "live", hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider }));
     router.push("/case/feedback");
   };
 

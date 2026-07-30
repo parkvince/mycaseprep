@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
-import { LogOut, User, Briefcase, Sliders, Mic, Download, Trash2, ShieldAlert } from "lucide-react";
+import { LogOut, User, Briefcase, Sliders, Mic, Download, Trash2, ShieldAlert, BarChart3 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
+import AnalyticsConsentControls from "@/components/AnalyticsConsentControls";
 import { isAdminEmail } from "@/lib/admin";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
@@ -353,6 +354,11 @@ export default function SettingsPage() {
         {/* Interviewer style */}
         <CardSection icon={<Mic size={16} />} title="Default interviewer style" delay={0.16}>
           <ToggleGroup options={STYLES} value={interviewerStyle} onChange={setInterviewerStyle} />
+        </CardSection>
+
+        {/* Analytics privacy */}
+        <CardSection icon={<BarChart3 size={16} />} title="Analytics & privacy" delay={0.18}>
+          <AnalyticsConsentControls />
         </CardSection>
 
         {/* Account */}

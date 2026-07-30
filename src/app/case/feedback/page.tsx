@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion } from "framer-motion";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { FirmKey, Difficulty, Evaluation } from "@/types";
 import { formatScore, formatScoreColor, formatDuration } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import { ArrowRight, Clock, AlertTriangle, Download } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -88,10 +89,12 @@ function offerBorder(d: string) {
 
 function FeedbackInner() {
   const router = useRouter();
+  const evaluationTrackedRef = useRef(false);
 
   const [firm, setFirm] = useState<FirmKey>("mckinsey");
   const [caseType, setCaseType] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
+  const [practiceMode, setPracticeMode] = useState("text");
   const [hintsUsed, setHintsUsed] = useState(0);
   const [duration, setDuration] = useState(0);
   const [transcriptRaw, setTranscriptRaw] = useState("[]");
@@ -127,6 +130,7 @@ function FeedbackInner() {
       setFirm(data.firm ?? "mckinsey");
       setCaseType(data.caseType ?? null);
       setDifficulty(data.difficulty ?? "intermediate");
+      setPracticeMode(data.mode ?? "text");
       setHintsUsed(data.hintsUsed ?? 0);
       setDuration(data.duration ?? 0);
       const t = data.transcript ?? [];
@@ -191,6 +195,19 @@ function FeedbackInner() {
       const data = await res.json();
       setEvaluation(data);
       setLoading(false);
+      if (!evaluationTrackedRef.current) {
+        evaluationTrackedRef.current = true;
+        trackEvent("case_evaluated", {
+          case_source: "ai",
+          firm,
+          case_type: caseType,
+          difficulty,
+          practice_mode: practiceMode,
+          duration_seconds: duration,
+          hints_used: hintsUsed,
+          score: data.overallScore,
+        });
+      }
       await saveSession(t, data.overallScore);
     } catch (err) {
       clearTimeout(timeoutId);

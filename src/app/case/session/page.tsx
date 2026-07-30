@@ -7,6 +7,7 @@ import { FirmKey, Difficulty, Mode, Message } from "@/types";
 import { FIRM_CONFIGS } from "@/lib/prompts/firms";
 import { INTERVIEWERS, type Interviewer } from "@/lib/interviewers";
 import { ArrowRight, Clock, Lightbulb, X } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const FONT = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
 
@@ -141,8 +142,18 @@ function SessionInner() {
 
   const handleEndSession = () => {
     if (timerRef.current) clearInterval(timerRef.current);
+    trackEvent("case_completed", {
+      case_source: "ai",
+      firm,
+      case_type: caseType,
+      difficulty,
+      practice_mode: mode,
+      duration_seconds: elapsedTime,
+      hints_used: hintsUsed,
+      user_responses: transcript.filter(message => message.role === "user").length,
+    });
     sessionStorage.setItem("transcriptData", JSON.stringify({
-      firm, caseType, difficulty, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider,
+      firm, caseType, difficulty, mode, hintsUsed, duration: elapsedTime, transcript, caseTitle, aiProvider,
     }));
     router.push("/case/feedback");
   };

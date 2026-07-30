@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GUIDED_CASES } from "@/lib/guidedCases";
+import { trackEvent } from "@/lib/analytics";
 import { ArrowRight, ChevronRight, BookOpen, MousePointerClick, MessageCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FloatingBlob from "@/components/FloatingBlob";
@@ -109,7 +110,18 @@ function GuidedCaseInner() {
   const currentQuestion = currentCase.questions.find(q => q.id === currentQuestionId);
   const selectedOption = currentQuestion?.options.find(o => o.id === selectedOptionId);
 
-  const handleStart = () => { startTimeRef.current = Date.now(); setCurrentQuestionId(currentCase.startQuestionId); setStage("question"); };
+  const handleStart = () => {
+    startTimeRef.current = Date.now();
+    trackEvent("case_started", {
+      case_source: "guided",
+      firm: currentCase.firm,
+      case_type: currentCase.type,
+      difficulty: currentCase.difficulty,
+      practice_mode: "guided",
+    });
+    setCurrentQuestionId(currentCase.startQuestionId);
+    setStage("question");
+  };
   const handleSelectOption = (optionId: string) => { if (!showFeedback) setSelectedOptionId(optionId); };
 
   const handleSubmitAnswer = () => {
@@ -134,6 +146,17 @@ function GuidedCaseInner() {
   const handleSubmitFinal = async () => {
     setSaving(true);
     const duration = startTimeRef.current ? Math.round((Date.now() - startTimeRef.current) / 1000) : 0;
+    trackEvent("case_completed", {
+      case_source: "guided",
+      firm: currentCase.firm,
+      case_type: currentCase.type,
+      difficulty: currentCase.difficulty,
+      practice_mode: "guided",
+      duration_seconds: duration,
+      hints_used: 0,
+      score,
+      decisions: questionCount,
+    });
     try {
       await fetch("/api/sessions/save", {
         method: "POST",

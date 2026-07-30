@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Product analytics
+
+MyCasePrep has consent-gated Google Analytics 4 and Amplitude instrumentation
+for acquisition, product funnels, and retention. Use `.env.example` as a
+reference, add the two provider IDs to the existing `.env.local`, and restart
+the development server.
+
+The full setup instructions, event dictionary, privacy rules, and recommended
+retention charts are in [`docs/analytics.md`](docs/analytics.md).
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
