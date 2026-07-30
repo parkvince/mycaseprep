@@ -134,21 +134,12 @@ export default function AuthPage() {
         <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
       </motion.div>
 
-      {/* Value context so this isn't a bare login wall - tells a first-time visitor
-          what they get, matching the "free" promise from the homepage. */}
       <motion.div
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }}
         style={{ width: "100%", maxWidth: "420px", marginBottom: "1rem", textAlign: "center" }}
       >
         <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--hp-foreground)", letterSpacing: "-0.01em", marginBottom: "0.5rem" }}>
           {tab === "signup" ? "Create your free account" : "Welcome back"}
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.4rem 0.9rem", fontSize: "0.78rem", color: "var(--hp-soft-foreground)" }}>
-          {["2 AI interviews / 12h - free", "16 firm-specific rubrics", "Instant scorecards"].map(t => (
-            <span key={t} style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
-              <span style={{ color: "#16a34a", fontWeight: 700 }}>✓</span>{t}
-            </span>
-          ))}
         </div>
       </motion.div>
 

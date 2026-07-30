@@ -475,10 +475,10 @@ export default function LandingPage() {
 
             <div style={{ maxWidth: "860px", margin: "0 auto", display: "grid", gap: "1rem" }}>
               {[
-                { title: "Data we collect", body: "When you sign up, MyCasePrep collects your name and email to create your account. If you sign in with Google, MyCasePrep receives your name, email, and profile photo - never your Google password. Your case interview transcripts, scores, and performance history are stored to power your history and tracking features.", color: "var(--hp-lavender)" },
-                { title: "Data sharing & security", body: "MyCasePrep does not sell, rent, or share your personal data with third parties for marketing purposes. Your interview transcripts are used only to generate your scorecard and are never shared publicly. Data is protected with industry-standard encryption in transit (HTTPS) and at rest.", color: "var(--hp-mint)" },
-                { title: "Interview processing", body: "Your interview responses are processed by a scoring system to generate feedback and dimensional scores. MyCasePrep does not use your transcripts to train any models. Your responses remain private to your account.", color: "var(--hp-peach)" },
-                { title: "Your data rights", body: "You can export all of your data or permanently delete your account and everything attached to it at any time, instantly, from Settings - no request or waiting period required.", color: "var(--hp-sky)" },
+                { title: "Data we collect", body: "To create and run your account, MyCasePrep stores your name and email. Email sign-ups also store a securely hashed password. If you sign in with Google, MyCasePrep receives your name, email, and profile photo - never your Google password. Saved practice data can include case details, interview transcripts, scores, duration, hints, and usage history.", color: "var(--hp-lavender)" },
+                { title: "Data sharing & security", body: "MyCasePrep does not sell or rent your personal data or share it for third-party advertising. Necessary service providers help operate hosting, database, authentication, and AI features. If you allow analytics, Google Analytics and Amplitude receive limited usage events, but never names, emails, prompts, answers, or transcripts. Data is encrypted in transit using HTTPS.", color: "var(--hp-mint)" },
+                { title: "Interview processing", body: "Case prompts and responses are sent to third-party AI providers to conduct interviews and generate feedback and dimensional scores. MyCasePrep does not train its own models on your transcripts. AI providers process submitted content under their own service terms, so avoid including sensitive personal information that is not needed for case practice.", color: "var(--hp-peach)" },
+                { title: "Your data rights", body: "From Settings, you can download your account profile, usage data, and saved practice sessions. You can also permanently delete your account, saved sessions, and usage record immediately after confirming your email. Messages submitted through the separate feedback form are not part of this export and may be retained as support records.", color: "var(--hp-sky)" },
               ].map((card, i) => (
                 <Reveal key={card.title} delay={i * 0.07}>
                   <div className="hp-surface-card" style={{ padding: "1.5rem 1.75rem", display: "flex", gap: "1.25rem", alignItems: "flex-start" }}>
@@ -499,7 +499,7 @@ export default function LandingPage() {
                 <p style={{ fontSize: "0.8rem", color: "var(--hp-soft-foreground)" }}>
                   Questions?{" "}
                   <a href="/feedback" style={{ color: "var(--hp-primary)", fontWeight: 600, textDecoration: "none" }}>Contact the MyCasePrep team</a>
-                  {" "}· Last updated June 26, 2026
+                  {" "}· Last updated July 30, 2026
                 </p>
               </div>
             </Reveal>
