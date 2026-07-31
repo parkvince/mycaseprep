@@ -244,8 +244,8 @@ function InterviewInner() {
   const targetSeconds = difficulty === "advanced" ? 15 * 60 : difficulty === "intermediate" ? 20 * 60 : 25 * 60;
   const remaining = Math.max(0, targetSeconds - elapsedTime);
   const timeColor = !timedMode
-    ? "rgba(255,255,255,0.3)"
-    : remaining === 0 ? "#ef4444" : remaining <= 120 ? "#f59e0b" : "rgba(255,255,255,0.55)";
+    ? "var(--text-secondary)"
+    : remaining === 0 ? "#ef4444" : remaining <= 120 ? "#f59e0b" : "#b45309";
 
   const pickVoice = (voices: SpeechSynthesisVoice[]) => {
     const en = voices.filter(v => v.lang.startsWith("en"));
@@ -662,27 +662,33 @@ function InterviewInner() {
 
   const ctrlBtn = (active = false, danger = false): React.CSSProperties => ({
     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-    gap: "4px", width: "68px", height: "52px", borderRadius: "10px",
-    border: `1px solid ${danger ? "#dc2626" : active ? "rgba(124,92,252,0.45)" : "rgba(255,255,255,0.1)"}`,
-    background: danger ? "#dc2626" : active ? "rgba(124,92,252,0.15)" : "rgba(255,255,255,0.05)",
-    color: danger ? "#fff" : active ? "#a78bfa" : "rgba(255,255,255,0.65)",
+    gap: "4px", width: "64px", minWidth: "56px", height: "56px", borderRadius: "12px",
+    border: "1px solid transparent",
+    background: danger ? "rgba(220,38,38,0.08)" : active ? "rgba(124,92,252,0.1)" : "transparent",
+    color: danger ? "var(--danger)" : active ? "#7c5cfc" : "var(--text-primary)",
     cursor: "pointer", flexShrink: 0, transition: "all 0.15s", fontFamily: FONT,
   });
 
   // ── NO CASE DATA ── (e.g. a refresh, or landing here directly instead of via the dashboard)
   if (ready && !casePrompt) {
     return (
-      <main style={{ height: "100vh", background: "#0d0d0d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: FONT, padding: "0 1.5rem", gap: "1rem", textAlign: "center" }}>
-        <p style={{ fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>No case loaded</p>
-        <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.4)", margin: 0, maxWidth: "360px" }}>
-          This can happen after a refresh. Start a new case from your dashboard.
-        </p>
-        <button
-          onClick={() => router.push("/dashboard")}
-          style={{ marginTop: "0.5rem", height: "44px", padding: "0 1.5rem", borderRadius: "10px", border: "none", background: "#fff", color: "#111", fontSize: "0.85rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer" }}
-        >
-          Go to dashboard
-        </button>
+      <main style={{ minHeight: "100dvh", background: "var(--bg)", display: "grid", placeItems: "center", color: "var(--text-primary)", fontFamily: FONT, padding: "24px" }}>
+        <section style={{ width: "100%", maxWidth: "480px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "16px", padding: "40px 32px", textAlign: "center" }}>
+          <div aria-hidden style={{ width: "48px", height: "48px", borderRadius: "12px", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--text-secondary)" }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/></svg>
+          </div>
+          <h1 style={{ fontSize: "1.25rem", lineHeight: 1.3, fontWeight: 700, margin: "0 0 8px" }}>No case loaded</h1>
+          <p style={{ fontSize: "0.875rem", lineHeight: 1.6, color: "var(--text-secondary)", margin: "0 auto 24px", maxWidth: "360px" }}>
+            This can happen after a refresh. Start a new case from your dashboard.
+          </p>
+          <button
+            aria-label="Go to dashboard"
+            onClick={() => router.push("/dashboard")}
+            style={{ height: "44px", padding: "0 20px", borderRadius: "8px", border: "none", background: "var(--accent)", color: "#fff", fontSize: "0.875rem", fontWeight: 700, fontFamily: FONT, cursor: "pointer" }}
+          >
+            Go to dashboard
+          </button>
+        </section>
       </main>
     );
   }
@@ -690,148 +696,210 @@ function InterviewInner() {
   // ── PRE-SESSION ──
   if (!sessionStarted) {
     return (
-      <main style={{ minHeight: "100vh", background: "#0d0d0d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: FONT, padding: "2.5rem 1.5rem" }}>
-        <div style={{ width: "100%", maxWidth: "480px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem" }}>
+      <main style={{ minHeight: "100dvh", background: "var(--bg)", display: "grid", placeItems: "center", color: "var(--text-primary)", fontFamily: FONT, padding: "32px 20px" }}>
+        <style>{`@media (max-width: 560px) { .hp-lobby-card { padding: 28px 20px !important; } }`}</style>
+        <section className="hp-lobby-card" style={{ width: "100%", maxWidth: "560px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "16px", padding: "40px", boxShadow: "0 20px 56px rgba(17,17,17,0.06)" }}>
 
-          <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", minHeight: "28px", padding: "4px 10px", borderRadius: "999px", background: `color-mix(in srgb, ${firmConfig.color} 10%, white)`, border: `1px solid color-mix(in srgb, ${firmConfig.color} 24%, var(--border))`, fontSize: "0.75rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "16px" }}>
+            <span aria-hidden style={{ width: "6px", height: "6px", borderRadius: "999px", background: firmConfig.color }} />
             {FIRM_SHORT[firm] ?? firmConfig.name} · Live interview
           </div>
 
-          <h1 style={{ fontSize: "clamp(1.25rem, 3vw, 1.75rem)", fontWeight: 800, margin: 0, textAlign: "center", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+          <h1 style={{ fontSize: "clamp(1.5rem, 4vw, 2rem)", fontWeight: 800, margin: "0 0 12px", letterSpacing: "-0.03em", lineHeight: 1.2 }}>
             {caseTitle}
           </h1>
 
-          <div style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.3)", textTransform: "capitalize" }}>{difficulty} difficulty</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
+            <span style={{ padding: "4px 10px", borderRadius: "999px", background: "var(--bg-elevated)", border: "1px solid var(--border)", fontSize: "0.75rem", color: "var(--text-secondary)", textTransform: "capitalize" }}>{difficulty}</span>
+            <span style={{ padding: "4px 10px", borderRadius: "999px", background: "var(--bg-elevated)", border: "1px solid var(--border)", fontSize: "0.75rem", color: "var(--text-secondary)", textTransform: "capitalize" }}>{caseType ?? "Case interview"}</span>
+          </div>
 
           {/* Interviewer */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.6rem" }}>
-            <div style={{ width: "84px", height: "84px", borderRadius: "9999px", overflow: "hidden", border: "2px solid rgba(255,255,255,0.1)", background: "linear-gradient(160deg, #2a2a3e 0%, #1c1c2a 100%)", display: "grid", placeItems: "center" }}>
-              <img src={interviewer.image} alt={interviewer.name} style={{ width: "82%", height: "82%", objectFit: "contain", marginTop: "10px" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "16px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", marginBottom: "20px" }}>
+            <div style={{ width: "52px", height: "52px", borderRadius: "999px", overflow: "hidden", background: "#0d0d0f", display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <img src={interviewer.image} alt={interviewer.name} style={{ width: "84%", height: "84%", objectFit: "contain", marginTop: "6px" }} />
             </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "0.9rem", fontWeight: 600 }}>{interviewer.name}</div>
-              <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", marginTop: "2px" }}>{interviewer.title}, {FIRM_SHORT[firm] ?? firmConfig.name}</div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: "0.875rem", fontWeight: 700 }}>{interviewer.name}</div>
+              <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "2px" }}>{interviewer.title}, {FIRM_SHORT[firm] ?? firmConfig.name}</div>
             </div>
           </div>
 
           {/* Case brief */}
           {casePrompt && (
-            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem 1.25rem", width: "100%", boxSizing: "border-box" }}>
-              <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", marginBottom: "0.5rem" }}>Case brief</div>
+            <div style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "12px", padding: "16px", width: "100%", marginBottom: "20px" }}>
+              <div style={{ fontSize: "0.6875rem", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: "8px" }}>Case brief</div>
               {/* Full text, never truncated - scrolls within the panel if the case runs long. */}
-              <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0, whiteSpace: "pre-wrap", maxHeight: "34vh", overflowY: "auto", paddingRight: "0.4rem" }}>
+              <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)", lineHeight: 1.7, margin: 0, whiteSpace: "pre-wrap", maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
                 {casePrompt}
               </p>
             </div>
           )}
 
-          <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.25)", textAlign: "center", lineHeight: 1.65, margin: 0 }}>
-            Your mic is live the moment you join - just talk naturally, no clicking or waiting your turn. Jump in anytime, even mid-sentence. You can also type instead.
+          <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", textAlign: "center", lineHeight: 1.6, margin: "0 0 16px" }}>
+            Your mic is live when you join. Talk naturally, jump in anytime, or type your response.
           </p>
 
           <button
+            aria-label="Join interview"
             onClick={startSession}
-            style={{ width: "100%", height: "48px", borderRadius: "10px", border: "none", background: "#fff", color: "#111", fontSize: "0.95rem", fontWeight: 700, cursor: "pointer", fontFamily: FONT, transition: "opacity 0.15s" }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = "0.88")}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = "1")}
+            style={{ width: "100%", height: "48px", borderRadius: "8px", border: "none", background: "var(--accent)", color: "#fff", fontSize: "0.875rem", fontWeight: 700, cursor: "pointer", fontFamily: FONT }}
           >
             Join interview
           </button>
 
           <button
+            aria-label="Back to dashboard"
             onClick={() => router.push("/dashboard")}
-            style={{ background: "transparent", color: "rgba(255,255,255,0.2)", border: "none", fontSize: "0.82rem", cursor: "pointer", fontFamily: FONT, transition: "color 0.15s" }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)")}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.2)")}
+            style={{ display: "block", margin: "12px auto 0", minHeight: "44px", padding: "0 12px", background: "transparent", color: "var(--text-secondary)", border: "none", fontSize: "0.8125rem", cursor: "pointer", fontFamily: FONT }}
           >
-            Back
+            Back to dashboard
           </button>
-        </div>
+        </section>
       </main>
     );
   }
 
   // ── ACTIVE SESSION ──
   return (
-    <main style={{ height: "100vh", background: "#111", display: "flex", flexDirection: "column", color: "#fff", overflow: "hidden", fontFamily: FONT, position: "relative" }}>
+    <main className={mediaError ? "hp-has-media-error" : undefined} style={{ height: "100dvh", minHeight: "560px", background: "var(--bg)", display: "flex", flexDirection: "column", color: "var(--text-primary)", overflow: "hidden", fontFamily: FONT, position: "relative" }}>
 
       <style>{`
-        @media (max-width: 760px) {
-          .hp-interview-video-grid { grid-template-columns: 1fr !important; grid-template-rows: 1fr 1fr !important; }
-          .hp-interview-ctrl-btn-label { display: none !important; }
-          .hp-interview-ctrl-btn { width: 44px !important; }
-          .hp-interview-chat-panel { position: fixed !important; inset: 44px 0 0 0 !important; width: 100% !important; z-index: 200; }
+        @keyframes hp-interview-ring {
+          0%, 100% { box-shadow: 0 0 0 2px rgba(124,92,252,.42), 0 0 28px rgba(124,92,252,.14); }
+          50% { box-shadow: 0 0 0 4px rgba(124,92,252,.72), 0 0 44px rgba(124,92,252,.28); }
         }
-        /* Barely-perceptible drift on the interviewer's "camera" so the static
-           photo reads as a live video feed instead of a frozen frame. */
-        @keyframes hp-kenburns {
-          0%   { transform: scale(1.02) translate(0, 0); }
-          50%  { transform: scale(1.07) translate(-0.6%, -0.8%); }
-          100% { transform: scale(1.03) translate(0.5%, 0.3%); }
+        @keyframes hp-interview-wave {
+          0%, 100% { transform: scaleY(.3); }
+          50% { transform: scaleY(1); }
         }
-        .hp-interviewer-video { animation: hp-kenburns 26s ease-in-out infinite alternate; transform-origin: center 30%; }
-        @keyframes hp-connect-pulse {
-          0%, 100% { opacity: 0.35; }
+        @keyframes hp-interview-dot {
+          0%, 80%, 100% { transform: translateY(0); opacity: .35; }
+          40% { transform: translateY(-4px); opacity: 1; }
+        }
+        @keyframes hp-interview-shimmer {
+          0%, 100% { opacity: .45; }
           50% { opacity: 1; }
+        }
+        .hp-speaking-ring { animation: hp-interview-ring 1.8s ease-in-out infinite; }
+        .hp-wave-bar { animation: hp-interview-wave .65s ease-in-out infinite; transform-origin: center; }
+        .hp-thinking-dot { animation: hp-interview-dot 1.1s ease-in-out infinite; }
+        .hp-connecting { animation: hp-interview-shimmer 1.5s ease-in-out infinite; }
+        .hp-interview-ctrl-btn:hover { background: var(--bg-elevated) !important; }
+        .hp-interview-ctrl-btn[data-active="true"]:hover { background: rgba(124,92,252,.14) !important; }
+        .hp-interview-ctrl-btn[data-danger="true"]:hover { background: rgba(220,38,38,.13) !important; }
+        .hp-topbar { display: grid !important; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); }
+        .hp-topbar-right { display: contents !important; }
+        .hp-top-status { grid-column: 2; }
+        .hp-topbar-right > button { grid-column: 3; justify-self: end; }
+        .hp-interview-control-bar {
+          position: absolute !important; left: 50%; bottom: 12px; transform: translateX(-50%);
+          width: max-content; max-width: calc(100% - 24px); height: 64px !important; padding: 4px 6px !important;
+          border: 1px solid var(--border) !important; border-radius: 999px; background: #fff !important;
+          box-shadow: 0 12px 36px rgba(17,17,17,.14); z-index: 40; overflow-x: auto;
+        }
+        .hp-interview-video-grid {
+          position: relative; display: block !important; padding: 12px 12px 88px !important;
+          background: var(--bg-card); overflow: hidden;
+        }
+        .hp-interviewer-tile { width: 100%; height: 100%; }
+        .hp-user-tile {
+          position: absolute !important; right: 28px; bottom: 104px; width: 180px; height: 132px;
+          border-color: rgba(255,255,255,.78) !important; box-shadow: 0 12px 32px rgba(0,0,0,.28); z-index: 5;
+        }
+        .hp-user-tile.hp-user-speaking { border-color: var(--success) !important; }
+        .hp-interview-chat-panel, .hp-case-sheet {
+          position: fixed !important; top: 56px !important; right: 0 !important; bottom: 0 !important;
+          left: auto !important;
+          width: 380px !important; height: auto !important; background: #fff !important; color: var(--text-primary) !important;
+          border-left: 1px solid var(--border) !important; box-shadow: -16px 0 40px rgba(17,17,17,.08);
+          z-index: 60 !important;
+        }
+        .hp-has-media-error .hp-interview-chat-panel, .hp-has-media-error .hp-case-sheet { top: 88px !important; }
+        .hp-has-media-error .hp-hint-toast { top: 104px !important; }
+        .hp-hint-toast { background: #fff !important; color: var(--text-primary) !important; border-color: rgba(124,92,252,.28) !important; box-shadow: 0 16px 40px rgba(17,17,17,.14) !important; }
+        .hp-caption { position: fixed !important; left: 50% !important; right: auto !important; bottom: 88px !important; width: auto; max-width: min(640px, calc(100% - 48px)); transform: translateX(-50%) !important; z-index: 35; }
+        @media (max-width: 767px) {
+          .hp-topbar { height: 88px !important; padding: 10px 12px !important; grid-template-columns: minmax(0,1fr) auto !important; grid-template-rows: auto auto; align-content: center; gap: 6px 10px !important; }
+          .hp-topbar-left { grid-column: 1; grid-row: 1; min-width: 0; }
+          .hp-topbar-right > button { grid-column: 2; grid-row: 1; }
+          .hp-top-status { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+          .hp-interview-video-grid { padding: 8px 8px 84px !important; display: grid !important; grid-template-rows: minmax(220px,1fr) 136px !important; gap: 8px !important; }
+          .hp-interviewer-tile { min-height: 0; }
+          .hp-user-tile { position: relative !important; inset: auto !important; width: 100% !important; height: 136px !important; }
+          .hp-interview-control-bar { left: 8px !important; right: 8px !important; transform: none !important; width: auto !important; justify-content: flex-start !important; }
+          .hp-interview-ctrl-btn { width: 56px !important; min-width: 52px !important; }
+          .hp-interview-chat-panel, .hp-case-sheet {
+            top: auto !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+            width: 100% !important; height: auto !important; max-height: 70vh !important;
+            border-left: none !important; border-top: 1px solid var(--border) !important; border-radius: 16px 16px 0 0;
+          }
+          .hp-has-media-error .hp-interview-chat-panel, .hp-has-media-error .hp-case-sheet { top: auto !important; }
+          .hp-hint-toast { top: 96px !important; width: calc(100% - 16px) !important; max-width: none !important; }
+          .hp-has-media-error .hp-hint-toast { top: 128px !important; }
+          .hp-caption { bottom: 84px !important; max-width: calc(100% - 32px) !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hp-speaking-ring, .hp-wave-bar, .hp-thinking-dot, .hp-connecting { animation: none !important; }
         }
       `}</style>
 
-      {/* Media permission warning */}
-      {mediaError && (
-        <div style={{ padding: "0.5rem 1.25rem", background: "rgba(245,158,11,0.12)", borderBottom: "1px solid rgba(245,158,11,0.3)", fontSize: "0.75rem", color: "#fbbf24", textAlign: "center", flexShrink: 0 }}>
-          Camera/mic access wasn&apos;t granted - voice barge-in won&apos;t detect your volume. You can still type, or use the Mute/Unmute button after allowing mic access in your browser.
-        </div>
-      )}
-
       {/* Top bar */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 1.25rem", height: "44px", background: "#191919", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "-0.01em", color: "#fff" }}>
-            <img src="/newlogomcp.png" alt="" style={{ width: "18px", height: "18px", flexShrink: 0 }} />
-            <span style={{ position: "relative", top: "-1px" }}>mycaseprep</span>
+      <div className="hp-topbar" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", padding: "0 16px", height: "56px", background: "var(--bg)", borderBottom: "1px solid var(--border)", flexShrink: 0, zIndex: 50 }}>
+        <div className="hp-topbar-left" style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", fontWeight: 700, fontSize: "0.9rem", color: "var(--text-primary)", flexShrink: 0 }}>
+            <img src="/newlogomcp.png" alt="" aria-hidden style={{ width: "24px", height: "24px" }} />
           </span>
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e", flexShrink: 0 }} />
-          <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "280px" }}>
+          <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {caseTitle} · {FIRM_SHORT[firm] ?? firmConfig.name}
           </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div className="hp-topbar-right" style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
           {/* Whose turn it is changes without any user action, so screen readers
               need it announced (WCAG 4.1.3) - otherwise a blind candidate has no
               way to know the interviewer stopped talking. */}
-          <div role="status" aria-live="polite" style={{
-            padding: "3px 10px", borderRadius: "9999px", fontSize: "0.72rem", fontWeight: 600,
-            background: !interviewerJoined ? "rgba(255,255,255,0.06)" : isSpeaking ? "rgba(167,139,250,0.15)" : loading ? "rgba(245,158,11,0.12)" : "rgba(34,197,94,0.15)",
-            color: !interviewerJoined ? "rgba(255,255,255,0.4)" : isSpeaking ? "#a78bfa" : loading ? "#f59e0b" : "#22c55e",
-            border: `1px solid ${!interviewerJoined ? "rgba(255,255,255,0.1)" : isSpeaking ? "rgba(167,139,250,0.3)" : loading ? "rgba(245,158,11,0.3)" : "rgba(34,197,94,0.3)"}`,
+          <div className="hp-top-status" role="status" aria-live="polite" style={{
+            display: "inline-flex", alignItems: "center", gap: "7px", padding: "5px 10px", borderRadius: "999px", fontSize: "0.6875rem", fontWeight: 700,
+            background: !interviewerJoined ? "var(--bg-elevated)" : isSpeaking ? "rgba(124,92,252,0.09)" : loading ? "rgba(245,158,11,0.1)" : "rgba(22,163,74,0.09)",
+            color: "var(--text-primary)", border: "1px solid var(--border)", whiteSpace: "nowrap",
             transition: "all 0.3s",
           }}>
-            {!interviewerJoined ? "Connecting..." : loading ? "Thinking..." : isSpeaking ? "Interviewer speaking - jump in anytime" : isListening ? "Listening..." : "Your turn"}
+            <span aria-hidden style={{ width: "7px", height: "7px", borderRadius: "999px", background: !interviewerJoined ? "#a3a3a3" : isSpeaking ? "#7c5cfc" : loading ? "#f59e0b" : "var(--success)" }} />
+            {!interviewerJoined ? "Connecting…" : loading ? "Thinking" : isSpeaking ? "Interviewer speaking" : isListening ? "Listening" : "Your turn"}
           </div>
           <button
+            aria-label={timedMode ? "Switch to count-up timer" : "Switch to countdown timer"}
+            aria-pressed={timedMode}
             onClick={() => setTimedMode(t => !t)}
             title={timedMode ? "Switch to a count-up timer" : "Switch to a timed countdown for interview pressure"}
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem", background: timedMode ? "rgba(245,158,11,0.12)" : "rgba(255,255,255,0.05)", border: `1px solid ${timedMode ? "rgba(245,158,11,0.3)" : "rgba(255,255,255,0.1)"}`, borderRadius: "9999px", padding: "3px 10px", cursor: "pointer", fontFamily: FONT }}
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px", height: "44px", background: timedMode ? "rgba(245,158,11,0.1)" : "var(--bg-card)", border: `1px solid ${timedMode ? "rgba(245,158,11,0.35)" : "var(--border)"}`, borderRadius: "999px", padding: "0 12px", cursor: "pointer", fontFamily: FONT, flexShrink: 0 }}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={timeColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2" /><path d="M9 2h6" /></svg>
-            <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.8rem", color: timeColor, fontWeight: timedMode ? 700 : 400 }}>
+            <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={timeColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2" /><path d="M9 2h6" /></svg>
+            <span style={{ fontVariantNumeric: "tabular-nums", fontSize: "0.75rem", color: timeColor, fontWeight: 700 }}>
               {timedMode ? (remaining === 0 ? "Time's up" : formatTime(remaining)) : formatTime(elapsedTime)}
             </span>
           </button>
         </div>
       </div>
 
+      {/* Media permission warning */}
+      {mediaError && (
+        <div role="alert" style={{ padding: "7px 16px", background: "rgba(245,158,11,0.1)", borderBottom: "1px solid rgba(245,158,11,0.3)", fontSize: "0.75rem", color: "#92400e", textAlign: "center", flexShrink: 0 }}>
+          Camera or microphone permission was denied. You can still type, or allow access in your browser to use voice and video.
+        </div>
+      )}
+
       {/* Hint overlay */}
       <AnimatePresence>
         {showHint && (
-          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            style={{ position: "absolute", top: "52px", left: "50%", transform: "translateX(-50%)", width: "460px", maxWidth: "90vw", background: "#1a1a2e", border: "1px solid rgba(124,92,252,0.3)", borderRadius: "12px", padding: "1rem 1.1rem", zIndex: 400, boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}>
+          <motion.div className="hp-hint-toast" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{ position: "absolute", top: "72px", left: "50%", transform: "translateX(-50%)", width: "520px", maxWidth: "calc(100% - 48px)", background: "#fff", border: "1px solid rgba(124,92,252,0.3)", borderRadius: "12px", padding: "16px", zIndex: 70, boxShadow: "0 16px 40px rgba(17,17,17,0.14)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "0.75rem" }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#a78bfa", marginBottom: "0.4rem" }}>Hint {hintsUsed}</div>
-                <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.65, margin: 0 }}>{getHint(hintsUsed, caseContext, casePrompt)}</p>
+                <div style={{ fontSize: "0.6875rem", fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#7c5cfc", marginBottom: "4px" }}>Hint {hintsUsed}</div>
+                <p style={{ fontSize: "0.8125rem", color: "var(--text-primary)", lineHeight: 1.6, margin: 0 }}>{getHint(hintsUsed, caseContext, casePrompt)}</p>
               </div>
-              <button onClick={() => setShowHint(false)} style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: "6px", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: "1rem", width: "24px", height: "24px", display: "grid", placeItems: "center", flexShrink: 0 }}>✕</button>
+              <button aria-label="Dismiss hint" onClick={() => setShowHint(false)} style={{ background: "var(--bg-elevated)", border: "none", borderRadius: "8px", color: "var(--text-secondary)", cursor: "pointer", fontSize: "1rem", width: "44px", height: "44px", display: "grid", placeItems: "center", flexShrink: 0 }}>×</button>
             </div>
           </motion.div>
         )}
@@ -840,14 +908,14 @@ function InterviewInner() {
       {/* Case overlay */}
       <AnimatePresence>
         {showCaseOverlay && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
-            style={{ position: "absolute", bottom: "76px", left: "50%", transform: "translateX(-50%)", width: "520px", maxWidth: "90vw", background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "14px", zIndex: 300, boxShadow: "0 24px 60px rgba(0,0,0,0.7)", maxHeight: "50vh", display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.875rem 1.1rem", borderBottom: "1px solid rgba(255,255,255,0.07)", flexShrink: 0 }}>
-              <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>Case brief</span>
-              <button onClick={() => setShowCaseOverlay(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: "1.1rem", lineHeight: 1 }}>✕</button>
+          <motion.div className="hp-case-sheet" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }} transition={{ duration: 0.18, ease: "easeOut" }}
+            role="dialog" aria-label="Case brief" style={{ position: "absolute", bottom: "76px", left: "50%", transform: "translateX(-50%)", width: "520px", maxWidth: "90vw", background: "#fff", border: "1px solid var(--border)", borderRadius: "16px", zIndex: 60, boxShadow: "0 24px 60px rgba(17,17,17,0.14)", maxHeight: "50vh", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: "56px", padding: "0 16px", borderBottom: "1px solid var(--border)", flexShrink: 0 }}>
+              <span style={{ fontSize: "0.875rem", fontWeight: 800, color: "var(--text-primary)" }}>Case brief</span>
+              <button aria-label="Close case brief" onClick={() => setShowCaseOverlay(false)} style={{ background: "var(--bg-elevated)", border: "none", borderRadius: "8px", color: "var(--text-secondary)", cursor: "pointer", fontSize: "1.1rem", width: "44px", height: "44px", display: "grid", placeItems: "center" }}>×</button>
             </div>
-            <div style={{ overflowY: "auto", padding: "1rem 1.1rem" }}>
-              <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.8, margin: 0, whiteSpace: "pre-wrap" }}>{casePrompt}</p>
+            <div style={{ overflowY: "auto", padding: "20px" }}>
+              <p style={{ fontSize: "0.8125rem", color: "var(--text-primary)", lineHeight: 1.75, margin: 0, whiteSpace: "pre-wrap" }}>{casePrompt}</p>
             </div>
           </motion.div>
         )}
@@ -861,19 +929,11 @@ function InterviewInner() {
           <div className="hp-interview-video-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", padding: "10px 10px 6px", overflow: "hidden" }}>
 
             {/* Interviewer tile */}
-            <div style={{ borderRadius: "12px", overflow: "hidden", background: "#1c1c1c", position: "relative", border: `2px solid ${isSpeaking ? "#a78bfa" : "rgba(255,255,255,0.04)"}`, transition: "border-color 0.25s", boxShadow: isSpeaking ? "0 0 0 4px rgba(167,139,250,0.12)" : "none" }}>
-              {isSpeaking && (
-                <motion.div
-                  aria-hidden
-                  animate={{ opacity: [0.35, 0.7, 0.35] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                  style={{ position: "absolute", inset: 0, borderRadius: "12px", boxShadow: "0 0 24px 4px rgba(167,139,250,0.35) inset", pointerEvents: "none", zIndex: 1 }}
-                />
-              )}
+            <div className={`hp-interviewer-tile${isSpeaking ? " hp-speaking-ring" : ""}`} style={{ borderRadius: "16px", overflow: "hidden", background: "#0d0d0f", position: "relative", border: "1px solid rgba(255,255,255,0.1)", transition: "border-color 0.25s" }}>
               {interviewerJoined ? (
                 <motion.div
-                  initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
-                  style={{ width: "100%", height: "100%", background: "linear-gradient(165deg, #2e2e44 0%, #232338 45%, #1a1a28 100%)", display: "grid", placeItems: "center" }}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18, ease: "easeOut" }}
+                  style={{ width: "100%", height: "100%", background: "radial-gradient(circle at 50% 42%, #262638 0%, #15151c 48%, #0d0d0f 100%)", display: "grid", placeItems: "center" }}
                 >
                   <img
                     className="hp-interviewer-video"
@@ -882,55 +942,55 @@ function InterviewInner() {
                   />
                 </motion.div>
               ) : (
-                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.9rem" }}>
+                <div className="hp-connecting" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px" }}>
                   <div style={{ width: "72px", height: "72px", borderRadius: "9999px", background: "rgba(255,255,255,0.07)", display: "grid", placeItems: "center", fontSize: "1.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)" }}>
                     {interviewer.name.charAt(0)}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", fontSize: "0.78rem", color: "rgba(255,255,255,0.4)", animation: "hp-connect-pulse 1.6s ease-in-out infinite" }}>
-                    {interviewer.name} is connecting...
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.8125rem", color: "rgba(255,255,255,0.64)" }}>
+                    Connecting…
                   </div>
                 </div>
               )}
 
               <AnimatePresence>
                 {isSpeaking && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    style={{ position: "absolute", bottom: "44px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "3px", alignItems: "center", background: "rgba(0,0,0,0.6)", borderRadius: "20px", padding: "6px 12px" }}>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18, ease: "easeOut" }}
+                    style={{ position: "absolute", bottom: "56px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "4px", alignItems: "center", background: "rgba(13,13,15,0.72)", borderRadius: "999px", padding: "6px 12px" }}>
                     {[0, 1, 2, 3, 4].map(i => (
-                      <motion.div key={i} animate={{ height: ["3px", "14px", "3px"] }} transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.09 }}
-                        style={{ width: "3px", background: "#a78bfa", borderRadius: "2px" }} />
+                      <span className="hp-wave-bar" key={i} style={{ width: "3px", height: i === 2 ? "16px" : "12px", background: "#a78bfa", borderRadius: "999px", animationDelay: `${i * 80}ms` }} />
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {loading && !isSpeaking && (
-                <div style={{ position: "absolute", bottom: "44px", left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.55)", borderRadius: "20px", padding: "6px 12px", display: "flex", gap: "4px", alignItems: "center" }}>
+                <div aria-label="Interviewer is thinking" style={{ position: "absolute", bottom: "56px", left: "50%", transform: "translateX(-50%)", background: "rgba(13,13,15,0.72)", borderRadius: "999px", padding: "8px 12px", display: "flex", gap: "5px", alignItems: "center" }}>
                   {[0, 1, 2].map(i => (
-                    <motion.div key={i} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-                      style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255,255,255,0.45)" }} />
+                    <span className="hp-thinking-dot" key={i} style={{ width: "5px", height: "5px", borderRadius: "999px", background: "#f59e0b", animationDelay: `${i * 140}ms` }} />
                   ))}
                 </div>
               )}
 
               <div style={{ position: "absolute", bottom: "10px", left: "10px", background: "rgba(0,0,0,0.6)", borderRadius: "8px", padding: "4px 10px" }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 600 }}>{interviewer.name}</div>
-                <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.35)" }}>{FIRM_SHORT[firm] ?? firmConfig.name}</div>
+                <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.62)" }}>{interviewer.title} · {FIRM_SHORT[firm] ?? firmConfig.name}</div>
               </div>
 
-              <button onClick={() => {
-                stopSpeaking();
-                isSpeakingRef.current = false;
-                setIsSpeaking(false);
-                if (!isMuted && !loadingRef.current) startListening();
-              }}
-                style={{ position: "absolute", top: "10px", right: "10px", background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "3px 8px", fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: FONT }}>
-                Stop talking
-              </button>
+              {isSpeaking && (
+                <button aria-label="Stop interviewer speaking" onClick={() => {
+                  stopSpeaking();
+                  isSpeakingRef.current = false;
+                  setIsSpeaking(false);
+                  if (!isMuted && !loadingRef.current) startListening();
+                }}
+                  style={{ position: "absolute", top: "12px", right: "12px", minHeight: "44px", background: "rgba(255,255,255,0.94)", border: "1px solid rgba(255,255,255,0.5)", borderRadius: "999px", padding: "0 14px", fontSize: "0.6875rem", fontWeight: 700, color: "#111", cursor: "pointer", fontFamily: FONT }}>
+                  Stop talking
+                </button>
+              )}
             </div>
 
             {/* User tile */}
-            <div style={{ borderRadius: "12px", overflow: "hidden", background: "#1c1c1c", position: "relative", border: `2px solid ${userSpeaking && !isMuted ? "#22c55e" : "rgba(255,255,255,0.04)"}`, transition: "border-color 0.15s" }}>
+            <div className={`hp-user-tile${userSpeaking && !isMuted ? " hp-user-speaking" : ""}`} style={{ borderRadius: "12px", overflow: "hidden", background: "#0d0d0f", position: "relative", border: `2px solid ${userSpeaking && !isMuted ? "var(--success)" : "rgba(255,255,255,0.78)"}`, transition: "border-color 0.15s" }}>
               {userVideoEnabled && !isVideoOff ? (
                 <video ref={userVideoRef} autoPlay muted playsInline style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)", display: "block" }} />
               ) : (
@@ -951,7 +1011,7 @@ function InterviewInner() {
               {/* Live caption - shows what's being heard right now, even if the chat panel is closed */}
               <AnimatePresence>
                 {isListening && (
-                  <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+                  <motion.div className="hp-caption" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.18, ease: "easeOut" }}
                     style={{ position: "absolute", bottom: "44px", left: "10px", right: "10px", background: "rgba(0,0,0,0.65)", borderRadius: "10px", padding: "6px 10px", fontSize: "0.78rem", lineHeight: 1.4, color: "rgba(255,255,255,0.85)" }}>
                     {interimText || <span style={{ color: "rgba(255,255,255,0.35)" }}>Listening...</span>}
                   </motion.div>
@@ -964,39 +1024,40 @@ function InterviewInner() {
                 {userSpeaking && !isMuted && (
                   <div style={{ display: "flex", gap: "2px", alignItems: "center" }}>
                     {[0, 1, 2].map(i => (
-                      <motion.div key={i} animate={{ height: ["2px", "8px", "2px"] }} transition={{ duration: 0.4, repeat: Infinity, delay: i * 0.1 }}
-                        style={{ width: "2px", background: "#22c55e", borderRadius: "1px" }} />
+                      <span className="hp-wave-bar" key={i} style={{ width: "2px", height: "8px", background: "var(--success)", borderRadius: "1px", animationDelay: `${i * 100}ms` }} />
                     ))}
                   </div>
                 )}
               </div>
+              {isVideoOff && <span style={{ position: "absolute", top: "8px", right: "8px", padding: "3px 7px", borderRadius: "8px", background: "rgba(13,13,15,0.72)", color: "rgba(255,255,255,0.8)", fontSize: "0.625rem", fontWeight: 700 }}>Camera off</span>}
             </div>
           </div>
 
           {/* Control bar */}
-          <div style={{ height: "64px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", background: "#191919", borderTop: "1px solid rgba(255,255,255,0.06)", flexShrink: 0, padding: "0 1rem" }}>
-            <button className="hp-interview-ctrl-btn" aria-label={isMuted ? "Unmute microphone" : "Mute microphone"} aria-pressed={isMuted} onClick={toggleMute} style={ctrlBtn(isMuted)}>
+          <div className="hp-interview-control-bar" role="toolbar" aria-label="Interview controls" style={{ height: "64px", display: "flex", alignItems: "center", justifyContent: "center", gap: "2px", background: "#fff", borderTop: "1px solid var(--border)", flexShrink: 0, padding: "0 16px" }}>
+            <button className="hp-interview-ctrl-btn" data-active={isMuted} aria-label={isMuted ? "Unmute microphone" : "Mute microphone"} aria-pressed={isMuted} onClick={toggleMute} style={ctrlBtn(isMuted)}>
               <MicIcon muted={isMuted} />
               <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isMuted ? "Unmute" : "Mute"}</span>
             </button>
-            <button className="hp-interview-ctrl-btn" aria-label={isVideoOff ? "Turn camera on" : "Turn camera off"} aria-pressed={isVideoOff} onClick={toggleVideo} style={ctrlBtn(isVideoOff)}>
+            <button className="hp-interview-ctrl-btn" data-active={isVideoOff} aria-label={isVideoOff ? "Turn camera on" : "Turn camera off"} aria-pressed={isVideoOff} onClick={toggleVideo} style={ctrlBtn(isVideoOff)}>
               <CameraIcon off={isVideoOff} />
-              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isVideoOff ? "Start cam" : "Stop cam"}</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>{isVideoOff ? "Camera on" : "Camera off"}</span>
             </button>
+            <span aria-hidden style={{ width: "1px", height: "32px", background: "var(--border)", margin: "0 3px", flexShrink: 0 }} />
             <button className="hp-interview-ctrl-btn" aria-label="Show a hint" onClick={() => { setHintsUsed(h => h + 1); setShowHint(true); }} style={ctrlBtn(false)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
               <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Hint{hintsUsed > 0 ? ` (${hintsUsed})` : ""}</span>
             </button>
-            <button className="hp-interview-ctrl-btn" aria-label="Show the case brief" aria-pressed={showCaseOverlay} onClick={() => setShowCaseOverlay(v => !v)} style={ctrlBtn(showCaseOverlay)}>
+            <button className="hp-interview-ctrl-btn" data-active={showCaseOverlay} aria-label="Toggle case brief" aria-pressed={showCaseOverlay} onClick={() => { setShowChat(false); setShowCaseOverlay(v => !v); }} style={ctrlBtn(showCaseOverlay)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
               <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Case</span>
             </button>
-            <button className="hp-interview-ctrl-btn" aria-label="Show the transcript panel" aria-pressed={showChat} onClick={() => setShowChat(v => !v)} style={ctrlBtn(showChat)}>
+            <button className="hp-interview-ctrl-btn" data-active={showChat} aria-label="Toggle transcript" aria-pressed={showChat} onClick={() => { setShowCaseOverlay(false); setShowChat(v => !v); }} style={ctrlBtn(showChat)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Chat</span>
+              <span className="hp-interview-ctrl-btn-label" style={{ fontSize: "0.6rem", fontWeight: 600 }}>Transcript</span>
             </button>
-            <div style={{ flex: 1 }} />
-            <button aria-label="End the interview" onClick={() => setShowEndConfirm(true)} style={ctrlBtn(false, true)}>
+            <span aria-hidden style={{ width: "1px", height: "32px", background: "var(--border)", margin: "0 3px", flexShrink: 0 }} />
+            <button className="hp-interview-ctrl-btn" data-danger="true" aria-label="End the interview" onClick={() => setShowEndConfirm(true)} style={ctrlBtn(false, true)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" transform="rotate(135 12 12)"/></svg>
               <span style={{ fontSize: "0.6rem", fontWeight: 600 }}>End</span>
             </button>
@@ -1006,32 +1067,37 @@ function InterviewInner() {
         {/* Chat panel */}
         <AnimatePresence>
           {showChat && (
-            <motion.div className="hp-interview-chat-panel" initial={{ width: 0, opacity: 0 }} animate={{ width: 280, opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.2 }}
-              style={{ borderLeft: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", overflow: "hidden", background: "#161616", flexShrink: 0 }}>
-              <div style={{ padding: "0.65rem 0.875rem", borderBottom: "1px solid rgba(255,255,255,0.06)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", flexShrink: 0 }}>
-                Transcript
+            <motion.div className="hp-interview-chat-panel" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }} transition={{ duration: 0.18, ease: "easeOut" }}
+              role="dialog" aria-label="Interview transcript" style={{ borderLeft: "1px solid var(--border)", display: "flex", flexDirection: "column", overflow: "hidden", background: "#fff", flexShrink: 0 }}>
+              <div style={{ minHeight: "56px", padding: "0 16px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+                <div>
+                  <div style={{ fontSize: "0.875rem", fontWeight: 800, color: "var(--text-primary)" }}>Transcript</div>
+                  <div style={{ fontSize: "0.6875rem", color: "var(--text-secondary)", marginTop: "2px" }}>{transcript.length} messages</div>
+                </div>
+                <button aria-label="Close transcript" onClick={() => setShowChat(false)} style={{ width: "44px", height: "44px", borderRadius: "8px", border: "none", background: "var(--bg-elevated)", color: "var(--text-secondary)", display: "grid", placeItems: "center", cursor: "pointer", fontSize: "1.1rem" }}>×</button>
               </div>
-              <div style={{ flex: 1, overflowY: "auto", padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
                 {transcript.map((msg, i) => (
-                  <div key={i} style={{ display: "flex", flexDirection: "column", gap: "3px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
-                    <span style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.2)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      {msg.role === "user" ? (session?.user?.name ?? "You") : interviewer.name}
-                    </span>
-                    <div style={{ maxWidth: "90%", padding: "0.5rem 0.75rem", borderRadius: msg.role === "user" ? "10px 3px 10px 10px" : "3px 10px 10px 10px", background: msg.role === "user" ? "rgba(124,92,252,0.2)" : "rgba(255,255,255,0.05)", fontSize: "0.8rem", lineHeight: 1.6, color: "rgba(255,255,255,0.75)" }}>
+                  <div key={i} style={{ display: "flex", flexDirection: "column", gap: "5px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.625rem", color: "var(--text-secondary)", fontWeight: 700 }}>
+                      <span>{msg.role === "user" ? (session?.user?.name ?? "You") : interviewer.name}</span>
+                      <span aria-hidden>·</span>
+                      <time>{msg.timestamp.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</time>
+                    </div>
+                    <div style={{ maxWidth: "88%", padding: "10px 12px", borderRadius: msg.role === "user" ? "12px 4px 12px 12px" : "4px 12px 12px 12px", background: msg.role === "user" ? "rgba(124,92,252,0.1)" : "var(--bg-elevated)", border: msg.role === "user" ? "1px solid rgba(124,92,252,0.18)" : "1px solid var(--border)", fontSize: "0.8125rem", lineHeight: 1.6, color: "var(--text-primary)" }}>
                       {renderContent(msg.content)}
                     </div>
                   </div>
                 ))}
                 {loading && (
-                  <div style={{ padding: "0.5rem 0.75rem", borderRadius: "3px 10px 10px 10px", background: "rgba(255,255,255,0.05)", width: "fit-content", display: "flex", gap: "3px", alignItems: "center" }}>
+                  <div aria-label="Interviewer is typing" style={{ padding: "10px 12px", borderRadius: "4px 12px 12px 12px", background: "var(--bg-elevated)", border: "1px solid var(--border)", width: "fit-content", display: "flex", gap: "5px", alignItems: "center" }}>
                     {[0, 1, 2].map(i => (
-                      <motion.div key={i} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-                        style={{ width: "4px", height: "4px", borderRadius: "50%", background: "rgba(255,255,255,0.35)" }} />
+                      <span className="hp-thinking-dot" key={i} style={{ width: "5px", height: "5px", borderRadius: "999px", background: "var(--text-secondary)", animationDelay: `${i * 140}ms` }} />
                     ))}
                   </div>
                 )}
                 {isListening && interimText && (
-                  <div style={{ padding: "0.5rem 0.75rem", borderRadius: "10px 3px 10px 10px", background: "rgba(124,92,252,0.06)", border: "1px dashed rgba(124,92,252,0.2)", fontSize: "0.75rem", color: "rgba(255,255,255,0.25)", alignSelf: "flex-end", maxWidth: "90%" }}>
+                  <div style={{ padding: "8px 10px", borderRadius: "12px 4px 12px 12px", background: "rgba(124,92,252,0.05)", border: "1px dashed rgba(124,92,252,0.24)", fontSize: "0.75rem", color: "var(--text-secondary)", fontStyle: "italic", alignSelf: "flex-end", maxWidth: "88%" }}>
                     {interimText}
                   </div>
                 )}
@@ -1039,26 +1105,28 @@ function InterviewInner() {
               </div>
 
               {/* Input */}
-              <div style={{ padding: "0.625rem 0.75rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexShrink: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.68rem", color: isListening ? "#a78bfa" : "rgba(255,255,255,0.25)", fontWeight: 600 }}>
-                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: isListening ? "#a78bfa" : isMuted ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.25)", flexShrink: 0 }} />
-                  {isMuted ? "Muted - unmute to talk" : isListening ? "Listening..." : "Type below, or just talk - jump in anytime"}
+              <div style={{ padding: "12px", borderTop: "1px solid var(--border)", background: "#fff", flexShrink: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.6875rem", color: isListening ? "#7c5cfc" : "var(--text-secondary)", fontWeight: 700 }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "999px", background: isListening ? "#7c5cfc" : isMuted ? "var(--danger)" : "var(--text-secondary)", flexShrink: 0 }} />
+                  {isMuted ? "Muted — unmute to talk" : isListening ? "Listening…" : "Type below, or just talk"}
                 </div>
                 <textarea
+                  aria-label="Type your interview response"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onFocus={() => { if (isListening) stopListening(); }}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}
                   placeholder={isListening ? "Listening..." : "Type your response..."}
-                  style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: `1px solid ${isListening ? "rgba(124,92,252,0.35)" : "rgba(255,255,255,0.07)"}`, borderRadius: "8px", padding: "0.5rem 0.7rem", color: "#fff", fontSize: "0.8rem", fontFamily: FONT, resize: "none", minHeight: "48px", maxHeight: "88px", outline: "none", lineHeight: 1.55, boxSizing: "border-box" }}
+                  style={{ width: "100%", background: "var(--bg-card)", border: `1px solid ${isListening ? "rgba(124,92,252,0.35)" : "var(--border)"}`, borderRadius: "8px", padding: "10px 12px", color: "var(--text-primary)", fontSize: "0.8125rem", fontFamily: FONT, resize: "none", minHeight: "64px", maxHeight: "104px", lineHeight: 1.55, boxSizing: "border-box" }}
                   rows={2}
                 />
                 <button
+                  aria-label="Send response"
                   onClick={() => sendMessage(input)}
                   disabled={loading || !input.trim()}
-                  style={{ height: "32px", borderRadius: "7px", border: "none", background: loading || !input.trim() ? "rgba(255,255,255,0.06)" : "#fff", color: loading || !input.trim() ? "rgba(255,255,255,0.18)" : "#111", cursor: loading || !input.trim() ? "not-allowed" : "pointer", fontSize: "0.75rem", fontFamily: FONT, fontWeight: 700 }}
+                  style={{ height: "44px", borderRadius: "8px", border: "none", background: loading || !input.trim() ? "var(--bg-elevated)" : "var(--accent)", color: loading || !input.trim() ? "var(--text-secondary)" : "#fff", cursor: loading || !input.trim() ? "not-allowed" : "pointer", fontSize: "0.75rem", fontFamily: FONT, fontWeight: 700 }}
                 >
-                  Submit
+                  Send
                 </button>
               </div>
             </motion.div>
@@ -1069,23 +1137,23 @@ function InterviewInner() {
       {/* End confirm modal */}
       <AnimatePresence>
         {showEndConfirm && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 500 }}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{ position: "fixed", inset: 0, background: "rgba(17,17,17,0.48)", display: "grid", placeItems: "center", zIndex: 100, padding: "20px" }}
             onClick={() => setShowEndConfirm(false)}>
-            <motion.div initial={{ opacity: 0, scale: 0.96, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.15 }}
+            <motion.div role="dialog" aria-modal="true" aria-labelledby="hp-end-title" initial={{ opacity: 0, scale: 0.96, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 8 }} transition={{ duration: 0.18, ease: "easeOut" }}
               onClick={e => e.stopPropagation()}
-              style={{ background: "#1e1e1e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px", padding: "1.75rem 2rem", width: "320px", boxShadow: "0 24px 60px rgba(0,0,0,0.6)" }}>
-              <h3 style={{ fontSize: "1rem", fontWeight: 700, margin: "0 0 0.5rem", color: "#fff", fontFamily: FONT }}>End interview?</h3>
-              <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.6, margin: "0 0 1.5rem", fontFamily: FONT }}>
-                You'll be taken to your scorecard. This cannot be undone.
+              style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "400px", boxShadow: "0 24px 64px rgba(17,17,17,0.2)" }}>
+              <h2 id="hp-end-title" style={{ fontSize: "1.125rem", fontWeight: 800, margin: "0 0 8px", color: "var(--text-primary)", fontFamily: FONT }}>End interview?</h2>
+              <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)", lineHeight: 1.6, margin: "0 0 20px", fontFamily: FONT }}>
+                You&apos;ll be taken to your scorecard. This cannot be undone.
               </p>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button onClick={() => setShowEndConfirm(false)}
-                  style={{ flex: 1, height: "38px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: "0.82rem", fontFamily: FONT, fontWeight: 600 }}>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                <button aria-label="Keep interview going" onClick={() => setShowEndConfirm(false)}
+                  style={{ flex: "1 1 140px", height: "44px", borderRadius: "8px", border: "1px solid var(--border)", background: "#fff", color: "var(--text-primary)", cursor: "pointer", fontSize: "0.8125rem", fontFamily: FONT, fontWeight: 700 }}>
                   Keep going
                 </button>
-                <button onClick={() => { setShowEndConfirm(false); handleEndSession(); }}
-                  style={{ flex: 1, height: "38px", borderRadius: "8px", border: "none", background: "#dc2626", color: "#fff", cursor: "pointer", fontSize: "0.82rem", fontFamily: FONT, fontWeight: 700 }}>
+                <button aria-label="Confirm end interview" onClick={() => { setShowEndConfirm(false); handleEndSession(); }}
+                  style={{ flex: "1 1 140px", height: "44px", borderRadius: "8px", border: "none", background: "var(--danger)", color: "#fff", cursor: "pointer", fontSize: "0.8125rem", fontFamily: FONT, fontWeight: 700 }}>
                   End interview
                 </button>
               </div>
